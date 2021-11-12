@@ -33,8 +33,6 @@ public class GoodDriveTrain extends SubsystemBase {
 
     public GoodDriveTrain(){
 
-        m_robotDrive = new DifferentialDrive((GoodTalonFX)m_leftMotor, (GoodTalonFX)m_rightMotor);
-
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
         m_gyro = new AHRS();
@@ -46,10 +44,13 @@ public class GoodDriveTrain extends SubsystemBase {
           }else{
             m_leftMotor = new WPI_TalonSRX(0);
             m_rightMotor = new WPI_TalonSRX(1);
+            m_robotDrive = new DifferentialDrive((WPI_TalonSRX)m_leftMotor, (WPI_TalonSRX)m_rightMotor);
             m_leftMotorSim = new TalonSRXSimCollection(m_leftMotor);
             m_rightMotorSim = new TalonSRXSimCollection(m_rightMotor);
 
             m_field = new Field2d();
+
+            //SmartDashboard.putData("Field", m_field);
 
             // This class simulates our drivetrain's motion around the field.
             m_robotDriveSim =
