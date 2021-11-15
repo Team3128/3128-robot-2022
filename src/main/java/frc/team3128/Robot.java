@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team3128.hardware.*;
 import frc.team3128.subsystems.*;
 import frc.team3128.*;
@@ -33,6 +34,16 @@ public class Robot extends TimedRobot {
     m_stick = new Joystick(0);
     m_move = new Mover();
     m_drive = new GoodDriveTrain();
+  }
+
+  @Override
+  public void robotPeriodic(){
+    CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    m_drive.arcadeDrive(m_stick.getY(), m_stick.getX());
   }
 
   @Override

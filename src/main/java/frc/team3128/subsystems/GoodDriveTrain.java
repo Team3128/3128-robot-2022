@@ -74,7 +74,7 @@ public class GoodDriveTrain extends SubsystemBase {
                   1.5, // kvVoltSecondsPerRadian
                   0.3 // kaVoltSecondsSquaredPerRadian
               ),
-              DCMotor.getCIM(2), // gearbox
+              DCMotor.getFalcon500(4), // gearbox
               8, // driveGearing
               0.66, // trackWidthMeters
               2, // wheelRadius
@@ -91,8 +91,6 @@ public class GoodDriveTrain extends SubsystemBase {
         getLeftEncoderDistance(),
         getRightEncoderDistance());
     field.setRobotPose(getPose());   
-
-    SmartDashboard.putString("Here", "working");
   }
 
   public void simulationPeriodic() {
@@ -101,8 +99,8 @@ public class GoodDriveTrain extends SubsystemBase {
     // We negate the right side so that positive voltages make the right side
     // move forward.
     robotDriveSim.setInputs(
-        leftMotor.getMotorOutputVoltage(),// * RobotController.getBatteryVoltage(),
-        -rightMotor.getMotorOutputVoltage());// * RobotController.getBatteryVoltage());
+        -leftMotor.getMotorOutputVoltage(),// * RobotController.getBatteryVoltage(),
+        rightMotor.getMotorOutputVoltage());// * RobotController.getBatteryVoltage());
 
     robotDriveSim.update(0.02);
 
