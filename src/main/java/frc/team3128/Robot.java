@@ -40,4 +40,8 @@ public class Robot extends TimedRobot {
     m_drive.arcadeDrive(m_stick.getY(), m_stick.getX());
   }
 
+  @Override
+  public void simulationInit(){
+    
+  }
 }
