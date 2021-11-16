@@ -4,26 +4,47 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class GoodTalonFX extends WPI_TalonFX{
+	private boolean lazy;
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 
 	/**
 	 * 
 	 * @param deviceNumber device id
+	 * @param isLazy whether or not the motor is lazy
 	 */
-	public GoodTalonFX(int deviceNumber) {
+	public GoodTalonFX(int deviceNumber, boolean isLazy) {
 		super(deviceNumber);
 		enableVoltageCompensation(true);
 		configVoltageCompSaturation(12, 10);
+		lazy = isLazy;
+	}
+
+	/**
+	 * 
+	 * @param deviceNumber device id
+	 */
+	public GoodTalonFX(int deviceNumber){
+		this(deviceNumber, true);
+	}
+
+	public void setLazy(boolean isLazy){
+		lazy = isLazy;
+	}
+
+	public boolean isLazy(){
+		return lazy;
 	}
 
 	@Override
 	public void set(ControlMode controlMode, double outputValue) {
-		// return;
-
-		if (outputValue != prevValue || controlMode != prevControlMode) {
+		if(lazy){
+			if (outputValue != prevValue || controlMode != prevControlMode) {
+				super.set(controlMode, outputValue);
+				prevValue = outputValue;
+			}
+		}else{
 			super.set(controlMode, outputValue);
-			prevValue = outputValue;
 		}
 	}
 

@@ -1,7 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -26,8 +26,10 @@ import frc.team3128.Robot;
 
 public class GoodDriveTrain extends SubsystemBase {
     
-    private static BaseTalon leftMotor;
-    private static BaseTalon rightMotor;
+    private static BaseTalon leftLeader;
+    private static BaseTalon rightLeader;
+    private static GoodTalonFX leftFollower;
+    private static GoodTalonFX rightFollower;
     private static TalonSRXSimCollection leftMotorSim;
     private static TalonSRXSimCollection rightMotorSim;
     private static DifferentialDrive robotDrive;
@@ -38,29 +40,37 @@ public class GoodDriveTrain extends SubsystemBase {
 
     private static Field2d field;
 
+    //constant
     private static double encoderDistancePerDot = 
 
     2 * 2 // wheel diameter
     * Math.PI
     / 2048; // encoder resolution
 
+
     public GoodDriveTrain(){
 
       odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
       if(Robot.isReal()){
-          leftMotor = new GoodTalonFX(0);
-          rightMotor = new GoodTalonFX(1);
-          robotDrive = new DifferentialDrive((GoodTalonFX)leftMotor, (GoodTalonFX)rightMotor);
+          leftLeader = new GoodTalonFX(0);
+          rightLeader = new GoodTalonFX(1);
+          leftFollower = new GoodTalonFX(2);
+          rightFollower = new GoodTalonFX(3);
+
+          leftFollower.follow(leftLeader);
+          leftFollower.setInverted(InvertType.FollowMaster);
+          rightFollower.follow(rightLeader);
+          rightFollower.setInverted(InvertType.FollowMaster);
+
+          robotDrive = new DifferentialDrive((GoodTalonFX)leftLeader, (GoodTalonFX)rightLeader);
         }else{
-          leftMotor = new WPI_TalonSRX(0);
-          rightMotor = new WPI_TalonSRX(1);
-          robotDrive = new DifferentialDrive((WPI_TalonSRX)leftMotor, (WPI_TalonSRX)rightMotor);
-          leftMotorSim = new TalonSRXSimCollection(leftMotor);
-          rightMotorSim = new TalonSRXSimCollection(rightMotor);
-
-          field = new Field2d();
-
+          leftLeader = new WPI_TalonSRX(0);
+          rightLeader = new WPI_TalonSRX(1);
+          leftMotorSim = new TalonSRXSimCollection(leftLeader);
+          rightMotorSim = new TalonSRXSimCollection(rightLeader);
+          robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
+          
           SmartDashboard.putData("Field", field);
 
           //SmartDashboard.putData("Field", m_field);
@@ -81,6 +91,8 @@ public class GoodDriveTrain extends SubsystemBase {
               null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
         }
 
+        field = new Field2d();
+
         resetEncoders();
     }
 
@@ -99,8 +111,8 @@ public class GoodDriveTrain extends SubsystemBase {
     // We negate the right side so that positive voltages make the right side
     // move forward.
     robotDriveSim.setInputs(
-        -leftMotor.getMotorOutputVoltage(),// * RobotController.getBatteryVoltage(),
-        rightMotor.getMotorOutputVoltage());// * RobotController.getBatteryVoltage());
+        -leftLeader.getMotorOutputVoltage(),// * RobotController.getBatteryVoltage(),
+        rightLeader.getMotorOutputVoltage());// * RobotController.getBatteryVoltage());
 
     robotDriveSim.update(0.02);
 
@@ -109,7 +121,7 @@ public class GoodDriveTrain extends SubsystemBase {
     rightMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getRightPositionMeters() / encoderDistancePerDot));
     rightMotorSim.setQuadratureVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/encoderDistancePerDot/10));
 
-    SmartDashboard.putNumber("Left Speed", leftMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / encoderDistancePerDot * 10);
     
     int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -123,7 +135,6 @@ public class GoodDriveTrain extends SubsystemBase {
   public double getHeading() {
     return Math.IEEEremainder(gyro.getAngle(), 360) * (false // gyroRversed
     ? -1.0 : 1.0);
-    //return 0;
   }
 
   public Pose2d getPose(){
@@ -132,11 +143,11 @@ public class GoodDriveTrain extends SubsystemBase {
   }
 
   public double getLeftEncoderDistance() {
-    return leftMotor.getSelectedSensorPosition() * encoderDistancePerDot;
+    return leftLeader.getSelectedSensorPosition() * encoderDistancePerDot;
   }
 
   public double getRightEncoderDistance() {
-    return rightMotor.getSelectedSensorPosition() * encoderDistancePerDot;
+    return rightLeader.getSelectedSensorPosition() * encoderDistancePerDot;
   }
 
   public void arcadeDrive(double x, double y){
@@ -144,7 +155,8 @@ public class GoodDriveTrain extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    leftMotor.setSelectedSensorPosition(0);
-    rightMotor.setSelectedSensorPosition(0);
+    leftLeader.setSelectedSensorPosition(0);
+    rightLeader.setSelectedSensorPosition(0);
   }
 }
+
