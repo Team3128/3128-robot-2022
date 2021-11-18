@@ -3,7 +3,7 @@ package frc.team3128.hardware;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-public class GoodTalonFX extends WPI_TalonFX{
+public class AN_TalonFX extends WPI_TalonFX{
 	private boolean lazy;
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
@@ -13,7 +13,7 @@ public class GoodTalonFX extends WPI_TalonFX{
 	 * @param deviceNumber device id
 	 * @param isLazy whether or not the motor is lazy
 	 */
-	public GoodTalonFX(int deviceNumber, boolean isLazy) {
+	public AN_TalonFX(int deviceNumber, boolean isLazy) {
 		super(deviceNumber);
 		enableVoltageCompensation(true);
 		configVoltageCompSaturation(12, 10);
@@ -24,7 +24,7 @@ public class GoodTalonFX extends WPI_TalonFX{
 	 * 
 	 * @param deviceNumber device id
 	 */
-	public GoodTalonFX(int deviceNumber){
+	public AN_TalonFX(int deviceNumber){
 		this(deviceNumber, true);
 	}
 

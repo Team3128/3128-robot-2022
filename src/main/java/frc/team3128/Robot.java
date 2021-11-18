@@ -26,14 +26,14 @@ import frc.team3128.*;
 public class Robot extends TimedRobot {
  
   private Mover m_move; // test subsystem
-  private GoodDriveTrain m_drive;
+  private AN_DriveTrain m_drive;
   private Joystick m_stick;
 
   @Override
   public void robotInit(){
     m_stick = new Joystick(0);
     m_move = new Mover();
-    m_drive = new GoodDriveTrain();
+    m_drive = new AN_DriveTrain();
   }
 
   @Override

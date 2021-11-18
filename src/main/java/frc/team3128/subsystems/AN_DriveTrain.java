@@ -24,12 +24,12 @@ import edu.wpi.first.wpiutil.math.VecBuilder;
 import frc.team3128.hardware.*;
 import frc.team3128.Robot;
 
-public class GoodDriveTrain extends SubsystemBase {
+public class AN_DriveTrain extends SubsystemBase {
     
     private static BaseTalon leftLeader;
     private static BaseTalon rightLeader;
-    private static GoodTalonFX leftFollower;
-    private static GoodTalonFX rightFollower;
+    private static AN_TalonFX leftFollower;
+    private static AN_TalonFX rightFollower;
     private static TalonSRXSimCollection leftMotorSim;
     private static TalonSRXSimCollection rightMotorSim;
     private static DifferentialDrive robotDrive;
@@ -48,22 +48,22 @@ public class GoodDriveTrain extends SubsystemBase {
     / 2048; // encoder resolution
 
 
-    public GoodDriveTrain(){
+    public AN_DriveTrain(){
 
       odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
       if(Robot.isReal()){
-          leftLeader = new GoodTalonFX(0);
-          rightLeader = new GoodTalonFX(1);
-          leftFollower = new GoodTalonFX(2);
-          rightFollower = new GoodTalonFX(3);
+          leftLeader = new AN_TalonFX(0);
+          rightLeader = new AN_TalonFX(1);
+          leftFollower = new AN_TalonFX(2);
+          rightFollower = new AN_TalonFX(3);
 
           leftFollower.follow(leftLeader);
           leftFollower.setInverted(InvertType.FollowMaster);
           rightFollower.follow(rightLeader);
           rightFollower.setInverted(InvertType.FollowMaster);
 
-          robotDrive = new DifferentialDrive((GoodTalonFX)leftLeader, (GoodTalonFX)rightLeader);
+          robotDrive = new DifferentialDrive((AN_TalonFX)leftLeader, (AN_TalonFX)rightLeader);
         }else{
           leftLeader = new WPI_TalonSRX(0);
           rightLeader = new WPI_TalonSRX(1);
