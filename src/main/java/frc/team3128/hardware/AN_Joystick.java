@@ -16,4 +16,12 @@ public class AN_Joystick {
     public AN_Joystick(int deviceNumber){
         stick = new Joystick(deviceNumber);
     }
+
+    public double getX(){
+        return stick.getX();
+    }
+
+    public double getY(){
+        return stick.getY();
+    }
 }
