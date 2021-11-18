@@ -3,7 +3,7 @@ package frc.team3128.hardware;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-public class GoodTalonFX extends WPI_TalonFX{
+public class GoodTalonFX extends WPI_TalonFX {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 
