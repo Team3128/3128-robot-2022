@@ -1,6 +1,5 @@
 package frc.team3128.hardware;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -12,7 +11,6 @@ public class AN_Joystick {
 
     private Joystick stick;
 
-    private JoystickButton trigger;
     public POVButton povDown;
     public POVButton povLeft;
     public POVButton povRight;
@@ -21,6 +19,7 @@ public class AN_Joystick {
     private HashMap<Integer, JoystickButton> buttons;
 
     public AN_Joystick(int deviceNumber){
+        buttons = new HashMap<Integer, JoystickButton>();
         stick = new Joystick(deviceNumber);
 
         for(int i = 1; i < 13; i++)

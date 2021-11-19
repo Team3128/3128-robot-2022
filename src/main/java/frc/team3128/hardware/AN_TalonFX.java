@@ -13,7 +13,7 @@ public class AN_TalonFX extends WPI_TalonFX{
 	 * @param deviceNumber device id
 	 * @param isLazy whether or not the motor is lazy
 	 */
-	public AN_TalonFX(int deviceNumber, boolean isLazy) {
+	public AN_TalonFX(int deviceNumber, boolean isLazy) {    
 		super(deviceNumber);
 		enableVoltageCompensation(true);
 		configVoltageCompSaturation(12, 10);
