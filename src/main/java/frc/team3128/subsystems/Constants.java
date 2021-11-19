@@ -1,5 +1,7 @@
 package frc.team3128.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 public class Constants {
     public static class ShooterConstants {
         public static final double SHOOTER_PID_kP = 0;
@@ -43,4 +45,23 @@ public class Constants {
 
     public static class MechanismConstants {    
     }
+
+    public static class IntakeConstants {
+        public static final int ARM_MOTOR_ID = 7;
+        public static final int BRUSH_MOTOR_1_ID = 5;
+        public static final int BRUSH_MOTOR_2_ID = 33;
+        public static final int INTAKE_MOTOR_ID = 4;
+
+        public static final int TOP_LIMIT_SWITCH_ID = 0;
+        public static final int BOTTOM_LIMIT_SWITCH_ID = 1;
+
+
+        public static final double INTAKE_MOTOR_POWER = 0.6;
+        public static final double BRUSH_MOTOR_POWER = 0.78;
+        public static final double ARM_MOTOR_POWER = 0.28;
+
+        public static final double ARM_MOTOR_POWER_AUTO = 0.07;
+        public static final NeutralMode ARM_NEUTRAL_MODE = null;
+}
+
 }
