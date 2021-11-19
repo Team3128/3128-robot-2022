@@ -19,15 +19,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.VecBuilder;
+import frc.team3128.hardware.*;
 import frc.team3128.Robot;
-import frc.team3128.hardware.AN_TalonFX;
 
-public class AN_Drivetrain extends SubsystemBase {
-        
+public class NARDrivetrain extends SubsystemBase {
+    
     private static BaseTalon leftLeader;
     private static BaseTalon rightLeader;
-    private static AN_TalonFX leftFollower;
-    private static AN_TalonFX rightFollower;
+    private static NARTalonFX leftFollower;
+    private static NARTalonFX rightFollower;
     private static TalonSRXSimCollection leftMotorSim;
     private static TalonSRXSimCollection rightMotorSim;
     private static DifferentialDrive robotDrive;
@@ -38,56 +39,49 @@ public class AN_Drivetrain extends SubsystemBase {
 
     private static Field2d field;
 
-    //constant
-    private static double encoderDistancePerDot = 2 * 2 // wheel diameter
-    * Math.PI
-    / 2048; // encoder resolution
+    public NARDrivetrain(){
 
+      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
-    public AN_Drivetrain(){
+      if(Robot.isReal()){
+          leftLeader = new NARTalonFX(0);
+          rightLeader = new NARTalonFX(1);
+          leftFollower = new NARTalonFX(2);
+          rightFollower = new NARTalonFX(3);
+
+          leftFollower.follow(leftLeader);
+          leftFollower.setInverted(InvertType.FollowMaster);
+          rightFollower.follow(rightLeader);
+          rightFollower.setInverted(InvertType.FollowMaster);
+
+          robotDrive = new DifferentialDrive((NARTalonFX)leftLeader, (NARTalonFX)rightLeader);
+        }else{
+          leftLeader = new WPI_TalonSRX(0);
+          rightLeader = new WPI_TalonSRX(1);
+          leftMotorSim = new TalonSRXSimCollection(leftLeader);
+          rightMotorSim = new TalonSRXSimCollection(rightLeader);
+          robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
+
+          // Simulated drivetrain handles simulation math
+          robotDriveSim =
+          new DifferentialDrivetrainSim(
+              LinearSystemId.identifyDrivetrainSystem(
+                  0.5, // kvVoltSecondsPerMeter
+                  0.05, // kaVoltSecondsSquaredPerMeter
+                  1.5, // kvVoltSecondsPerRadian
+                  0.3 // kaVoltSecondsSquaredPerRadian
+              ),
+              DCMotor.getFalcon500(4), // gearbox
+              8, // driveGearing
+              0.66, // trackWidthMeters
+              2, // wheelRadius
+              null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
+        }
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
 
-        if(Robot.isReal()){
-            leftLeader = new AN_TalonFX(0);
-            rightLeader = new AN_TalonFX(1);
-            leftFollower = new AN_TalonFX(2);
-            rightFollower = new AN_TalonFX(3);
-
-            leftFollower.follow(leftLeader);
-            leftFollower.setInverted(InvertType.FollowMaster);
-            rightFollower.follow(rightLeader);
-            rightFollower.setInverted(InvertType.FollowMaster);
-
-            robotDrive = new DifferentialDrive((AN_TalonFX)leftLeader, (AN_TalonFX)rightLeader);
-        } 
-        else {
-            leftLeader = new WPI_TalonSRX(0);
-            rightLeader = new WPI_TalonSRX(1);
-            leftMotorSim = new TalonSRXSimCollection(leftLeader);
-            rightMotorSim = new TalonSRXSimCollection(rightLeader);
-            robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
-                
-            SmartDashboard.putData("Field", field);
-
-            //SmartDashboard.putData("Field", m_field);
-
-            // This class simulates our drivetrain's motion around the field.
-            robotDriveSim =
-            new DifferentialDrivetrainSim(
-                LinearSystemId.identifyDrivetrainSystem(
-                    0.5, // kvVoltSecondsPerMeter
-                    0.05, // kaVoltSecondsSquaredPerMeter
-                    1.5, // kvVoltSecondsPerRadian
-                    0.3 // kaVoltSecondsSquaredPerRadian
-                ),
-                DCMotor.getFalcon500(4), // gearbox
-                8, // driveGearing
-                0.66, // trackWidthMeters
-                2, // wheelRadius
-                null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
-        }
+        SmartDashboard.putData("Field", field);
 
         resetEncoders();
     }
@@ -109,13 +103,13 @@ public class AN_Drivetrain extends SubsystemBase {
 
         robotDriveSim.update(0.02);
 
-        leftMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getLeftPositionMeters() / encoderDistancePerDot));
-        leftMotorSim.setQuadratureVelocity((int)(robotDriveSim.getLeftVelocityMetersPerSecond()/encoderDistancePerDot/10));
-        rightMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getRightPositionMeters() / encoderDistancePerDot));
-        rightMotorSim.setQuadratureVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/encoderDistancePerDot/10));
+        leftMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
+        leftMotorSim.setQuadratureVelocity((int)(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
+        rightMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
+        rightMotorSim.setQuadratureVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
 
         SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / encoderDistancePerDot * 10);
+        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10);
         
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
@@ -134,11 +128,11 @@ public class AN_Drivetrain extends SubsystemBase {
     }
 
     public double getLeftEncoderDistance() {
-        return leftLeader.getSelectedSensorPosition() * encoderDistancePerDot;
+        return leftLeader.getSelectedSensorPosition() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK;
     }
 
     public double getRightEncoderDistance() {
-        return rightLeader.getSelectedSensorPosition() * encoderDistancePerDot;
+        return rightLeader.getSelectedSensorPosition() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK;
     }
 
     public void arcadeDrive(double x, double y){

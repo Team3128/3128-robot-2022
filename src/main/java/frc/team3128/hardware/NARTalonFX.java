@@ -3,7 +3,10 @@ package frc.team3128.hardware;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-public class AN_TalonFX extends WPI_TalonFX{
+import frc.team3128.common.NARMotor;
+import frc.team3128.common.NARTalon;
+
+public class NARTalonFX extends WPI_TalonFX{
 	private boolean lazy;
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
@@ -13,7 +16,7 @@ public class AN_TalonFX extends WPI_TalonFX{
 	 * @param deviceNumber device id
 	 * @param isLazy whether or not the motor is lazy
 	 */
-	public AN_TalonFX(int deviceNumber, boolean isLazy) {    
+	public NARTalonFX(int deviceNumber, boolean isLazy) {
 		super(deviceNumber);
 		enableVoltageCompensation(true);
 		configVoltageCompSaturation(12, 10);
@@ -24,10 +27,11 @@ public class AN_TalonFX extends WPI_TalonFX{
 	 * 
 	 * @param deviceNumber device id
 	 */
-	public AN_TalonFX(int deviceNumber){
+	public NARTalonFX(int deviceNumber){
 		this(deviceNumber, true);
 	}
 
+	@Override
 	public void setLazy(boolean isLazy){
 		lazy = isLazy;
 	}
@@ -48,6 +52,7 @@ public class AN_TalonFX extends WPI_TalonFX{
 		}
 	}
 
+	@Override
 	public double getSetpoint() {
 		return prevValue;
 	}

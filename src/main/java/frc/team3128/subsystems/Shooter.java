@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.Robot;
-import frc.team3128.hardware.AN_TalonFX;
+import frc.team3128.hardware.*;
 
 public class Shooter extends PIDSubsystem {
 
@@ -70,8 +70,8 @@ public class Shooter extends PIDSubsystem {
 
         //Robot is real
         if(Robot.isReal()) {
-            m_leftShooter = new AN_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new AN_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
+            m_leftShooter = new NARTalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
+            m_rightShooter = new NARTalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
         }
         else {
             //Robot is a simulation

@@ -27,14 +27,20 @@ public class Constants {
         public static final int CAN_TIMEOUT = 0;
         public static final double SIDEKICK_kS = 0;
         public static final double SIDEKICK_kV = 0;
+        public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
     }
 
     public static class ConversionConstants {
-        public static final double ENCODER_TO_RPM = 10*60/Constants.MechanismConstants.ENCODER_RESOLUTION_PER_ROTATION; // (sensor units per 100 ms to rpm)
-        public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/MechanismConstants.SIDEKICK_UNITS_PER_ROTATION;
+        public static final double ENCODER_TO_RPM = 10*60/DriveConstants.ENCODER_RESOLUTION_PER_ROTATION; // (sensor units per 100 ms to rpm)
+        public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_UNITS_PER_ROTATION;
     }
-    public static class MechanismConstants {
+
+    public static class DriveConstants {
+        public static final int WHEEL_RADIUS = 2; // inches
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
-        public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
+        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
+    }
+
+    public static class MechanismConstants {    
     }
 }
