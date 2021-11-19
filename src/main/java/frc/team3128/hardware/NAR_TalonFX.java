@@ -27,15 +27,15 @@ public class NAR_TalonFX extends WPI_TalonFX{
 	 * 
 	 * @param deviceNumber device id
 	 */
-	public NAR_TalonFX(int deviceNumber){
+	public NAR_TalonFX(int deviceNumber) {
 		this(deviceNumber, true);
 	}
 
-	public void setLazy(boolean isLazy){
+	public void setLazy(boolean isLazy) {
 		lazy = isLazy;
 	}
 
-	public boolean isLazy(){
+	public boolean isLazy() {
 		return lazy;
 	}
 

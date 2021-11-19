@@ -18,7 +18,7 @@ public class NAR_Joystick {
 
     private HashMap<Integer, JoystickButton> buttons;
 
-    public NAR_Joystick(int deviceNumber){
+    public NAR_Joystick(int deviceNumber) {
         buttons = new HashMap<Integer, JoystickButton>();
         stick = new Joystick(deviceNumber);
 
@@ -52,7 +52,7 @@ public class NAR_Joystick {
         return povRight;
     }
 
-    public double getX(){
+    public double getX() {
         return stick.getX();
     }
 

@@ -19,9 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpiutil.math.VecBuilder;
-import frc.team3128.hardware.*;
 import frc.team3128.Robot;
+import frc.team3128.hardware.NAR_TalonFX;
 
 public class NAR_Drivetrain extends SubsystemBase {
     
@@ -41,41 +40,42 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     public NAR_Drivetrain(){
 
-      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
-      if(Robot.isReal()){
-          leftLeader = new NAR_TalonFX(0);
-          rightLeader = new NAR_TalonFX(1);
-          leftFollower = new NAR_TalonFX(2);
-          rightFollower = new NAR_TalonFX(3);
+        if (Robot.isReal()) {
+            leftLeader = new NAR_TalonFX(0);
+            rightLeader = new NAR_TalonFX(1);
+            leftFollower = new NAR_TalonFX(2);
+            rightFollower = new NAR_TalonFX(3);
 
-          leftFollower.follow(leftLeader);
-          leftFollower.setInverted(InvertType.FollowMaster);
-          rightFollower.follow(rightLeader);
-          rightFollower.setInverted(InvertType.FollowMaster);
+            leftFollower.follow(leftLeader);
+            leftFollower.setInverted(InvertType.FollowMaster);
+            rightFollower.follow(rightLeader);
+            rightFollower.setInverted(InvertType.FollowMaster);
 
-          robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
-        }else{
-          leftLeader = new WPI_TalonSRX(0);
-          rightLeader = new WPI_TalonSRX(1);
-          leftMotorSim = new TalonSRXSimCollection(leftLeader);
-          rightMotorSim = new TalonSRXSimCollection(rightLeader);
-          robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
+            robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
+        } 
+        else {
+            leftLeader = new WPI_TalonSRX(0);
+            rightLeader = new WPI_TalonSRX(1);
+            leftMotorSim = new TalonSRXSimCollection(leftLeader);
+            rightMotorSim = new TalonSRXSimCollection(rightLeader);
+            robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
 
-          // Simulated drivetrain handles simulation math
-          robotDriveSim =
-          new DifferentialDrivetrainSim(
-              LinearSystemId.identifyDrivetrainSystem(
-                  0.5, // kvVoltSecondsPerMeter
-                  0.05, // kaVoltSecondsSquaredPerMeter
-                  1.5, // kvVoltSecondsPerRadian
-                  0.3 // kaVoltSecondsSquaredPerRadian
-              ),
-              DCMotor.getFalcon500(4), // gearbox
-              8, // driveGearing
-              0.66, // trackWidthMeters
-              2, // wheelRadius
-              null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
+            // Simulated drivetrain handles simulation math
+            robotDriveSim =
+            new DifferentialDrivetrainSim(
+                LinearSystemId.identifyDrivetrainSystem(
+                    0.5, // kvVoltSecondsPerMeter
+                    0.05, // kaVoltSecondsSquaredPerMeter
+                    1.5, // kvVoltSecondsPerRadian
+                    0.3 // kaVoltSecondsSquaredPerRadian
+                ),
+                DCMotor.getFalcon500(4), // gearbox
+                8, // driveGearing
+                0.66, // trackWidthMeters
+                2, // wheelRadius
+                null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
         }
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -123,7 +123,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
-    public Pose2d getPose(){
+    public Pose2d getPose() {
         return odometry.getPoseMeters();
     }
 
@@ -135,7 +135,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         return rightLeader.getSelectedSensorPosition() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK;
     }
 
-    public void arcadeDrive(double x, double y){
+    public void arcadeDrive(double x, double y) {
         robotDrive.arcadeDrive(x,y);
     }
 
