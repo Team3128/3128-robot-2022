@@ -70,8 +70,8 @@ public class Shooter extends PIDSubsystem {
 
         //Robot is real
         if(Robot.isReal()) {
-            m_leftShooter = new NARTalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new NARTalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
+            m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
+            m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
         }
         else {
             //Robot is a simulation

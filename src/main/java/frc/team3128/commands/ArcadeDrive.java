@@ -3,14 +3,14 @@ package frc.team3128.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team3128.subsystems.AN_Drivetrain;
+import frc.team3128.subsystems.NAR_Drivetrain;
 
 public class ArcadeDrive extends CommandBase {
-    private final AN_Drivetrain m_drivetrain;
+    private final NAR_Drivetrain m_drivetrain;
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_turn;
     
-    public ArcadeDrive(AN_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn) {
+    public ArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn) {
         m_drivetrain = drivetrain;
         addRequirements(m_drivetrain);
 

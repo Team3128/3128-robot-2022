@@ -16,18 +16,18 @@ import frc.team3128.hardware.*;
 public class RobotContainer {
 
     private Mover m_move; // test subsystem
-    private AN_Drivetrain m_drive;
+    private NAR_Drivetrain m_drive;
     private Shooter m_shooter;
 
-    private AN_Joystick m_stick;
+    private NAR_Joystick m_stick;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
 
     public RobotContainer() {
         m_move = new Mover();
-        m_drive = new AN_Drivetrain();
-        m_stick = new AN_Joystick(0);
+        m_drive = new NAR_Drivetrain();
+        m_stick = new NAR_Joystick(0);
         m_shooter = new Shooter();
 
         m_commandScheduler.registerSubsystem(m_move, m_drive, m_shooter);

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.Robot;
-import frc.team3128.hardware.NARTalonSRX;
+import frc.team3128.hardware.NAR_TalonSRX;
 
 public class Sidekick extends PIDSubsystem {
 
@@ -32,7 +32,7 @@ public class Sidekick extends PIDSubsystem {
     }
 
     public static final Sidekick instance = new Sidekick();
-    public static NARTalonSRX SIDEKICK; 
+    public static NAR_TalonSRX SIDEKICK; 
     public TalonSRXSimCollection m_sidekickSim;
     public FlywheelSim m_sidekickShooterSim;
 
@@ -57,7 +57,7 @@ public class Sidekick extends PIDSubsystem {
     }
 
     private void configMotors() {
-        SIDEKICK = new NARTalonSRX(Constants.SidekickConstants.SIDEKICK_ID);
+        SIDEKICK = new NAR_TalonSRX(Constants.SidekickConstants.SIDEKICK_ID);
         SIDEKICK.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0,
                 Constants.SidekickConstants.CAN_TIMEOUT);
         SIDEKICK.setInverted(true);

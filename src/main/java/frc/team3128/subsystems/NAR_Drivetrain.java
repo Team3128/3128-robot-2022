@@ -23,12 +23,12 @@ import edu.wpi.first.wpiutil.math.VecBuilder;
 import frc.team3128.hardware.*;
 import frc.team3128.Robot;
 
-public class NARDrivetrain extends SubsystemBase {
+public class NAR_Drivetrain extends SubsystemBase {
     
     private static BaseTalon leftLeader;
     private static BaseTalon rightLeader;
-    private static NARTalonFX leftFollower;
-    private static NARTalonFX rightFollower;
+    private static NAR_TalonFX leftFollower;
+    private static NAR_TalonFX rightFollower;
     private static TalonSRXSimCollection leftMotorSim;
     private static TalonSRXSimCollection rightMotorSim;
     private static DifferentialDrive robotDrive;
@@ -39,22 +39,22 @@ public class NARDrivetrain extends SubsystemBase {
 
     private static Field2d field;
 
-    public NARDrivetrain(){
+    public NAR_Drivetrain(){
 
       odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
       if(Robot.isReal()){
-          leftLeader = new NARTalonFX(0);
-          rightLeader = new NARTalonFX(1);
-          leftFollower = new NARTalonFX(2);
-          rightFollower = new NARTalonFX(3);
+          leftLeader = new NAR_TalonFX(0);
+          rightLeader = new NAR_TalonFX(1);
+          leftFollower = new NAR_TalonFX(2);
+          rightFollower = new NAR_TalonFX(3);
 
           leftFollower.follow(leftLeader);
           leftFollower.setInverted(InvertType.FollowMaster);
           rightFollower.follow(rightLeader);
           rightFollower.setInverted(InvertType.FollowMaster);
 
-          robotDrive = new DifferentialDrive((NARTalonFX)leftLeader, (NARTalonFX)rightLeader);
+          robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
         }else{
           leftLeader = new WPI_TalonSRX(0);
           rightLeader = new WPI_TalonSRX(1);

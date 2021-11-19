@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 
-public class NARJoystick {
+public class NAR_Joystick {
 
     private Joystick stick;
 
@@ -18,7 +18,7 @@ public class NARJoystick {
 
     private HashMap<Integer, JoystickButton> buttons;
 
-    public NARJoystick(int deviceNumber){
+    public NAR_Joystick(int deviceNumber){
         buttons = new HashMap<Integer, JoystickButton>();
         stick = new Joystick(deviceNumber);
 
