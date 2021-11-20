@@ -43,4 +43,14 @@ public class Constants {
 
     public static class MechanismConstants {    
     }
+
+    public static class HopperConstants {
+
+        public static final int HOPPER_MOTOR_1_ID = 0;
+        public static final int BOTTOM_SENSOR_ID = 0;
+        public static final int TOP_SENSOR_ID = 0;
+        public static final double HOPPER_MOTOR_1_POWER = 0;
+        public static final String HOPPER_MOTOR_2_POWER = null;
+
+    }
 }
