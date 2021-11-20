@@ -14,9 +14,10 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.Robot;
+import frc.team3128.common.NAR_PIDSubsystem;
 import frc.team3128.hardware.*;
 
-public class Shooter extends PIDSubsystem {
+public class Shooter extends NAR_PIDSubsystem {
 
     public enum ShooterState {
         OFF(0),
@@ -44,9 +45,6 @@ public class Shooter extends PIDSubsystem {
     //Simulated Shooter
     private FlywheelSim m_shooterSim;
 
-    //Number of successful checks
-    private int plateauCount;
-
     //Feed Forward
     private final SimpleMotorFeedforward m_shooterFeedforward =
       new SimpleMotorFeedforward(Constants.ShooterConstants.SHOOTER_KS,
@@ -66,7 +64,7 @@ public class Shooter extends PIDSubsystem {
      */
     public Shooter() {
         
-        super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD));
+        super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD), Constants.ShooterConstants.PLATEAU_COUNT);
 
         //Robot is real
         if(Robot.isReal()) {
@@ -89,12 +87,6 @@ public class Shooter extends PIDSubsystem {
         }
     }
 
-    /**
-     * Determines if the shooter has maintained the desired RPM for a certain amount of time
-     */
-    public boolean isReady() {
-        return (plateauCount >= Constants.ShooterConstants.PLATEAU_COUNT);
-    }
 
     /**
      * @return If the shooter is at the setpoint RPM
@@ -115,7 +107,7 @@ public class Shooter extends PIDSubsystem {
      * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
      */
     public void startPID() {
-        plateauCount = 0;
+        super.startPID();
         super.setSetpoint(shooterState.shooterRPM);
         getController().setTolerance(Constants.ShooterConstants.THRESHOLD_PERCENT * shooterState.shooterRPM);
     }
@@ -166,11 +158,7 @@ public class Shooter extends PIDSubsystem {
             getController().setTolerance(thresholdPercent * setpoint);
         }
 
-        if (atSetpoint() && (setpoint != 0)) {
-            plateauCount++;
-        } else {
-            plateauCount = 0;
-        }
+        super.useOutput(setpoint);
 
         preTime = time;
 
