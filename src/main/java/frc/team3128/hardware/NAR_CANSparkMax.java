@@ -37,6 +37,3 @@ public class NAR_CANSparkMax extends CANSparkMax {
 		return prevValue;
 	}
 }
-
-
-}
