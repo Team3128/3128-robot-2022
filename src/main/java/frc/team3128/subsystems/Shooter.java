@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.Robot;
-import frc.team3128.hardware.GoodTalonFX;
+import frc.team3128.hardware.*;
 
 public class Shooter extends PIDSubsystem {
 
@@ -40,7 +40,6 @@ public class Shooter extends PIDSubsystem {
     private BaseTalon m_leftShooter, m_rightShooter;
     //Simulated Motors
     private TalonSRXSimCollection m_leftShooterSim;
-    private TalonSRXSimCollection m_rightShooterSim;
 
     //Simulated Shooter
     private FlywheelSim m_shooterSim;
@@ -58,7 +57,7 @@ public class Shooter extends PIDSubsystem {
     private ShooterState shooterState = ShooterState.OFF;
 
     //Threshold Information
-    private double value = 0, preValue = 0, time = 0, preTime = 0;
+    private double time = 0, preTime = 0;
     private double thresholdPercent = Constants.ShooterConstants.RPM_THRESHOLD_PERCENT;
     
 
@@ -71,15 +70,14 @@ public class Shooter extends PIDSubsystem {
 
         //Robot is real
         if(Robot.isReal()) {
-            m_leftShooter = new GoodTalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new GoodTalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
+            m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
+            m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
         }
         else {
             //Robot is a simulation
             m_leftShooter = new WPI_TalonSRX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
             m_rightShooter = new WPI_TalonSRX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
             m_leftShooterSim = new TalonSRXSimCollection(m_leftShooter);
-            m_rightShooterSim = new TalonSRXSimCollection(m_rightShooter);
             m_shooterSim = new FlywheelSim(
                 LinearSystemId.identifyVelocitySystem(
                     0, //kV
@@ -158,8 +156,6 @@ public class Shooter extends PIDSubsystem {
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 
-
-        value = getMeasurement();
         time = RobotController.getFPGATime() / 1e6;
         if (thresholdPercent < Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
             thresholdPercent += ((time - preTime) * ((Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - Constants.ShooterConstants.RPM_THRESHOLD_PERCENT)) / Constants.ShooterConstants.TIME_TO_MAX_THRESHOLD);
@@ -172,7 +168,6 @@ public class Shooter extends PIDSubsystem {
             plateauCount = 0;
         }
 
-        preValue = value;
         preTime = time;
 
 
