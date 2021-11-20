@@ -62,8 +62,6 @@ public class Intake implements Subsystem {
         m_brush_motor_1Sim = new VictorSPXSimCollection(m_brush_motor_1);
         m_brush_motor_2Sim = new VictorSPXSimCollection(m_brush_motor_2);
         m_intake_motorSim = new VictorSPXSimCollection(m_intake_motor);
-
-
     }
 
     

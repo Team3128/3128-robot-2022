@@ -30,6 +30,7 @@ public class Constants {
         public static final double SIDEKICK_kS = 0;
         public static final double SIDEKICK_kV = 0;
         public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
+        public static final double SIDEKICK_PLATEAU_THRESHOLD = 5;
     }
 
     public static class ConversionConstants {
@@ -41,9 +42,6 @@ public class Constants {
         public static final int WHEEL_RADIUS = 2; // inches
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
-    }
-
-    public static class MechanismConstants {    
     }
 
     public static class IntakeConstants {
