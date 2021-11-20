@@ -17,7 +17,7 @@ import frc.team3128.hardware.NAR_TalonSRX;
 
 public class Sidekick extends PIDSubsystem {
 
-    public static enum SidekickState {
+    public static enum SidekickState { // enum for the setpoint shooting state
         OFF(0),
         LONG_RANGE(4800), // long range shooting
         MID_RANGE(4080), // actual setpoint 4080 // mid range shooting
@@ -32,17 +32,26 @@ public class Sidekick extends PIDSubsystem {
     }
 
     public static final Sidekick instance = new Sidekick();
-    public static NAR_TalonSRX SIDEKICK; 
+    
+    // motors
+    public static NAR_TalonSRX m_sidekick; 
+
+    // simulated motors
     public TalonSRXSimCollection m_sidekickSim;
     public FlywheelSim m_sidekickShooterSim;
 
+    // sidekick state
     public SidekickState SIDEKICK_STATE = SidekickState.MID_RANGE;
 
+    // feedforward (from WPILib ff)
     private final SimpleMotorFeedforward m_sidekickFeedForward =
       new SimpleMotorFeedforward(Constants.SidekickConstants.SIDEKICK_kS,
                                  Constants.SidekickConstants.SIDEKICK_kV);
     
 
+    /**
+     * Constructor for the Sidekick, initiates  
+     */
     private Sidekick() {
         super(new PIDController(Constants.SidekickConstants.SIDEKICK_PID_kP, Constants.SidekickConstants.SIDEKICK_PID_kI, Constants.SidekickConstants.SIDEKICK_PID_kD));
         getController().setTolerance(2000*Constants.SidekickConstants.SIDEKICK_RPM_THRESHOLD_PERCENT);
@@ -52,19 +61,25 @@ public class Sidekick extends PIDSubsystem {
         setSetpoint(0);
     }
 
+    /**
+     * @return If the sidekick is at the desired setpoint
+     */
     public boolean atSetpoint() {
         return m_controller.atSetpoint();
     }
 
+    /** 
+     * Configures the motors (regular+simulation) 
+     */
     private void configMotors() {
-        SIDEKICK = new NAR_TalonSRX(Constants.SidekickConstants.SIDEKICK_ID);
-        SIDEKICK.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0,
+        m_sidekick = new NAR_TalonSRX(Constants.SidekickConstants.SIDEKICK_ID);
+        m_sidekick.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0,
                 Constants.SidekickConstants.CAN_TIMEOUT);
-        SIDEKICK.setInverted(true);
-        SIDEKICK.setSensorPhase(true);
+        m_sidekick.setInverted(true);
+        m_sidekick.setSensorPhase(true);
 
         if (!Robot.isReal()) {
-            m_sidekickSim = new TalonSRXSimCollection(SIDEKICK);
+            m_sidekickSim = new TalonSRXSimCollection(m_sidekick);
             m_sidekickShooterSim = new FlywheelSim(
                 LinearSystemId.identifyVelocitySystem( // plant
                     0, //kV
@@ -76,18 +91,27 @@ public class Sidekick extends PIDSubsystem {
         }
     }
 
+    /**
+     * Configures the encoders (nothing here yet, this would be for future sidekicks with encoders)
+     */
     private void configEncoders() {
 
     }
 
-    public static Sidekick getInstance() {
-        return instance;
-    }
-
+    /**
+     * Sets the state for the sidekick
+     * @param sidekickState new state for the sidekick
+     */
     public void setState(SidekickState sidekickState) {
         SIDEKICK_STATE = sidekickState;
     }
 
+    /**
+     * Calculates and applies the voltage to reach a given setpoint using PID and feedforward
+     * Converts to a percent voltage output before applying voltage
+     * @param output Output from PID loop
+     * @param setpoint Desired setpoint of RPM for the PID loop and FF
+     */
     @Override
     protected void useOutput(double output, double setpoint) {
         double voltageOutput = output + m_sidekickFeedForward.calculate(setpoint);
@@ -98,37 +122,46 @@ public class Sidekick extends PIDSubsystem {
         output = (output > 1 ) ? 1 : ((output < -1) ? -1 : output);
         output = (setpoint == 0) ? 0 : output;
         
-        SIDEKICK.set(ControlMode.PercentOutput, output);    
+        m_sidekick.set(ControlMode.PercentOutput, output);    
     }
 
+    /**
+     * @return Current RPM according to the sensor reading
+     */
     @Override
     protected double getMeasurement() {
-        return SIDEKICK.getSelectedSensorVelocity() * Constants.ConversionConstants.SIDEKICK_ENCODER_TO_RPM;
+        return m_sidekick.getSelectedSensorVelocity() * Constants.ConversionConstants.SIDEKICK_ENCODER_TO_RPM;
     }
 
+    /**
+     * @return if the sidekick is ready to shoot
+     */
     public boolean isReady() {
         return true; // fix logic here
     }
 
     public void setPower(double power) {
-        SIDEKICK.set(ControlMode.PercentOutput, power);
+        m_sidekick.set(ControlMode.PercentOutput, power);
     }
 
     public void shoot() {
         setSetpoint(SIDEKICK_STATE.sidekickRPM);
     }
 
+    /**
+     * Un-shoots the sidekick, basically
+     */
     public void counterShoot() {
         setSetpoint(0);
     }
 
     @Override
     public void simulationPeriodic() {
-        m_sidekickShooterSim.setInputVoltage(SIDEKICK.getMotorOutputVoltage());
+        m_sidekickShooterSim.setInputVoltage(m_sidekick.getMotorOutputVoltage());
         m_sidekickShooterSim.update(0.02);
         m_sidekickSim.setQuadratureVelocity((int) (m_sidekickShooterSim.getAngularVelocityRadPerSec()*0.0254)); // TEMP RADIUS TO GET IT TO WORK
 
-        SmartDashboard.putNumber("Speed", SIDEKICK.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Speed", m_sidekick.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Expected Speed", m_sidekickShooterSim.getAngularVelocityRadPerSec());
     }
 }
