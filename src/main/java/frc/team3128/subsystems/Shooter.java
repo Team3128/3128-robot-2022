@@ -129,6 +129,10 @@ public class Shooter extends PIDSubsystem {
         startPID();
     }
 
+    public void stopShoot() {
+        beginShoot(ShooterState.OFF);
+    }
+
     /**
      * @return The Shooter State
      */
