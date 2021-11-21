@@ -21,14 +21,22 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Robot;
+import frc.team3128.common.NAR_EMotor;
 import frc.team3128.hardware.NAR_TalonFX;
+import frc.team3128.hardware.NAR_TalonSRX;
 
 public class NAR_Drivetrain extends SubsystemBase {
     
-    private static BaseTalon leftLeader;
-    private static BaseTalon rightLeader;
-    private static NAR_TalonFX leftFollower;
-    private static NAR_TalonFX rightFollower;
+    private static NAR_EMotor leftLeader;
+    private static NAR_EMotor rightLeader;
+    private static NAR_EMotor leftFollower;
+    private static NAR_EMotor rightFollower;
+
+    // private static BaseTalon leftLeader;
+    // private static BaseTalon rightLeader;
+    // private static NAR_TalonFX leftFollower;
+    // private static NAR_TalonFX rightFollower;
+
     private static TalonSRXSimCollection leftMotorSim;
     private static TalonSRXSimCollection rightMotorSim;
     private static DifferentialDrive robotDrive;
@@ -39,38 +47,21 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     private static Field2d field;
 
-    private WPI_TalonFX test;
-
     public NAR_Drivetrain(){
 
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        leftLeader = new NAR_TalonFX(0);
+        rightLeader = new NAR_TalonFX(1);
+        leftFollower = new NAR_TalonFX(2);
+        rightFollower = new NAR_TalonFX(3);
 
-        if (Robot.isReal()) {
-            leftLeader = new NAR_TalonFX(0);
-            rightLeader = new NAR_TalonFX(1);
-            leftFollower = new NAR_TalonFX(2);
-            rightFollower = new NAR_TalonFX(3);
+        leftFollower.follow(leftLeader);
+        //leftFollower.setInverted(InvertType.FollowMaster);
+        rightFollower.follow(rightLeader);
+        //rightFollower.setInverted(InvertType.FollowMaster);
 
-            leftFollower.follow(leftLeader);
-            leftFollower.setInverted(InvertType.FollowMaster);
-            rightFollower.follow(rightLeader);
-            rightFollower.setInverted(InvertType.FollowMaster);
+        robotDrive = new DifferentialDrive(leftLeader.getMotor(), rightLeader.getMotor());
 
-            robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
-        } 
-        else {
-            //test = new WPI_TalonFX(0);
-
-            leftLeader = new NAR_TalonFX(0);
-            rightLeader = new WPI_TalonSRX(1);
-
-           
-
-            leftMotorSim = new TalonSRXSimCollection(leftLeader);
-            rightMotorSim = new TalonSRXSimCollection(rightLeader);
-            robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
-
-            // Simulated drivetrain handles simulation math
+        if(Robot.isSimulation()){
             robotDriveSim =
             new DifferentialDrivetrainSim(
                 LinearSystemId.identifyDrivetrainSystem(
@@ -85,6 +76,44 @@ public class NAR_Drivetrain extends SubsystemBase {
                 2, // wheelRadius
                 null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
         }
+
+        // if (Robot.isReal()) {
+        //     leftLeader = new NAR_TalonFX(0);
+        //     rightLeader = new NAR_TalonFX(1);
+        //     leftFollower = new NAR_TalonFX(2);
+        //     rightFollower = new NAR_TalonFX(3);
+
+        //     leftFollower.follow(leftLeader);
+        //     leftFollower.setInverted(InvertType.FollowMaster);
+        //     rightFollower.follow(rightLeader);
+        //     rightFollower.setInverted(InvertType.FollowMaster);
+
+        //     robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
+        // } 
+        // else {
+
+        //     leftLeader = new WPI_TalonSRX(0);
+        //     rightLeader = new WPI_TalonSRX(1);
+
+        //     leftMotorSim = new TalonSRXSimCollection(leftLeader);
+        //     rightMotorSim = new TalonSRXSimCollection(rightLeader);
+        //     robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
+
+        //     // Simulated drivetrain handles simulation math
+        //     robotDriveSim =
+        //     new DifferentialDrivetrainSim(
+        //         LinearSystemId.identifyDrivetrainSystem(
+        //             0.5, // kvVoltSecondsPerMeter
+        //             0.05, // kaVoltSecondsSquaredPerMeter
+        //             1.5, // kvVoltSecondsPerRadian
+        //             0.3 // kaVoltSecondsSquaredPerRadian
+        //         ),
+        //         DCMotor.getFalcon500(4), // gearbox
+        //         8, // driveGearing
+        //         0.66, // trackWidthMeters
+        //         2, // wheelRadius
+        //         null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
+        // }
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
@@ -111,10 +140,15 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         robotDriveSim.update(0.02);
 
-        leftMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
-        leftMotorSim.setQuadratureVelocity((int)(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
-        rightMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
-        rightMotorSim.setQuadratureVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
+        leftLeader.setRawSimPosition((int)(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
+        leftLeader.setRawSimVelocity((int)(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
+        rightLeader.setRawSimPosition((int)(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
+        rightLeader.setRawSimVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
+
+        // leftMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
+        // leftMotorSim.setQuadratureVelocity((int)(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
+        // rightMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
+        // rightMotorSim.setQuadratureVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
 
         SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10);
@@ -148,8 +182,10 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void resetEncoders() {
-        leftLeader.setSelectedSensorPosition(0);
-        rightLeader.setSelectedSensorPosition(0);
+        leftLeader.setEncoderPosition(0);
+        rightLeader.setEncoderPosition(0);
+        // leftLeader.setSelectedSensorPosition(0);
+        // rightLeader.setSelectedSensorPosition(0);
     }
 
     public void stop() {
