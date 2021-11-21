@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -38,6 +39,8 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     private static Field2d field;
 
+    private WPI_TalonFX test;
+
     public NAR_Drivetrain(){
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -56,8 +59,13 @@ public class NAR_Drivetrain extends SubsystemBase {
             robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
         } 
         else {
-            leftLeader = new WPI_TalonSRX(0);
+            //test = new WPI_TalonFX(0);
+
+            leftLeader = new NAR_TalonFX(0);
             rightLeader = new WPI_TalonSRX(1);
+
+           
+
             leftMotorSim = new TalonSRXSimCollection(leftLeader);
             rightMotorSim = new TalonSRXSimCollection(rightLeader);
             robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
