@@ -1,16 +1,10 @@
 package frc.team3128.hardware;
 
-import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-
+import com.revrobotics.CANSparkMax;
 
 public class NAR_CANSparkMax extends CANSparkMax {
 
 	private double prevValue = 0;
-	private ControlType prevControlMode = ControlType.kVoltage;
-
 	/**
 	 * 
 	 * @param deviceNumber device id

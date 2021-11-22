@@ -14,11 +14,16 @@ public class StopShoot extends CommandBase {
     
     @Override
     public void initialize() {
+        
+    }
+
+    @Override
+    public void execute() {
         m_shooter.stopShoot();
     }
     
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }

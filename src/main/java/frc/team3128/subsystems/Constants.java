@@ -4,12 +4,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Constants {
     public static class ShooterConstants {
-        public static final double SHOOTER_PID_kP = 0;
+        public static final double SHOOTER_PID_kP = 0.0005;
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
         public static final double SHOOTER_PID_kF = 0;
-        public static final int LEFT_SHOOTER_ID = 4; //Left Shooter Motor
-        public static final int RIGHT_SHOOTER_ID = 5; //Right Shooter Motor
+        public static final int LEFT_SHOOTER_ID = 8; //Left Shooter Motor
+        public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
         public static final int PLATEAU_COUNT = 25; //Number of checks at correct RPM to shoot
         public static final double THRESHOLD_PERCENT = 0.05; //Maximum Percent Error in RPM to still shoot
         public static final int SHOOTER_KS = 0; //Static gain in PID Feed Forward
@@ -34,7 +34,8 @@ public class Constants {
     }
 
     public static class ConversionConstants {
-        public static final double ENCODER_TO_RPM = 10*60/DriveConstants.ENCODER_RESOLUTION_PER_ROTATION; // (sensor units per 100 ms to rpm)
+        public static final double FALCON_ENCODER_RESOLUTION = 4096;
+        public static final double ENCODER_TO_RPM = 10*60/FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
         public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_UNITS_PER_ROTATION;
     }
 

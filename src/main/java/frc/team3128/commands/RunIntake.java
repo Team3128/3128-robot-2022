@@ -7,9 +7,7 @@ import frc.team3128.subsystems.Intake;
 
 public class RunIntake extends CommandBase{
     private final Intake m_intake;
-
-
-
+    
     public RunIntake(Intake intake){
         m_intake = intake; 
         addRequirements(m_intake);

@@ -15,7 +15,6 @@ public class Intake implements Subsystem {
     private enum IntakeState {
         TOP, BOTTOM;
     }
-    public static final Intake instance = new Intake();
 
     //motors
     private NAR_TalonSRX m_arm_motor;
@@ -30,10 +29,6 @@ public class Intake implements Subsystem {
     private DigitalInput m_limitSwitchTop, m_limitSwitchBottom;
 
     public IntakeState intakeState; 
-
-    public static Intake getInstance() { 
-        return instance;
-    }
 
     public Intake() {
         configMotors();
@@ -51,7 +46,7 @@ public class Intake implements Subsystem {
         m_arm_motor.setNeutralMode(Constants.IntakeConstants.ARM_NEUTRAL_MODE);
         m_brush_motor_2.set(ControlMode.Follower, Constants.IntakeConstants.BRUSH_MOTOR_1_ID);
 
-        if (! Robot.isReal()){
+        if (!Robot.isReal()){
             configMotorsSim();
         }
     }
@@ -66,7 +61,6 @@ public class Intake implements Subsystem {
 
     
     private void configSensors() {
-        //TODO: Set constants to real DigitalInput channels
         m_limitSwitchTop = new DigitalInput(Constants.IntakeConstants.TOP_LIMIT_SWITCH_ID);
         m_limitSwitchBottom = new DigitalInput(Constants.IntakeConstants.BOTTOM_LIMIT_SWITCH_ID);
     }
