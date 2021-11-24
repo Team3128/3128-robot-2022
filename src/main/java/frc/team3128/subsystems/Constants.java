@@ -55,6 +55,7 @@ public class Constants {
         );
 
 
+        public static final Boolean GYRO_REVERSED = false;
         public static final double DRIVE_GEARING = 8;
         public static final double TRACK_WIDTH_METERS = 0.66;
         public static final double WHEEL_RADIUS_METERS = 0.0508; 

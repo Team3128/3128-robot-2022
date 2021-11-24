@@ -110,7 +110,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
         
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        return Math.IEEEremainder(gyro.getAngle(), 360) * (Constants.DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
     }
 
     public Pose2d getPose() {
