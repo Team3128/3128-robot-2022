@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
 
@@ -40,10 +39,6 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 		return prevValue;
 	}
 
-	@Override
-	public SpeedController getMotor() {
-		return this;
-	}
 
 	@Override
 	public void setEncoderPosition(double n) {
@@ -51,12 +46,12 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 	}
 
 	@Override
-	public void setRawSimPosition(double pos) {
+	public void setQuadSimPosition(double pos) {
 		motorSim.setQuadratureRawPosition((int)pos);
 	}
 
 	@Override
-	public void setRawSimVelocity(double vel) {
+	public void setQuadSimVelocity(double vel) {
 		motorSim.setQuadratureVelocity((int)vel);
 	}
 
@@ -66,5 +61,9 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((IMotorController)motor);
+	}
+	@Override
+	public NAR_EMotor getMotor(){
+		return this;
 	}
 }

@@ -1,7 +1,12 @@
 package frc.team3128.subsystems;
 
+import edu.wpi.first.wpilibj.system.LinearSystem;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
+
 public class Constants {
     public static class ShooterConstants {
+
         public static final double SHOOTER_PID_kP = 0;
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
@@ -19,6 +24,7 @@ public class Constants {
     }
 
     public static class SidekickConstants {
+
         public static final float SIDEKICK_PID_kP = 0;
         public static final float SIDEKICK_PID_kI = 0;
         public static final float SIDEKICK_PID_kD = 0;
@@ -31,14 +37,29 @@ public class Constants {
     }
 
     public static class ConversionConstants {
+
         public static final double ENCODER_TO_RPM = 10*60/DriveConstants.ENCODER_RESOLUTION_PER_ROTATION; // (sensor units per 100 ms to rpm)
         public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_UNITS_PER_ROTATION;
     }
 
     public static class DriveConstants {
-        public static final int WHEEL_RADIUS = 2; // inches
+
+        // Sim constants, TODO: move to new class
+        public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
+        public static final LinearSystem DRIVE_CHARACTERIAZTION = 
+        LinearSystemId.identifyDrivetrainSystem(
+            0.5, // kvVoltSecondsPerMeter
+            0.05, // kaVoltSecondsSquaredPerMeter
+            1.5, // kvVoltSecondsPerRadian
+            0.3 // kaVoltSecondsSquaredPerRadian
+        );
+
+
+        public static final double DRIVE_GEARING = 8;
+        public static final double TRACK_WIDTH_METERS = 0.66;
+        public static final double WHEEL_RADIUS_METERS = 0.0508; 
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
-        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
+        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
     }
 
     public static class MechanismConstants {    
