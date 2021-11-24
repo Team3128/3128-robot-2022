@@ -46,14 +46,13 @@ public class Constants {
 
         // Sim constants, TODO: move to new class
         public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
-        public static final LinearSystem DRIVE_CHARACTERIAZTION = 
+        public static final LinearSystem DRIVE_CHARACTERIZATION = 
         LinearSystemId.identifyDrivetrainSystem(
             0.5, // kvVoltSecondsPerMeter
             0.05, // kaVoltSecondsSquaredPerMeter
             1.5, // kvVoltSecondsPerRadian
             0.3 // kaVoltSecondsSquaredPerRadian
         );
-
 
         public static final Boolean GYRO_REVERSED = false;
         public static final double DRIVE_GEARING = 8;

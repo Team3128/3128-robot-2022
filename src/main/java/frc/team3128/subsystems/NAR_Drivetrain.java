@@ -62,7 +62,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         if(Robot.isSimulation()){
             robotDriveSim =
             new DifferentialDrivetrainSim(
-                Constants.DriveConstants.DRIVE_CHARACTERIAZTION,
+                Constants.DriveConstants.DRIVE_CHARACTERIZATION,
                 Constants.DriveConstants.GEARBOX,
                 Constants.DriveConstants.DRIVE_GEARING,
                 Constants.DriveConstants.TRACK_WIDTH_METERS,
