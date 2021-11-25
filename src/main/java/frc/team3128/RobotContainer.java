@@ -50,11 +50,21 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
+        // right button trigger: intake
         m_rightStick.getButton(1).whenPressed(new RunCommand(m_intake::runIntake, m_intake))
                                 .whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
 
+        // right button 2: shoot
         m_rightStick.getButton(2).whenPressed(new Shoot(m_shooter, ShooterState.MID_RANGE))
                                 .whenReleased(new RunCommand(m_shooter::stopShoot, m_shooter));
+
+        // right button 9: move arm down
+        m_rightStick.getButton(9).whenPressed(new ArmDown(m_intake))
+                                .whenReleased(new StopArm(m_intake));
+        
+        // right button 10: move arm up
+        m_rightStick.getButton(10).whenPressed(new ArmUp(m_intake))
+                                .whenReleased(new StopArm(m_intake));
     }
 
     public void stopDrivetrain() {
