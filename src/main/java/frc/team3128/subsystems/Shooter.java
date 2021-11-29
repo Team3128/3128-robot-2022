@@ -18,6 +18,9 @@ import frc.team3128.hardware.*;
 
 public class Shooter extends PIDSubsystem {
 
+    /**
+     * Different possible RPM setpoints
+     */
     public enum ShooterState {
         OFF(0),
         LONG_RANGE(6000), // long range shooting
