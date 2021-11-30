@@ -1,5 +1,7 @@
 package frc.team3128.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
@@ -8,14 +10,13 @@ import edu.wpi.first.wpiutil.math.numbers.N2;
 public class Constants {
 
     public static class ShooterConstants {
-
-        public static final double SHOOTER_PID_kP = 0;
+        public static final double SHOOTER_PID_kP = 0.0005;
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
         public static final double SHOOTER_PID_kF = 0;
-        public static final int LEFT_SHOOTER_ID = 4; //Left Shooter Motor
-        public static final int RIGHT_SHOOTER_ID = 5; //Right Shooter Motor
-        public static final int PLATEAU_COUNT = 0; //Number of checks at correct RPM to shoot
+        public static final int LEFT_SHOOTER_ID = 8; //Left Shooter Motor
+        public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
+        public static final int PLATEAU_COUNT = 25; //Number of checks at correct RPM to shoot
         public static final double THRESHOLD_PERCENT = 0.05; //Maximum Percent Error in RPM to still shoot
         public static final int SHOOTER_KS = 0; //Static gain in PID Feed Forward
         public static final int SHOOTER_KV = 0; //Velocity gain in PID Feed Forward
@@ -37,12 +38,12 @@ public class Constants {
         public static final double SIDEKICK_kS = 0;
         public static final double SIDEKICK_kV = 0;
         public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
-
+        public static final double SIDEKICK_PLATEAU_THRESHOLD = 5;
     }
 
     public static class ConversionConstants {
-
-        public static final double ENCODER_TO_RPM = 10*60/DriveConstants.ENCODER_RESOLUTION_PER_ROTATION; // (sensor units per 100 ms to rpm)
+        public static final double FALCON_ENCODER_RESOLUTION = 4096;
+        public static final double ENCODER_TO_RPM = 10*60/FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
         public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_UNITS_PER_ROTATION;
 
     }
@@ -68,8 +69,22 @@ public class Constants {
 
     }
 
-    public static class MechanismConstants {   
-         
+    public static class IntakeConstants {
+        public static final int ARM_MOTOR_ID = 7;
+        public static final int BRUSH_MOTOR_1_ID = 5;
+        public static final int BRUSH_MOTOR_2_ID = 33;
+        public static final int INTAKE_MOTOR_ID = 4;
+
+        public static final int TOP_LIMIT_SWITCH_ID = 0;
+        public static final int BOTTOM_LIMIT_SWITCH_ID = 1;
+
+
+        public static final double INTAKE_MOTOR_POWER = 0.6;
+        public static final double BRUSH_MOTOR_POWER = 0.78;
+        public static final double ARM_MOTOR_POWER = 0.28;
+
+        public static final double ARM_MOTOR_POWER_AUTO = 0.07;
+        public static final NeutralMode ARM_NEUTRAL_MODE = null;
     }
 
     public static class HopperConstants {
@@ -78,7 +93,9 @@ public class Constants {
         public static final int BOTTOM_SENSOR_ID = 0;
         public static final int TOP_SENSOR_ID = 0;
         public static final double HOPPER_MOTOR_1_POWER = 0;
-        public static final String HOPPER_MOTOR_2_POWER = null;
+        public static final double HOPPER_MOTOR_2_POWER = 0;
+        public static final int HOPPER_MOTOR_2_ID = 0;
 
     }
+
 }

@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.Robot;
+import frc.team3128.common.NAR_PIDSubsystem;
 import frc.team3128.hardware.NAR_TalonSRX;
 
-public class Sidekick extends PIDSubsystem {
+public class Sidekick extends NAR_PIDSubsystem {
 
     public static enum SidekickState { // enum for the setpoint shooting state
         OFF(0),
@@ -54,7 +54,7 @@ public class Sidekick extends PIDSubsystem {
      */
     private Sidekick() {
         super(new PIDController(Constants.SidekickConstants.SIDEKICK_PID_kP, Constants.SidekickConstants.SIDEKICK_PID_kI, Constants.SidekickConstants.SIDEKICK_PID_kD));
-        getController().setTolerance(2000*Constants.SidekickConstants.SIDEKICK_RPM_THRESHOLD_PERCENT);
+        getController().setTolerance(2000*Constants.SidekickConstants.SIDEKICK_RPM_THRESHOLD_PERCENT, Constants.SidekickConstants.SIDEKICK_PLATEAU_THRESHOLD);
 
         configMotors();
         configEncoders();
@@ -85,7 +85,7 @@ public class Sidekick extends PIDSubsystem {
                     0, //kV
                     0 //kA
                 ), 
-                DCMotor.getVex775Pro(1),
+                DCMotor.getVex775Pro(1), // gearbox (1 Vex775 motor)
                 1/3 //gearing
             );
         }
@@ -106,6 +106,10 @@ public class Sidekick extends PIDSubsystem {
         SIDEKICK_STATE = sidekickState;
     }
 
+    public SidekickState setState() {
+        return SIDEKICK_STATE;
+    }
+
     /**
      * Calculates and applies the voltage to reach a given setpoint using PID and feedforward
      * Converts to a percent voltage output before applying voltage
@@ -118,6 +122,8 @@ public class Sidekick extends PIDSubsystem {
         double voltage = RobotController.getBatteryVoltage();
 
         output = voltageOutput/voltage;
+
+        super.useOutput(setpoint);
 
         output = (output > 1 ) ? 1 : ((output < -1) ? -1 : output);
         output = (setpoint == 0) ? 0 : output;
@@ -136,23 +142,28 @@ public class Sidekick extends PIDSubsystem {
     /**
      * @return if the sidekick is ready to shoot
      */
+    @Override
     public boolean isReady() {
         return true; // fix logic here
+    }
+
+    public void startPID() {
+        super.startPID();
+        super.setSetpoint(SIDEKICK_STATE.sidekickRPM);
+        getController().setTolerance(Constants.ShooterConstants.THRESHOLD_PERCENT * SIDEKICK_STATE.sidekickRPM);
     }
 
     public void setPower(double power) {
         m_sidekick.set(ControlMode.PercentOutput, power);
     }
 
-    public void shoot() {
-        setSetpoint(SIDEKICK_STATE.sidekickRPM);
+    public void beginShoot(SidekickState state) {
+        setState(state);
+        startPID();
     }
 
-    /**
-     * Un-shoots the sidekick, basically
-     */
-    public void counterShoot() {
-        setSetpoint(0);
+    public void stopShoot() {
+        beginShoot(SidekickState.OFF);
     }
 
     @Override
