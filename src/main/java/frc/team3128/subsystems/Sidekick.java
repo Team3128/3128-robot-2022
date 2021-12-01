@@ -31,7 +31,7 @@ public class Sidekick extends NAR_PIDSubsystem {
         }
     }
 
-    public static final Sidekick instance = new Sidekick();
+    public static Sidekick instance;
     
     // motors
     public static NAR_TalonSRX m_sidekick; 
@@ -59,6 +59,13 @@ public class Sidekick extends NAR_PIDSubsystem {
         configMotors();
         configEncoders();
         setSetpoint(0);
+    }
+
+    public static synchronized Sidekick getInstance() {
+        if (instance == null) {
+            instance = new Sidekick();
+        }
+        return instance;
     }
 
     /**

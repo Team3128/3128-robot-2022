@@ -12,9 +12,12 @@ import frc.team3128.hardware.NAR_VictorSPX;
 
 
 public class Intake implements Subsystem {
+
     private enum IntakeState {
         TOP, BOTTOM;
     }
+
+    private static Intake instance;
 
     //motors
     private NAR_TalonSRX m_arm_motor;
@@ -35,6 +38,13 @@ public class Intake implements Subsystem {
         configSensors();
 
         intakeState = IntakeState.TOP;
+    }
+
+    public static synchronized Intake getInstance() {
+        if (instance == null) {
+            instance = new Intake();
+        }
+        return instance;
     }
 
     private void configMotors() {

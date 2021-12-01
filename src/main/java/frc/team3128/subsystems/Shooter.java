@@ -39,6 +39,7 @@ public class Shooter extends NAR_PIDSubsystem {
         }
     }
 
+    private static Shooter instance;
 
     //Motors
     private NAR_TalonFX m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
@@ -77,6 +78,14 @@ public class Shooter extends NAR_PIDSubsystem {
             );
         }
     }
+
+    public static synchronized Shooter getInstance() {
+        if(instance == null) {
+            instance = new Shooter();
+        }
+        return instance;
+    }
+
 
     /**
      * @return If the shooter is at the setpoint RPM
@@ -136,7 +145,7 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + m_shooterFeedforward.calculate(setpoint);
+        double voltageOutput = output + (setpoint * 0.0019); // m_shooterFeedforward.calculate(setpoint);
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 
@@ -151,8 +160,8 @@ public class Shooter extends NAR_PIDSubsystem {
         preTime = time;
 
 
-        output = (output > 1) ? 1 : ((output < -1) ? -1 : output);
-        output = (setpoint == 0) ? 0 : output;
+        percentOutput = (percentOutput > 1) ? 1 : ((percentOutput < -1) ? -1 : percentOutput);
+        percentOutput = (setpoint == 0) ? 0 : percentOutput;
 
         m_leftShooter.set(ControlMode.PercentOutput, percentOutput);
         m_rightShooter.set(ControlMode.PercentOutput, -percentOutput);

@@ -39,6 +39,8 @@ public class NAR_Drivetrain extends SubsystemBase {
     // private NAR_EMotor leftFollower = new NAR_CANSparkMax(2, MotorType.kBrushed);
     // private NAR_EMotor rightFollower = new NAR_CANSparkMax(3, MotorType.kBrushed);
 
+    public static NAR_Drivetrain instance;
+
     private DifferentialDrive robotDrive;
     private DifferentialDrivetrainSim robotDriveSim;
     private DifferentialDriveOdometry odometry;
@@ -77,6 +79,13 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Field", field);
 
         resetEncoders();
+    }
+
+    public static synchronized NAR_Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new NAR_Drivetrain();
+        }
+        return instance;
     }
 
     @Override

@@ -12,6 +12,8 @@ import net.thefletcher.revrobotics.enums.MotorType;
 
 public class Hopper implements Subsystem {
 
+    private static Hopper instance;
+
     private NAR_TalonSRX m_hopper_1;
     private NAR_CANSparkMax m_hopper_2;
 
@@ -19,10 +21,16 @@ public class Hopper implements Subsystem {
 
     private TalonSRXSimCollection m_hopper_sim_1;
 
-
     public Hopper() {
         configMotors();
         configSensors();
+    }
+
+    public static synchronized Hopper getInstance() {
+        if (instance == null) {
+            instance = new Hopper();
+        }
+        return instance;
     }
 
     private void configMotors() {
