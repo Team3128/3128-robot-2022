@@ -23,6 +23,8 @@ import frc.team3128.Robot;
 import frc.team3128.hardware.NAR_TalonFX;
 
 public class NAR_Drivetrain extends SubsystemBase {
+
+    private static NAR_Drivetrain instance;
     
     private static BaseTalon leftLeader;
     private static BaseTalon rightLeader;
@@ -84,6 +86,13 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Field", field);
 
         resetEncoders();
+    }
+
+    public static synchronized NAR_Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new NAR_Drivetrain();
+        }
+        return instance;
     }
 
     @Override

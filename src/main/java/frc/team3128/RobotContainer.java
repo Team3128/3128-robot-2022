@@ -39,7 +39,8 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        m_commandScheduler.registerSubsystem(m_drive, m_shooter, m_hopper);
+        //Registers subsystems so that periodic methods run
+        m_commandScheduler.registerSubsystem(m_drive, m_shooter, m_hopper, m_intake);
 
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getX));
         m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint));
