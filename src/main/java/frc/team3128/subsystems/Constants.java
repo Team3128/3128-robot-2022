@@ -12,16 +12,6 @@ public class Constants {
 
     public static class ShooterConstants {
 
-        // There are other better ways of doing this, need to use DCU 
-        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
-        LinearSystemId.identifyVelocitySystem(
-            0.5, //kV
-            1.5 //kA
-        );
-        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getFalcon500(2);
-        public static final double SHOOTER_GEARING = 1.5;
-        public static final double SHOOTER_RADIUS_METERS = 0.0254; //not correct
-
         public static final double SHOOTER_PID_kP = 16e-7;
         public static final double SHOOTER_PID_kI = 5e-6;
         public static final double SHOOTER_PID_kD = 4.2e-6;
@@ -39,6 +29,17 @@ public class Constants {
         public static final int SHOOTER_KS = 0; //Static gain in PID Feed Forward
         public static final int SHOOTER_KV = 0; //Velocity gain in PID Feed Forward
         public static final int SHOOTER_KA = 0; //Acceleration gain PID Feed Forward
+
+        // There are other better ways of doing this, need to use DCU 
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            SHOOTER_KV, 
+            SHOOTER_KA
+        );
+        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getFalcon500(2);
+        public static final double SHOOTER_GEARING = 1.5;
+        public static final double SHOOTER_RADIUS_METERS = 0.0254; //not correct
+  
        
     }
 
