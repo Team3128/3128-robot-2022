@@ -62,32 +62,21 @@ public class Shooter extends NAR_PIDSubsystem {
     
 
     /**
-     * Creates the PID Controller and Instantiates the Motors (with simulated counterparts if necessary)
+     * Creates the PID Controller (with sim if necessary)
      */
     public Shooter() {
         
         super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD), Constants.ShooterConstants.PLATEAU_COUNT);
-
-        //Robot is real
-        if(Robot.isReal()) {
-            m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
-        }
-        else {
-            //Robot is a simulation
-
-
+    
+        //Robot is a simulation
+        if(Robot.isSimulation()){
             m_shooterSim = new FlywheelSim(
-                LinearSystemId.identifyVelocitySystem(
-                    0, //kV
-                    0 //kA
-                ),
-                DCMotor.getFalcon500(2), //gearbox
-                1.5 //gearing
+                Constants.ShooterConstants.SHOOTER_CHAR,
+                Constants.ShooterConstants.SHOOTER_GEARBOX,
+                Constants.ShooterConstants.SHOOTER_GEARING 
             );
         }
     }
-
 
     /**
      * @return If the shooter is at the setpoint RPM
@@ -138,8 +127,6 @@ public class Shooter extends NAR_PIDSubsystem {
         return m_leftShooter.getSelectedSensorVelocity() * Constants.ConversionConstants.ENCODER_TO_RPM;
     }
 
-
-
     /**
      * Use the raw voltage output from the PID loop, add a feed forward component, and convert it to a percentage of total
      * possible voltage to apply to the motors.
@@ -173,15 +160,16 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public void simulationPeriodic() {
-        m_shooterSim.setInputVoltage(
+        m_shooterSim.setInput(
             m_leftShooter.getMotorOutputVoltage()
+            //m_rightShooter.getMotorOutputVoltage()
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooter.setQuadSimVelocity((int) (m_shooterSim.getAngularVelocityRadPerSec() * 0.0254));
+        m_leftShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
+        //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
 
-        SmartDashboard.putNumber("Speed", m_leftShooter.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Expected Speed", m_shooterSim.getAngularVelocityRadPerSec());
+        SmartDashboard.putNumber("Expected Shooter Speed (rpm)", m_shooterSim.getAngularVelocityRadPerSec() * 60 /(2*Math.PI) );
     }
     
 }

@@ -63,7 +63,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         if(Robot.isSimulation()){
             robotDriveSim =
             new DifferentialDrivetrainSim(
-                Constants.DriveConstants.DRIVE_CHARACTERIZATION,
+                Constants.DriveConstants.DRIVE_CHAR,
                 Constants.DriveConstants.GEARBOX,
                 Constants.DriveConstants.DRIVE_GEARING,
                 Constants.DriveConstants.TRACK_WIDTH_METERS,
@@ -90,19 +90,20 @@ public class NAR_Drivetrain extends SubsystemBase {
         // Set motor voltage inputs
         robotDriveSim.setInputs(
             -leftLeader.getMotorOutputVoltage(),
-            rightLeader.getMotorOutputVoltage());
+            rightLeader.getMotorOutputVoltage()
+        );
 
         // Update sim environment
         robotDriveSim.update(0.02);
 
         // Store simulated motor states
         leftLeader.setQuadSimPosition(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK);
-        leftLeader.setQuadSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10);
+        leftLeader.setQuadSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/(Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10));
         rightLeader.setQuadSimPosition(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK);
-        rightLeader.setQuadSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10);
+        rightLeader.setQuadSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/(Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10));
 
         SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10);
+        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / (Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10));
         
         // TODO: Abstractify gyro
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");

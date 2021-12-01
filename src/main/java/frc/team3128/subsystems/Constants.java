@@ -5,17 +5,31 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
+import edu.wpi.first.wpiutil.math.numbers.N1;
 import edu.wpi.first.wpiutil.math.numbers.N2;
 
 public class Constants {
 
     public static class ShooterConstants {
+
+        // There are other better ways of doing this, need to use DCU 
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            0.5, //kV
+            1.5 //kA
+        );
+        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getFalcon500(2);
+        public static final double SHOOTER_GEARING = 1.5;
+        public static final double SHOOTER_RADIUS_METERS = 0.0254; //not correct
+
         public static final double SHOOTER_PID_kP = 0.0005;
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
         public static final double SHOOTER_PID_kF = 0;
+
         public static final int LEFT_SHOOTER_ID = 8; //Left Shooter Motor
         public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
+
         public static final int PLATEAU_COUNT = 25; //Number of checks at correct RPM to shoot
         public static final double THRESHOLD_PERCENT = 0.05; //Maximum Percent Error in RPM to still shoot
         public static final int SHOOTER_KS = 0; //Static gain in PID Feed Forward
@@ -51,14 +65,18 @@ public class Constants {
     public static class DriveConstants {
 
         // Sim constants, TODO: move to new class
+
+        // TODO: Get actual kv, ka
         public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
-        public static final LinearSystem<N2, N2, N2> DRIVE_CHARACTERIZATION = 
+        public static final LinearSystem<N2, N2, N2> DRIVE_CHAR = 
         LinearSystemId.identifyDrivetrainSystem(
-            0.5, // kvVoltSecondsPerMeter
-            0.05, // kaVoltSecondsSquaredPerMeter
-            1.5, // kvVoltSecondsPerRadian
-            0.3 // kaVoltSecondsSquaredPerRadian
+            5, //0.5, // kvVoltSecondsPerMeter
+            0.5,//0.05, // kaVoltSecondsSquaredPerMeter
+            5,//1.5, // kvVoltSecondsPerRadian
+            0.5//0.3 // kaVoltSecondsSquaredPerRadian
         );
+        public static final double DRIVE_GEARING = 8;
+        public static final double WHEEL_RADIUS_METERS = 0.0508; 
 
         public static final int DRIVE_MOTOR_1_ID = 0;
         public static final int DRIVE_MOTOR_2_ID = 1;
@@ -66,9 +84,7 @@ public class Constants {
         public static final int DRIVE_MOTOR_4_ID = 3;
 
         public static final Boolean GYRO_REVERSED = false;
-        public static final double DRIVE_GEARING = 8;
         public static final double TRACK_WIDTH_METERS = 0.66;
-        public static final double WHEEL_RADIUS_METERS = 0.0508; 
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
 
@@ -95,12 +111,13 @@ public class Constants {
     public static class HopperConstants {
 
         public static final int HOPPER_MOTOR_1_ID = 0;
-        public static final int BOTTOM_SENSOR_ID = 0;
-        public static final int TOP_SENSOR_ID = 1;
-        public static final double HOPPER_MOTOR_1_POWER = 0;
-        public static final double HOPPER_MOTOR_2_POWER = 0;
         public static final int HOPPER_MOTOR_2_ID = 1;
 
+        public static final int BOTTOM_SENSOR_ID = 0;
+        public static final int TOP_SENSOR_ID = 1;
+
+        public static final double HOPPER_MOTOR_1_POWER = 0;
+        public static final double HOPPER_MOTOR_2_POWER = 0;
     }
 
 }
