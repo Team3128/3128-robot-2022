@@ -30,10 +30,12 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        m_drive = new NAR_Drivetrain();
-        m_shooter = new Shooter();
-        m_hopper = new Hopper();
-        m_intake = new Intake();
+        m_drive = NAR_Drivetrain.getInstance();
+        m_shooter = Shooter.getInstance();
+        m_hopper = Hopper.getInstance();
+        m_intake = Intake.getInstance();
+
+        //Enable PID control for PIDSubsystems
         m_shooter.enable();
 
         m_leftStick = new NAR_Joystick(0);
