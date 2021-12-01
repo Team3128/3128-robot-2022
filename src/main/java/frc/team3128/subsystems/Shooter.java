@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import frc.team3128.Robot;
+import frc.team3128.common.NAR_EMotor;
 import frc.team3128.common.NAR_PIDSubsystem;
 import frc.team3128.hardware.*;
 
@@ -40,9 +41,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
 
     //Motors
-    private BaseTalon m_leftShooter, m_rightShooter;
-    //Simulated Motors
-    private TalonSRXSimCollection m_leftShooterSim;
+    private NAR_TalonFX m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
+    private NAR_TalonFX m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
 
     //Simulated Shooter
     private FlywheelSim m_shooterSim;
@@ -75,9 +75,8 @@ public class Shooter extends NAR_PIDSubsystem {
         }
         else {
             //Robot is a simulation
-            m_leftShooter = new WPI_TalonSRX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new WPI_TalonSRX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
-            m_leftShooterSim = new TalonSRXSimCollection(m_leftShooter);
+
+
             m_shooterSim = new FlywheelSim(
                 LinearSystemId.identifyVelocitySystem(
                     0, //kV
@@ -136,7 +135,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     protected double getMeasurement() {
-        return m_leftShooter.getSelectedSensorVelocity(0) * Constants.ConversionConstants.ENCODER_TO_RPM;
+        return m_leftShooter.getSelectedSensorVelocity() * Constants.ConversionConstants.ENCODER_TO_RPM;
     }
 
 
@@ -179,11 +178,10 @@ public class Shooter extends NAR_PIDSubsystem {
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooterSim.setQuadratureVelocity((int) (m_shooterSim.getAngularVelocityRadPerSec() * 0.0254));
+        m_leftShooter.setQuadSimVelocity((int) (m_shooterSim.getAngularVelocityRadPerSec() * 0.0254));
 
         SmartDashboard.putNumber("Speed", m_leftShooter.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Expected Speed", m_shooterSim.getAngularVelocityRadPerSec());
-
     }
     
 }

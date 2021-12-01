@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
 import frc.team3128.hardware.NAR_CANSparkMax;
+import frc.team3128.hardware.NAR_TalonFX;
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class NAR_Drivetrain extends SubsystemBase {
@@ -23,20 +24,20 @@ public class NAR_Drivetrain extends SubsystemBase {
     // Initialize the generic motors
     // TODO: Weird difference in speed for different motors
 
-    // private NAR_EMotor leftLeader = new NAR_TalonFX(0);
-    // private NAR_EMotor rightLeader = new NAR_TalonFX(1);
-    // private NAR_EMotor leftFollower = new NAR_TalonFX(2);
-    // private NAR_EMotor rightFollower = new NAR_TalonFX(3);
+    private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_1_ID);
+    private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_2_ID);
+    private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_3_ID);
+    private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_4_ID);
 
     // private NAR_EMotor leftLeader = new NAR_TalonSRX(0);
     // private NAR_EMotor rightLeader = new NAR_TalonSRX(1);
     // private NAR_EMotor leftFollower = new NAR_TalonSRX(2);
     // private NAR_EMotor rightFollower = new NAR_TalonSRX(3);
     
-    private NAR_EMotor leftLeader = new NAR_CANSparkMax(0, MotorType.kBrushed);
-    private NAR_EMotor rightLeader = new NAR_CANSparkMax(1, MotorType.kBrushed);
-    private NAR_EMotor leftFollower = new NAR_CANSparkMax(2, MotorType.kBrushed);
-    private NAR_EMotor rightFollower = new NAR_CANSparkMax(3, MotorType.kBrushed);
+    // private NAR_EMotor leftLeader = new NAR_CANSparkMax(0, MotorType.kBrushed);
+    // private NAR_EMotor rightLeader = new NAR_CANSparkMax(1, MotorType.kBrushed);
+    // private NAR_EMotor leftFollower = new NAR_CANSparkMax(2, MotorType.kBrushed);
+    // private NAR_EMotor rightFollower = new NAR_CANSparkMax(3, MotorType.kBrushed);
 
     private DifferentialDrive robotDrive;
     private DifferentialDrivetrainSim robotDriveSim;

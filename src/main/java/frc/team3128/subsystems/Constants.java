@@ -60,6 +60,11 @@ public class Constants {
             0.3 // kaVoltSecondsSquaredPerRadian
         );
 
+        public static final int DRIVE_MOTOR_1_ID = 0;
+        public static final int DRIVE_MOTOR_2_ID = 1;
+        public static final int DRIVE_MOTOR_3_ID = 2;
+        public static final int DRIVE_MOTOR_4_ID = 3;
+
         public static final Boolean GYRO_REVERSED = false;
         public static final double DRIVE_GEARING = 8;
         public static final double TRACK_WIDTH_METERS = 0.66;
@@ -75,8 +80,8 @@ public class Constants {
         public static final int BRUSH_MOTOR_2_ID = 33;
         public static final int INTAKE_MOTOR_ID = 4;
 
-        public static final int TOP_LIMIT_SWITCH_ID = 0;
-        public static final int BOTTOM_LIMIT_SWITCH_ID = 1;
+        public static final int TOP_LIMIT_SWITCH_ID = 2;
+        public static final int BOTTOM_LIMIT_SWITCH_ID = 3;
 
 
         public static final double INTAKE_MOTOR_POWER = 0.6;
@@ -84,17 +89,17 @@ public class Constants {
         public static final double ARM_MOTOR_POWER = 0.28;
 
         public static final double ARM_MOTOR_POWER_AUTO = 0.07;
-        public static final NeutralMode ARM_NEUTRAL_MODE = null;
+        public static final NeutralMode ARM_NEUTRAL_MODE = NeutralMode.Coast;
     }
 
     public static class HopperConstants {
 
         public static final int HOPPER_MOTOR_1_ID = 0;
         public static final int BOTTOM_SENSOR_ID = 0;
-        public static final int TOP_SENSOR_ID = 0;
+        public static final int TOP_SENSOR_ID = 1;
         public static final double HOPPER_MOTOR_1_POWER = 0;
         public static final double HOPPER_MOTOR_2_POWER = 0;
-        public static final int HOPPER_MOTOR_2_ID = 0;
+        public static final int HOPPER_MOTOR_2_ID = 1;
 
     }
 
