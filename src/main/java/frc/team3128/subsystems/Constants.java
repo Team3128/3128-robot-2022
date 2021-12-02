@@ -4,9 +4,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Constants {
     public static class ShooterConstants {
-        public static final double SHOOTER_PID_kP = 16e-7;
-        public static final double SHOOTER_PID_kI = 5e-6;
-        public static final double SHOOTER_PID_kD = 4.2e-6;
+        public static final double SHOOTER_PID_kP = 1.24e-7; //2.18e-5; //16e-7;
+        public static final double SHOOTER_PID_kI = 0; // 5e-6;
+        public static final double SHOOTER_PID_kD = 0; // 4.2e-6;
 
         public static final int LEFT_SHOOTER_ID = 8; //Left Shooter Motor
         public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
@@ -14,8 +14,8 @@ public class Constants {
         public static final int PLATEAU_COUNT = 25; //Number of checks at correct RPM to shoot
         public static final double THRESHOLD_PERCENT = 0.05; //Maximum Percent Error in RPM to still shoot
         public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.326; //Velocity gain in PID Feed Forward
-        public static final double SHOOTER_KA = 0.0696; //Acceleration gain PID Feed Forward
+        public static final double SHOOTER_KV = 0.00163; //old = 0.0019; //0.326; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0349; //0.0696; //Acceleration gain PID Feed Forward
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.1;
         public static final double TIME_TO_MAX_THRESHOLD = 5;
@@ -23,7 +23,7 @@ public class Constants {
 
     public static class SidekickConstants {
 
-        public static final int SIDEKICK_ID = 0;
+        public static final int SIDEKICK_ID = 42;
 
         public static final float SIDEKICK_PID_kP = 0;
         public static final float SIDEKICK_PID_kI = 0;

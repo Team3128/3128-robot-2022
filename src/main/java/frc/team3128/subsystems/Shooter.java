@@ -177,6 +177,8 @@ public class Shooter extends NAR_PIDSubsystem {
         m_rightShooter.set(ControlMode.PercentOutput, -percentOutput);
 
         SmartDashboard.putNumber("Shooter RPM", getMeasurement());
+        SmartDashboard.putBoolean("Shooter isReady", atSetpoint());
+
     }
 
     @Override
