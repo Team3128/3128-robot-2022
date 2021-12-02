@@ -13,14 +13,12 @@ public class Constants {
 
         public static final int PLATEAU_COUNT = 25; //Number of checks at correct RPM to shoot
         public static final double THRESHOLD_PERCENT = 0.05; //Maximum Percent Error in RPM to still shoot
+        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.326; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0696; //Acceleration gain PID Feed Forward
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.1;
         public static final double TIME_TO_MAX_THRESHOLD = 5;
-
-        public static final int SHOOTER_KS = 0; //Static gain in PID Feed Forward
-        public static final int SHOOTER_KV = 0; //Velocity gain in PID Feed Forward
-        public static final int SHOOTER_KA = 0; //Acceleration gain PID Feed Forward
-       
     }
 
     public static class SidekickConstants {
