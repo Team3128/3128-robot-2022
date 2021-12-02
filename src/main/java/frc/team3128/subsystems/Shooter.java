@@ -155,7 +155,7 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + (setpoint * 0.0019); // m_shooterFeedforward.calculate(setpoint);
+        double voltageOutput = output + m_shooterFeedforward.calculate(setpoint);
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 
@@ -175,6 +175,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
         m_leftShooter.set(ControlMode.PercentOutput, percentOutput);
         m_rightShooter.set(ControlMode.PercentOutput, -percentOutput);
+
+        SmartDashboard.putNumber("Shooter RPM", getMeasurement());
     }
 
     @Override
