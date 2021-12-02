@@ -19,6 +19,7 @@ public class RobotContainer {
 
     private NAR_Drivetrain m_drive;
     private Shooter m_shooter;
+    private Sidekick m_sidekick;
     private Hopper m_hopper;
     private Intake m_intake;
 
@@ -32,20 +33,20 @@ public class RobotContainer {
 
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
+        m_sidekick = Sidekick.getInstance();
         m_hopper = Hopper.getInstance();
         m_intake = Intake.getInstance();
-
-        //Enable PID control for PIDSubsystems
         m_shooter.enable();
+        m_sidekick.enable();
 
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
         //Registers subsystems so that periodic methods run
-        m_commandScheduler.registerSubsystem(m_drive, m_shooter, m_hopper, m_intake);
+        m_commandScheduler.registerSubsystem(m_drive, m_shooter, m_sidekick, m_hopper, m_intake);
 
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getX));
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint));
+        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint, m_sidekick::isReady));
 
         configureButtonBindings();
     }   
@@ -57,7 +58,7 @@ public class RobotContainer {
                                 .whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
 
         // right button 2: shoot
-        m_rightStick.getButton(2).whenPressed(new Shoot(m_shooter, ShooterState.MID_RANGE))
+        m_rightStick.getButton(2).whenPressed(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE))
                                 .whenReleased(new RunCommand(m_shooter::stopShoot, m_shooter));
 
         // right button 9: move arm down

@@ -23,7 +23,7 @@ public class Constants {
 
     public static class SidekickConstants {
 
-        public static final int SIDEKICK_ID = 0;
+        public static final int SIDEKICK_ID = 42;
 
         public static final float SIDEKICK_PID_kP = 0;
         public static final float SIDEKICK_PID_kI = 0;
