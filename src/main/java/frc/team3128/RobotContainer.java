@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.*;
+import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.limelight.LEDMode;
 import frc.team3128.common.limelight.Limelight;
 
