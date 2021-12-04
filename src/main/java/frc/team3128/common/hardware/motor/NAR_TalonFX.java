@@ -1,4 +1,4 @@
-package frc.team3128.hardware;
+package frc.team3128.common.hardware.motor;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
