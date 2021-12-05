@@ -16,6 +16,9 @@ public class Climber implements Subsystem {
     private void configMotors() {
         CLIMBER_MOTOR_1 = new NAR_TalonFX(Constants.ClimberConstants.CLIMBER_MOTOR_1_ID, true);
         CLIMBER_MOTOR_2 = new NAR_TalonFX(Constants.ClimberConstants.CLIMBER_MOTOR_2_ID, true);
+
+        CLIMBER_MOTOR_1.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        CLIMBER_MOTOR_2.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
     }
 
     public void setMotors(double power) {
