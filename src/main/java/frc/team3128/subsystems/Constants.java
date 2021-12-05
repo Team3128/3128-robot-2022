@@ -88,6 +88,7 @@ public class Constants {
         public static final int CLIMBER_MOTOR_1_ID = 10; 
         public static final int CLIMBER_MOTOR_2_ID = 11; 
         
+        public static final NeutralMode CLIMBER_NEUTRAL_MODE = NeutralMode.Brake; 
         public static final double CLIMBER_MOTOR_POWER = 1;
     }
 
