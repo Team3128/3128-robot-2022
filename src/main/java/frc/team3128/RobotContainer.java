@@ -42,13 +42,14 @@ public class RobotContainer {
         //Registers subsystems so that periodic methods run
         m_commandScheduler.registerSubsystem(m_drive, m_shooter, m_hopper, m_intake);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getX));
+        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
         m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint));
 
         configureButtonBindings();
     }   
 
     private void configureButtonBindings() {
+
 
         // right button trigger: intake
         m_rightStick.getButton(1).whenPressed(new RunCommand(m_intake::runIntake, m_intake))
