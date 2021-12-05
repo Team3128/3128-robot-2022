@@ -87,6 +87,7 @@ public class Constants {
     }
 
     public static class ClimberConstants {
+
         public static final int CLIMBER_MOTOR_1_ID = 10;
         public static final int CLIMBER_MOTOR_2_ID = 11;
 
