@@ -35,6 +35,7 @@ public class Shooter extends NAR_PIDSubsystem {
         }
     }
 
+    private static Shooter instance;
 
     //Motors
     private BaseTalon m_leftShooter, m_rightShooter;
@@ -84,6 +85,13 @@ public class Shooter extends NAR_PIDSubsystem {
                 1.5 //gearing
             );
         }
+    }
+
+    public static synchronized Shooter getInstance() {
+        if(instance == null) {
+            instance = new Shooter();
+        }
+        return instance;
     }
 
 
@@ -162,11 +170,15 @@ public class Shooter extends NAR_PIDSubsystem {
         preTime = time;
 
 
-        output = (output > 1) ? 1 : ((output < -1) ? -1 : output);
-        output = (setpoint == 0) ? 0 : output;
+        percentOutput = (percentOutput > 1) ? 1 : ((percentOutput < -1) ? -1 : percentOutput);
+        percentOutput = (setpoint == 0) ? 0 : percentOutput;
 
         m_leftShooter.set(ControlMode.PercentOutput, percentOutput);
         m_rightShooter.set(ControlMode.PercentOutput, -percentOutput);
+
+        SmartDashboard.putNumber("Shooter RPM", getMeasurement());
+        SmartDashboard.putBoolean("Shooter isReady", atSetpoint());
+
     }
 
     @Override
