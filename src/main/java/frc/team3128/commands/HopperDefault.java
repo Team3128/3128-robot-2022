@@ -7,11 +7,14 @@ import frc.team3128.subsystems.Hopper;
 
 public class HopperDefault extends CommandBase {
     private final Hopper m_hopper;
-    private final BooleanSupplier isShooting;
+    private final BooleanSupplier shooterIsReady;
+    private final BooleanSupplier sidekickIsReady;
 
-    public HopperDefault(Hopper hopper, BooleanSupplier isShooting) {
+
+    public HopperDefault(Hopper hopper, BooleanSupplier isShooting, BooleanSupplier sidekickIsReady) {
         m_hopper = hopper;
-        this.isShooting = isShooting;
+        this.shooterIsReady = isShooting;
+        this.sidekickIsReady = sidekickIsReady;
 
         addRequirements(m_hopper);
     }
@@ -24,7 +27,7 @@ public class HopperDefault extends CommandBase {
     public void execute() {
         boolean isTop = m_hopper.getTop();
         boolean isBottom = m_hopper.getBottom();
-        boolean isShooting = this.isShooting.getAsBoolean();
+        boolean isShooting = this.shooterIsReady.getAsBoolean() && this.sidekickIsReady.getAsBoolean();
 
         if (isShooting) {
             m_hopper.runHopper(1);
