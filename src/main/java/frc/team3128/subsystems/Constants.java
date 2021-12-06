@@ -18,17 +18,6 @@ public class Constants {
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.1;
         public static final double TIME_TO_MAX_THRESHOLD = 5;
-    }
-
-    public static class SidekickConstants {
-        public static final float SIDEKICK_PID_kP = 0;
-        public static final float SIDEKICK_PID_kI = 0;
-        public static final float SIDEKICK_PID_kD = 0;
-        public static final int SIDEKICK_RPM_THRESHOLD_PERCENT = 0;
-        public static final int SIDEKICK_ID = 0;
-        public static final int CAN_TIMEOUT = 0;
-        public static final double SIDEKICK_kS = 0;
-        public static final double SIDEKICK_kV = 0;
         public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
         public static final double SIDEKICK_PLATEAU_THRESHOLD = 5;
     }
@@ -73,5 +62,4 @@ public class Constants {
         public static final int HOPPER_MOTOR_2_ID = 0;
 
     }
-
 }
