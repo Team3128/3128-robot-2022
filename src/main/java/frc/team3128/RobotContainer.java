@@ -29,7 +29,7 @@ public class RobotContainer {
     private Intake m_intake;
     private Climber m_climber;
 
-    private Limelight shooterLimelight = new Limelight("limelight-sog", -26.0, 0, 0, 30);;
+    private Limelight shooterLimelight = new Limelight("limelight-sog", -26.0, 0, 0, 30);
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -71,28 +71,22 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // right button trigger: intake
-        m_rightStick.getButton(1).whenPressed(new RunCommand(m_intake::runIntake, m_intake))
-                                .whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
+        m_rightStick.getButton(1).whenActive(new RunCommand(m_intake::runIntake, m_intake));
 
         // right button 2: shoot
-        m_rightStick.getButton(2).whenPressed(new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight)))
-                                .whenReleased(new RunCommand(m_shooter::stopShoot, m_shooter));
+        m_rightStick.getButton(2).whenActive(new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight)));
 
         // right button 9: move arm down
-        m_rightStick.getButton(9).whenPressed(new RunCommand(m_intake::moveArmDown, m_intake))
-                                .whenReleased(new RunCommand(m_intake::stopArm, m_intake));
+        m_rightStick.getButton(9).whenActive(new RunCommand(m_intake::moveArmDown, m_intake));
         
         // right button 10: move arm up
-        m_rightStick.getButton(10).whenPressed(new RunCommand(m_intake::moveArmUp, m_intake))
-                                .whenReleased(new RunCommand(m_intake::stopArm, m_intake));
+        m_rightStick.getButton(10).whenActive(new RunCommand(m_intake::moveArmUp, m_intake));
 
         // left button 7: move climber up
-        m_leftStick.getButton(7).whenPressed(new RunCommand(m_climber::moveClimberUp, m_climber))
-                                .whenReleased(new RunCommand(m_climber::stopClimber, m_climber));
+        m_leftStick.getButton(7).whenActive(new RunCommand(m_climber::moveClimberUp, m_climber));
 
         // left button 8: move climber down
-        m_leftStick.getButton(8).whenPressed(new RunCommand(m_climber::moveClimberDown, m_climber))
-                                .whenReleased(new RunCommand(m_climber::stopClimber, m_climber));
+        m_leftStick.getButton(8).whenActive(new RunCommand(m_climber::moveClimberDown, m_climber));
         
     }
 
