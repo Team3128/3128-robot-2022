@@ -11,9 +11,9 @@ public class HopperDefault extends CommandBase {
     private final BooleanSupplier sidekickIsReady;
 
 
-    public HopperDefault(Hopper hopper, BooleanSupplier isShooting, BooleanSupplier sidekickIsReady) {
+    public HopperDefault(Hopper hopper, BooleanSupplier shooterIsReady, BooleanSupplier sidekickIsReady) {
         m_hopper = hopper;
-        this.shooterIsReady = isShooting;
+        this.shooterIsReady = shooterIsReady;
         this.sidekickIsReady = sidekickIsReady;
 
         addRequirements(m_hopper);

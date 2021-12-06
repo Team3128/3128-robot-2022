@@ -1,29 +1,47 @@
 package frc.team3128.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.team3128.hardware.NAR_TalonFX;
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.common.hardware.motor.NAR_TalonSRX;
 
-public class Climber implements Subsystem {
+public class Climber extends SubsystemBase {
+
+    private static Climber instance;
     
-    private NAR_TalonFX CLIMBER_MOTOR_1, CLIMBER_MOTOR_2;
-    public static final Climber instance = new Climber(); 
+    private NAR_TalonSRX m_climbMotor1, m_climbMotor2;
 
     public Climber() {
-        configMotors(); 
+        configMotors();
+    }
+
+    public static synchronized Climber getInstance() {
+        if (instance == null) {
+            instance = new Climber();
+        }
+        return instance;
     }
 
     private void configMotors() {
-        CLIMBER_MOTOR_1 = new NAR_TalonFX(Constants.ClimberConstants.CLIMBER_MOTOR_1_ID, true);
-        CLIMBER_MOTOR_2 = new NAR_TalonFX(Constants.ClimberConstants.CLIMBER_MOTOR_2_ID, true);
-
-        CLIMBER_MOTOR_1.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
-        CLIMBER_MOTOR_2.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_climbMotor1 = new NAR_TalonSRX(Constants.ClimberConstants.CLIMBER_MOTOR_1_ID);
+        m_climbMotor2 = new NAR_TalonSRX(Constants.ClimberConstants.CLIMBER_MOTOR_2_ID);
+        
+        m_climbMotor1.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_climbMotor2.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
+    }
+    
+    public void moveClimberUp() {
+        //If ControlMode is not specified, WPI_TalonSRX will default to PercentOutput
+        m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_UP_POWER);
+        m_climbMotor2.set(Constants.ClimberConstants.CLIMBER_UP_POWER);
     }
 
-    public void setMotors(double power) {
-        CLIMBER_MOTOR_1.set(ControlMode.PercentOutput, power);
-        CLIMBER_MOTOR_2.set(ControlMode.PercentOutput, power);
+    public void moveClimberDown() {
+        m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_DOWN_POWER);
+        m_climbMotor2.set(Constants.ClimberConstants.CLIMBER_DOWN_POWER);
+    }
+
+    public void stopClimber() {
+        m_climbMotor1.set(0);
+        m_climbMotor2.set(0);
     }
 
 }

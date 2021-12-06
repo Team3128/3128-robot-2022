@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_PIDSubsystem;
-import frc.team3128.hardware.NAR_TalonSRX;
+import frc.team3128.common.hardware.motor.NAR_TalonSRX;
 
 public class Sidekick extends NAR_PIDSubsystem {
 
@@ -138,7 +138,8 @@ public class Sidekick extends NAR_PIDSubsystem {
         
         m_sidekick.set(ControlMode.PercentOutput, output);    
 
-        SmartDashboard.putBoolean("Sidekick isReady", atSetpoint());
+        SmartDashboard.putBoolean("Sidekick isReady", isReady());
+        SmartDashboard.putBoolean("Sidekick atSetpoint", atSetpoint());
         SmartDashboard.putNumber("Sidekick RPM", getMeasurement());
     }
 
