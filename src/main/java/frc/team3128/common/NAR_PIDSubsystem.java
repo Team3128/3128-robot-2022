@@ -41,7 +41,7 @@ abstract public class NAR_PIDSubsystem extends PIDSubsystem{
      * the RPM drifts from the setpoint, set plateau count back to zero.
      * @param setpoint The desired setpoint RPM for the PID Loop
      */
-    public void useOutput(double setpoint) {
+    public void countPlateau(double setpoint) {
         if (getController().atSetpoint() && (setpoint != 0)) {
             plateauCount++;
         } else {
