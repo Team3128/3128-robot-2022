@@ -14,6 +14,8 @@ import net.thefletcher.revrobotics.CANEncoder;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.enums.MotorType;
 
+// TODO Unkill this class
+
 public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor{
 
 	private double prevValue = 0;
