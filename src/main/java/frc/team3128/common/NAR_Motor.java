@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
 
+    // Condensed the contant-storing functionality of this class to an enum
     public static enum MotorConstants{
 
         Vex775Pro(18730, 0.7, 134, 0.71);
@@ -55,11 +56,13 @@ public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
         construct();
     }
 
+    // Need clarification on how to use this
     @Override
     public void updateSimulation(double timeStep) {
         
     }
 
+    // Probably how this should be implemented
     @Override
     public void constructFake(){
         encoderSim = SimDevice.create("Encoder ["+deviceNumber+"]", deviceNumber);
