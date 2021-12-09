@@ -59,15 +59,14 @@ public class Constants {
         public static final double SIDEKICK_kV = 0;
 
 
-        public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
+        public static final double SIDEKICK_ENCODER_RESOLUTION= 4096;
 
     }
 
     public static class ConversionConstants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double ENCODER_TO_RPM = 10*60/FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
-        public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_UNITS_PER_ROTATION;
-
+        public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_ENCODER_RESOLUTION;
     }
 
     public static class DriveConstants {
@@ -75,7 +74,7 @@ public class Constants {
         // Sim constants, TODO: move to new class
 
         // TODO: Get actual kv, ka
-        public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
+        public static final DCMotor GEARBOX = DCMotor.getVex775Pro(4); 
         public static final LinearSystem<N2, N2, N2> DRIVE_CHAR = 
         LinearSystemId.identifyDrivetrainSystem(
             5, //0.5, // kvVoltSecondsPerMeter
