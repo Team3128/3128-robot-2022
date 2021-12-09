@@ -5,13 +5,6 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.wpilibj.SpeedController;
 
-import javax.swing.text.DefaultStyledDocument.ElementSpec;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.fasterxml.jackson.databind.deser.AbstractDeserializer;
-
-import edu.wpi.first.wpilibj.SpeedController;
-
 public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
 
     // Condensed the contant-storing functionality of this class to an enum
