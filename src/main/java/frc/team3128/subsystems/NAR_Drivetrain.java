@@ -20,9 +20,11 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Robot;
-import frc.team3128.hardware.NAR_TalonFX;
+import frc.team3128.common.hardware.motor.NAR_TalonFX;
 
 public class NAR_Drivetrain extends SubsystemBase {
+
+    private static NAR_Drivetrain instance;
     
     private static BaseTalon leftLeader;
     private static BaseTalon rightLeader;
@@ -44,8 +46,8 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         if (Robot.isReal()) {
             leftLeader = new NAR_TalonFX(0);
-            rightLeader = new NAR_TalonFX(1);
-            leftFollower = new NAR_TalonFX(2);
+            leftFollower = new NAR_TalonFX(1);
+            rightLeader = new NAR_TalonFX(2);
             rightFollower = new NAR_TalonFX(3);
 
             leftFollower.follow(leftLeader);
@@ -84,6 +86,13 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Field", field);
 
         resetEncoders();
+    }
+
+    public static synchronized NAR_Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new NAR_Drivetrain();
+        }
+        return instance;
     }
 
     @Override
@@ -147,5 +156,10 @@ public class NAR_Drivetrain extends SubsystemBase {
     public void stop() {
         robotDrive.stopMotor();
     }
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        robotDrive.tankDrive(leftSpeed, rightSpeed);
+    }
+    
 }
 

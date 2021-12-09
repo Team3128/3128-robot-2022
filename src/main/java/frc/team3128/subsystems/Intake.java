@@ -5,16 +5,20 @@ import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.VictorSPXSimCollection;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Robot;
-import frc.team3128.hardware.NAR_TalonSRX;
-import frc.team3128.hardware.NAR_VictorSPX;
+import frc.team3128.common.hardware.motor.NAR_TalonSRX;
+import frc.team3128.common.hardware.motor.NAR_VictorSPX;
 
 
-public class Intake implements Subsystem {
+public class Intake extends SubsystemBase {
+
     private enum IntakeState {
         TOP, BOTTOM;
     }
+
+    private static Intake instance;
 
     //motors
     private NAR_TalonSRX m_arm_motor;
@@ -35,6 +39,13 @@ public class Intake implements Subsystem {
         configSensors();
 
         intakeState = IntakeState.TOP;
+    }
+
+    public static synchronized Intake getInstance() {
+        if (instance == null) {
+            instance = new Intake();
+        }
+        return instance;
     }
 
     private void configMotors() {
@@ -74,6 +85,8 @@ public class Intake implements Subsystem {
             intakeState = IntakeState.TOP;
             //stopArm();
         }
+        
+        SmartDashboard.putString("Intake State", String.valueOf(intakeState));
     }
 
     public void runIntake() {

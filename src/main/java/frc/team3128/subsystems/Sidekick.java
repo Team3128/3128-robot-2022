@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_PIDSubsystem;
-import frc.team3128.hardware.NAR_TalonSRX;
+import frc.team3128.common.hardware.motor.NAR_TalonSRX;
 
 public class Sidekick extends NAR_PIDSubsystem {
 
@@ -31,7 +31,8 @@ public class Sidekick extends NAR_PIDSubsystem {
         }
     }
 
-    public static final Sidekick instance = new Sidekick();    
+    public static Sidekick instance;
+    
     // motors
     public static NAR_TalonSRX m_sidekick; 
 
@@ -62,6 +63,16 @@ public class Sidekick extends NAR_PIDSubsystem {
         setSetpoint(0);
     }
 
+    public static synchronized Sidekick getInstance() {
+        if (instance == null) {
+            instance = new Sidekick();
+        }
+        return instance;
+    }
+
+    /**
+     * @return If the sidekick is at the desired setpoint
+     */
     public boolean atSetpoint() {
         return m_controller.atSetpoint();
     }
@@ -120,17 +131,22 @@ public class Sidekick extends NAR_PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + m_sidekickFeedForward.calculate(setpoint);
+        //THIS IS VERY BAD - TUNE P, I, D, and feed forward later
+        double voltageOutput = output + (0.0027*setpoint);//m_sidekickFeedForward.calculate(setpoint);
         double voltage = RobotController.getBatteryVoltage();
 
         output = voltageOutput/voltage;
 
         super.useOutput(setpoint);
 
-        output = (output > 1 ) ? 1 : ((output < -1) ? -1 : output);
+        output = (output > 1) ? 1 : ((output < -1) ? -1 : output);
         output = (setpoint == 0) ? 0 : output;
         
         m_sidekick.set(ControlMode.PercentOutput, output);    
+
+        SmartDashboard.putBoolean("Sidekick isReady", isReady());
+        SmartDashboard.putBoolean("Sidekick atSetpoint", atSetpoint());
+        SmartDashboard.putNumber("Sidekick RPM", getMeasurement());
     }
 
     /**
