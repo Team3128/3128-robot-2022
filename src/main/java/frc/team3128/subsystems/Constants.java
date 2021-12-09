@@ -36,7 +36,6 @@ public class Constants {
         public static final double SIDEKICK_kS = 0;
         public static final double SIDEKICK_kV = 0;
 
-
         public static final double SIDEKICK_UNITS_PER_ROTATION = 4096;
 
     }
@@ -85,7 +84,7 @@ public class Constants {
         
 
     }
-
+  
     public static class ClimberConstants {
 
         public static final int CLIMBER_MOTOR_1_ID = 10;
