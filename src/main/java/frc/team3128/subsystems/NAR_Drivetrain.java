@@ -145,7 +145,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double x, double y) {
-        robotDrive.arcadeDrive(x,y);
+        robotDrive.arcadeDrive(x, y, false); // Don't squareInputs
     }
 
     public void resetEncoders() {

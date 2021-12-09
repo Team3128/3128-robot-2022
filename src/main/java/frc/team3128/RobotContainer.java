@@ -5,6 +5,7 @@ import frc.team3128.subsystems.Shooter.ShooterState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team3128.commands.*;
@@ -28,13 +29,20 @@ public class RobotContainer {
     private Intake m_intake;
     private Climber m_climber;
 
-    private Limelight shooterLimelight = new Limelight("limelight-sog", -26.0, 0, 0, 30);
+    private Limelight shooterLimelight = new Limelight("limelight-sog", -26.0, 0, 0, 30);;
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
+
+    private Command runIntake, stopIntake;
+    private Command alignShoot, stopAlignShoot;
+    private Command armDown, armUp, stopArm;
+    private Command climberDown, climberUp, stopClimber;
+
+    private boolean debug = false;
 
     public RobotContainer() {
 
@@ -63,6 +71,7 @@ public class RobotContainer {
         //TODO: Test shooter atSetpoint() vs. isReady() - isReady actually waits for the 25 count, atSetpoint doesn't
         m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint, m_sidekick::isReady));
 
+        initAutos();
         configureButtonBindings();
         dashboardInit();
     }   
@@ -70,25 +79,25 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // right button trigger: intake
-        m_rightStick.getButton(1).whenPressed(new RunCommand(m_intake::runIntake, m_intake))
-                                .whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
+        m_rightStick.getButton(1).whenPressed(runIntake)
+                                .whenReleased(stopIntake);
 
         // right button 2: shoot
-        m_rightStick.getButton(2).whenPressed(new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight)))
-                                .whenReleased(new RunCommand(m_shooter::stopShoot, m_shooter));
+        m_rightStick.getButton(2).whenPressed(alignShoot)
+                                .whenReleased(stopAlignShoot);
         // right button 9: move arm down
-        m_rightStick.getButton(9).whenPressed(new RunCommand(m_intake::moveArmDown, m_intake))
-                                .whenReleased(new RunCommand(m_intake::stopArm, m_intake));
+        m_rightStick.getButton(9).whenPressed(armDown)
+                                .whenReleased(stopArm);
         // right button 10: move arm up
-        m_rightStick.getButton(10).whenPressed(new RunCommand(m_intake::moveArmUp, m_intake))
-                                .whenReleased(new RunCommand(m_intake::stopArm, m_intake));
+        m_rightStick.getButton(10).whenPressed(armUp)
+                                .whenReleased(stopArm);
         // left button 7: move climber up
-        m_leftStick.getButton(7).whenPressed(new RunCommand(m_climber::moveClimberUp, m_climber))
-                                .whenReleased(new RunCommand(m_climber::stopClimber, m_climber));
+        m_leftStick.getButton(7).whenPressed(climberUp)
+                                .whenReleased(stopClimber);
 
         // left button 8: move climber down
-        m_leftStick.getButton(8).whenPressed(new RunCommand(m_climber::moveClimberDown, m_climber))
-                                .whenReleased(new RunCommand(m_climber::stopClimber, m_climber));
+        m_leftStick.getButton(8).whenPressed(climberDown)
+                                .whenReleased(stopClimber);
 
     }
 
@@ -102,6 +111,36 @@ public class RobotContainer {
         SmartDashboard.putData(m_intake);
         SmartDashboard.putData(m_climber);
 
+        if(debug) {
+            SmartDashboard.putNumber("Left Stick Raw X", m_leftStick.getX());
+            SmartDashboard.putNumber("Left Stick Raw Y", m_leftStick.getY());
+            SmartDashboard.putNumber("Left Stick Raw Z", m_leftStick.getZ());
+            SmartDashboard.putNumber("Left Stick Raw Twist", m_leftStick.getTwist());
+            SmartDashboard.putNumber("Left Stick Raw Throttle", m_leftStick.getThrottle());
+
+            SmartDashboard.putNumber("Right Stick Raw X", m_rightStick.getX());
+            SmartDashboard.putNumber("Right Stick Raw Y", m_rightStick.getY());
+            SmartDashboard.putNumber("Right Stick Raw Z", m_rightStick.getZ());
+            SmartDashboard.putNumber("Right Stick Raw Twist", m_rightStick.getTwist());
+            SmartDashboard.putNumber("Right Stick Raw Throttle", m_rightStick.getThrottle());
+        }
+
+    }
+
+    private void initAutos() {
+        runIntake = new RunCommand(m_intake::runIntake, m_intake);
+        stopIntake = new RunCommand(m_intake::stopIntake, m_intake);
+        
+        alignShoot = new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight));
+        stopAlignShoot = new ParallelCommandGroup(new RunCommand(m_shooter::stopShoot, m_shooter), new InstantCommand(shooterLimelight::turnLEDOff));
+
+        armDown = new RunCommand(m_intake::moveArmDown, m_intake);
+        armUp = new RunCommand(m_intake::moveArmUp, m_intake);
+        stopArm = new RunCommand(m_intake::stopArm, m_intake);
+
+        climberUp = new RunCommand(m_climber::moveClimberUp, m_climber);
+        climberDown = new RunCommand(m_climber::moveClimberDown, m_climber);
+        stopClimber = new RunCommand(m_climber::stopClimber, m_climber);
     }
 
     public void stopDrivetrain() {

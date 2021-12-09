@@ -3,9 +3,7 @@ package frc.team3128.commands;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.team3128.common.limelight.LEDMode;
@@ -28,8 +26,6 @@ public class CmdAlign extends CommandBase {
     
     private double prevTime, currTime; // seconds
     private int plateauCount, targetFoundCount;
-
-    private int count = 0;
 
     private boolean isAligned;
 
@@ -67,12 +63,8 @@ public class CmdAlign extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_limelight.setLEDMode(LEDMode.ON);
-        NetworkTableInstance.getDefault().getTable("limelight-sog").getEntry("ledMode").setNumber(3);
 
-        SmartDashboard.putString("Limelight LED mode", m_limelight.getLedMode());;
-
-        currTime = RobotController.getFPGATime() /1e6;
+        currTime = RobotController.getFPGATime() / 1e6;
 
         switch(aimState) {
             case SEARCHING:
@@ -93,28 +85,27 @@ public class CmdAlign extends CommandBase {
             case FEEDBACK:
                 if(!m_limelight.hasValidTarget()) {
                     aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
+
+                    isAligned = false;
+                    plateauCount = 0;
+
                     break;
                 }
 
                 currHorizontalOffset = m_limelight.getValue(LimelightKey.HORIZONTAL_OFFSET, Constants.VisionContants.SAMPLE_RATE);
                 currError = goalHorizontalOffset - currHorizontalOffset;
 
-                SmartDashboard.putNumber("CmdAlign currError", currError);
-
                 if (txThreshold < Constants.VisionContants.TX_THRESHOLD_MAX) {
                     txThreshold += (currTime - prevTime) * (Constants.VisionContants.TX_THRESHOLD_INCREMENT);
                 }
 
-                SmartDashboard.putNumber("CmdAlign txThreshold", txThreshold);
-
-                double feedbackPower = Constants.VisionContants.VISION_PID_kP * currError + Constants.VisionContants.VISION_PID_kD * (currError - prevError) / (currTime - prevTime);
-
+                double ff = Math.signum(currError) * Constants.VisionContants.ALIGN_FF;
+                double feedbackPower = Constants.VisionContants.VISION_PID_kP * currError + Constants.VisionContants.VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
+                
                 if(feedbackPower > 1)
                     feedbackPower = 1;
                 else if(feedbackPower < -1)
                     feedbackPower = -1;
-
-                SmartDashboard.putNumber("CmdAlign feedbackPower", feedbackPower);
 
                 m_drive.tankDrive(-feedbackPower, feedbackPower);
 
@@ -123,10 +114,9 @@ public class CmdAlign extends CommandBase {
                 if (Math.abs(currError) < txThreshold) {
                     plateauCount++;
 
-                    SmartDashboard.putNumber("CmdAlign plateauCount", plateauCount);
-
                     if(plateauCount > Constants.VisionContants.ALIGN_PLATEAU_COUNT) {
                         isAligned = true;
+                        m_limelight.setLEDMode(LEDMode.OFF);
                     }
                 }
                 else {
@@ -144,12 +134,7 @@ public class CmdAlign extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_limelight.setLEDMode(LEDMode.OFF);
         m_drive.stop();
-
-        count++;
-
-        SmartDashboard.putString("CmdAlign", "this has ended " + count);
     }
 
     // Returns true when the command should end.
