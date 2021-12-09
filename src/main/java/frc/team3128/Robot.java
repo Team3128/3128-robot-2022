@@ -4,47 +4,66 @@
 
 package frc.team3128;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import frc.team3128.hardware.*;
-import frc.team3128.subsystems.*;
-import frc.team3128.*;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
- * arcade steering.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to
+ * each mode, as described in the TimedRobot documentation.
  */
 public class Robot extends TimedRobot {
- 
-  private Mover m_move; // test subsystem
-  private GoodDriveTrain m_drive;
-  private Joystick m_stick;
 
-  @Override
-  public void robotInit(){
-    m_stick = new Joystick(0);
-    m_move = new Mover();
-    m_drive = new GoodDriveTrain();
-  }
+    public static RobotContainer m_robotContainer = new RobotContainer();
+    private Command m_autonomousCommand;
 
-  @Override
-  public void teleopPeriodic() {
-    // Drive with arcade drive.
-    // That means that the Y axis drives forward
-    // and backward, and the X turns left and right.
-    m_drive.arcadeDrive(m_stick.getY(), m_stick.getX());
-  }
+    @Override
+    public void robotInit(){
+        LiveWindow.disableAllTelemetry();
+    }
 
-  @Override
-  public void simulationPeriodic(){
+    @Override
+    public void robotPeriodic(){
 
-  }
+    }
+
+    @Override
+    public void autonomousInit() {
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
+        }
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+        CommandScheduler.getInstance().run();
+    }
+
+    @Override
+    public void teleopInit() {
+        CommandScheduler.getInstance().cancelAll();
+        m_robotContainer.stopDrivetrain();
+    }
+
+    @Override
+    public void teleopPeriodic() {
+        CommandScheduler.getInstance().run();
+    }
+
+    @Override
+    public void simulationInit() {
+        
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        CommandScheduler.getInstance().run();
+    }
+    
+    @Override
+    public void disabledPeriodic() {
+
+    }
 }

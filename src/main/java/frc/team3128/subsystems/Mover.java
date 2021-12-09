@@ -12,26 +12,27 @@ public class Mover extends SubsystemBase {
     public static BaseTalon motor;
     public static TalonSRXSimCollection motorSim;
 
-    public Mover(){
+    public Mover() {
         configHardware();
     }
 
-    private void configHardware(){
-        if(Robot.isReal()){
+    private void configHardware() {
+        if (Robot.isReal()) {
             motor = new TalonFX(0);
-        } else {
+        }
+        else {
             motor = new TalonSRX(0);
             motorSim = new TalonSRXSimCollection(motor);
         }
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
 
     }
 
     @Override
-    public void simulationPeriodic(){
+    public void simulationPeriodic() {
         
     }
 
