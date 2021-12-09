@@ -48,12 +48,13 @@ public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
         }
     }
 
+    // Have to be defined higher up
+    protected double encoderRes;
+    protected double moi;
+
     protected MotorType type;
     protected int deviceNumber;
     protected T motorController;
-    protected boolean encodable;
-    protected double encoderRes;
-    protected double moi;
     protected SimDevice encoderSim;
     protected SimDouble simPos;
     protected SimDouble simVel;
@@ -64,7 +65,9 @@ public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
         construct();
     }
 
-    // Do some physics
+    /**
+     * Simulates physics for an individual motor assuming perfect conditions
+     */
     @Override
     public void updateSimulation(double timeStep) {
         double position = simPos.get();
@@ -76,7 +79,6 @@ public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
         simPos.set(position+velocity*timeStep);
     }
 
-    // Probably how this should be implemented
     @Override
     public void constructFake(){
         encoderSim = SimDevice.create(motorController.getClass().getSimpleName()+"["+deviceNumber+"] simEncoder", deviceNumber);
@@ -97,7 +99,8 @@ public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
      */
     public double getSimVel(){
 
-        double freeSpeed = (type.getFreeSpeedRPM() * 60 / encoderRes);
+        // freeSpeed in native units / second
+        double freeSpeed = (type.getFreeSpeedRPM() * encoderRes / 60);
 
         if(simVel.get() < freeSpeed)
             return simVel.get();
@@ -112,18 +115,20 @@ public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
         return getSimTorque() / moi;
     }
 
+    /**
+     * @return Net torque in N*m
+     */
     public double getSimTorque(){
 
         double appTorq = type.getStallTorqueNM()*motorController.get();
 
-        if(encodable)
-            appTorq*= 1 - Math.abs(getSimVel())/(type.getFreeSpeedRPM() * 60 / encoderRes);
+        appTorq *= 1 - Math.abs(getSimVel()) / (type.getFreeSpeedRPM() * encoderRes / 60);
 
         return appTorq - simLoad.get();
     }
 
     /**
-     * IMPLEMENT WITH CAUTION
+     * IMPLEMENT WITH CAUTION, this may require knowledge of more complete motor state
      * 
      * @param load simulated load in N*m
      */
