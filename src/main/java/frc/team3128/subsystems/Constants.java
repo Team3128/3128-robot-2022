@@ -2,11 +2,20 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.system.LinearSystem;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
+import edu.wpi.first.wpiutil.math.numbers.N1;
+import edu.wpi.first.wpiutil.math.numbers.N2;
+
 public class Constants {
+
     public static class ShooterConstants {
-        public static final double SHOOTER_PID_kP = 1.24e-7; //2.18e-5; //16e-7;
-        public static final double SHOOTER_PID_kI = 0; // 5e-6;
-        public static final double SHOOTER_PID_kD = 0; // 4.2e-6;
+
+        public static final double SHOOTER_PID_kP = 1.24e-7;
+        public static final double SHOOTER_PID_kI = 0;
+        public static final double SHOOTER_PID_kD = 0;
+        public static final double SHOOTER_PID_kF = 0;
 
         public static final int LEFT_SHOOTER_ID = 8; //Left Shooter Motor
         public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
@@ -19,6 +28,22 @@ public class Constants {
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.1;
         public static final double TIME_TO_MAX_THRESHOLD = 5;
+
+        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
+
+        // There are other better ways of doing this, need to use DCU 
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            SHOOTER_KV, 
+            SHOOTER_KA
+        );
+        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getFalcon500(2);
+        public static final double SHOOTER_GEARING = 1.5;
+        public static final double SHOOTER_RADIUS_METERS = 0.0508; //not correct
+  
+       
     }
 
     public static class SidekickConstants {
@@ -44,14 +69,34 @@ public class Constants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double ENCODER_TO_RPM = 10*60/FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
         public static final double SIDEKICK_ENCODER_TO_RPM = 10*60/SidekickConstants.SIDEKICK_UNITS_PER_ROTATION;
+
     }
 
     public static class DriveConstants {
-        public static final int WHEEL_RADIUS = 2; // inches
-        public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
-        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = -0.7;
+        // Sim constants, TODO: move to new class
+
+        // TODO: Get actual kv, ka
+        public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
+        public static final LinearSystem<N2, N2, N2> DRIVE_CHAR = 
+        LinearSystemId.identifyDrivetrainSystem(
+            5, //0.5, // kvVoltSecondsPerMeter
+            0.5,//0.05, // kaVoltSecondsSquaredPerMeter
+            5,//1.5, // kvVoltSecondsPerRadian
+            0.5//0.3 // kaVoltSecondsSquaredPerRadian
+        );
+        public static final double DRIVE_GEARING = 8;
+        public static final double WHEEL_RADIUS_METERS = 0.0508; 
+        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
+        public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
+        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
+        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
+
+        public static final Boolean GYRO_REVERSED = false;
+        public static final double TRACK_WIDTH_METERS = 0.66;
+        public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
+        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
+
     }
 
     public static class IntakeConstants {
@@ -60,12 +105,12 @@ public class Constants {
         public static final int BRUSH_MOTOR_2_ID = 33;
         public static final int INTAKE_MOTOR_ID = 4;
 
-        public static final int TOP_LIMIT_SWITCH_ID = 0;
-        public static final int BOTTOM_LIMIT_SWITCH_ID = 1;
+        public static final int TOP_LIMIT_SWITCH_ID = 2;
+        public static final int BOTTOM_LIMIT_SWITCH_ID = 3;
 
-        public static final double INTAKE_MOTOR_POWER = 0.8;
-        public static final double BRUSH_MOTOR_POWER = 0.4;
-        public static final double ARM_MOTOR_POWER = 0.56;
+        public static final double INTAKE_MOTOR_POWER = 0.6;
+        public static final double BRUSH_MOTOR_POWER = 0.3;
+        public static final double ARM_MOTOR_POWER = 0.42;
 
         public static final double ARM_MOTOR_POWER_AUTO = 0.07;
         public static final NeutralMode ARM_NEUTRAL_MODE = NeutralMode.Brake;
