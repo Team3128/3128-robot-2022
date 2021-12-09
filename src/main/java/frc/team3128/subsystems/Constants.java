@@ -99,7 +99,7 @@ public class Constants {
 
     public static class VisionContants {
 
-        public static final String TOP_HOSTNAME = "limelight-sog";
+        public static final String TOP_HOSTNAME = "10.31.28.25";
 
         public static final int SAMPLE_RATE = 3;
 
@@ -108,14 +108,14 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured.
         public static final double TARGET_WIDTH = 30.0; //inches
 
-        public static final double VISION_PID_kP = 0.01;
+        public static final double VISION_PID_kP = 0.02;
         public static final double VISION_PID_kI = 0.02;
         public static final double VISION_PID_kD = 0.00006;
 
         public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 1; //degrees
-        public static final double TX_THRESHOLD_MAX = 2; //degrees
+        public static final double TX_THRESHOLD = 2; //degrees
+        public static final double TX_THRESHOLD_MAX = 5; //degrees
         public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 

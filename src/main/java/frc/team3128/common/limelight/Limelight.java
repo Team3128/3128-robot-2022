@@ -150,4 +150,8 @@ public class Limelight {
     public double getSelectedPipeline() {
         return limelightTable.getEntry("pipeline").getDouble(0);
     }
+
+    public String getLedMode() {
+        return limelightTable.getEntry("ledMode").getString("I don't know LED mode. Send help");
+    }
 }

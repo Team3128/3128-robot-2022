@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team3128.commands.*;
-import frc.team3128.common.hardware.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.limelight.LEDMode;
 import frc.team3128.common.limelight.Limelight;
@@ -71,23 +70,26 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // right button trigger: intake
-        m_rightStick.getButton(1).whenActive(new RunCommand(m_intake::runIntake, m_intake));
+        m_rightStick.getButton(1).whenPressed(new RunCommand(m_intake::runIntake, m_intake))
+                                .whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
 
         // right button 2: shoot
-        m_rightStick.getButton(2).whenActive(new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight)));
-
+        m_rightStick.getButton(2).whenPressed(new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight)))
+                                .whenReleased(new RunCommand(m_shooter::stopShoot, m_shooter));
         // right button 9: move arm down
-        m_rightStick.getButton(9).whenActive(new RunCommand(m_intake::moveArmDown, m_intake));
-        
+        m_rightStick.getButton(9).whenPressed(new RunCommand(m_intake::moveArmDown, m_intake))
+                                .whenReleased(new RunCommand(m_intake::stopArm, m_intake));
         // right button 10: move arm up
-        m_rightStick.getButton(10).whenActive(new RunCommand(m_intake::moveArmUp, m_intake));
-
+        m_rightStick.getButton(10).whenPressed(new RunCommand(m_intake::moveArmUp, m_intake))
+                                .whenReleased(new RunCommand(m_intake::stopArm, m_intake));
         // left button 7: move climber up
-        m_leftStick.getButton(7).whenActive(new RunCommand(m_climber::moveClimberUp, m_climber));
+        m_leftStick.getButton(7).whenPressed(new RunCommand(m_climber::moveClimberUp, m_climber))
+                                .whenReleased(new RunCommand(m_climber::stopClimber, m_climber));
 
         // left button 8: move climber down
-        m_leftStick.getButton(8).whenActive(new RunCommand(m_climber::moveClimberDown, m_climber));
-        
+        m_leftStick.getButton(8).whenPressed(new RunCommand(m_climber::moveClimberDown, m_climber))
+                                .whenReleased(new RunCommand(m_climber::stopClimber, m_climber));
+
     }
 
     private void dashboardInit() {
