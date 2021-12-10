@@ -1,13 +1,10 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
-import com.ctre.phoenix.motorcontrol.VictorSPXSimCollection;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team3128.Robot;
 import frc.team3128.common.hardware.motor.NAR_TalonSRX;
 import frc.team3128.common.hardware.motor.NAR_VictorSPX;
 
@@ -23,12 +20,6 @@ public class Intake extends SubsystemBase {
     //motors
     private NAR_TalonSRX m_arm_motor;
     private NAR_VictorSPX m_brush_motor_1, m_brush_motor_2, m_intake_motor;
-
-    //simulated motors
-    private TalonSRXSimCollection m_arm_motorSim;
-    private VictorSPXSimCollection m_brush_motor_1Sim;
-    private VictorSPXSimCollection m_brush_motor_2Sim;
-    private VictorSPXSimCollection m_intake_motorSim;
 
     private DigitalInput m_limitSwitchTop, m_limitSwitchBottom;
 
@@ -57,17 +48,6 @@ public class Intake extends SubsystemBase {
         m_arm_motor.setNeutralMode(Constants.IntakeConstants.ARM_NEUTRAL_MODE);
         m_brush_motor_2.set(ControlMode.Follower, Constants.IntakeConstants.BRUSH_MOTOR_1_ID);
 
-        if (!Robot.isReal()){
-            configMotorsSim();
-        }
-    }
-
-
-    private void configMotorsSim() {
-        m_arm_motorSim = new TalonSRXSimCollection(m_arm_motor);
-        m_brush_motor_1Sim = new VictorSPXSimCollection(m_brush_motor_1);
-        m_brush_motor_2Sim = new VictorSPXSimCollection(m_brush_motor_2);
-        m_intake_motorSim = new VictorSPXSimCollection(m_intake_motor);
     }
 
     

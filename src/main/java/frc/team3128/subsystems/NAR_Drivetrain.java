@@ -15,8 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
-import frc.team3128.hardware.NAR_CANSparkMax;
-import frc.team3128.hardware.NAR_TalonFX;
+import frc.team3128.common.hardware.motor.NAR_CANSparkMax;
+import frc.team3128.common.hardware.motor.NAR_TalonFX;
+import frc.team3128.common.hardware.motor.NAR_TalonSRX;
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class NAR_Drivetrain extends SubsystemBase {
@@ -98,8 +99,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         
         // Set motor voltage inputs
         robotDriveSim.setInputs(
-            -leftLeader.getMotorOutputVoltage(),
-            rightLeader.getMotorOutputVoltage()
+            leftLeader.getMotorOutputVoltage(),
+            -rightLeader.getMotorOutputVoltage()
         );
 
         // Update sim environment
@@ -137,7 +138,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double x, double y) {
-        robotDrive.arcadeDrive(x,y);
+        robotDrive.arcadeDrive(x, y, false);
     }
 
     public void resetEncoders() {
