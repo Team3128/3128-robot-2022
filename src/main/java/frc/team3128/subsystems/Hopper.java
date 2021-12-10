@@ -2,12 +2,13 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+//import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team3128.common.hardware.motor.NAR_CANSparkMax;
-import frc.team3128.common.hardware.motor.NAR_TalonSRX;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.team3128.hardware.NAR_CANSparkMax;
+import frc.team3128.hardware.NAR_TalonSRX;
+import net.thefletcher.revrobotics.enums.MotorType;
 
 public class Hopper extends SubsystemBase {
 
