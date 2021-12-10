@@ -44,6 +44,7 @@ public class Sidekick extends NAR_PIDSubsystem {
     public SidekickState SIDEKICK_STATE = SidekickState.MID_RANGE;
 
     // feedforward (from WPILib ff)
+
     private final SimpleMotorFeedforward m_sidekickFeedForward =
       new SimpleMotorFeedforward(Constants.SidekickConstants.SIDEKICK_kS,
                                  Constants.SidekickConstants.SIDEKICK_kV);
@@ -55,6 +56,7 @@ public class Sidekick extends NAR_PIDSubsystem {
     private Sidekick() {
         super(new PIDController(Constants.SidekickConstants.SIDEKICK_PID_kP, Constants.SidekickConstants.SIDEKICK_PID_kI, Constants.SidekickConstants.SIDEKICK_PID_kD));
         getController().setTolerance(2000*Constants.SidekickConstants.SIDEKICK_RPM_THRESHOLD_PERCENT, Constants.SidekickConstants.SIDEKICK_PLATEAU_THRESHOLD);
+
 
         configMotors();
         configEncoders();
@@ -87,12 +89,14 @@ public class Sidekick extends NAR_PIDSubsystem {
 
         if (!Robot.isReal()) {
             m_sidekickSim = new TalonSRXSimCollection(m_sidekick);
+
             m_sidekickShooterSim = new FlywheelSim(
                 LinearSystemId.identifyVelocitySystem( // plant
                     0, //kV
                     0 //kA
                 ), 
                 DCMotor.getVex775Pro(1), // gearbox (1 Vex775 motor)
+
                 1/3 //gearing
             );
         }
@@ -101,6 +105,7 @@ public class Sidekick extends NAR_PIDSubsystem {
     /**
      * Configures the encoders (nothing here yet, this would be for future sidekicks with encoders)
      */
+
     private void configEncoders() {
 
     }
@@ -123,6 +128,7 @@ public class Sidekick extends NAR_PIDSubsystem {
      * @param output Output from PID loop
      * @param setpoint Desired setpoint of RPM for the PID loop and FF
      */
+
     @Override
     protected void useOutput(double output, double setpoint) {
         //THIS IS VERY BAD - TUNE P, I, D, and feed forward later
@@ -155,6 +161,7 @@ public class Sidekick extends NAR_PIDSubsystem {
      * @return if the sidekick is ready to shoot
      */
     @Override
+
     public boolean isReady() {
         return true; // fix logic here
     }
