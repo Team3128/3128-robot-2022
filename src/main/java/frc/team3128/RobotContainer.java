@@ -138,7 +138,7 @@ public class RobotContainer {
         runIntake = new RunCommand(m_intake::runIntake, m_intake);
         stopIntake = new RunCommand(m_intake::stopIntake, m_intake);
         
-        alignShoot = new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight));
+        alignShoot = new ParallelCommandGroup(new CmdShoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight));
         stopAlignShoot = new ParallelCommandGroup(new RunCommand(m_shooter::stopShoot, m_shooter), new InstantCommand(shooterLimelight::turnLEDOff));
 
         armDown = new RunCommand(m_intake::moveArmDown, m_intake);
