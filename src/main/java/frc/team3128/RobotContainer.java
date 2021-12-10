@@ -2,12 +2,18 @@ package frc.team3128;
 
 import frc.team3128.subsystems.*;
 import frc.team3128.subsystems.Shooter.ShooterState;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.team3128.autonomous.AutoSimple;
+import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.limelight.LEDMode;
@@ -36,6 +42,7 @@ public class RobotContainer {
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
+    private Command trajectory;
 
     private Command runIntake, stopIntake;
     private Command alignShoot, stopAlignShoot;
@@ -141,6 +148,22 @@ public class RobotContainer {
         climberUp = new RunCommand(m_climber::moveClimberUp, m_climber);
         climberDown = new RunCommand(m_climber::moveClimberDown, m_climber);
         stopClimber = new RunCommand(m_climber::stopClimber, m_climber);
+
+        trajectory = new RamseteCommand(Trajectories.trajectorySimple, 
+                                        m_drive::getPose,
+                                        new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+                                        new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+                                                                    Constants.DriveConstants.kV,
+                                                                    Constants.DriveConstants.kA),
+                                        Constants.DriveConstants.DRIVE_KINEMATICS,
+                                        m_drive::getWheelSpeeds,
+                                        new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                                        new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                                        m_drive::tankDriveVolts,
+                                        m_drive)
+                                        .andThen(() -> m_drive.stop(), m_drive);
+
+        auto = new AutoSimple(m_shooter, m_sidekick, m_drive, shooterLimelight, m_intake, trajectory);
     }
 
     public void stopDrivetrain() {
@@ -150,4 +173,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return auto;
     }
+
+
 }

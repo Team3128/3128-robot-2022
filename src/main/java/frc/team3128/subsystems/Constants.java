@@ -2,6 +2,8 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class Constants {
     public static class ShooterConstants {
         public static final double SHOOTER_PID_kP = 1.24e-7; //2.18e-5; //16e-7;
@@ -47,11 +49,28 @@ public class Constants {
     }
 
     public static class DriveConstants {
+        
+        public static final double MAX_DRIVE_VELOCITY = 1.75; // m/s
+        public static final double MAX_DRIVE_ACCELERATION = 1.5; // m/s^2
+
         public static final int WHEEL_RADIUS = 2; // inches
+        public static final double TRACK_WIDTH = 0.66; // meters
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
+
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
 
         public static final double ARCADE_DRIVE_TURN_MULT = -0.7;
+
+        public static final double kS = 0.73; // volts
+        public static final double kV = 0.571; // volt*seconds/meter
+        public static final double kA = 0.013; // volt*seconds^2/meter
+
+        public static final double MAX_DRIVE_VOLTAGE = 11; // volts (hopefully you could figure this out)
+        public static final double RAMSETE_B = 2;
+        public static final double RAMSETE_ZETA = 0.7;
+        public static final double RAMSETE_KP = 0.5; // I think Tyler just took this number and ran with it
+
     }
 
     public static class IntakeConstants {
