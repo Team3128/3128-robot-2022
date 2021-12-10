@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public abstract class Simulable {
     protected boolean isReal;
 
-    // No constructer is problematic but solves the device-number problem higher up
+    // No constructor is problematic but solves the device-number problem higher up
     public void construct(){
         // We will always need the real code for any simulated class
         constructReal();
