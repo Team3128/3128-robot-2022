@@ -3,8 +3,6 @@ package frc.team3128.hardware;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import frc.team3128.common.NAR_Motor;
-
 public class NAR_TalonSRX extends NAR_Motor<WPI_TalonSRX>{
 
 
@@ -13,7 +11,7 @@ public class NAR_TalonSRX extends NAR_Motor<WPI_TalonSRX>{
     protected double prevValue = 0;
 	protected ControlMode prevControlMode = ControlMode.Disabled;
 
-    protected NAR_TalonSRX(int deviceNumber) {
+    NAR_TalonSRX(int deviceNumber) {
 		super(deviceNumber);
 	}
 
