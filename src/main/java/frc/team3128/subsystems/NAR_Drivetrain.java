@@ -18,6 +18,7 @@ import frc.team3128.common.NAR_EMotor;
 import frc.team3128.common.hardware.motor.NAR_CANSparkMax;
 import frc.team3128.common.hardware.motor.NAR_TalonFX;
 import frc.team3128.common.hardware.motor.NAR_TalonSRX;
+
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class NAR_Drivetrain extends SubsystemBase {
@@ -101,6 +102,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         robotDriveSim.setInputs(
             leftLeader.getMotorOutputVoltage(),
             -rightLeader.getMotorOutputVoltage()
+
         );
 
         // Update sim environment

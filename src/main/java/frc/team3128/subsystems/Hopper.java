@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.motor.NAR_CANSparkMax;
 import frc.team3128.common.hardware.motor.NAR_TalonSRX;
+
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class Hopper extends SubsystemBase {

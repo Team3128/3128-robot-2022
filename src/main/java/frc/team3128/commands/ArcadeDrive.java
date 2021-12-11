@@ -11,7 +11,6 @@ public class ArcadeDrive extends CommandBase {
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_turn;
     private final DoubleSupplier m_throttle;
-    
 
 
     public ArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle) {

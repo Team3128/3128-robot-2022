@@ -11,9 +11,11 @@ import edu.wpi.first.wpiutil.math.numbers.N2;
 public class Constants {
 
     public static class ShooterConstants {
-        public static final double SHOOTER_PID_kP = 1.24e-7; //2.18e-5; //16e-7;
-        public static final double SHOOTER_PID_kI = 0; // 5e-6;
-        public static final double SHOOTER_PID_kD = 0; // 4.2e-6;
+
+        public static final double SHOOTER_PID_kP = 1.24e-7;
+        public static final double SHOOTER_PID_kI = 0;
+        public static final double SHOOTER_PID_kD = 0;
+        public static final double SHOOTER_PID_kF = 0;
 
         public static final int LEFT_SHOOTER_ID = 8; //Left Shooter Motor
         public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
@@ -90,9 +92,8 @@ public class Constants {
         public static final Boolean GYRO_REVERSED = false;
         public static final double TRACK_WIDTH_METERS = 0.66;
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
-        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS* 2 / ENCODER_RESOLUTION_PER_ROTATION;
+        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = -0.7;
     }
 
     public static class IntakeConstants {
