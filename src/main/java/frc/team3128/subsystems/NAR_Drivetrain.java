@@ -95,7 +95,11 @@ public class NAR_Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
-        field.setRobotPose(getPose());     
+        field.setRobotPose(getPose());
+
+        SmartDashboard.putNumber("DT x", getPose().getX());
+        SmartDashboard.putNumber("DT y", getPose().getY());
+        SmartDashboard.putNumber("DT angel", getHeading());
     }
 
     public void simulationPeriodic() {
@@ -126,7 +130,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
         
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360) * (Constants.DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
+        return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
 
     public Pose2d getPose() {

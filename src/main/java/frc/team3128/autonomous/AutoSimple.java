@@ -16,7 +16,7 @@ import frc.team3128.subsystems.Shooter.ShooterState;
 public class AutoSimple extends SequentialCommandGroup {
     public AutoSimple(Shooter shooter, Sidekick sidekick, NAR_Drivetrain drive, Limelight shooterLimelight, Intake intake, Command trajectory) {
         addCommands(
-            new ParallelCommandGroup(new CmdShoot(shooter, sidekick, ShooterState.MID_RANGE), new CmdAlign(drive, shooterLimelight)).withTimeout(10),
+            new ParallelCommandGroup(new CmdShoot(shooter, sidekick, ShooterState.MID_RANGE), new CmdAlign(drive, shooterLimelight)).withTimeout(7),
             new InstantCommand(() -> intake.runIntake()),
             trajectory,
             new InstantCommand(() -> intake.stopIntake())

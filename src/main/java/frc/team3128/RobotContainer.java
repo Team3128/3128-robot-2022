@@ -70,7 +70,7 @@ public class RobotContainer {
         shooterLimelight.setLEDMode(LEDMode.ON);
 
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint));
+        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint, m_sidekick::atSetpoint));
 
         initAutos();
         configureButtonBindings();
