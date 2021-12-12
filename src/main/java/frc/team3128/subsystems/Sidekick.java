@@ -137,7 +137,7 @@ public class Sidekick extends NAR_PIDSubsystem {
 
         output = voltageOutput/voltage;
 
-        super.countPlateau(setpoint);
+        super.useOutput(setpoint);
 
         output = (output > 1) ? 1 : ((output < -1) ? -1 : output);
         output = (setpoint == 0) ? 0 : output;

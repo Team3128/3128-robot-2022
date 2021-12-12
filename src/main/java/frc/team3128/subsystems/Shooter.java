@@ -150,7 +150,7 @@ public class Shooter extends NAR_PIDSubsystem {
             getController().setTolerance(thresholdPercent * setpoint);
         }
 
-        super.countPlateau(setpoint);
+        super.useOutput(setpoint);
 
         preTime = time;
 

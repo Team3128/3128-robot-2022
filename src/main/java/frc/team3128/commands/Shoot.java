@@ -6,12 +6,12 @@ import frc.team3128.subsystems.Sidekick;
 import frc.team3128.subsystems.Shooter.ShooterState;
 import frc.team3128.subsystems.Sidekick.SidekickState;
 
-public class CmdShoot extends CommandBase {
+public class Shoot extends CommandBase {
     private final Shooter m_shooter;
     private final Sidekick m_sidekick;
     private final ShooterState m_state;
     
-    public CmdShoot(Shooter shooter, Sidekick sidekick, ShooterState state) {
+    public Shoot(Shooter shooter, Sidekick sidekick, ShooterState state) {
         m_shooter = shooter;
         m_sidekick = sidekick;
         m_state = state;

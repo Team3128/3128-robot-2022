@@ -4,13 +4,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -141,24 +139,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         return rightLeader.getSelectedSensorPosition() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK;
     }
 
-    /**
-     * @return the left encoder velocity in meters per second
-     */
-    public double getLeftEncoderSpeed() {
-        return leftLeader.getSelectedSensorVelocity() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10;
-    }
-
-    /**
-     * @return the right encoder velocity in meters per second
-     */
-    public double getRightEncoderSpeed() {
-        return rightLeader.getSelectedSensorVelocity() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10;
-    }
-
     public void arcadeDrive(double x, double y) {
-
-        robotDrive.arcadeDrive(x, y, false); // Don't squareInputs
-
+        robotDrive.arcadeDrive(x, y, false);
     }
 
     public void resetEncoders() {
@@ -174,12 +156,5 @@ public class NAR_Drivetrain extends SubsystemBase {
         robotDrive.tankDrive(leftSpeed, rightSpeed);
     }
     
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(getLeftEncoderSpeed(), getRightEncoderSpeed());
-    }
-
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        robotDrive.tankDrive(leftVolts / RobotController.getBatteryVoltage(), rightVolts / RobotController.getBatteryVoltage());
-    }
 }
 

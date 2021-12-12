@@ -2,18 +2,11 @@ package frc.team3128;
 
 import frc.team3128.subsystems.*;
 import frc.team3128.subsystems.Shooter.ShooterState;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.team3128.autonomous.AutoSimple;
-import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.limelight.LEDMode;
@@ -35,21 +28,13 @@ public class RobotContainer {
     private Intake m_intake;
     private Climber m_climber;
 
-    private Limelight shooterLimelight = new Limelight("limelight-sog", -26.0, 0, 0, 30);;
+    private Limelight shooterLimelight = new Limelight("limelight-sog", -26.0, 0, 0, 30);
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
-    private Command trajectory;
-
-    private Command runIntake, stopIntake;
-    private Command alignShoot, stopAlignShoot;
-    private Command armDown, armUp, stopArm;
-    private Command climberDown, climberUp, stopClimber;
-
-    private boolean debug = false;
 
     public RobotContainer() {
 
@@ -72,7 +57,6 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
         m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint));
 
-        initAutos();
         configureButtonBindings();
         dashboardInit();
     }   
@@ -81,26 +65,23 @@ public class RobotContainer {
 
 
         // right button trigger: intake
-        m_rightStick.getButton(1).whenPressed(runIntake)
-                                .whenReleased(stopIntake);
+        m_rightStick.getButton(1).whenActive(new RunCommand(m_intake::runIntake, m_intake));
 
         // right button 2: shoot
-        m_rightStick.getButton(2).whenPressed(alignShoot)
-                                .whenReleased(stopAlignShoot);
+        m_rightStick.getButton(2).whenActive(new ParallelCommandGroup(new Shoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight)));
+
         // right button 9: move arm down
-        m_rightStick.getButton(9).whenPressed(armDown)
-                                .whenReleased(stopArm);
+        m_rightStick.getButton(9).whenActive(new RunCommand(m_intake::moveArmDown, m_intake));
+        
         // right button 10: move arm up
-        m_rightStick.getButton(10).whenPressed(armUp)
-                                .whenReleased(stopArm);
+        m_rightStick.getButton(10).whenActive(new RunCommand(m_intake::moveArmUp, m_intake));
+
         // left button 7: move climber up
-        m_leftStick.getButton(7).whenPressed(climberUp)
-                                .whenReleased(stopClimber);
+        m_leftStick.getButton(7).whenActive(new RunCommand(m_climber::moveClimberUp, m_climber));
 
         // left button 8: move climber down
-        m_leftStick.getButton(8).whenPressed(climberDown)
-                                .whenReleased(stopClimber);
-
+        m_leftStick.getButton(8).whenActive(new RunCommand(m_climber::moveClimberDown, m_climber));
+        
     }
 
     private void dashboardInit() {
@@ -113,52 +94,6 @@ public class RobotContainer {
         SmartDashboard.putData(m_intake);
         SmartDashboard.putData(m_climber);
 
-        if(debug) {
-            SmartDashboard.putNumber("Left Stick Raw X", m_leftStick.getX());
-            SmartDashboard.putNumber("Left Stick Raw Y", m_leftStick.getY());
-            SmartDashboard.putNumber("Left Stick Raw Z", m_leftStick.getZ());
-            SmartDashboard.putNumber("Left Stick Raw Twist", m_leftStick.getTwist());
-            SmartDashboard.putNumber("Left Stick Raw Throttle", m_leftStick.getThrottle());
-
-            SmartDashboard.putNumber("Right Stick Raw X", m_rightStick.getX());
-            SmartDashboard.putNumber("Right Stick Raw Y", m_rightStick.getY());
-            SmartDashboard.putNumber("Right Stick Raw Z", m_rightStick.getZ());
-            SmartDashboard.putNumber("Right Stick Raw Twist", m_rightStick.getTwist());
-            SmartDashboard.putNumber("Right Stick Raw Throttle", m_rightStick.getThrottle());
-        }
-
-    }
-
-    private void initAutos() {
-        runIntake = new RunCommand(m_intake::runIntake, m_intake);
-        stopIntake = new RunCommand(m_intake::stopIntake, m_intake);
-        
-        alignShoot = new ParallelCommandGroup(new CmdShoot(m_shooter, m_sidekick, ShooterState.MID_RANGE), new CmdAlign(m_drive, shooterLimelight));
-        stopAlignShoot = new ParallelCommandGroup(new RunCommand(m_shooter::stopShoot, m_shooter), new InstantCommand(shooterLimelight::turnLEDOff));
-
-        armDown = new RunCommand(m_intake::moveArmDown, m_intake);
-        armUp = new RunCommand(m_intake::moveArmUp, m_intake);
-        stopArm = new RunCommand(m_intake::stopArm, m_intake);
-
-        climberUp = new RunCommand(m_climber::moveClimberUp, m_climber);
-        climberDown = new RunCommand(m_climber::moveClimberDown, m_climber);
-        stopClimber = new RunCommand(m_climber::stopClimber, m_climber);
-
-        trajectory = new RamseteCommand(Trajectories.trajectorySimple, 
-                                        m_drive::getPose,
-                                        new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
-                                        new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-                                                                    Constants.DriveConstants.kV,
-                                                                    Constants.DriveConstants.kA),
-                                        Constants.DriveConstants.DRIVE_KINEMATICS,
-                                        m_drive::getWheelSpeeds,
-                                        new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                        new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                        m_drive::tankDriveVolts,
-                                        m_drive)
-                                        .andThen(() -> m_drive.stop(), m_drive);
-
-        auto = new AutoSimple(m_shooter, m_sidekick, m_drive, shooterLimelight, m_intake, trajectory);
     }
 
     public void stopDrivetrain() {
@@ -168,6 +103,4 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return auto;
     }
-
-
 }

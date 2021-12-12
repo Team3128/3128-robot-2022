@@ -144,22 +144,10 @@ public class Limelight {
         limelightTable.getEntry("pipeline").setNumber(pipeline.getPipeline());
     }
 
-    public void turnLEDOn() {
-        setLEDMode(LEDMode.ON);
-    }
-
-    public void turnLEDOff() {
-        setLEDMode(LEDMode.OFF);
-    }
-
       /**
      * Set the limelight on the dashboard
      */
     public double getSelectedPipeline() {
         return limelightTable.getEntry("pipeline").getDouble(0);
-    }
-
-    public String getLedMode() {
-        return limelightTable.getEntry("ledMode").getString("I don't know LED mode. Send help");
     }
 }
