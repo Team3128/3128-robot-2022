@@ -28,7 +28,9 @@ public class ArcadeDrive extends CommandBase {
     
     @Override
     public void execute() {
+
         double throttle = (-m_throttle.getAsDouble() + 1) / 2;
+
         if(throttle < 0.3)
             throttle = 0.3;
         if (throttle > 0.8)

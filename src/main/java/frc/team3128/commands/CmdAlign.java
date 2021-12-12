@@ -63,8 +63,8 @@ public class CmdAlign extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_limelight.setLEDMode(LEDMode.ON);
-        currTime = RobotController.getFPGATime() /1e6;
+
+        currTime = RobotController.getFPGATime() / 1e6;
 
         switch(aimState) {
             case SEARCHING:
@@ -85,6 +85,10 @@ public class CmdAlign extends CommandBase {
             case FEEDBACK:
                 if(!m_limelight.hasValidTarget()) {
                     aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
+
+                    isAligned = false;
+                    plateauCount = 0;
+
                     break;
                 }
 
@@ -95,8 +99,9 @@ public class CmdAlign extends CommandBase {
                     txThreshold += (currTime - prevTime) * (Constants.VisionContants.TX_THRESHOLD_INCREMENT);
                 }
 
-                double feedbackPower = Constants.VisionContants.VISION_PID_kP * currError + Constants.VisionContants.VISION_PID_kD * (currError - prevError) / (currTime - prevTime);
-
+                double ff = Math.signum(currError) * Constants.VisionContants.ALIGN_FF;
+                double feedbackPower = Constants.VisionContants.VISION_PID_kP * currError + Constants.VisionContants.VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
+                
                 if(feedbackPower > 1)
                     feedbackPower = 1;
                 else if(feedbackPower < -1)
@@ -111,6 +116,7 @@ public class CmdAlign extends CommandBase {
 
                     if(plateauCount > Constants.VisionContants.ALIGN_PLATEAU_COUNT) {
                         isAligned = true;
+                        m_limelight.setLEDMode(LEDMode.OFF);
                     }
                 }
                 else {
@@ -128,7 +134,6 @@ public class CmdAlign extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_limelight.setLEDMode(LEDMode.OFF);
         m_drive.stop();
     }
 
