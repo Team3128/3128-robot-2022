@@ -1,23 +1,22 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import frc.team3128.Robot;
+import frc.team3128.common.NAR_EMotor;
 import frc.team3128.common.NAR_PIDSubsystem;
 import frc.team3128.common.hardware.motor.NAR_TalonFX;
 
 public class Shooter extends NAR_PIDSubsystem {
 
+    /**
+     * Different possible RPM setpoints
+     */
     public enum ShooterState {
         OFF(0),
         LONG_RANGE(6000), // long range shooting
@@ -38,9 +37,8 @@ public class Shooter extends NAR_PIDSubsystem {
     private static Shooter instance;
 
     //Motors
-    private BaseTalon m_leftShooter, m_rightShooter;
-    //Simulated Motors
-    private TalonSRXSimCollection m_leftShooterSim;
+    private NAR_TalonFX m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
+    private NAR_TalonFX m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
 
     //Simulated Shooter
     private FlywheelSim m_shooterSim;
@@ -60,29 +58,18 @@ public class Shooter extends NAR_PIDSubsystem {
     
 
     /**
-     * Creates the PID Controller and Instantiates the Motors (with simulated counterparts if necessary)
+     * Creates the PID Controller (with sim if necessary)
      */
     public Shooter() {
         
         super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD), Constants.ShooterConstants.PLATEAU_COUNT);
-
-        //Robot is real
-        if(Robot.isReal()) {
-            m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
-        }
-        else {
-            //Robot is a simulation
-            m_leftShooter = new WPI_TalonSRX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-            m_rightShooter = new WPI_TalonSRX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
-            m_leftShooterSim = new TalonSRXSimCollection(m_leftShooter);
+    
+        //Robot is a simulation
+        if(Robot.isSimulation()){
             m_shooterSim = new FlywheelSim(
-                LinearSystemId.identifyVelocitySystem(
-                    0, //kV
-                    0 //kA
-                ),
-                DCMotor.getFalcon500(2), //gearbox
-                1.5 //gearing
+                Constants.ShooterConstants.SHOOTER_CHAR,
+                Constants.ShooterConstants.SHOOTER_GEARBOX,
+                Constants.ShooterConstants.SHOOTER_GEARING 
             );
         }
     }
@@ -141,10 +128,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     protected double getMeasurement() {
-        return m_leftShooter.getSelectedSensorVelocity(0) * Constants.ConversionConstants.ENCODER_TO_RPM;
+        return m_leftShooter.getSelectedSensorVelocity() * Constants.ConversionConstants.ENCODER_TO_RPM;
     }
-
-
 
     /**
      * Use the raw voltage output from the PID loop, add a feed forward component, and convert it to a percentage of total
@@ -184,16 +169,18 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public void simulationPeriodic() {
-        m_shooterSim.setInputVoltage(
+        m_shooterSim.setInput(
             m_leftShooter.getMotorOutputVoltage()
+            //m_rightShooter.getMotorOutputVoltage()
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooterSim.setQuadratureVelocity((int) (m_shooterSim.getAngularVelocityRadPerSec() * 0.0254));
+        m_leftShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
+        //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
 
-        SmartDashboard.putNumber("Speed", m_leftShooter.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Expected Speed", m_shooterSim.getAngularVelocityRadPerSec());
-
+        SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
+        SmartDashboard.putNumber("Expected Shooter Speed (rpm)", m_shooterSim.getAngularVelocityRadPerSec()); //* 60 / (2*Math.PI) );
+        SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
     }
     
     public void setMotorVelocity(double rpm) {

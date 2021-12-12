@@ -69,14 +69,8 @@ public class RobotContainer {
 
         shooterLimelight.setLEDMode(LEDMode.ON);
 
-        // Daniel - All subsystems now extend SubsystemBase, which registers them to the scheduler on construction, so this is now unnecessary
-        // Registers subsystems to scheduler so that periodic methods run
-        // m_commandScheduler.registerSubsystem(m_drive, m_shooter, m_sidekick, m_hopper, m_intake, m_climber);
-
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-
-        //TODO: Test shooter atSetpoint() vs. isReady() - isReady actually waits for the 25 count, atSetpoint doesn't
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint, m_sidekick::isReady));
+        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint));
 
         initAutos();
         configureButtonBindings();
@@ -84,6 +78,7 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
+
 
         // right button trigger: intake
         m_rightStick.getButton(1).whenPressed(runIntake)
