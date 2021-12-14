@@ -14,7 +14,7 @@ public class Constants {
 
     public static class ShooterConstants {
 
-        public static final double SHOOTER_PID_kP = 1.24e-7;
+        public static final double SHOOTER_PID_kP = 1.24e-7; //1.24e-7
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
         public static final double SHOOTER_PID_kF = 0;
@@ -23,13 +23,13 @@ public class Constants {
         public static final int RIGHT_SHOOTER_ID = 13; //Right Shooter Motor
 
         public static final int PLATEAU_COUNT = 25; //Number of checks at correct RPM to shoot
-        public static final double THRESHOLD_PERCENT = 0.05; //Maximum Percent Error in RPM to still shoot
+        public static final double THRESHOLD_PERCENT = 0.1; //0.05; //Maximum Percent Error in RPM to still shoot
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.1;
         public static final double TIME_TO_MAX_THRESHOLD = 5;
 
         public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.00176; //0.00163; //Velocity gain in PID Feed Forward
         public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
 
         // There are other better ways of doing this, need to use DCU 
@@ -105,7 +105,7 @@ public class Constants {
         public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS * 2 * Math.PI / ENCODER_RESOLUTION_PER_ROTATION;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = -0.7;
+        public static final double ARCADE_DRIVE_TURN_MULT = -0.6; //-0.7
 
         public static final double kS = 0.8; // 0.73; // volts
         public static final double kV = 0.5; // 0.571; // volt*seconds/meter

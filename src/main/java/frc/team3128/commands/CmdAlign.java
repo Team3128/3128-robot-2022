@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.team3128.common.limelight.LEDMode;
 import frc.team3128.common.limelight.Limelight;
 import frc.team3128.common.limelight.LimelightKey;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team3128.subsystems.Constants;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
@@ -129,6 +130,7 @@ public class CmdAlign extends CommandBase {
         }
 
         prevTime = currTime;
+        SmartDashboard.putBoolean("Shooter isAligned", isAligned);
     }
 
     // Called once the command ends or is interrupted.

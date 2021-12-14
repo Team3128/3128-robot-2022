@@ -62,7 +62,10 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     public Shooter() {
         
-        super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD), Constants.ShooterConstants.PLATEAU_COUNT);
+        super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, 
+                                Constants.ShooterConstants.SHOOTER_PID_kI, 
+                                Constants.ShooterConstants.SHOOTER_PID_kD), 
+                                Constants.ShooterConstants.PLATEAU_COUNT);
     
         //Robot is a simulation
         if(Robot.isSimulation()){
@@ -145,12 +148,10 @@ public class Shooter extends NAR_PIDSubsystem {
         double percentOutput = voltageOutput/voltage;
 
         time = RobotController.getFPGATime() / 1e6;
-        if (thresholdPercent < Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += ((time - preTime) * ((Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - Constants.ShooterConstants.RPM_THRESHOLD_PERCENT)) / Constants.ShooterConstants.TIME_TO_MAX_THRESHOLD);
-            getController().setTolerance(thresholdPercent * setpoint);
-        }
-
-        super.countPlateau(setpoint);
+        // if (thresholdPercent < Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
+        //     thresholdPercent += ((time - preTime) * ((Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - Constants.ShooterConstants.RPM_THRESHOLD_PERCENT)) / Constants.ShooterConstants.TIME_TO_MAX_THRESHOLD);
+        //     getController().setTolerance(thresholdPercent * setpoint);
+        // }
 
         preTime = time;
 
@@ -164,7 +165,16 @@ public class Shooter extends NAR_PIDSubsystem {
         SmartDashboard.putNumber("Shooter RPM", getMeasurement());
         SmartDashboard.putBoolean("Shooter isReady", isReady());
         SmartDashboard.putBoolean("Shooter atSetpoint", atSetpoint());
+        SmartDashboard.putNumber("Shooter setpoint", setpoint);
+        SmartDashboard.putNumber("Shooter threshold percent", thresholdPercent);
+        SmartDashboard.putNumber("Shooter plateau", plateauCount);
 
+        super.countPlateau(setpoint);
+
+        SmartDashboard.putBoolean("Shooter atSetpoint2", atSetpoint());
+        SmartDashboard.putBoolean("Shooter atSetpoint3", m_controller.atSetpoint());
+        SmartDashboard.putBoolean("NarSet atSetpoint4", super.narSet());
+        
     }
 
     @Override

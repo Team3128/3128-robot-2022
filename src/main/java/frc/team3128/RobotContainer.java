@@ -107,6 +107,12 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenPressed(climberDown)
                                 .whenReleased(stopClimber);
 
+        // left button 9: turn LED on
+        m_leftStick.getButton(9).whenPressed(shooterLimelight::turnLEDOn);
+
+        // left button 10: turn LED off
+        m_leftStick.getButton(10).whenPressed(shooterLimelight::turnLEDOff);
+
     }
 
     private void dashboardInit() {
