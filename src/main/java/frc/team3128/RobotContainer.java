@@ -49,6 +49,8 @@ public class RobotContainer {
     private Command armDown, armUp, stopArm;
     private Command climberDown, climberUp, stopClimber;
 
+    private boolean driveInverted = false;
+
     private boolean debug = false;
 
     public RobotContainer() {
@@ -69,7 +71,7 @@ public class RobotContainer {
 
         shooterLimelight.setLEDMode(LEDMode.ON);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
+        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, this::getDriveInverted));
         m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint, m_sidekick::atSetpoint));
 
         initAutos();
@@ -93,6 +95,10 @@ public class RobotContainer {
         // right button 10: move arm up
         m_rightStick.getButton(10).whenPressed(armUp)
                                 .whenReleased(stopArm);
+
+        // left trigger: reverse drive
+        m_leftStick.getButton(1).whenPressed(() -> driveInverted = !driveInverted);
+
         // left button 7: move climber up
         m_leftStick.getButton(7).whenPressed(climberUp)
                                 .whenReleased(stopClimber);
@@ -159,6 +165,10 @@ public class RobotContainer {
                                         .andThen(() -> m_drive.stop(), m_drive);
 
         auto = new AutoSimple(m_shooter, m_sidekick, m_drive, shooterLimelight, m_intake, trajectory);
+    }
+
+    private boolean getDriveInverted() {
+        return driveInverted;
     }
 
     public void stopDrivetrain() {

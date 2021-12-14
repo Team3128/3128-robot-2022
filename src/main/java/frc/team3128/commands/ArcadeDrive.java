@@ -1,5 +1,6 @@
 package frc.team3128.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,15 +12,16 @@ public class ArcadeDrive extends CommandBase {
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_turn;
     private final DoubleSupplier m_throttle;
+    private final BooleanSupplier m_driveInv;
 
-
-    public ArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle) {
+    public ArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle, BooleanSupplier driveInversed) {
         m_drivetrain = drivetrain;
         addRequirements(m_drivetrain);
 
         m_xSpeed = xSpeed;
         m_turn = turn;
         m_throttle = throttle;
+        m_driveInv = driveInversed;
     }
     
     @Override
@@ -36,8 +38,9 @@ public class ArcadeDrive extends CommandBase {
         if (throttle > 0.8)
             throttle = 1;
 
+        double inv = (m_driveInv.getAsBoolean() ? -1 : 1);
 
-        m_drivetrain.arcadeDrive(m_xSpeed.getAsDouble() * throttle, Constants.DriveConstants.ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble() * throttle);
+        m_drivetrain.arcadeDrive(inv * m_xSpeed.getAsDouble() * throttle, Constants.DriveConstants.ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble() * throttle);
     }
     
     @Override
