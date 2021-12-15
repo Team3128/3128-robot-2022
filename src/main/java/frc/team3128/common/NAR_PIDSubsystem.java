@@ -44,7 +44,7 @@ abstract public class NAR_PIDSubsystem extends PIDSubsystem{
      */
     public void countPlateau(double setpoint) {
         SmartDashboard.putBoolean("NAR_PIDSubsystem atSetpoint", m_controller.atSetpoint());
-        if (m_controller.atSetpoint() && (setpoint != 0)) {
+        if (getController().atSetpoint() && (setpoint != 0)) {
             plateauCount++;
         } else {
             plateauCount = 0;
@@ -52,7 +52,7 @@ abstract public class NAR_PIDSubsystem extends PIDSubsystem{
     }
  
     public boolean narSet(){
-        m_controller.atSetpoint()
+        return m_controller.atSetpoint();
     }
     /**
      * Set plateau counter back to 0 when restarted PID loop

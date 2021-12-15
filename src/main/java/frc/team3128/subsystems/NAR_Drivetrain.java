@@ -102,9 +102,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         
         // Set motor voltage inputs
         robotDriveSim.setInputs(
-            leftLeader.getMotorOutputVoltage(),
+            -leftLeader.getMotorOutputVoltage(),
             rightLeader.getMotorOutputVoltage()
-
         );
 
         // Update sim environment
@@ -127,7 +126,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         
     public double getHeading() {
         //gyro.getAngle uses CW as positive
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return (Math.IEEEremainder(gyro.getAngle(), 360) + 360) % 360;
     }
 
     public Pose2d getPose() {

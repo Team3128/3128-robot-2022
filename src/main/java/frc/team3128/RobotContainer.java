@@ -168,7 +168,8 @@ public class RobotContainer {
                                         new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
                                         m_drive::tankDriveVolts,
                                         m_drive)
-                                        .andThen(() -> m_drive.stop(), m_drive);
+                                        .andThen(() -> m_drive.stop(), m_drive)
+                                        .andThen(() -> SmartDashboard.putNumber("End auto heading", m_drive.getHeading()));
 
         auto = new AutoSimple(m_shooter, m_sidekick, m_drive, shooterLimelight, m_intake, trajectory);
     }

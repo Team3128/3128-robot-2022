@@ -37,11 +37,10 @@ public class Trajectories {
             .setReversed(true);
 
     public static Trajectory trajectorySimple = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(
-            new Translation2d(Units.inchesToMeters(-6), 0)),
-        new Pose2d(Units.inchesToMeters(-40), 0, new Rotation2d(0)),
-        backwardsTrajConfig);
+        new Pose2d(7, 4, new Rotation2d(0)),
+        List.of(),
+        new Pose2d(14, 8, new Rotation2d(0)),
+        forwardTrajConfig);
 
     public static Trajectory trajectoryLessSimple = TrajectoryGenerator.generateTrajectory(
         new Pose2d(0, 0, new Rotation2d(0)),

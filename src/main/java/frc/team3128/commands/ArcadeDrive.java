@@ -38,7 +38,7 @@ public class ArcadeDrive extends CommandBase {
         if (throttle > 0.8)
             throttle = 1;
 
-        double inv = (m_driveInv.getAsBoolean() ? -1 : 1);
+        double inv = (m_driveInv.getAsBoolean() ? -1 : 1); // -1 if driveInv is true, 1 if false
 
         m_drivetrain.arcadeDrive(inv * m_xSpeed.getAsDouble() * throttle, Constants.DriveConstants.ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble() * throttle);
     }

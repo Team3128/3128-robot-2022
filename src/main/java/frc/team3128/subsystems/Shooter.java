@@ -174,6 +174,7 @@ public class Shooter extends NAR_PIDSubsystem {
         SmartDashboard.putBoolean("Shooter atSetpoint2", atSetpoint());
         SmartDashboard.putBoolean("Shooter atSetpoint3", m_controller.atSetpoint());
         SmartDashboard.putBoolean("NarSet atSetpoint4", super.narSet());
+        SmartDashboard.putBoolean("GetController atSetpoint4", getController().atSetpoint());
         
     }
 
