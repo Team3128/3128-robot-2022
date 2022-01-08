@@ -1,4 +1,4 @@
-package frc.team3128.common.limelight;
+package frc.team3128.common.hardware.limelight;
 
 public enum Pipeline {
     DEFAULT(0),

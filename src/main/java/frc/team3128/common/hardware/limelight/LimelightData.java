@@ -1,4 +1,4 @@
-package frc.team3128.common.limelight;
+package frc.team3128.common.hardware.limelight;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

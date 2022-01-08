@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.SpeedController;
-
 public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
 
     public static enum MotorConstants{

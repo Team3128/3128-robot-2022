@@ -3,9 +3,8 @@ package frc.team3128;
 import frc.team3128.subsystems.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
-import frc.team3128.common.limelight.LEDMode;
-import frc.team3128.common.limelight.Limelight;
-
+import frc.team3128.common.hardware.limelight.LEDMode;
+import frc.team3128.common.hardware.limelight.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;

@@ -13,13 +13,10 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.Constants;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
-import frc.team3128.common.hardware.motor.NAR_CANSparkMax;
 import frc.team3128.common.hardware.motor.NAR_TalonFX;
-import frc.team3128.common.hardware.motor.NAR_TalonSRX;
-
-import net.thefletcher.revrobotics.enums.MotorType;
 
 public class NAR_Drivetrain extends SubsystemBase {
 

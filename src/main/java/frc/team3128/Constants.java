@@ -1,11 +1,8 @@
-package frc.team3128.subsystems;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+package frc.team3128;
 
 import edu.wpi.first.wpilibj.system.LinearSystem;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
-import edu.wpi.first.wpiutil.math.numbers.N1;
 import edu.wpi.first.wpiutil.math.numbers.N2;
 
 public class Constants {
