@@ -96,7 +96,9 @@ public class NAR_Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
-        field.setRobotPose(getPose());     
+        field.setRobotPose(getPose());   
+        
+        SmartDashboard.putNumber("Gyro", getHeading());
     }
 
     public void simulationPeriodic() {
@@ -123,11 +125,13 @@ public class NAR_Drivetrain extends SubsystemBase {
         // TODO: Abstractify gyro
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
-        angle.set(-robotDriveSim.getHeading().getDegrees());
+        angle.set(robotDriveSim.getHeading().getDegrees()); // @Nathan: I tested this out, this seems to work. This preserves parity w/ the real robot in angle, odometry
+        SmartDashboard.putNumber("Sim Gyro", angle.get());
     }
         
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360) * (Constants.DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
+        //gyro.getYaw uses CW as positive
+        return -gyro.getYaw(); // (Math.IEEEremainder(gyro.getAngle(), 360) + 360) % 360;
     }
 
     public Pose2d getPose() {

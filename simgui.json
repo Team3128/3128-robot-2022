@@ -13,5 +13,10 @@
         }
       }
     }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
+    }
   }
 }
