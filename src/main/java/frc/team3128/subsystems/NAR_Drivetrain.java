@@ -6,9 +6,10 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,11 +56,16 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         // Not sure what the deal is here
         leftFollower.follow(leftLeader);
-        //leftFollower.setInverted(InvertType.FollowMaster);
         rightFollower.follow(rightLeader);
-        //rightFollower.setInverted(InvertType.FollowMaster);
+        
+        leftLeader.setInverted(false);
+        leftFollower.setInverted(false);
+        rightLeader.setInverted(true);
+        rightFollower.setInverted(true);
 
-        robotDrive = new DifferentialDrive(leftLeader.getMotor(), rightLeader.getMotor());
+        robotDrive = new DifferentialDrive(
+            new MotorControllerGroup(leftLeader.getMotor(), leftFollower.getMotor()),
+            new MotorControllerGroup(rightLeader.getMotor(), rightFollower.getMotor()));
 
         if(Robot.isSimulation()){
             robotDriveSim =
@@ -98,7 +104,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         // Set motor voltage inputs
         robotDriveSim.setInputs(
             leftLeader.getMotorOutputVoltage(),
-            -rightLeader.getMotorOutputVoltage()
+            rightLeader.getMotorOutputVoltage()
 
         );
 

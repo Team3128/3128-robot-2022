@@ -1,7 +1,7 @@
 package frc.team3128.common;
 
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.math.controller.PIDController;
 
 abstract public class NAR_PIDSubsystem extends PIDSubsystem{
     

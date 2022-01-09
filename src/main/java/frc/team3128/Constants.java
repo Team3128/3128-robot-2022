@@ -1,19 +1,25 @@
 package frc.team3128;
 
-import edu.wpi.first.wpilibj.system.LinearSystem;
-import edu.wpi.first.wpilibj.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
-import edu.wpi.first.wpiutil.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.numbers.N2;
 
 public class Constants {
 
     public static class ConversionConstants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
-        public static final double ENCODER_TO_RPM = 10*60/FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
+        public static final double SPARK_ENCODER_RESOLUTION = 42;
+        public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
 
     }
 
     public static class DriveConstants {
+
+        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
+        public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
+        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
+        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
         // Sim constants, TODO: move to new class
 
@@ -21,23 +27,17 @@ public class Constants {
         public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
         public static final LinearSystem<N2, N2, N2> DRIVE_CHAR = 
         LinearSystemId.identifyDrivetrainSystem(
-            5, //0.5, // kvVoltSecondsPerMeter
-            0.5,//0.05, // kaVoltSecondsSquaredPerMeter
-            5,//1.5, // kvVoltSecondsPerRadian
-            0.5//0.3 // kaVoltSecondsSquaredPerRadian
+            5,              // kvVoltSecondsPerMeter
+            0.5,            // kaVoltSecondsSquaredPerMeter
+            5,              // kvVoltSecondsPerRadian
+            0.5             // kaVoltSecondsSquaredPerRadian
         );
         public static final double DRIVE_GEARING = 8;
         public static final double WHEEL_RADIUS_METERS = 0.0508; 
-        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
-        public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
-        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
-        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
+        public static final double TRACK_WIDTH_METERS = 0.66;        
+        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ConversionConstants.FALCON_ENCODER_RESOLUTION;
 
         public static final Boolean GYRO_REVERSED = false;
-        public static final double TRACK_WIDTH_METERS = 0.66;
-        public static final double ENCODER_RESOLUTION_PER_ROTATION = 2048;
-        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ENCODER_RESOLUTION_PER_ROTATION;
-
     }
 
     public static class VisionContants {

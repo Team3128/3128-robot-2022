@@ -10,7 +10,7 @@ import frc.team3128.common.NAR_EMotor;
 //import frc.team3128.common.NARMotor;
 //import frc.team3128.common.NARTalon;
 
-public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor{
+public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private NAR_TalonSRX fakeMotor;
@@ -71,7 +71,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor{
 		if(fakeMotor != null)
 			return fakeMotor.getMotorOutputVoltage();	
 		else
-			return super.getSelectedSensorPosition();
+			return super.getSelectedSensorPosition(); // what the hell
 	}
 
 	@Override

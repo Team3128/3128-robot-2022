@@ -1,7 +1,7 @@
 package frc.team3128.common.hardware.motor;
 
-// import com.revrobotics.ControlType;
-// import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDevice.Direction;
@@ -9,15 +9,12 @@ import edu.wpi.first.hal.SimDouble;
 
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
+import frc.team3128.Constants.ConversionConstants;;
 
-import net.thefletcher.revrobotics.CANEncoder;
-import net.thefletcher.revrobotics.CANSparkMax;
-import net.thefletcher.revrobotics.enums.MotorType;
-
-public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor{
+public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	private double prevValue = 0;
-	private CANEncoder encoder;
+	private RelativeEncoder encoder;
 	private SimDevice encoderSim;
 	private SimDouble encoderPos;
 	private SimDouble encoderVel;
@@ -32,6 +29,7 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor{
 
 		if(Robot.isReal()){
 			encoder = getEncoder();
+			encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks - TEST
 		}else{
 			encoderSim = SimDevice.create("CANEncoder", deviceNumber);
 			encoderPos = encoderSim.createDouble("Pos", Direction.kBidir, 0);
@@ -76,11 +74,11 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor{
 	}
 
 	@Override
-	public void setEncoderPosition(double n) {
+	public void setEncoderPosition(double encPos) {
 		if(encoderSim != null)
-			encoderPos.set(n);	
+			encoderPos.set(encPos);	
 		else
-			setEncPosition(n);
+			encoder.setPosition(encPos);
 	}
 
 	@Override
