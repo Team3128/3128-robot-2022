@@ -1,0 +1,70 @@
+{
+  "MainWindow": {
+    "GLOBAL": {
+      "height": "720",
+      "maximized": "0",
+      "style": "0",
+      "userScale": "2",
+      "width": "1280",
+      "xpos": "-1",
+      "ypos": "-1"
+    }
+  },
+  "Window": {
+    "###/SmartDashboard/Field": {
+      "Collapsed": "0",
+      "Pos": "267,62",
+      "Size": "400,200"
+    },
+    "###FMS": {
+      "Collapsed": "0",
+      "Pos": "5,540",
+      "Size": "235,169"
+    },
+    "###Joysticks": {
+      "Collapsed": "0",
+      "Pos": "250,465",
+      "Size": "796,155"
+    },
+    "###Keyboard 0 Settings": {
+      "Collapsed": "0",
+      "Pos": "-11,237",
+      "Size": "300,560"
+    },
+    "###Keyboard 1 Settings": {
+      "Collapsed": "0",
+      "Pos": "320,50",
+      "Size": "300,560"
+    },
+    "###NetworkTables": {
+      "Collapsed": "0",
+      "Pos": "250,277",
+      "Size": "750,185"
+    },
+    "###Other Devices": {
+      "Collapsed": "0",
+      "Pos": "1025,20",
+      "Size": "250,695"
+    },
+    "###System Joysticks": {
+      "Collapsed": "0",
+      "Pos": "590,436",
+      "Size": "192,218"
+    },
+    "###Timing": {
+      "Collapsed": "0",
+      "Pos": "5,150",
+      "Size": "135,127"
+    },
+    "Debug##Default": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "400,400"
+    },
+    "Robot State": {
+      "Collapsed": "0",
+      "Pos": "5,20",
+      "Size": "92,99"
+    }
+  }
+}

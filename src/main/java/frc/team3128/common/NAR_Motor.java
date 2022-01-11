@@ -3,11 +3,11 @@ package frc.team3128.common;
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.SimDevice.Direction;
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-public abstract class NAR_Motor<T extends SpeedController> extends Simulable {
+public abstract class NAR_Motor<T extends MotorController> extends Simulable {
 
     public static enum MotorConstants{
 

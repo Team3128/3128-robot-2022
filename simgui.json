@@ -1,0 +1,36 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[3128]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/NAR_Drivetrain": "Subsystem",
+      "/SmartDashboard/Scheduler": "Scheduler"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
+    }
+  }
+}

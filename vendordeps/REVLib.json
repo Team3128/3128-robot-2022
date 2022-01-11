@@ -1,24 +1,24 @@
 {
-    "fileName": "REVRobotics.json",
-    "name": "REVRobotics",
-    "version": "1.5.4",
+    "fileName": "REVLib.json",
+    "name": "REVLib",
+    "version": "2022.1.0",
     "uuid": "3f48eb8c-50fe-43a6-9cb7-44c86353c4cb",
     "mavenUrls": [
-        "http://www.revrobotics.com/content/sw/max/sdk/maven/"
+        "https://maven.revrobotics.com/"
     ],
-    "jsonUrl": "http://www.revrobotics.com/content/sw/max/sdk/REVRobotics.json",
+    "jsonUrl": "https://software-metadata.revrobotics.com/REVLib.json",
     "javaDependencies": [
         {
             "groupId": "com.revrobotics.frc",
-            "artifactId": "SparkMax-java",
-            "version": "1.5.4"
+            "artifactId": "REVLib-java",
+            "version": "2022.1.0"
         }
     ],
     "jniDependencies": [
         {
             "groupId": "com.revrobotics.frc",
-            "artifactId": "SparkMax-driver",
-            "version": "1.5.4",
+            "artifactId": "REVLib-driver",
+            "version": "2022.1.0",
             "skipInvalidPlatforms": true,
             "isJar": false,
             "validPlatforms": [
@@ -35,9 +35,9 @@
     "cppDependencies": [
         {
             "groupId": "com.revrobotics.frc",
-            "artifactId": "SparkMax-cpp",
-            "version": "1.5.4",
-            "libName": "SparkMax",
+            "artifactId": "REVLib-cpp",
+            "version": "2022.1.0",
+            "libName": "REVLib",
             "headerClassifier": "headers",
             "sharedLibrary": false,
             "skipInvalidPlatforms": true,
@@ -53,9 +53,9 @@
         },
         {
             "groupId": "com.revrobotics.frc",
-            "artifactId": "SparkMax-driver",
-            "version": "1.5.4",
-            "libName": "SparkMaxDriver",
+            "artifactId": "REVLib-driver",
+            "version": "2022.1.0",
+            "libName": "REVLibDriver",
             "headerClassifier": "headers",
             "sharedLibrary": false,
             "skipInvalidPlatforms": true,
