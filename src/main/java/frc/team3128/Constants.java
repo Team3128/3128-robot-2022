@@ -3,6 +3,7 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
 
 public class Constants {
@@ -11,9 +12,9 @@ public class Constants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
         public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
-
     }
 
+    // Speedy Gonzales constants
     public static class DriveConstants {
 
         public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
@@ -21,23 +22,40 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
-        // Sim constants, TODO: move to new class
+        public static final double DRIVE_GEARING = 9.6;
+        public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
+        public static final double TRACK_WIDTH_METERS = 0.59312;
 
-        // TODO: Get actual kv, ka
+
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
+        public static final double DRIVE_DIST_PER_TICK = ENCODER_DISTANCE_PER_MARK / DRIVE_GEARING; // meters per encoder tick
+
+        public static final double kS = 0.63899;
+        public static final double kV = 2.1976;
+        public static final double kA = 0.12023;
+        public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
+        public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
+
+        public static final double MAX_DRIVE_VELOCITY = 4; // m/s - Real value ~5
+        public static final double MAX_DRIVE_ACCELERATION = 100; // m/s^2 - I don't know what this number is
+        public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
+
+        //Ramsete constants
+        public static final double RAMSETE_B = 2; //default value - don't change unless absolutely necessary
+        public static final double RAMSETE_ZETA = 0.7; //default value - don't change unless absolutely necessary
+        public static final double RAMSETE_KP = 2.1963;
+
+        public static final Boolean GYRO_REVERSED = false;
+
         public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
         public static final LinearSystem<N2, N2, N2> DRIVE_CHAR = 
         LinearSystemId.identifyDrivetrainSystem(
-            5,              // kvVoltSecondsPerMeter
-            0.5,            // kaVoltSecondsSquaredPerMeter
-            5,              // kvVoltSecondsPerRadian
-            0.5             // kaVoltSecondsSquaredPerRadian
+            kV,                 // kvVoltSecondsPerMeter
+            kA,                 // kaVoltSecondsSquaredPerMeter
+            kVAngular,          // kvVoltSecondsPerRadian
+            kAAngular           // kaVoltSecondsSquaredPerRadian
         );
-        public static final double DRIVE_GEARING = 8;
-        public static final double WHEEL_RADIUS_METERS = 0.0508; 
-        public static final double TRACK_WIDTH_METERS = 0.66;        
-        public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 / ConversionConstants.FALCON_ENCODER_RESOLUTION;
-
-        public static final Boolean GYRO_REVERSED = false;
     }
 
     public static class VisionContants {

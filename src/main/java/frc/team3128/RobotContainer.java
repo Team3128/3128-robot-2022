@@ -1,8 +1,14 @@
 package frc.team3128;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+
+import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.subsystems.NAR_Drivetrain;
@@ -37,12 +43,29 @@ public class RobotContainer {
 
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
+        initAutos();
         configureButtonBindings();
         dashboardInit();
     }   
 
     private void configureButtonBindings() {
         
+    }
+
+    private void initAutos() {
+        auto = new RamseteCommand(Trajectories.trajectorySimple, 
+                                m_drive::getPose,
+                                new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+                                new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+                                                            Constants.DriveConstants.kV,
+                                                            Constants.DriveConstants.kA),
+                                Constants.DriveConstants.DRIVE_KINEMATICS,
+                                m_drive::getWheelSpeeds,
+                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                                m_drive::tankDriveVolts,
+                                m_drive)
+                                .andThen(() -> m_drive.stop(), m_drive);
     }
 
     private void dashboardInit() {
@@ -58,6 +81,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        m_drive.resetPose(Trajectories.trajectorySimple.getInitialPose()); // change this if the trajectory being run changes
         return auto;
     }
 }

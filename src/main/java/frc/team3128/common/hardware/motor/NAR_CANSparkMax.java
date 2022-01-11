@@ -9,7 +9,7 @@ import edu.wpi.first.hal.SimDouble;
 
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
-import frc.team3128.Constants.ConversionConstants;;
+import frc.team3128.Constants.ConversionConstants;
 
 public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
