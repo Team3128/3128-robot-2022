@@ -2,6 +2,7 @@ package frc.team3128.common.hardware.motor;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import frc.team3128.Robot;
@@ -13,7 +14,7 @@ import frc.team3128.common.NAR_EMotor;
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
-	private NAR_TalonSRX fakeMotor;
+	private TalonFXSimCollection motorSim;
 
 	public static int simMotorID = 3128;
 
@@ -23,8 +24,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	public NAR_TalonFX(int deviceNumber) {
 		super(deviceNumber);
 		if(Robot.isSimulation()){
-			fakeMotor = new NAR_TalonSRX(simMotorID);
-			simMotorID--;
+			motorSim = getTalonFXSimCollection();
 		}
 
 		configVoltageCompSaturation(12, 10);
@@ -32,13 +32,9 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	public void set(ControlMode controlMode, double outputValue) {
-		if(fakeMotor != null){
-			fakeMotor.set(controlMode, outputValue);
-		}else{
-			if (outputValue != prevValue || controlMode != prevControlMode) {
-				super.set(controlMode, outputValue);
-				prevValue = outputValue;
-			}
+		if (outputValue != prevValue || controlMode != prevControlMode) {
+			super.set(controlMode, outputValue);
+			prevValue = outputValue;
 		}
 		// if (outputValue != prevValue || controlMode != prevControlMode) {
 		// 	super.set(controlMode, outputValue);
@@ -52,44 +48,32 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 
 	@Override
 	public double getSelectedSensorPosition() {
-		if(fakeMotor != null)
-			return fakeMotor.getSelectedSensorPosition();	
-		else
-			return super.getSelectedSensorPosition();
+		return super.getSelectedSensorPosition();
 	}
 
 	@Override
 	public double getSelectedSensorVelocity() {
-		if(fakeMotor != null)
-			return fakeMotor.getSelectedSensorVelocity();	
-		else
-			return super.getSelectedSensorVelocity();
+		return super.getSelectedSensorVelocity();
 	}
 
 	@Override
 	public double getMotorOutputVoltage(){
-		if(fakeMotor != null)
-			return fakeMotor.getMotorOutputVoltage();	
-		else
-			return super.getSelectedSensorPosition(); // what the hell
+		return super.getMotorOutputVoltage();
 	}
 
 	@Override
 	public void setEncoderPosition(double n) {
-		if(fakeMotor != null)
-			fakeMotor.setEncoderPosition(n);	
-		else
 			super.setSelectedSensorPosition(n);
 	}
 
 	@Override
 	public void setQuadSimPosition(double pos) {
-		fakeMotor.setQuadSimPosition((int)pos);
+		motorSim.setIntegratedSensorRawPosition((int)pos);
 	}
 
 	@Override
 	public void setQuadSimVelocity(double vel) {
-		fakeMotor.setQuadSimVelocity((int)vel);
+		motorSim.setIntegratedSensorVelocity((int)vel);
 	}
 
 	@Override
@@ -100,11 +84,11 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		super.follow((IMotorController)motor);
 	}
 
+
+
+	
 	@Override
 	public NAR_EMotor getMotor(){
-		if(fakeMotor != null)
-			return fakeMotor;
-		else
-			return this;
+		return this;
 	}
 }
