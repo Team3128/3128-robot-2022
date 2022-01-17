@@ -4,6 +4,7 @@ import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 
 public class Constants {
@@ -82,5 +83,31 @@ public class Constants {
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
         
+    }
+
+    public static class ShooterConstants {
+        public static final int LEFT_SHOOTER_ID = 2; 
+        public static final double SHOOTER_PID_kP = 1.24e-3;
+        public static final double SHOOTER_PID_kI = 0;
+        public static final double SHOOTER_PID_kD = 0;
+
+        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
+
+        public static final int PLATEAU_COUNT = 25;
+
+        public static final double RPM_THRESHOLD_PERCENT = 0.05;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.06;
+        public static final double TIME_TO_MAX_THRESHOLD = 8;
+
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            SHOOTER_KV, 
+            SHOOTER_KA
+        );
+        public static final double SHOOTER_RADIUS_METERS = 0.0508;
+        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
+        public static final double SHOOTER_GEARING = 1.5;
     }
 }
