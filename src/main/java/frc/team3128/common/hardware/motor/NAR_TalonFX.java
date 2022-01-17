@@ -66,13 +66,21 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 			super.setSelectedSensorPosition(n);
 	}
 
+	//TODO: Only temporary
 	@Override
 	public void setSimPosition(double pos) {
+		if(super.getInverted()) {
+			pos *= -1;
+		}
 		motorSim.setIntegratedSensorRawPosition((int)pos);
 	}
 
+	//TODO: Only temporary
 	@Override
 	public void setSimVelocity(double vel) {
+		if(super.getInverted()) {
+			vel *= -1;
+		}
 		motorSim.setIntegratedSensorVelocity((int)vel);
 	}
 
