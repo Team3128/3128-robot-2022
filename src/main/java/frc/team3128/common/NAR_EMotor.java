@@ -28,14 +28,11 @@ public interface NAR_EMotor extends MotorController {
     /**
      * 
      */
-    public void setQuadSimPosition(double pos);
-    public void setQuadSimVelocity(double vel);
+    public void setSimPosition(double pos);
+    public void setSimVelocity(double vel);
 
     /**
      * @param motor NAR_EMotor to follow
      */
     public void follow(NAR_EMotor motor);
-
-    // This is stupid and needs a better solution
-    public NAR_EMotor getMotor();
 }

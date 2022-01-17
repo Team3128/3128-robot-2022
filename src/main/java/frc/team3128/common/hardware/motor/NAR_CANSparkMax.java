@@ -82,12 +82,12 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	}
 
 	@Override
-	public void setQuadSimPosition(double pos) {
+	public void setSimPosition(double pos) {
 		encoderPos.set(pos);
 	}
 
 	@Override
-	public void setQuadSimVelocity(double vel) {
+	public void setSimVelocity(double vel) {
 		encoderVel.set(vel);
 	}
 
@@ -97,10 +97,5 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((CANSparkMax)motor);
-	}
-
-	@Override
-	public NAR_EMotor getMotor() {
-		return this;
 	}
 }

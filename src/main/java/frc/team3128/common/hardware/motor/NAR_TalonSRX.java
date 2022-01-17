@@ -46,12 +46,12 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 	}
 
 	@Override
-	public void setQuadSimPosition(double pos) {
+	public void setSimPosition(double pos) {
 		motorSim.setQuadratureRawPosition((int)pos);
 	}
 
 	@Override
-	public void setQuadSimVelocity(double vel) {
+	public void setSimVelocity(double vel) {
 		motorSim.setQuadratureVelocity((int)vel);
 	}
 
@@ -61,9 +61,5 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((IMotorController)motor);
-	}
-	@Override
-	public NAR_EMotor getMotor(){
-		return this;
 	}
 }

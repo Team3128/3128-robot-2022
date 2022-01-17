@@ -16,8 +16,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonFXSimCollection motorSim;
 
-	public static int simMotorID = 3128;
-
 	/**	 
 	 * @param deviceNumber device id
 	 */
@@ -63,16 +61,16 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 
 	@Override
 	public void setEncoderPosition(double n) {
-			super.setSelectedSensorPosition(n);
+		super.setSelectedSensorPosition(n);
 	}
 
 	@Override
-	public void setQuadSimPosition(double pos) {
+	public void setSimPosition(double pos) {
 		motorSim.setIntegratedSensorRawPosition((int)pos);
 	}
 
 	@Override
-	public void setQuadSimVelocity(double vel) {
+	public void setSimVelocity(double vel) {
 		motorSim.setIntegratedSensorVelocity((int)vel);
 	}
 
@@ -82,13 +80,5 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((IMotorController)motor);
-	}
-
-
-
-	
-	@Override
-	public NAR_EMotor getMotor(){
-		return this;
 	}
 }
