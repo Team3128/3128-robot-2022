@@ -16,7 +16,7 @@ public class Hopper extends SubsystemBase {
     private static Hopper instance;
 
     private NAR_EMotor m_hopper;
-    private DoubleSolenoid m_hpiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
+    private DoubleSolenoid m_hpiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.HopperConstants.SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.SOLENOID_BACKWARD_CHANNEL_ID);
 
     // private DigitalInput m_bottom, m_top;
     private boolean isEjected;

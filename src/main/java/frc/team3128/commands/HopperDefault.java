@@ -5,12 +5,12 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.subsystems.Hopper;
 
-public class HopperPiston extends CommandBase {
+public class HopperDefault extends CommandBase {
     private final Hopper m_hopper;
     private final BooleanSupplier isShooting;
     private boolean isEjected;
 
-    public HopperPiston(Hopper hopper, BooleanSupplier isShooting) {
+    public HopperDefault(Hopper hopper, BooleanSupplier isShooting) {
         m_hopper = hopper;
         this.isShooting = isShooting;
 
