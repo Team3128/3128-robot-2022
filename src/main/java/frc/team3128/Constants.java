@@ -83,4 +83,8 @@ public class Constants {
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
         
     }
+    public static class IntakeConstants {
+        public static final int m_intake_ID = 4; 
+
+    }
 }
