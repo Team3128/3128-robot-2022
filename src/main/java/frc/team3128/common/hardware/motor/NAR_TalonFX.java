@@ -16,6 +16,8 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonFXSimCollection motorSim;
 
+	public static int simMotorID = 3128;
+
 	/**	 
 	 * @param deviceNumber device id
 	 */
@@ -61,7 +63,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 
 	@Override
 	public void setEncoderPosition(double n) {
-		super.setSelectedSensorPosition(n);
+			super.setSelectedSensorPosition(n);
 	}
 
 	@Override

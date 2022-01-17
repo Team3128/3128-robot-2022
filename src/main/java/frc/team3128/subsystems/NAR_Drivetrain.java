@@ -2,7 +2,9 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+//import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import net.thefletcher.revrobotics.enums.MotorType;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
@@ -28,20 +30,20 @@ public class NAR_Drivetrain extends SubsystemBase {
     // Initialize the generic motors
     // TODO: Weird difference in speed for different motors
 
-    // private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
-    // private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
-    // private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
-    // private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
 
     // private NAR_EMotor leftLeader = new NAR_TalonSRX(0);
     // private NAR_EMotor rightLeader = new NAR_TalonSRX(1);
     // private NAR_EMotor leftFollower = new NAR_TalonSRX(2);
     // private NAR_EMotor rightFollower = new NAR_TalonSRX(3);
     
-    private NAR_EMotor leftLeader = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID, MotorType.kBrushless);
-    private NAR_EMotor rightLeader = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID, MotorType.kBrushless);
-    private NAR_EMotor leftFollower = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
-    private NAR_EMotor rightFollower = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
+    // private NAR_EMotor leftLeader = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID, MotorType.kBrushless);
+    // private NAR_EMotor rightLeader = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID, MotorType.kBrushless);
+    // private NAR_EMotor leftFollower = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
+    // private NAR_EMotor rightFollower = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
 
     public static NAR_Drivetrain instance;
 
@@ -125,6 +127,8 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / (Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
+
+        SmartDashboard.putNumber("Voltage", leftLeader.getMotorOutputVoltage());
         
         // TODO: Abstractify gyro
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
