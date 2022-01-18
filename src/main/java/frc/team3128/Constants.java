@@ -12,14 +12,6 @@ import edu.wpi.first.math.numbers.N2;
 
 public class Constants {
 
-    public static class ClimberConstants {
-        public static final int CLIMBER_MOTOR_1_ID = 1;
-        public static final int CLIMBER_MOTOR_2_ID = 2;
-        public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
-        public static final double CLIMBER_POWER = .5;
-
-
-    }
     public static class ConversionConstants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
@@ -70,30 +62,14 @@ public class Constants {
         );
     }
 
-    public static class VisionContants {
+    public static class ClimberConstants {
+        public static final int CLIMBER_MOTOR_1_ID = 1;
+        public static final int CLIMBER_MOTOR_2_ID = 2;
+        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
+        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
 
-        public static final String TOP_HOSTNAME = "limelight-sog";
-
-        public static final int SAMPLE_RATE = 3;
-
-        public static final double TOP_CAMERA_ANGLE = -26.0; //degrees
-        public static final double TOP_CAMERA_HEIGHT = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured - also determine units
-        public static final double TOP_FRONT_DIST = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured.
-        public static final double TARGET_WIDTH = 30.0; //inches
-
-        public static final double VISION_PID_kP = 0.01;
-        public static final double VISION_PID_kI = 0.02;
-        public static final double VISION_PID_kD = 0.00006;
-
-        public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
-
-        public static final double TX_THRESHOLD = 1; //degrees
-        public static final double TX_THRESHOLD_MAX = 2; //degrees
-        public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
-        public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
-
-        public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
-        
+        public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
+        public static final double CLIMBER_POWER = .5;
     }
 
     public static class ShooterConstants {
@@ -127,12 +103,41 @@ public class Constants {
         // public static final int BOTTOM_SENSOR_ID = 12;
         // public static final int TOP_SENSOR_ID = 13;
         public static final double HOPPER_MOTOR_POWER = 0.5;
-        public static final int SOLENOID_FORWARD_CHANNEL_ID = 3;
-        public static final int SOLENOID_BACKWARD_CHANNEL_ID = 4;
+        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 3;
+        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 4;
     }
 
     public static class IntakeConstants {
-        public static final int m_intake_ID = 4; 
+        public static final int INTAKE_MOTOR_ID = 4; 
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 5;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+
         public static final double INTAKE_MOTOR_POWER = 0.6;
+    }
+
+    public static class VisionContants {
+
+        public static final String TOP_HOSTNAME = "limelight-sog";
+
+        public static final int SAMPLE_RATE = 3;
+
+        public static final double TOP_CAMERA_ANGLE = -26.0; //degrees
+        public static final double TOP_CAMERA_HEIGHT = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured - also determine units
+        public static final double TOP_FRONT_DIST = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured.
+        public static final double TARGET_WIDTH = 30.0; //inches
+
+        public static final double VISION_PID_kP = 0.01;
+        public static final double VISION_PID_kI = 0.02;
+        public static final double VISION_PID_kD = 0.00006;
+
+        public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
+
+        public static final double TX_THRESHOLD = 1; //degrees
+        public static final double TX_THRESHOLD_MAX = 2; //degrees
+        public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
+        public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
+
+        public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
+        
     }
 }
