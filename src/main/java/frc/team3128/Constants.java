@@ -3,12 +3,23 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 
 public class Constants {
 
+    public static class ClimberConstants {
+        public static final int CLIMBER_MOTOR_1_ID = 1;
+        public static final int CLIMBER_MOTOR_2_ID = 2;
+        public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
+        public static final double CLIMBER_POWER = .5;
+
+
+    }
     public static class ConversionConstants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
@@ -109,5 +120,19 @@ public class Constants {
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
+    }
+  
+    public static class HopperConstants {
+        public static final int HOPPER_MOTOR_ID = 11;
+        // public static final int BOTTOM_SENSOR_ID = 12;
+        // public static final int TOP_SENSOR_ID = 13;
+        public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final int SOLENOID_FORWARD_CHANNEL_ID = 3;
+        public static final int SOLENOID_BACKWARD_CHANNEL_ID = 4;
+    }
+
+    public static class IntakeConstants {
+        public static final int m_intake_ID = 4; 
+        public static final double INTAKE_MOTOR_POWER = 0.6;
     }
 }
