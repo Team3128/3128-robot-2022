@@ -6,14 +6,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.RunIntake;
+import frc.team3128.commands.Shoot;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.NAR_Drivetrain;
+import frc.team3128.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -29,6 +32,8 @@ public class RobotContainer {
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
     private Intake m_intake;
+
+    private Shooter shooter;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
@@ -52,9 +57,12 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
+        Shoot shootCmd = new Shoot(shooter, Shooter.ShooterState.LAUNCHPAD);
+        m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCmd));
+        m_rightStick.getButton(2).whenReleased(new RunCommand(shooter::stopShoot, shooter));
+      
         m_rightStick.getButton(8).whenActive(new RunIntake(m_intake));
         m_rightStick.getButton(8).whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
-
     }
 
     private void initAutos() {
