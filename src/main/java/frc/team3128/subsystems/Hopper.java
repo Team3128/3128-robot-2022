@@ -11,6 +11,8 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
+// commented out code is for if we are using photoelectric sensors (currency piston approach)
+
 public class Hopper extends SubsystemBase {
 
     private static Hopper instance;
@@ -50,28 +52,47 @@ public class Hopper extends SubsystemBase {
     //     return !m_bottom.get(); // .get() is inverted
     // }
 
+    /**
+     * Tracks gate ejected state
+     * @return true if gate ejected, false if retracted
+     */
     public boolean getEjected() {
         return isEjected;
     }
 
+    /**
+     * Ejects the piston gate
+     */
     public void ejectPistonGate(){
         m_hpiston.set(kForward);
         isEjected = true;
     }
 
+    /**
+     * Retracts the piston gate
+     */
     public void retractPistonGate(){
         m_hpiston.set(kReverse);
         isEjected = false;
     }
 
+    /**
+     * Stops the piston gate - emergency stop/power off
+     */
     public void turnPistonOff() {
         m_hpiston.set(kOff); 
     }
 
+    /**
+     * Runs the hopper using the HOPPER_MOTOR_POWER constant
+     */
     public void runHopper() {
         m_hopper.set(Constants.HopperConstants.HOPPER_MOTOR_POWER);
     }
 
+    /**
+     * Stops the hopper - sets power to 0
+     */
     public void stopHopper() {
         m_hopper.set(0);
     }

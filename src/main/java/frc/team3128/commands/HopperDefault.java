@@ -19,17 +19,18 @@ public class HopperDefault extends CommandBase {
 
     @Override
     public void initialize() {
-        //
     }
 
     @Override
     public void execute() {
-        isEjected = m_hopper.getEjected();
-
-        if (isShooting.getAsBoolean()) {
+        isEjected = m_hopper.getEjected(); 
+        // if shooting, retract gate if ejected and run the hopper
+        if (isShooting.getAsBoolean()) { 
             if (isEjected) m_hopper.retractPistonGate();
             m_hopper.runHopper();
-        } else {
+        } 
+        // else, eject the gate if it is not ejected
+        else {
             if (!isEjected) m_hopper.ejectPistonGate();
         }
     }
