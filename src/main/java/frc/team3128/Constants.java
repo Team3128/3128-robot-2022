@@ -94,9 +94,18 @@ public class Constants {
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
         
     }
+
+    public static class HopperConstants {
+        public static final int HOPPER_MOTOR_ID = 11;
+        // public static final int BOTTOM_SENSOR_ID = 12;
+        // public static final int TOP_SENSOR_ID = 13;
+        public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final int SOLENOID_FORWARD_CHANNEL_ID = 3;
+        public static final int SOLENOID_BACKWARD_CHANNEL_ID = 4;
+    }
+
     public static class IntakeConstants {
         public static final int m_intake_ID = 4; 
         public static final double INTAKE_MOTOR_POWER = 0.6;
-
     }
 }
