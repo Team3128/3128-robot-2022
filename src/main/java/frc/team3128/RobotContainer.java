@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.team3128.common.hardware.input.NAR_Joystick;
+import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
 import frc.team3128.commands.Climb;
@@ -88,6 +89,9 @@ public class RobotContainer {
     }
 
     private void initAutos() {
+
+        NarwhalDashboard.addAuto("Shoot Launchpad", new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD));
+
         auto = new RamseteCommand(Trajectories.trajectorySimple, 
                                 m_drive::getPose,
                                 new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
