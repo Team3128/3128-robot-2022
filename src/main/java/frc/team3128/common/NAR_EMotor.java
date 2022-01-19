@@ -26,9 +26,13 @@ public interface NAR_EMotor extends MotorController {
     public void setEncoderPosition(double encPos);
 
     /**
-     * 
+     * @param pos Position in native units
      */
     public void setSimPosition(double pos);
+
+    /**
+     * @param vel Velocity in native units / second
+     */
     public void setSimVelocity(double vel);
 
     /**

@@ -5,6 +5,7 @@ package frc.team3128.common.hardware.motor;
 
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDevice.Direction;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.hal.SimDouble;
 
 import frc.team3128.Robot;
@@ -19,7 +20,7 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	private double prevValue = 0;
 	private SparkMaxRelativeEncoder encoder;
-	private SimDevice encoderSim;
+	private SimDeviceSim encoderSim;
 	private SimDouble encoderPos;
 	private SimDouble encoderVel;
 
@@ -31,13 +32,14 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
 		super(deviceNumber, type);
 
-		if(Robot.isReal()){
-			encoder = (SparkMaxRelativeEncoder)getEncoder();
-			encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks - TEST
-		}else{
-			encoderSim = SimDevice.create("CANEncoder", deviceNumber);
-			encoderPos = encoderSim.createDouble("Pos", Direction.kBidir, 0);
-			encoderVel = encoderSim.createDouble("Vel", Direction.kBidir, 0);
+		encoder = (SparkMaxRelativeEncoder)getEncoder();
+		encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks
+		encoder.setVelocityConversionFactor(ConversionConstants.SPARK_VELOCITY_FACTOR); // convert rpm to nu/s
+
+		if(Robot.isSimulation()){
+			encoderSim = new SimDeviceSim("CANSparkMax[" + this.getDeviceId() + "] - RelativeEncoder");
+			encoderPos = encoderSim.getDouble("Position");
+			encoderVel = encoderSim.getDouble("Velocity");
 		}
 
 		// enableVoltageCompensation(true);
@@ -92,7 +94,7 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	@Override
 	public void setSimVelocity(double vel) {
-		encoderVel.set(vel);
+		encoderVel.set(vel); //makes nathan :)
 	}
 
 	@Override

@@ -11,7 +11,8 @@ public class Constants {
     public static class ConversionConstants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
-        public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
+        public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // rmp to nu/s
+        public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
     }
 
     // Speedy Gonzales constants
@@ -21,6 +22,11 @@ public class Constants {
         public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
+
+        public static final int KIT_MOTOR_LEFT_LEADER_ID = 1;
+        public static final int KIT_MOTOR_LEFT_FOLLOWER_ID = 2;
+        public static final int KIT_MOTOR_RIGHT_LEADER_ID = 3;
+        public static final int KIT_MOTOR_RIGHT_FOLLOWER_ID = 4;
 
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
@@ -38,7 +44,7 @@ public class Constants {
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
         public static final double MAX_DRIVE_VELOCITY = 4; // m/s - Real value ~5
-        public static final double MAX_DRIVE_ACCELERATION = 100; // m/s^2 - I don't know what this number is
+        public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
         //Ramsete constants

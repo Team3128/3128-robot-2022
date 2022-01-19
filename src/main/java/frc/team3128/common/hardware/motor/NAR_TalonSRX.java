@@ -45,14 +45,22 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 		setSelectedSensorPosition(n);
 	}
 
+	//TODO: Only temporary
 	@Override
 	public void setSimPosition(double pos) {
+		if(super.getInverted()){
+			pos *= -1;
+		}
 		motorSim.setQuadratureRawPosition((int)pos);
 	}
 
+	//TODO: Only temporary
 	@Override
 	public void setSimVelocity(double vel) {
-		motorSim.setQuadratureVelocity((int)vel);
+		if(super.getInverted()){
+			vel *= -1;
+		}
+		motorSim.setQuadratureVelocity((int)vel/10); // convert nu/s to nu/100ms
 	}
 
 	@Override

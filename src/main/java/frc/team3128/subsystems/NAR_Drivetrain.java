@@ -30,20 +30,20 @@ public class NAR_Drivetrain extends SubsystemBase {
     // Initialize the generic motors
     // TODO: Weird difference in speed for different motors
 
-    private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
-    private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
-    private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
-    private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    // private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    // private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    // private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    // private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
 
-    // private NAR_EMotor leftLeader = new NAR_TalonSRX(0);
-    // private NAR_EMotor rightLeader = new NAR_TalonSRX(1);
-    // private NAR_EMotor leftFollower = new NAR_TalonSRX(2);
-    // private NAR_EMotor rightFollower = new NAR_TalonSRX(3);
+    // private NAR_EMotor leftLeader = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    // private NAR_EMotor rightLeader = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    // private NAR_EMotor leftFollower = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    // private NAR_EMotor rightFollower = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
     
-    // private NAR_EMotor leftLeader = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID, MotorType.kBrushless);
-    // private NAR_EMotor rightLeader = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID, MotorType.kBrushless);
-    // private NAR_EMotor leftFollower = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
-    // private NAR_EMotor rightFollower = new NAR_CANSparkMax(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
+    private NAR_EMotor leftLeader = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_LEFT_LEADER_ID, MotorType.kBrushless);
+    private NAR_EMotor rightLeader = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_RIGHT_LEADER_ID, MotorType.kBrushless);
+    private NAR_EMotor leftFollower = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
+    private NAR_EMotor rightFollower = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
 
     public static NAR_Drivetrain instance;
 
@@ -52,7 +52,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDriveOdometry odometry;
 
     // TODO: Abstractify gyro
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
 
@@ -63,6 +63,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         leftFollower.follow(leftLeader);
         rightFollower.follow((rightLeader));
         
+        // Right side true for kitbot, left side true for speedy G
         leftLeader.setInverted(true);
         leftFollower.setInverted(true);
         rightLeader.setInverted(false);
@@ -121,12 +122,12 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         // Store simulated motor states
         leftLeader.setSimPosition(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
-        leftLeader.setSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/(Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
+        leftLeader.setSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.DRIVE_DIST_PER_TICK);
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
-        rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/(Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
+        rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.DRIVE_DIST_PER_TICK);
 
         SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / (Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
+        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
 
         SmartDashboard.putNumber("Voltage", leftLeader.getMotorOutputVoltage());
         

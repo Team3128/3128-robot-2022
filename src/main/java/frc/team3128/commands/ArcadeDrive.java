@@ -33,9 +33,10 @@ public class ArcadeDrive extends CommandBase {
         if (throttle > 0.8)
             throttle = 1;
 
+
         double xSpeed = -m_xSpeed.getAsDouble(); //invert xSpeed
 
-        m_drivetrain.arcadeDrive(xSpeed * throttle, -0.7 * m_turn.getAsDouble() * throttle);
+        m_drivetrain.arcadeDrive(xSpeed * throttle, 0.7 * m_turn.getAsDouble() * throttle);
     }
     
     @Override

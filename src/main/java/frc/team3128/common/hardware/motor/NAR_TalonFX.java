@@ -16,8 +16,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonFXSimCollection motorSim;
 
-	public static int simMotorID = 3128;
-
 	/**	 
 	 * @param deviceNumber device id
 	 */
@@ -47,23 +45,8 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	@Override
-	public double getSelectedSensorPosition() {
-		return super.getSelectedSensorPosition();
-	}
-
-	@Override
-	public double getSelectedSensorVelocity() {
-		return super.getSelectedSensorVelocity();
-	}
-
-	@Override
-	public double getMotorOutputVoltage(){
-		return super.getMotorOutputVoltage();
-	}
-
-	@Override
 	public void setEncoderPosition(double n) {
-			super.setSelectedSensorPosition(n);
+		super.setSelectedSensorPosition(n);
 	}
 
 	//TODO: Only temporary
@@ -81,7 +64,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		if(super.getInverted()) {
 			vel *= -1;
 		}
-		motorSim.setIntegratedSensorVelocity((int)vel);
+		motorSim.setIntegratedSensorVelocity((int)(vel/10)); // convert nu/s to nu/100ms
 	}
 
 	@Override
