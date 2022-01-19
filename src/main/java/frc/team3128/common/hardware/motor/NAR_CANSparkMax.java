@@ -3,15 +3,12 @@ package frc.team3128.common.hardware.motor;
 // import com.revrobotics.RelativeEncoder;
 // import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.hal.SimDevice;
-import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.hal.SimDouble;
 
 import frc.team3128.Robot;
-import frc.team3128.common.NAR_EMotor;
 import frc.team3128.Constants.ConversionConstants;
-
+import frc.team3128.common.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.MotorType;

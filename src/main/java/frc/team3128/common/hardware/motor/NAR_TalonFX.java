@@ -6,10 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import frc.team3128.Robot;
-import frc.team3128.common.NAR_EMotor;
-
-//import frc.team3128.common.NARMotor;
-//import frc.team3128.common.NARTalon;
+import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
     private double prevValue = 0;
@@ -34,10 +31,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 			super.set(controlMode, outputValue);
 			prevValue = outputValue;
 		}
-		// if (outputValue != prevValue || controlMode != prevControlMode) {
-		// 	super.set(controlMode, outputValue);
-		// 	prevValue = outputValue;
-		// }
 	}
 	
 	public double getSetpoint() {
@@ -49,7 +42,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		super.setSelectedSensorPosition(n);
 	}
 
-	//TODO: Only temporary
+	// getInverted() stuff should only be temporary
 	@Override
 	public void setSimPosition(double pos) {
 		if(super.getInverted()) {
@@ -58,7 +51,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		motorSim.setIntegratedSensorRawPosition((int)pos);
 	}
 
-	//TODO: Only temporary
+	// getInverted() stuff should only be temporary
 	@Override
 	public void setSimVelocity(double vel) {
 		if(super.getInverted()) {

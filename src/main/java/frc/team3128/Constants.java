@@ -6,6 +6,8 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
 
+// CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)
+
 public class Constants {
 
     public static class ConversionConstants {
@@ -15,7 +17,6 @@ public class Constants {
         public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
     }
 
-    // Speedy Gonzales constants
     public static class DriveConstants {
 
         public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
@@ -31,7 +32,6 @@ public class Constants {
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.59312;
-
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
@@ -88,5 +88,14 @@ public class Constants {
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
         
+        // Previously LimelightConstants
+        public static final String[] VALUE_KEYS = { "tx", "ty", "ts", "ta", "thor", "tvert", "tshort", "tlong", "tv" };
+        public static final String[] VALUE_KEYS_PNP = { "x", "y", "z", "pitch", "yaw", "roll" };
+    
+        public static final double SCREEN_WIDTH = 320;
+        public static final double SCREEN_HEIGHT = 240;
+    
+        public static final double HORIZONTAL_FOV = 59.6; //degrees
+        public static final double VERTICAL_FOV = 45.7; //degrees
     }
 }
