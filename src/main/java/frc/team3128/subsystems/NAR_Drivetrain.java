@@ -123,9 +123,9 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         // Store simulated motor states
         leftLeader.setSimPosition(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
-        leftLeader.setSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.DRIVE_DIST_PER_TICK);
+        leftLeader.setSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
-        rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.DRIVE_DIST_PER_TICK);
+        rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
 
         SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
@@ -134,7 +134,6 @@ public class NAR_Drivetrain extends SubsystemBase {
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
         angle.set(robotDriveSim.getHeading().getDegrees()); // @Nathan: I tested this out, this seems to work. This preserves parity w/ the real robot in angle, odometry
-        SmartDashboard.putNumber("Sim Gyro", angle.get());
     }
         
     public double getHeading() {
