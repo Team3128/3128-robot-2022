@@ -87,15 +87,5 @@ public class Constants {
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
-        
-        // Previously LimelightConstants
-        public static final String[] VALUE_KEYS = { "tx", "ty", "ts", "ta", "thor", "tvert", "tshort", "tlong", "tv" };
-        public static final String[] VALUE_KEYS_PNP = { "x", "y", "z", "pitch", "yaw", "roll" };
-    
-        public static final double SCREEN_WIDTH = 320;
-        public static final double SCREEN_HEIGHT = 240;
-    
-        public static final double HORIZONTAL_FOV = 59.6; //degrees
-        public static final double VERTICAL_FOV = 45.7; //degrees
     }
 }

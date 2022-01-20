@@ -93,13 +93,13 @@ public class Limelight {
 
             // }
 
-            for (String valueKey : Constants.VisionContants.VALUE_KEYS) {
+            for (String valueKey : LimelightConstants.VALUE_KEYS) {
                 runningTotal[idx] += limelightTable.getEntry(valueKey).getDouble(0.0);
                 idx++;
             }
         }
         idx = 0;
-        for (String valueKey : Constants.VisionContants.VALUE_KEYS) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS) {
             data.set(valueKey, runningTotal[idx] / numSamples);
             idx++;
         }
@@ -114,7 +114,7 @@ public class Limelight {
                 camtranArray[b] += limelightTable.getEntry("camtran").getDoubleArray(new double[6])[b];
             }
         }
-        for (String valueKey : Constants.VisionContants.VALUE_KEYS_PNP) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS_PNP) {
             data.set(valueKey, camtranArray[index] / numSamples);
             index++;
         }
