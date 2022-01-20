@@ -3,8 +3,6 @@ package frc.team3128.common.hardware.limelight;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import frc.team3128.Constants;
-
 public class LimelightData {
 
     private LinkedHashMap<String, Double> values;
@@ -14,10 +12,10 @@ public class LimelightData {
         // values = new HashMap<String, Double>();
         values = new LinkedHashMap<String, Double>();
 
-        for (String valueKey : Constants.VisionContants.VALUE_KEYS) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS) {
             values.put(valueKey, 0.0);
         }
-        for (String valueKey : Constants.VisionContants.VALUE_KEYS_PNP) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS_PNP) {
             values.put(valueKey, 0.0);
         }
     }
