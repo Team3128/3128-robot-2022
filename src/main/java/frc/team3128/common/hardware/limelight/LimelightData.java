@@ -12,10 +12,10 @@ public class LimelightData {
         // values = new HashMap<String, Double>();
         values = new LinkedHashMap<String, Double>();
 
-        for (String valueKey : LimelightConstants.valueKeys) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS) {
             values.put(valueKey, 0.0);
         }
-        for (String valueKey : LimelightConstants.valueKeysPnP) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS_PNP) {
             values.put(valueKey, 0.0);
         }
     }

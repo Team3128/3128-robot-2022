@@ -1,23 +1,26 @@
 package frc.team3128.common.hardware.motor;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax;
+// import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.hal.SimDevice;
-import edu.wpi.first.hal.SimDevice.Direction;
+import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
 import frc.team3128.Robot;
-import frc.team3128.common.NAR_EMotor;
 import frc.team3128.Constants.ConversionConstants;
+import frc.team3128.common.infrastructure.NAR_EMotor;
+import net.thefletcher.revrobotics.CANSparkMax;
+import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
+import net.thefletcher.revrobotics.enums.MotorType;
 
 public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	private double prevValue = 0;
-	private RelativeEncoder encoder;
-	private SimDevice encoderSim;
-	private SimDouble encoderPos;
-	private SimDouble encoderVel;
+	private SparkMaxRelativeEncoder encoder;
+	private SimDeviceSim encoderSim;
+	private SimDouble encoderSimVel;
 
 	/**
 	 * 
@@ -27,13 +30,13 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
 		super(deviceNumber, type);
 
-		if(Robot.isReal()){
-			encoder = getEncoder();
-			encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks - TEST
-		}else{
-			encoderSim = SimDevice.create("CANEncoder", deviceNumber);
-			encoderPos = encoderSim.createDouble("Pos", Direction.kBidir, 0);
-			encoderVel = encoderSim.createDouble("Vel", Direction.kBidir, 0);
+		encoder = (SparkMaxRelativeEncoder) getEncoder();
+		encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks
+		encoder.setVelocityConversionFactor(ConversionConstants.SPARK_VELOCITY_FACTOR); // convert rpm to nu/s
+
+		if(Robot.isSimulation()){
+			encoderSim = new SimDeviceSim("CANSparkMax[" + this.getDeviceId() + "] - RelativeEncoder");
+			encoderSimVel = encoderSim.getDouble("Velocity");
 		}
 
 		// enableVoltageCompensation(true);
@@ -54,41 +57,32 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	@Override
 	public double getSelectedSensorPosition() {
-		if(encoderSim != null)
-			return encoderPos.get();	
-		else
-			return encoder.getPosition();
+		return encoder.getPosition();
 	}
 
 	@Override
 	public double getSelectedSensorVelocity() {
-		if(encoderSim != null)
-			return encoderVel.get();	
-		else
-			return encoder.getVelocity();
+		return encoder.getVelocity();
 	}
 
 	@Override
 	public double getMotorOutputVoltage() {
-		return getAppliedOutput();
+		return getAppliedOutput() * getBusVoltage();
 	}
 
 	@Override
 	public void setEncoderPosition(double encPos) {
-		if(encoderSim != null)
-			encoderPos.set(encPos);	
-		else
-			encoder.setPosition(encPos);
+		encoder.setPosition(encPos);
 	}
 
 	@Override
-	public void setQuadSimPosition(double pos) {
-		encoderPos.set(pos);
+	public void setSimPosition(double pos) {
+		encoder.setPosition(pos);
 	}
 
 	@Override
-	public void setQuadSimVelocity(double vel) {
-		encoderVel.set(vel);
+	public void setSimVelocity(double vel) {
+		encoderSimVel.set(vel);
 	}
 
 	@Override
@@ -97,10 +91,5 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((CANSparkMax)motor);
-	}
-
-	@Override
-	public NAR_EMotor getMotor() {
-		return this;
 	}
 }
