@@ -106,10 +106,11 @@ public class NarwhalDashboard extends WebSocketServer {
         if (selectedAuto == null)
             return null;
 
-        if (!autoPrograms.containsKey(selectedAuto)) {
-            Log.recoverable("NarwhalDashboard", "Auto program \"" + selectedAuto
-                    + "\" does not exist. Perhaps it was deleted between its selection and the beginning of the autonomous period?");
-        }
+        // Redundant to onMessage()
+        // if (!autoPrograms.containsKey(selectedAuto)) {
+        //     Log.recoverable("NarwhalDashboard", "Auto program \"" + selectedAuto
+        //             + "\" does not exist. Perhaps it was deleted between its selection and the beginning of the autonomous period?");
+        // }
 
         return autoPrograms.get(selectedAuto);
     }
@@ -132,6 +133,7 @@ public class NarwhalDashboard extends WebSocketServer {
         }
     }
 
+    // Called once on connection with web server
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         Log.info("NarwhalDashboard", conn.getRemoteSocketAddress().getHostName() + " has opened a connection.");
@@ -212,11 +214,13 @@ public class NarwhalDashboard extends WebSocketServer {
         // has closed its connection.");
     }
 
+    // Called by request from web server 
     @Override
     public void onMessage(WebSocket conn, String message) {
         Log.info("NarwhalDashboard", message);
         String[] parts = message.split(":");
 
+        // Recieve auto selection
         if (parts[0].equals("selectAuto")) {
             String programName = parts[1];
 
@@ -229,6 +233,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 Log.recoverable("NarwhalDashboard", "Auto program \"" + programName + "\" does not exist.");
             }
 
+        // Recieve numerical data (for debug only afaik)
         } else if (parts[0].equals("numData")) {
             String key = parts[1];
             String list = parts[2];
@@ -245,6 +250,8 @@ public class NarwhalDashboard extends WebSocketServer {
             } else {
                 Log.info("NarwhalDashboard", "Recieved, but will not process, numerical data: " + key + " = " + data);
             }
+
+        // Recieve input data (clicking a button on the dash to activate commands)
         } else if (parts[0].equals("button")) {
             String key = parts[1];
             boolean down = parts[2].equals("down");
@@ -255,6 +262,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 Log.recoverable("NarwhalDashboard", "Button \"" + parts[1] + "\" was never added.");
             }
 
+        // Revieve limelight selection (could be consolidated with pipeline)
         } else if(parts[0].equals("selectLimelight")){
                 selectedLimelight = parts[1];
 
@@ -263,6 +271,8 @@ public class NarwhalDashboard extends WebSocketServer {
                 } else {
                     Log.info("NarwhalDashboard", "Unable to Parse Limelight Change Request from Dashboard");
                 }
+
+        // Revieve pipeline selection (could be consolidated with limelight)
         } else if(parts[0].equals("selectPipeline")) {
                 String pipelineStr = parts[1];
 
