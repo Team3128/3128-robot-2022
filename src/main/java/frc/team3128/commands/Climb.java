@@ -9,13 +9,11 @@ public class Climb extends SequentialCommandGroup{
     public Climb(Climber m_climber){
         addCommands(
             new InstantCommand(() -> m_climber.climberExtend()),
-            new InstantCommand(() -> m_climber.angleArm()),
+            new InstantCommand(() -> m_climber.extendArm()),
             new InstantCommand(() -> m_climber.climberExtend()),
             new InstantCommand(() -> m_climber.climberRetract()),
-            new InstantCommand(() -> m_climber.unAngleArm()),
+            new InstantCommand(() -> m_climber.retractArm()),
             new InstantCommand(() -> m_climber.climberRetract())
-
-
         );
     }
 

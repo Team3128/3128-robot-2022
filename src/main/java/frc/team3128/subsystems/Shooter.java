@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 
-import frc.team3128.common.NAR_PIDSubsystem;
 import frc.team3128.common.hardware.motor.NAR_TalonFX;
 import frc.team3128.common.hardware.motor.NAR_TalonSRX;
+import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import frc.team3128.common.utility.Log;
 
 public class Shooter extends NAR_PIDSubsystem{
@@ -162,7 +162,7 @@ public class Shooter extends NAR_PIDSubsystem{
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
+        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
         //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
     
         SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
