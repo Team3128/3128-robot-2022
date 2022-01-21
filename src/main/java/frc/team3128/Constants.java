@@ -3,7 +3,11 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 
 // CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)
@@ -62,6 +66,59 @@ public class Constants {
             kVAngular,          // kvVoltSecondsPerRadian
             kAAngular           // kaVoltSecondsSquaredPerRadian
         );
+    }
+
+    public static class ClimberConstants {
+        public static final int CLIMBER_MOTOR_1_ID = 1;
+        public static final int CLIMBER_MOTOR_2_ID = 2;
+        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
+        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
+
+        public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
+        public static final double CLIMBER_POWER = .5;
+    }
+
+    public static class ShooterConstants {
+        public static final int LEFT_SHOOTER_ID = 2; 
+        public static final double SHOOTER_PID_kP = 1.24e-3;
+        public static final double SHOOTER_PID_kI = 0;
+        public static final double SHOOTER_PID_kD = 0;
+
+        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
+
+        public static final int PLATEAU_COUNT = 25;
+
+        public static final double RPM_THRESHOLD_PERCENT = 0.05;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.06;
+        public static final double TIME_TO_MAX_THRESHOLD = 8;
+
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            SHOOTER_KV, 
+            SHOOTER_KA
+        );
+        public static final double SHOOTER_RADIUS_METERS = 0.0508;
+        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
+        public static final double SHOOTER_GEARING = 1.5;
+    }
+  
+    public static class HopperConstants {
+        public static final int HOPPER_MOTOR_ID = 11;
+        // public static final int BOTTOM_SENSOR_ID = 12;
+        // public static final int TOP_SENSOR_ID = 13;
+        public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 3;
+        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 4;
+    }
+
+    public static class IntakeConstants {
+        public static final int INTAKE_MOTOR_ID = 4; 
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 5;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+
+        public static final double INTAKE_MOTOR_POWER = 0.6;
     }
 
     public static class VisionContants {
