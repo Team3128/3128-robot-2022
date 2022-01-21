@@ -172,8 +172,6 @@ public class NarwhalDashboard extends WebSocketServer {
 
                     jsonString += ",\"limelights\": [";
 
-                    //Limelight[] limes = 
-
                     for(Limelight lime : limelights.values()) {
                         jsonString += "\""+lime.hostname+"\",";
                     }
