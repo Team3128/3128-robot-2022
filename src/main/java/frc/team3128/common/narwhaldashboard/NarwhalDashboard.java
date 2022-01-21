@@ -89,9 +89,9 @@ public class NarwhalDashboard extends WebSocketServer {
     }
 
     /**
-     * Sends new set of autonomous programs to NarwhalDashboard.
+     * Sends new set of initial data to NarwhalDashboard.
      */
-    public static void pushAutos() {
+    public static void pushData() {
         pushed = false;
     }
 

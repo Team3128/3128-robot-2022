@@ -25,6 +25,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit(){
         LiveWindow.disableAllTelemetry();
+
+        NarwhalDashboard.startServer();
         //Log.info("NarwhalRobot", "Starting Dashboard Update Thread...");
         dashboardUpdateThread = new Thread(this::updateDashboardLoop, "Dashboard Update Thread");
         dashboardUpdateThread.start();
@@ -86,7 +88,7 @@ public class Robot extends TimedRobot {
         while (true) {
             updateDashboard();
             try {
-                Thread.sleep(100);
+                Thread.sleep(NarwhalDashboard.getUpdateWavelength());
             } catch (InterruptedException e) {
                 //Log.info("NarwhalRobot", "Dashboard Update Thread shutting down");
                 return;

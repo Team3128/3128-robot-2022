@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
+import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 /**
@@ -85,6 +86,10 @@ public class RobotContainer {
                                 m_drive::tankDriveVolts,
                                 m_drive)
                                 .andThen(() -> m_drive.stop(), m_drive);
+
+        // Setup auto-selector
+        NarwhalDashboard.addAuto("Auto test", auto);
+        // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
     }
 
     private void dashboardInit() {
