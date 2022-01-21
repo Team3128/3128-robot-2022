@@ -9,13 +9,16 @@ public class ArcadeDrive extends CommandBase {
     private final NAR_Drivetrain m_drivetrain;
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_turn;
-    
-    public ArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn) {
+    private final DoubleSupplier m_throttle;
+
+
+    public ArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle) {
         m_drivetrain = drivetrain;
         addRequirements(m_drivetrain);
 
         m_xSpeed = xSpeed;
         m_turn = turn;
+        m_throttle = throttle;
     }
     
     @Override
@@ -24,7 +27,16 @@ public class ArcadeDrive extends CommandBase {
     
     @Override
     public void execute() {
-        m_drivetrain.arcadeDrive(m_xSpeed.getAsDouble(), m_turn.getAsDouble());
+        double throttle = (-m_throttle.getAsDouble() + 1) / 2;
+        if(throttle < 0.3)
+            throttle = 0.3;
+        if (throttle > 0.8)
+            throttle = 1;
+
+
+        double xSpeed = -m_xSpeed.getAsDouble(); //invert xSpeed
+
+        m_drivetrain.arcadeDrive(xSpeed * throttle, 0.7 * m_turn.getAsDouble() * throttle);
     }
     
     @Override

@@ -25,5 +25,3 @@ pluginManagement {
         }
     }
 }
-
-include ':common'

@@ -1,80 +1,80 @@
 package frc.team3128.subsystems;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.Constants;
 import frc.team3128.Robot;
-import frc.team3128.hardware.NAR_TalonFX;
+import frc.team3128.hardware.motor.*;
+import frc.team3128.infrastructure.NAR_EMotor;
+
+// CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)
 
 public class NAR_Drivetrain extends SubsystemBase {
-    
-    private static BaseTalon leftLeader;
-    private static BaseTalon rightLeader;
-    private static NAR_TalonFX leftFollower;
-    private static NAR_TalonFX rightFollower;
-    private static TalonSRXSimCollection leftMotorSim;
-    private static TalonSRXSimCollection rightMotorSim;
-    private static DifferentialDrive robotDrive;
-    private static DifferentialDrivetrainSim robotDriveSim;
-    private static DifferentialDriveOdometry odometry;
 
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    // Initialize the generic motors
+
+    // private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    // private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    // private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    // private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+
+    private NAR_EMotor leftLeader = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    private NAR_EMotor rightLeader = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    private NAR_EMotor leftFollower = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    private NAR_EMotor rightFollower = new NAR_TalonSRX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    
+    // private NAR_EMotor leftLeader = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_LEFT_LEADER_ID, MotorType.kBrushless);
+    // private NAR_EMotor rightLeader = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_RIGHT_LEADER_ID, MotorType.kBrushless);
+    // private NAR_EMotor leftFollower = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
+    // private NAR_EMotor rightFollower = new NAR_CANSparkMax(Constants.DriveConstants.KIT_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
+
+    public static NAR_Drivetrain instance;
+
+    private DifferentialDrive robotDrive;
+    private DifferentialDrivetrainSim robotDriveSim;
+    private DifferentialDriveOdometry odometry;
+
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
 
     public NAR_Drivetrain(){
 
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        leftFollower.follow(leftLeader);
+        rightFollower.follow((rightLeader));
+        
+        // Right side true for kitbot, left side true for speedy G
+        leftLeader.setInverted(true);
+        leftFollower.setInverted(true);
+        rightLeader.setInverted(false);
+        rightFollower.setInverted(false);
 
-        if (Robot.isReal()) {
-            leftLeader = new NAR_TalonFX(0);
-            rightLeader = new NAR_TalonFX(1);
-            leftFollower = new NAR_TalonFX(2);
-            rightFollower = new NAR_TalonFX(3);
+        robotDrive = new DifferentialDrive(
+            new MotorControllerGroup(leftLeader, leftFollower),
+            new MotorControllerGroup(rightLeader, rightFollower));
 
-            leftFollower.follow(leftLeader);
-            leftFollower.setInverted(InvertType.FollowMaster);
-            rightFollower.follow(rightLeader);
-            rightFollower.setInverted(InvertType.FollowMaster);
-
-            robotDrive = new DifferentialDrive((NAR_TalonFX)leftLeader, (NAR_TalonFX)rightLeader);
-        } 
-        else {
-            leftLeader = new WPI_TalonSRX(0);
-            rightLeader = new WPI_TalonSRX(1);
-            leftMotorSim = new TalonSRXSimCollection(leftLeader);
-            rightMotorSim = new TalonSRXSimCollection(rightLeader);
-            robotDrive = new DifferentialDrive((WPI_TalonSRX)leftLeader, (WPI_TalonSRX)rightLeader);
-
-            // Simulated drivetrain handles simulation math
+        if(Robot.isSimulation()){
             robotDriveSim =
             new DifferentialDrivetrainSim(
-                LinearSystemId.identifyDrivetrainSystem(
-                    0.5, // kvVoltSecondsPerMeter
-                    0.05, // kaVoltSecondsSquaredPerMeter
-                    1.5, // kvVoltSecondsPerRadian
-                    0.3 // kaVoltSecondsSquaredPerRadian
-                ),
-                DCMotor.getFalcon500(4), // gearbox
-                8, // driveGearing
-                0.66, // trackWidthMeters
-                2, // wheelRadius
+                Constants.DriveConstants.DRIVE_CHAR,
+                Constants.DriveConstants.GEARBOX,
+                Constants.DriveConstants.DRIVE_GEARING,
+                Constants.DriveConstants.TRACK_WIDTH_METERS,
+                Constants.DriveConstants.WHEEL_RADIUS_METERS, 
                 null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
         }
 
@@ -86,41 +86,51 @@ public class NAR_Drivetrain extends SubsystemBase {
         resetEncoders();
     }
 
+    public static synchronized NAR_Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new NAR_Drivetrain();
+        }
+        return instance;
+    }
+
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
-        field.setRobotPose(getPose());     
+        field.setRobotPose(getPose());   
+        
+        SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
+        SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
+        SmartDashboard.putNumber("Gyro", getHeading());
     }
 
     public void simulationPeriodic() {
-        // To update our simulation, we set motor voltage inputs, update the simulation,
-        // and write the simulated positions and velocities to our simulated encoder and gyro.
-        // We negate the right side so that positive voltages make the right side
-        // move forward.
+        
+        // Set motor voltage inputs
         robotDriveSim.setInputs(
-            -leftLeader.getMotorOutputVoltage(),// * RobotController.getBatteryVoltage(),
-            rightLeader.getMotorOutputVoltage());// * RobotController.getBatteryVoltage());
+            leftLeader.getMotorOutputVoltage(),
+            rightLeader.getMotorOutputVoltage()
+        );
 
+        // Update sim environment
         robotDriveSim.update(0.02);
 
-        leftMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
-        leftMotorSim.setQuadratureVelocity((int)(robotDriveSim.getLeftVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
-        rightMotorSim.setQuadratureRawPosition((int)(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK));
-        rightMotorSim.setQuadratureVelocity((int)(robotDriveSim.getRightVelocityMetersPerSecond()/Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK/10));
+        // Store simulated motor states
+        leftLeader.setSimPosition(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
+        leftLeader.setSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
+        rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
+        rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
 
-        SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK * 10);
+        SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
         
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
-        angle.set(-robotDriveSim.getHeading().getDegrees());
-
-        // leftMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
-        // rightMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+        angle.set(robotDriveSim.getHeading().getDegrees()); // @Nathan: I tested this out, this seems to work. This preserves parity w/ the real robot in angle, odometry
     }
         
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        //gyro.getYaw uses CW as positive
+        return -gyro.getYaw();
     }
 
     public Pose2d getPose() {
@@ -128,24 +138,62 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public double getLeftEncoderDistance() {
-        return leftLeader.getSelectedSensorPosition() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK;
+        return leftLeader.getSelectedSensorPosition() * Constants.DriveConstants.DRIVE_DIST_PER_TICK;
     }
 
     public double getRightEncoderDistance() {
-        return rightLeader.getSelectedSensorPosition() * Constants.DriveConstants.ENCODER_DISTANCE_PER_MARK;
+        return rightLeader.getSelectedSensorPosition() * Constants.DriveConstants.DRIVE_DIST_PER_TICK;
+    }
+
+    /**
+     * @return the left encoder velocity in meters per second
+     */
+    public double getLeftEncoderSpeed() {
+        return leftLeader.getSelectedSensorVelocity() * Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10;
+    }
+
+    /**
+     * @return the right encoder velocity in meters per second
+     */
+    public double getRightEncoderSpeed() {
+        return rightLeader.getSelectedSensorVelocity() * Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10;
+    }
+    
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(getLeftEncoderSpeed(), getRightEncoderSpeed());
     }
 
     public void arcadeDrive(double x, double y) {
-        robotDrive.arcadeDrive(x,y);
-    }
-
-    public void resetEncoders() {
-        leftLeader.setSelectedSensorPosition(0);
-        rightLeader.setSelectedSensorPosition(0);
+        robotDrive.arcadeDrive(x, y, false);
     }
 
     public void stop() {
         robotDrive.stopMotor();
     }
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        robotDrive.tankDrive(leftSpeed, rightSpeed);
+        robotDrive.feed();
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        robotDrive.tankDrive(leftVolts / RobotController.getBatteryVoltage(), rightVolts / RobotController.getBatteryVoltage());
+        robotDrive.feed();
+    }
+
+    public void resetEncoders() {
+        leftLeader.setEncoderPosition(0);
+        rightLeader.setEncoderPosition(0);
+    }
+
+    public void resetPose(Pose2d poseMeters) {
+        resetEncoders();
+        odometry.resetPosition(poseMeters, Rotation2d.fromDegrees(getHeading()));
+    }
+
+    public void resetGyro() {
+        gyro.reset();
+    }
+
 }
 
