@@ -6,15 +6,15 @@ import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.team3128.Robot;
-import frc.team3128.common.NAR_EMotor;
+import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
+
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonSRXSimCollection motorSim;
 
 	/**
-	 * 
 	 * @param deviceNumber device id
 	 */
 	public NAR_TalonSRX(int deviceNumber) {
@@ -45,14 +45,22 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 		setSelectedSensorPosition(n);
 	}
 
+	// getInverted() stuff should only be temporary
 	@Override
-	public void setQuadSimPosition(double pos) {
+	public void setSimPosition(double pos) {
+		if(super.getInverted()){
+			pos *= -1;
+		}
 		motorSim.setQuadratureRawPosition((int)pos);
 	}
 
+	// getInverted() stuff should only be temporary
 	@Override
-	public void setQuadSimVelocity(double vel) {
-		motorSim.setQuadratureVelocity((int)vel);
+	public void setSimVelocity(double vel) {
+		if(super.getInverted()){
+			vel *= -1;
+		}
+		motorSim.setQuadratureVelocity((int)vel/10); // convert nu/s to nu/100ms
 	}
 
 	@Override
@@ -61,9 +69,5 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((IMotorController)motor);
-	}
-	@Override
-	public NAR_EMotor getMotor(){
-		return this;
 	}
 }

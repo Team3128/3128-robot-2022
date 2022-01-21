@@ -3,6 +3,7 @@ package frc.team3128.common.hardware.limelight;
 import java.util.Arrays;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.team3128.Constants;
 
 /**
  * Software wrapper to obtain data from and send data to the physical Limelight.
@@ -92,13 +93,13 @@ public class Limelight {
 
             // }
 
-            for (String valueKey : LimelightConstants.valueKeys) {
+            for (String valueKey : LimelightConstants.VALUE_KEYS) {
                 runningTotal[idx] += limelightTable.getEntry(valueKey).getDouble(0.0);
                 idx++;
             }
         }
         idx = 0;
-        for (String valueKey : LimelightConstants.valueKeys) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS) {
             data.set(valueKey, runningTotal[idx] / numSamples);
             idx++;
         }
@@ -113,7 +114,7 @@ public class Limelight {
                 camtranArray[b] += limelightTable.getEntry("camtran").getDoubleArray(new double[6])[b];
             }
         }
-        for (String valueKey : LimelightConstants.valueKeysPnP) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS_PNP) {
             data.set(valueKey, camtranArray[index] / numSamples);
             index++;
         }
