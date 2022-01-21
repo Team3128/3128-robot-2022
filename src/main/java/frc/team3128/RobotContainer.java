@@ -13,10 +13,14 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
+import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.hardware.input.NAR_Joystick;
+import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 /**
@@ -58,6 +62,7 @@ public class RobotContainer {
         } catch (IOException ex) {
             DriverStation.reportError("Me me no open trajectory: " + trajJson, ex.getStackTrace());
         }
+
 
         initAutos();
         configureButtonBindings();
