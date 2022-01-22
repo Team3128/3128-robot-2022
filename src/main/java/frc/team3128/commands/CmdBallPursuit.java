@@ -84,6 +84,7 @@ public class CmdBallPursuit extends CommandBase {
             case FEEDBACK:
                 if (!ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "No valid target anymore.");
+                    // this below line is bad and needs fixing
                     if ((ballLimelight.cameraAngle > 0 ? 1 : -1) * previousVerticalAngle > Constants.VisionContants.BLIND_THRESHOLD) {
                         Log.info("CmdBallPursuit", "Switching to BLIND...");
 

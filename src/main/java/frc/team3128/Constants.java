@@ -97,12 +97,12 @@ public class Constants {
         public static final double BLIND_THRESHOLD = 10; // CHANGE THIS
         public static final double BALL_THRESHOLD = 5;
         
-        // PID is a work in progress 
+        // PID is a work in progress - i stole these too 
         public static final double BALL_VISION_kF = 0;
-        public static final double BALL_VISION_kP = 0;
-        public static final double BALL_VISION_kD = 0;
+        public static final double BALL_VISION_kP = 0.02;
+        public static final double BALL_VISION_kD = 0.00001;
 
-        public static final double BALL_BLIND_kF = 0;
+        public static final double BALL_BLIND_kF = 0.1;
         public static final double BALL_BLIND_kP = 0;
         public static final double BALL_BLIND_kD = 0;
 
@@ -111,8 +111,8 @@ public class Constants {
         public static final double BALL_DECELERATE_START_DISTANCE = 2.5 * 12 * ConversionConstants.INCHES_TO_METERS;
         public static final double BALL_DECELERATE_END_DISTANCE = 0.6666666666666666666666 * 12 * ConversionConstants.INCHES_TO_METERS;
 
-        public static final double BALL_VEL_THRESHOLD = 0; // m/s
-        public static final int BALL_VEL_PLATEAU_THRESHOLD = 5;
+        public static final double BALL_VEL_THRESHOLD = 2.54; // m/s - 100 in/s 
+        public static final int BALL_VEL_PLATEAU_THRESHOLD = 10;
 
     }
 }
