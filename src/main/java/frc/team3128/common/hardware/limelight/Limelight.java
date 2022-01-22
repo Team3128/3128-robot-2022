@@ -133,6 +133,10 @@ public class Limelight {
         return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance;
     }
 
+    public double calculateDistToGroundTarget(double ty, double targetHeight) {
+        return (-targetHeight + cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance;
+    }
+
     public void setLEDMode(LEDMode mode) {
         limelightTable.getEntry("ledMode").setNumber(mode.getLEDMode());
     }

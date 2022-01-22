@@ -15,6 +15,7 @@ public class Constants {
         public static final double SPARK_ENCODER_RESOLUTION = 42;
         public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // rmp to nu/s
         public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
+        public static final double INCHES_TO_METERS = 0.0254;
     }
 
     public static class DriveConstants {
@@ -87,5 +88,31 @@ public class Constants {
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
+
+        // Ball Tracking Constants - Mika
+
+        public static final double BALL_TARGET_HEIGHT = 9.5 * ConversionConstants.INCHES_TO_METERS;
+
+        public static final double GOAL_HORIZONTAL_OFFSET = 0; // goal of x displacement from robot to ball/target - ideally 0 but if limelight not center change 
+        public static final double BLIND_THRESHOLD = 10; // CHANGE THIS
+        public static final double BALL_THRESHOLD = 5;
+        
+        // PID is a work in progress 
+        public static final double BALL_VISION_kF = 0;
+        public static final double BALL_VISION_kP = 0;
+        public static final double BALL_VISION_kD = 0;
+
+        public static final double BALL_BLIND_kF = 0;
+        public static final double BALL_BLIND_kP = 0;
+        public static final double BALL_BLIND_kD = 0;
+
+        // yoinked from deepspace - 2.5 = feet 
+        // this will need altering probably
+        public static final double BALL_DECELERATE_START_DISTANCE = 2.5 * 12 * ConversionConstants.INCHES_TO_METERS;
+        public static final double BALL_DECELERATE_END_DISTANCE = 0.6666666666666666666666 * 12 * ConversionConstants.INCHES_TO_METERS;
+
+        public static final double BALL_VEL_THRESHOLD = 0; // m/s
+        public static final int BALL_VEL_PLATEAU_THRESHOLD = 5;
+
     }
 }
