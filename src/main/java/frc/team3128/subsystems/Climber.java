@@ -51,13 +51,17 @@ public class Climber extends SubsystemBase {
         m_solenoid.set(kReverse);
     }
     public void climbEnd(){
-        //m_solenoid.set(kOff);
         m_climbMotor1.set(0);
     }
-    
-    public void climberMoveEncoder(double distance) {
-        distance = distance*(Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)/(Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI;
-        
+
+    public void setDistance(double distance) {
+        double desiredTicks = distance*(Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)/(Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI;
+        double ticks = desiredTicks - getCurrentTicks();
+        m_climbMotor1.setEncoderPosition(ticks); 
+    }
+
+    public double getCurrentTicks() {
+        return m_climbMotor1.getSelectedSensorPosition();
     }
 
 }
