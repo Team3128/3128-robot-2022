@@ -1,4 +1,0 @@
-[submodule "common"]
-	path = common
-	url = https://github.com/Team3128/3128-common
-	branch = WPI2022-Port
