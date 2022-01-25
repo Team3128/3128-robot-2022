@@ -13,10 +13,16 @@ import net.thefletcher.revrobotics.enums.MotorType;
 
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class Climber extends SubsystemBase {
     private static Climber instance;
     private DoubleSolenoid m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
     private NAR_CANSparkMax m_climbMotor1, m_climbMotor2;
+
+    DigitalInput bottomSensor = new DigitalInput(Constants.ClimberConstants.BOTTOM_SENSOR_ID);
+    DigitalInput topSensor = new DigitalInput(Constants.ClimberConstants.TOP_SENSOR_ID);
+
 
     public Climber() {
         configMotors();
@@ -37,7 +43,15 @@ public class Climber extends SubsystemBase {
         //m_climbMotor1.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
         m_solenoid.set(kOff);  
     }
+    public boolean getBottom() {
+        return bottomSensor.get();
 
+    }
+    public boolean getTop() {
+        return topSensor.get();
+
+    }
+    
     public void climberRetract(){
         m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
     }

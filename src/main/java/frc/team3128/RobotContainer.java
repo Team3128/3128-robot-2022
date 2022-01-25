@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.Climb;
+import frc.team3128.commands.ClimbSensor;
 import frc.team3128.commands.HopperDefault;
 import frc.team3128.commands.IntakeCargo;
 import frc.team3128.commands.Shoot;
@@ -100,7 +100,7 @@ public class RobotContainer {
         m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCmd));
         m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
 
-        m_rightStick.getButton(8).whenActive(new Climb(m_climber));
+        m_rightStick.getButton(8).whenActive(new ClimbSensor(m_climber));
         m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climbEnd, m_climber));
     }
 
