@@ -10,10 +10,6 @@ import frc.team3128.Constants;
 
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
-// commented out code is for if we are using photoelectric sensors (currency piston approach)
-
 public class Hopper extends SubsystemBase {
 
     private static Hopper instance;
@@ -21,13 +17,11 @@ public class Hopper extends SubsystemBase {
     private NAR_EMotor m_hopper;
     private DoubleSolenoid m_hpiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
 
-    // private DigitalInput m_bottom, m_top;
     private boolean isEjected;
 
     public Hopper() {
         configMotors();
 
-        configSensors();
         isEjected = true;
     }
 
@@ -39,19 +33,6 @@ public class Hopper extends SubsystemBase {
     private void configMotors() {
         m_hopper = new NAR_TalonSRX(Constants.HopperConstants.HOPPER_MOTOR_ID);
     }
-
-    private void configSensors() {
-        // m_bottom = new DigitalInput(Constants.HopperConstants.BOTTOM_SENSOR_ID);
-        // m_top = new DigitalInput(Constants.HopperConstants.TOP_SENSOR_ID);
-    }
-
-    // public boolean getTop() {
-    //     return !m_top.get(); // .get() is inverted
-    // }
-
-    // public boolean getBottom() {
-    //     return !m_bottom.get(); // .get() is inverted
-    // }
 
     /**
      * Tracks gate ejected state
@@ -96,10 +77,5 @@ public class Hopper extends SubsystemBase {
      */
     public void stopHopper() {
         m_hopper.set(0);
-    }
-
-    @Override
-    public void simulationPeriodic() {
-
     }
 }

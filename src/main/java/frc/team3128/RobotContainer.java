@@ -102,6 +102,9 @@ public class RobotContainer {
 
         m_rightStick.getButton(8).whenActive(new Climb(m_climber));
         m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climbEnd, m_climber));
+
+        // m_rightStick.getButton(1).whenHeld(new IntakeCargo(m_intake, m_hopper));
+        // m_rightStick.getButton(2).whenHeld(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCmd));
     }
 
     private void initAutos() {
