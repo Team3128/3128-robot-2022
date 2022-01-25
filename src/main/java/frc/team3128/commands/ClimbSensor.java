@@ -15,7 +15,7 @@ public class ClimbSensor extends SequentialCommandGroup{
             //Climber is manually fully retracted on Mid Bar
             
             //elev extend a wee bit
-            new InstantCommand(() -> m_climber.setDistance(Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+            new ClimbShort(m_climber),
            
             //piston extend
             new InstantCommand(() -> m_climber.extendArm()),
@@ -32,7 +32,7 @@ public class ClimbSensor extends SequentialCommandGroup{
             //repeat above commands:
             
             //elev extend a wee bit
-            new InstantCommand(() -> m_climber.setDistance(Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+            new ClimbShort(m_climber),
            
             //piston extend
             new InstantCommand(() -> m_climber.extendArm()),

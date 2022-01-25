@@ -79,9 +79,9 @@ public class Constants {
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
 
-        public static final double VERTICAL_DISTANCE = 3.0;  // TODO: change to actual distance
-        public static final double SMALL_VERTICAL_DISTANCE = 1.0; // TODO: change to actual distance
-        public static final double ANGLED_DISTANCE = 4.0; // TODO: change to actual distance
+        public static final double VERTICAL_DISTANCE = 24;  // TODO: change to actual distance
+        public static final double SMALL_VERTICAL_DISTANCE = 6; // TODO: change to actual distance
+        public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
 
         public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;

@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.Constants;
 
-public class ClimbRetract extends CommandBase{
+public class ClimbShort extends CommandBase{
     private final Climber m_climber;
 
-    public ClimbRetract(Climber climber) {
+    public ClimbShort(Climber climber) {
         m_climber = climber;
 
         addRequirements(m_climber);
@@ -20,7 +20,8 @@ public class ClimbRetract extends CommandBase{
 
     @Override
     public void initialize() {
-        m_climber.climberRetract();
+        m_climber.resetEncoder();
+        m_climber.climberExtend();
     }
 
 
@@ -36,6 +37,7 @@ public class ClimbRetract extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return m_climber.getBottom();
+        return m_climber.getCurrentTicks() == m_climber.getDesiredTick(Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE);
+
     }
 }

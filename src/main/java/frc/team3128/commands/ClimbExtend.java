@@ -31,7 +31,7 @@ public class ClimbExtend extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        m_climber.climbEnd();
+        m_climber.climberStop();
     }
 
     @Override

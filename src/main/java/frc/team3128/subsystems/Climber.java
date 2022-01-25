@@ -45,33 +45,37 @@ public class Climber extends SubsystemBase {
     }
     public boolean getBottom() {
         return bottomSensor.get();
-
     }
+
     public boolean getTop() {
         return topSensor.get();
-
     }
     
     public void climberRetract(){
         m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
     }
+
     public void climberExtend(){
         m_climbMotor1.set(-Constants.ClimberConstants.CLIMBER_POWER);
     }
-    public void extendArm(){
-        m_solenoid.set(kForward);
-    }
-    public void retractArm(){
-        m_solenoid.set(kReverse);
-    }
-    public void climbEnd(){
+
+    public void climberStop(){
         m_climbMotor1.set(0);
     }
 
-    public void setDistance(double distance) {
+    public void extendArm(){
+        m_solenoid.set(kForward);
+    }
+
+    public void retractArm(){
+        m_solenoid.set(kReverse);
+    }
+    public void resetEncoder() {
+        m_climbMotor1.setEncoderPosition(0);
+    }
+    public double getDesiredTick(double distance) {
         double desiredTicks = distance*(Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)/(Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI;
-        double ticks = desiredTicks - getCurrentTicks();
-        m_climbMotor1.setEncoderPosition(ticks); 
+        return desiredTicks;
     }
 
     public double getCurrentTicks() {
