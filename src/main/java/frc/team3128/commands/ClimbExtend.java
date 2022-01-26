@@ -1,13 +1,8 @@
 package frc.team3128.commands;
 
-import java.time.Instant;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Climber;
-import frc.team3128.Constants;
+import frc.team3128.subsystems.Climber.ClimberState;
 
 public class ClimbExtend extends CommandBase{
     private final Climber m_climber;
@@ -36,6 +31,6 @@ public class ClimbExtend extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return m_climber.getTop();
+        return m_climber.getClimberState() == ClimberState.TOP ;
     }
 }

@@ -1,23 +1,44 @@
-// package frc.team3128.commands;
+package frc.team3128.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team3128.Constants;
+import frc.team3128.subsystems.Climber;
 
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-// import frc.team3128.subsystems.Climber;
-// import frc.team3128.Constants;
+public class ClimbEncoder extends CommandBase{
+    private final Climber m_climber;
+    private final double m_distance;
+    private double ticks;
 
-// public class ClimbEncoder extends SequentialCommandGroup{
+    public ClimbEncoder(Climber climber, double distance) {
+        m_climber = climber;
+        m_distance = distance;
+        addRequirements(m_climber);
+    }
 
-//     public ClimbEncoder(Climber m_climber){
-//         addCommands(
-//             //Climber is manually fully retracted on Mid Bar
-//             new InstantCommand(() -> m_climber.setDistance(Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE)),
-//             new InstantCommand(() -> m_climber.extendArm()),
-//             new InstantCommand(() -> m_climber.setDistance(Constants.ClimberConstants.ANGLED_DISTANCE)),
-//             new InstantCommand(() -> m_climber.retractArm()),
-//             new InstantCommand(() -> m_climber.setDistance(-Constants.ClimberConstants.ANGLED_DISTANCE))
+    @Override
+    public void initialize() {
+        ticks = m_climber.getCurrentTicks() + m_climber.getDesiredTicks(m_distance);
+        if (m_distance > 0) {
+            m_climber.climberExtend();
+        }
+        else if (m_distance < 0) {
+            m_climber.climberRetract();
+        }
+    }
 
-//         );
-//     }
+    @Override
+    public void execute() {
+        
+    }
 
-// }
+    @Override
+    public void end(boolean interrupted) {
+        m_climber.climberStop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return Math.abs(ticks - m_climber.getCurrentTicks()) <= Constants.ClimberConstants.CLIMBER_ERROR_RATE;
+
+    }
+}

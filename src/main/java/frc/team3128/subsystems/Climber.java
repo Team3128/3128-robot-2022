@@ -16,15 +16,26 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Climber extends SubsystemBase {
+    public enum ClimberState {
+        BOTTOM(0),
+        TOP(20);
+
+        public double climberHeight;
+        private ClimberState(double climberHeight){
+            this.climberHeight = climberHeight;
+        }
+    }
+
     private static Climber instance;
+    private ClimberState climberState;
     private DoubleSolenoid m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
     private NAR_CANSparkMax m_climbMotor1, m_climbMotor2;
 
-    DigitalInput bottomSensor = new DigitalInput(Constants.ClimberConstants.BOTTOM_SENSOR_ID);
-    DigitalInput topSensor = new DigitalInput(Constants.ClimberConstants.TOP_SENSOR_ID);
+    DigitalInput climberLimitSwitch = new DigitalInput(Constants.ClimberConstants.BOTTOM_SENSOR_ID);
 
 
     public Climber() {
+        climberState = ClimberState.BOTTOM;
         configMotors();
     }
 
@@ -43,13 +54,23 @@ public class Climber extends SubsystemBase {
         //m_climbMotor1.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
         m_solenoid.set(kOff);  
     }
-    public boolean getBottom() {
-        return bottomSensor.get();
+
+    @Override
+    public void periodic() {
+        if (getClimberState() == ClimberState.BOTTOM && getSwitch() == true && getDesiredTicks(getCurrentTicks()) > 5395){
+            setClimberState(ClimberState.TOP);
+
+        }
+        else if (getClimberState() == ClimberState.BOTTOM && getSwitch() == true && getCurrentTicks() > 5395){
+            setClimberState(ClimberState.TOP);
+
+        }
     }
 
-    public boolean getTop() {
-        return topSensor.get();
+    public boolean getSwitch() {
+        return climberLimitSwitch.get();
     }
+
     
     public void climberRetract(){
         m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
@@ -70,16 +91,29 @@ public class Climber extends SubsystemBase {
     public void retractArm(){
         m_solenoid.set(kReverse);
     }
+    
     public void resetEncoder() {
         m_climbMotor1.setEncoderPosition(0);
     }
-    public double getDesiredTick(double distance) {
-        double desiredTicks = distance*(Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)/(Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI;
+    
+    public double getDesiredTicks(double distance) {
+        double desiredTicks = distance * (((Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)) / ((Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI));
         return desiredTicks;
+    }
+    public double getDistance(){
+
     }
 
     public double getCurrentTicks() {
         return m_climbMotor1.getSelectedSensorPosition();
+    }
+    
+    public void setClimberState(ClimberState state) {
+        climberState = state;
+    } 
+    
+    public ClimberState getClimberState() {
+        return climberState;
     }
 
 }

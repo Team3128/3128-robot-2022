@@ -101,7 +101,7 @@ public class RobotContainer {
         m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
 
         m_rightStick.getButton(8).whenActive(new ClimbSensor(m_climber));
-        m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climbEnd, m_climber));
+        m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
     }
 
     private void initAutos() {

@@ -1,9 +1,6 @@
 package frc.team3128.commands;
 
-import java.time.Instant;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.Constants;
@@ -15,7 +12,7 @@ public class ClimbSensor extends SequentialCommandGroup{
             //Climber is manually fully retracted on Mid Bar
             
             //elev extend a wee bit
-            new ClimbShort(m_climber),
+            new ClimbEncoder(m_climber, Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE),
            
             //piston extend
             new InstantCommand(() -> m_climber.extendArm()),
@@ -32,7 +29,7 @@ public class ClimbSensor extends SequentialCommandGroup{
             //repeat above commands:
             
             //elev extend a wee bit
-            new ClimbShort(m_climber),
+            new ClimbEncoder(m_climber, Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE),
            
             //piston extend
             new InstantCommand(() -> m_climber.extendArm()),
