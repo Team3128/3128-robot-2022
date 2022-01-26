@@ -14,10 +14,7 @@ import edu.wpi.first.math.util.Units;
 import frc.team3128.Constants;
 
 /**
- * 
  * Store trajectories for autonomous. Edit points here. 
- * There are many magic numbers in this class - makes it slightly easier to edit trajectories. With more accurate odometry, we could avoid this.
- * 
  */
 public class Trajectories {
     private static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(

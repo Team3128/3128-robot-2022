@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants;
 import frc.team3128.Robot;
-import frc.team3128.common.hardware.motor.*;
-import frc.team3128.common.infrastructure.NAR_EMotor;
+import frc.team3128.hardware.motorcontroller.*;
+import frc.team3128.infrastructure.NAR_EMotor;
 
 // CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)
 
