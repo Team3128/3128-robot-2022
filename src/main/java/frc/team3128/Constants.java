@@ -25,6 +25,9 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
+        public static final double ARCADE_DRIVE_TURN_DEADBAND = 0.05;
+
         public static final int KIT_MOTOR_LEFT_LEADER_ID = 1;
         public static final int KIT_MOTOR_LEFT_FOLLOWER_ID = 2;
         public static final int KIT_MOTOR_RIGHT_LEADER_ID = 3;
@@ -88,28 +91,23 @@ public class Constants {
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
-
+        
         // Ball Tracking Constants - Mika
 
         public static final double BALL_TARGET_HEIGHT = 9.5 * ConversionConstants.INCHES_TO_METERS;
+        public static final double BALL_LL_HEIGHT = 21 * ConversionConstants.INCHES_TO_METERS;
+        public static final double BALL_LL_ANGLE = 1.0; // Math.acos(21.0 / 39.0); // 1.002186; // radians
 
         public static final double GOAL_HORIZONTAL_OFFSET = 0; // goal of x displacement from robot to ball/target - ideally 0 but if limelight not center change 
-        public static final double BLIND_THRESHOLD = 10; // CHANGE THIS
         public static final double BALL_THRESHOLD = 5;
         
-        // PID is a work in progress - i stole these too 
-        public static final double BALL_VISION_kF = 0;
+        // PID is a work in progress 
+        public static final double BALL_VISION_kF = 0.8;
         public static final double BALL_VISION_kP = 0.02;
         public static final double BALL_VISION_kD = 0.00001;
 
-        public static final double BALL_BLIND_kF = 0.1;
-        public static final double BALL_BLIND_kP = 0;
-        public static final double BALL_BLIND_kD = 0;
-
-        // yoinked from deepspace - 2.5 = feet 
-        // this will need altering probably
-        public static final double BALL_DECELERATE_START_DISTANCE = 2.5 * 12 * ConversionConstants.INCHES_TO_METERS;
-        public static final double BALL_DECELERATE_END_DISTANCE = 0.6666666666666666666666 * 12 * ConversionConstants.INCHES_TO_METERS;
+        public static final double BALL_DECELERATE_START_DISTANCE = 25 * ConversionConstants.INCHES_TO_METERS; 
+        public static final double BALL_DECELERATE_END_DISTANCE = 9.5 * ConversionConstants.INCHES_TO_METERS; 
 
         public static final double BALL_VEL_THRESHOLD = 2.54; // m/s - 100 in/s 
         public static final int BALL_VEL_PLATEAU_THRESHOLD = 10;

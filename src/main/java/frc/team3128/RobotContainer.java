@@ -19,7 +19,11 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
+import frc.team3128.commands.CmdBallJoystick;
+import frc.team3128.commands.CmdBallJoystickPursuit;
+import frc.team3128.commands.CmdBallPursuit;
 import frc.team3128.common.hardware.input.NAR_Joystick;
+import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 /**
@@ -35,6 +39,8 @@ public class RobotContainer {
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
+
+    private Limelight ballLimelight;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
 
@@ -53,6 +59,8 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
+        ballLimelight = new Limelight("limelight-sog", Constants.VisionContants.BALL_LL_ANGLE, Constants.VisionContants.BALL_LL_HEIGHT, 0, 0);
+
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         try {
@@ -68,7 +76,9 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-
+        m_rightStick.getButton(1).whenHeld(new CmdBallJoystickPursuit(m_drive, ballLimelight, m_rightStick));
+        m_rightStick.getButton(3).whenPressed(new CmdBallPursuit(m_drive, ballLimelight));
+        m_rightStick.getButton(4).whenPressed(new CmdBallJoystick(m_drive, ballLimelight, m_rightStick));
     }
 
     private void initAutos() {
