@@ -82,6 +82,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 if (!ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "No valid target anymore.");
                     aimState = BallPursuitState.SEARCHING;
+                    targetCount = 0;
                 } else {
                     currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
 
@@ -137,6 +138,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 if (ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "Target found - Switching to SEARCHING");
                     aimState = BallPursuitState.SEARCHING;
+                    targetCount = 0;
                 }
                     
                 break;
