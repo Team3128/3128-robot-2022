@@ -76,7 +76,6 @@ dependencies {
 
     implementation 'net.thefletcher:SparkMaxSim-java:2022.1.1' //- this uses an old version of the Rev libraries which rely on deprecated features from WPILib, idk if we're going to be able to use this
     implementation project(':common')
-
 }
 
 // Simulation configuration (e.g. environment variables).

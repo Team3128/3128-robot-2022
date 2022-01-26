@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants;
 import frc.team3128.Robot;
-import frc.team3128.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.hardware.motorcontroller.*;
 import frc.team3128.infrastructure.NAR_EMotor;
 
 
