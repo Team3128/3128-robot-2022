@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.Constants;
 
-public class ClimbSensor extends SequentialCommandGroup{
+public class Climb extends SequentialCommandGroup{
 
-    public ClimbSensor(Climber m_climber){
+    public Climb(Climber m_climber){
         addCommands(
             //Climber is manually fully retracted on Mid Bar
             
