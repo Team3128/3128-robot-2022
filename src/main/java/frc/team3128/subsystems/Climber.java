@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Climber extends SubsystemBase {
     public enum ClimberState {
         BOTTOM(0),
-        TOP(20);
+        TOP(Constants.ClimberConstants.CLIMBER_HEIGHT);
 
         public double climberHeight;
         private ClimberState(double climberHeight){
@@ -31,7 +31,7 @@ public class Climber extends SubsystemBase {
     private DoubleSolenoid m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
     private NAR_CANSparkMax m_climbMotor1, m_climbMotor2;
 
-    DigitalInput climberLimitSwitch = new DigitalInput(Constants.ClimberConstants.BOTTOM_SENSOR_ID);
+    DigitalInput climberLimitSwitch = new DigitalInput(Constants.ClimberConstants.CLIMBER_SENSOR_ID);
 
 
     public Climber() {
@@ -57,13 +57,12 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getClimberState() == ClimberState.BOTTOM && getSwitch() == true && getDesiredTicks(getCurrentTicks()) > 5395){
+        if (getClimberState() == ClimberState.BOTTOM && getSwitch() && getCurrentTicks() > (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
             setClimberState(ClimberState.TOP);
-
         }
-        else if (getClimberState() == ClimberState.BOTTOM && getSwitch() == true && getCurrentTicks() > 5395){
-            setClimberState(ClimberState.TOP);
-
+        else if (getClimberState() == ClimberState.TOP && getSwitch() && getCurrentTicks() < (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))){
+            setClimberState(ClimberState.BOTTOM);
+            resetEncoder();
         }
     }
 
@@ -73,11 +72,15 @@ public class Climber extends SubsystemBase {
 
     
     public void climberRetract(){
-        m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
+        if (getClimberState() == ClimberState.TOP){
+            m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
+        }
     }
 
     public void climberExtend(){
-        m_climbMotor1.set(-Constants.ClimberConstants.CLIMBER_POWER);
+        if (getClimberState() == ClimberState.BOTTOM){
+            m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
+        }
     }
 
     public void climberStop(){
@@ -99,9 +102,6 @@ public class Climber extends SubsystemBase {
     public double getDesiredTicks(double distance) {
         double desiredTicks = distance * (((Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)) / ((Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI));
         return desiredTicks;
-    }
-    public double getDistance(){
-
     }
 
     public double getCurrentTicks() {
