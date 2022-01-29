@@ -101,10 +101,10 @@ public class Constants {
         public static final double GOAL_HORIZONTAL_OFFSET = 0; // goal of x displacement from robot to ball/target - ideally 0 but if limelight not center change 
         public static final double BALL_THRESHOLD = 5;
         
-        // PID is a work in progress 
         public static final double BALL_VISION_kF = 0.8;
-        public static final double BALL_VISION_kP = 0.02;
+        public static final double BALL_VISION_kP = 0.01;
         public static final double BALL_VISION_kD = 0.00001;
+        public static final double BALL_AUTO_PURSUIT_kF = 0.4;
 
         public static final double BALL_DECELERATE_START_DISTANCE = 25 * ConversionConstants.INCHES_TO_METERS; 
         public static final double BALL_DECELERATE_END_DISTANCE = 9.5 * ConversionConstants.INCHES_TO_METERS; 

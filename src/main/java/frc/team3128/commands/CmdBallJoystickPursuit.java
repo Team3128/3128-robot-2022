@@ -26,7 +26,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
     private double currentTime, previousTime;
     
     private double feedbackPower;
-    private double leftPower, rightPower;
+    private double power;
     private NAR_Joystick m_joystick;
 
     private double throttle, x, y;
@@ -59,7 +59,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     targetCount ++;
                 } else {
                     targetCount = 0;
-                    // in an ideal world this would happen after a set time but that is for after testing
                     Log.info("CmdBallPursuit", "No targets ... switching to BLIND...");
                     aimState = BallPursuitState.BLIND;
                 }
@@ -82,7 +81,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 if (!ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "No valid target anymore.");
                     aimState = BallPursuitState.SEARCHING;
-                    targetCount = 0;
                 } else {
                     currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
 
@@ -94,29 +92,28 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     
                     feedbackPower += Constants.VisionContants.BALL_VISION_kP * currentError;
                     feedbackPower += Constants.VisionContants.BALL_VISION_kD * (currentError - previousError) / (currentTime - previousTime);
+
+                    feedbackPower = Math.min(Math.max(feedbackPower, -1), 1);
                     
                     // joystick adding power back/forth
                     throttle = (-m_joystick.getThrottle() + 1) / 2;
                     if (throttle < 0.3) throttle = 0.3;
-                    if (throttle > 0.6) throttle = 0.6;
+                    if (throttle > 0.8) throttle = 1.0;
                     x = -m_joystick.getY();
 
-                    leftPower = Math.min(Math.max(0.3 + x*throttle - feedbackPower, -1), 1);
-                    rightPower = Math.min(Math.max(0.3 + x*throttle + feedbackPower, -1), 1);
+                    power = Math.min(Math.max(Constants.VisionContants.BALL_AUTO_PURSUIT_kF + x*throttle, -1), 1);
                     
                     // calculations to decelerate as the robot nears the target
                     previousVerticalAngle = ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
                     approxDistance = ballLimelight.calculateDistToGroundTarget(previousVerticalAngle, Constants.VisionContants.BALL_TARGET_HEIGHT / 2);
-                    SmartDashboard.putNumber("Distance", approxDistance);
-                    SmartDashboard.putNumber("Vertical Angle", previousVerticalAngle);
 
                     // multiplier = 1.0 - Math.min(Math.max((Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - approxDistance)
                     //         / (Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - 
                     //             Constants.VisionContants.BALL_DECELERATE_END_DISTANCE), 0.0), 1.0);
                     multiplier = 1.0;
 
-                    m_drivetrain.tankDrive(0.7*multiplier*leftPower, 0.7*multiplier*rightPower); // bad code - switch to arcadedrive
-                    // TODO: switch to arcade drive
+                    m_drivetrain.arcadeDrive(0.7*power*multiplier, 0.7*feedbackPower);
+
                     previousTime = currentTime;
                     previousError = currentError;
                 }
@@ -132,13 +129,10 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
                 m_drivetrain.arcadeDrive(x, y);
 
-                // in an ideal world this would have to find more than one 
-                // or maybe that doesn't matter much because it will just go back to blind
-                // but maybe two? need testing of initial first
+
                 if (ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "Target found - Switching to SEARCHING");
                     aimState = BallPursuitState.SEARCHING;
-                    targetCount = 0;
                 }
                     
                 break;

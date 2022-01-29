@@ -26,7 +26,6 @@ public class CmdBallPursuit extends CommandBase {
 
     private double feedbackPower;
     private double leftVel, rightVel;
-    private double leftPower, rightPower;
 
     int targetCount, plateauCount;
 
@@ -57,7 +56,6 @@ public class CmdBallPursuit extends CommandBase {
                     targetCount ++;
                 } else {
                     targetCount = 0;
-                    // in an ideal world this would happen after a set time but that is for after testing
                     Log.info("CmdBallPursuit", "No targets ... switching to BLIND...");
                     aimState = BallPursuitState.BLIND;
                 }
@@ -65,12 +63,10 @@ public class CmdBallPursuit extends CommandBase {
                 if (targetCount > Constants.VisionContants.BALL_THRESHOLD) {
                     Log.info("CmdBallPursuit", "Target found.");
                     Log.info("CmdBallPursuit", "Switching to FEEDBACK...");
-
-                    // m_drivetrain.tankDrive(0.8*Constants.VisionContants.BALL_VISION_kF, 0.8*Constants.VisionContants.BALL_VISION_kF);
                     
                     currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
 
-                    previousTime = RobotController.getFPGATime() / 1e6; // CONVERT UNITS
+                    previousTime = RobotController.getFPGATime() / 1e6; 
                     previousError = Constants.VisionContants.GOAL_HORIZONTAL_OFFSET - currentHorizontalOffset;
 
                     aimState = BallPursuitState.FEEDBACK;
@@ -82,11 +78,10 @@ public class CmdBallPursuit extends CommandBase {
                 if (!ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "No valid target anymore.");
                     aimState = BallPursuitState.SEARCHING;
-                    targetCount = 0;
                 } else {
                     currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
 
-                    currentTime = RobotController.getFPGATime() / 1e6; // CONVERT UNITS
+                    currentTime = RobotController.getFPGATime() / 1e6; 
                     currentError = Constants.VisionContants.GOAL_HORIZONTAL_OFFSET - currentHorizontalOffset;
 
                     // PID feedback loop for left+right powers based on horizontal offset errors
@@ -95,20 +90,17 @@ public class CmdBallPursuit extends CommandBase {
                     feedbackPower += Constants.VisionContants.BALL_VISION_kP * currentError;
                     feedbackPower += Constants.VisionContants.BALL_VISION_kD * (currentError - previousError) / (currentTime - previousTime);
                     
-                    leftPower = Math.min(Math.max(Constants.VisionContants.BALL_VISION_kF - feedbackPower, -1), 1);
-                    rightPower = Math.min(Math.max(Constants.VisionContants.BALL_VISION_kF + feedbackPower, -1), 1);
+                    feedbackPower = Math.min(Math.max(feedbackPower, -1), 1);
                     
                     // calculations to decelerate as the robot nears the target
                     previousVerticalAngle = ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
                     approxDistance = ballLimelight.calculateDistToGroundTarget(previousVerticalAngle, Constants.VisionContants.BALL_TARGET_HEIGHT / 2);
-                    SmartDashboard.putNumber("Distance", approxDistance);
-                    SmartDashboard.putNumber("Vertical Angle", previousVerticalAngle);
 
                     multiplier = 1.0 - Math.min(Math.max((Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - approxDistance)
                             / (Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - 
                                 Constants.VisionContants.BALL_DECELERATE_END_DISTANCE), 0.0), 1.0);
 
-                    m_drivetrain.tankDrive(0.7*multiplier*leftPower, 0.7*multiplier*rightPower); // bad code - switch to arcade drive
+                    m_drivetrain.arcadeDrive(0.7*Constants.VisionContants.BALL_VISION_kF*multiplier, 0.7*feedbackPower);
                     previousTime = currentTime;
                     previousError = currentError;
                 }
@@ -116,15 +108,11 @@ public class CmdBallPursuit extends CommandBase {
             
             case BLIND:
 
-                m_drivetrain.tankDrive(0.25, -0.25);
+                m_drivetrain.tankDrive(0.35, -0.35);
 
-                // in an ideal world this would have to find more than one 
-                // or maybe that doesn't matter much because it will just go back to blind
-                // but maybe two? need testing of initial first
                 if (ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallPursuit", "Target found - Switching to SEARCHING");
                     aimState = BallPursuitState.SEARCHING;
-                    targetCount = 0;
                 }
                     
                 break;

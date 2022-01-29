@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.CmdBallJoystick;
 import frc.team3128.commands.CmdBallJoystickPursuit;
 import frc.team3128.commands.CmdBallPursuit;
 import frc.team3128.hardware.input.NAR_Joystick;
@@ -76,7 +75,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         m_rightStick.getButton(1).whenHeld(new CmdBallJoystickPursuit(m_drive, ballLimelight, m_rightStick));
         m_rightStick.getButton(3).whenPressed(new CmdBallPursuit(m_drive, ballLimelight));
-        m_rightStick.getButton(4).whenPressed(new CmdBallJoystick(m_drive, ballLimelight, m_rightStick));
     }
 
     private void initAutos() {
