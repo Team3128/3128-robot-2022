@@ -79,15 +79,15 @@ public class Climber extends SubsystemBase {
         }
     }
     
-    public void climberRetract(){
-        if (getClimberState() == ClimberState.TOP){
-            m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
-        }
-    }
-
     public void climberExtend(){
         if (getClimberState() == ClimberState.BOTTOM){
             m_climbMotor1.set(Constants.ClimberConstants.CLIMBER_POWER);
+        }
+    }
+    
+    public void climberRetract(){
+        if (getClimberState() == ClimberState.TOP){
+            m_climbMotor1.set(-Constants.ClimberConstants.CLIMBER_POWER);
         }
     }
 
