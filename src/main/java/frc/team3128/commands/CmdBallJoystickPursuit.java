@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.Constants;
-import frc.team3128.hardware.input.NAR_Joystick;
-import frc.team3128.hardware.limelight.LEDMode;
-import frc.team3128.hardware.limelight.Limelight;
-import frc.team3128.hardware.limelight.LimelightKey;
-import frc.team3128.utility.Log;
+import frc.team3128.common.hardware.input.NAR_Joystick;
+import frc.team3128.common.hardware.limelight.LEDMode;
+import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.hardware.limelight.LimelightKey;
+import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 public class CmdBallJoystickPursuit extends CommandBase {
