@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.hardware.input.NAR_Joystick;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.Climb;
+import frc.team3128.commands.ClimbSensor;
 import frc.team3128.commands.HopperDefault;
 import frc.team3128.commands.IntakeCargo;
 import frc.team3128.commands.Shoot;

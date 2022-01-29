@@ -15,13 +15,15 @@ public class Hopper extends SubsystemBase {
     private static Hopper instance;
 
     private NAR_EMotor m_hopper;
-    private DoubleSolenoid m_hpiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
+    private DoubleSolenoid m_hpiston;
 
     private boolean isEjected;
 
     public Hopper() {
         configMotors();
-
+        configPneumatics();
+        configSensors();
+      
         isEjected = true;
     }
 
@@ -33,6 +35,22 @@ public class Hopper extends SubsystemBase {
     private void configMotors() {
         m_hopper = new NAR_TalonSRX(Constants.HopperConstants.HOPPER_MOTOR_ID);
     }
+
+    private void configPneumatics() {
+        m_hpiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
+    }
+    private void configSensors() {
+        // m_bottom = new DigitalInput(Constants.HopperConstants.BOTTOM_SENSOR_ID);
+        // m_top = new DigitalInput(Constants.HopperConstants.TOP_SENSOR_ID);
+    }
+
+    // public boolean getTop() {
+    //     return !m_top.get(); // .get() is inverted
+    // }
+
+    // public boolean getBottom() {
+    //     return !m_bottom.get(); // .get() is inverted
+    // }
 
     /**
      * Tracks gate ejected state

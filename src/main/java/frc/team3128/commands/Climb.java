@@ -3,17 +3,46 @@ package frc.team3128.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Climber;
+import frc.team3128.Constants;
 
 public class Climb extends SequentialCommandGroup{
 
     public Climb(Climber m_climber){
         addCommands(
-            new InstantCommand(() -> m_climber.climberExtend()),
+            //Climber is manually fully retracted on Mid Bar
+            
+            //elev extend a wee bit
+            new ClimbEncoder(m_climber, Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE),
+           
+            //piston extend
             new InstantCommand(() -> m_climber.extendArm()),
-            new InstantCommand(() -> m_climber.climberExtend()),
-            new InstantCommand(() -> m_climber.climberRetract()),
+            
+            //elev extend
+            new ClimbExtend(m_climber),
+            
+            //piston retract
             new InstantCommand(() -> m_climber.retractArm()),
-            new InstantCommand(() -> m_climber.climberRetract())
+            
+            //elev retract
+            new ClimbRetract(m_climber),
+
+            //repeat above commands:
+            
+            //elev extend a wee bit
+            new ClimbEncoder(m_climber, Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE),
+           
+            //piston extend
+            new InstantCommand(() -> m_climber.extendArm()),
+            
+            //elev extend
+            new ClimbExtend(m_climber),
+            
+            //piston retract
+            new InstantCommand(() -> m_climber.retractArm()),
+            
+            //elev retract
+            new ClimbRetract(m_climber)
+
         );
     }
 

@@ -69,13 +69,25 @@ public class Constants {
     }
 
     public static class ClimberConstants {
+        public static final int CLIMBER_SENSOR_ID = 0;
         public static final int CLIMBER_MOTOR_1_ID = 1;
         public static final int CLIMBER_MOTOR_2_ID = 2;
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
 
+        public static final double CLIMBER_GEAR_RATIO = 18.9;
+        public static final double AXLE_DIAMETER = 0.7;
+        public static final double CLIMBER_ERROR_RATE = .5; //in inches
+
+        public static final double CLIMBER_HEIGHT = 20; // inches
+
+        public static final double VERTICAL_DISTANCE = 24;  // TODO: change to actual distance
+        public static final double SMALL_VERTICAL_DISTANCE = 6; // TODO: change to actual distance
+        public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
+    
+
         public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
-        public static final double CLIMBER_POWER = .5;
+        public static final double CLIMBER_POWER = 0.5;
     }
 
     public static class ShooterConstants {
