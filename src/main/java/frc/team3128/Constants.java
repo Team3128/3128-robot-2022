@@ -139,11 +139,12 @@ public class Constants {
 
     public static class IntakeConstants {
 
-        public static final int INTAKE_MOTOR_ID = 4; 
-        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 5;
-        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+        public static final int INTAKE_MOTOR_ID = 5; 
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 3;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 4;
 
-        public static final double INTAKE_MOTOR_POWER = 0.6;
+        public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
+
     }
 
     public static class VisionContants {
