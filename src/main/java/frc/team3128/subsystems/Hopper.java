@@ -15,7 +15,7 @@ public class Hopper extends SubsystemBase {
     private static Hopper instance;
 
     private NAR_EMotor m_hopper;
-    private DoubleSolenoid m_hpiston;
+    private DoubleSolenoid m_hopperSolenoid;
 
     private boolean isEjected;
 
@@ -37,7 +37,7 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configPneumatics() {
-        m_hpiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
+        m_hopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
     }
     private void configSensors() {
         // m_bottom = new DigitalInput(Constants.HopperConstants.BOTTOM_SENSOR_ID);
@@ -64,7 +64,7 @@ public class Hopper extends SubsystemBase {
      * Ejects the piston gate
      */
     public void ejectPistonGate(){
-        m_hpiston.set(kForward);
+        m_hopperSolenoid.set(kForward);
         isEjected = true;
     }
 
@@ -72,7 +72,7 @@ public class Hopper extends SubsystemBase {
      * Retracts the piston gate
      */
     public void retractPistonGate(){
-        m_hpiston.set(kReverse);
+        m_hopperSolenoid.set(kReverse);
         isEjected = false;
     }
 
@@ -80,7 +80,7 @@ public class Hopper extends SubsystemBase {
      * Stops the piston gate - emergency stop/power off
      */
     public void turnPistonOff() {
-        m_hpiston.set(kOff); 
+        m_hopperSolenoid.set(kOff); 
     }
 
     /**

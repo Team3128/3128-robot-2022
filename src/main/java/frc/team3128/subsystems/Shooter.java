@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import frc.team3128.Constants;
 import frc.team3128.Robot;
+import frc.team3128.Constants.ShooterConstants;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -92,14 +93,33 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     /**
+     * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
+     */
+    public void startPID(double rpm) {
+        thresholdPercent = Constants.ShooterConstants.RPM_THRESHOLD_PERCENT;
+        super.setSetpoint(rpm);  
+        super.startPID();
+        getController().setTolerance(Constants.ShooterConstants.RPM_THRESHOLD_PERCENT * rpm);
+    }
+
+    /**
      * Sets the state using {@link #setState(ShooterState)} and begins the PID loop to achieve it using {@link #startPID()}
      * @param state Desired Shooter State
      */
     public void beginShoot(ShooterState state) {
-        Log.info("Shooter", "beginShoot");
+        Log.info("Shooter", "beginShoot state");
         Log.info("Shooter", "state: " + state.shooterRPM);
         setState(state);
         startPID();
+    }
+
+    /**
+     * Sets the state using {@link #setState(ShooterState)} and begins the PID loop to achieve it using {@link #startPID()}
+     * @param state Desired Shooter State
+     */
+    public void beginShoot(double rpm) {
+        Log.info("Shooter", "beginShoot rpm");
+        startPID(rpm);
     }
 
     public void stopShoot() {
@@ -127,7 +147,7 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + 0.003*setpoint;
+        double voltageOutput = output + ShooterConstants.SHOOTER_KV*setpoint; //0.003
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 

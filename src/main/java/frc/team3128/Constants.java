@@ -15,6 +15,7 @@ import edu.wpi.first.math.numbers.N2;
 public class Constants {
 
     public static class ConversionConstants {
+
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
         public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // rmp to nu/s
@@ -69,11 +70,15 @@ public class Constants {
     }
 
     public static class ClimberConstants {
+
         public static final int CLIMBER_SENSOR_ID = 0;
-        public static final int CLIMBER_MOTOR_1_ID = 1;
-        public static final int CLIMBER_MOTOR_2_ID = 2;
+        public static final int CLIMBER_MOTOR_1_ID = 6;
+        public static final int CLIMBER_MOTOR_2_ID = 7;
+
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 7;
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 8;
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -91,7 +96,11 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final int LEFT_SHOOTER_ID = 2; 
+
+        public static final int LEFT_SHOOTER_ID = 8; 
+        public static final int RIGHT_SHOOTER_ID = 9; 
+
+
         public static final double SHOOTER_PID_kP = 1.24e-3;
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
@@ -117,15 +126,19 @@ public class Constants {
     }
   
     public static class HopperConstants {
-        public static final int HOPPER_MOTOR_ID = 11;
+
+        public static final int HOPPER_MOTOR_ID = 5;
         // public static final int BOTTOM_SENSOR_ID = 12;
         // public static final int TOP_SENSOR_ID = 13;
-        public static final double HOPPER_MOTOR_POWER = 0.5;
+
         public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 3;
         public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 4;
+
+        public static final double HOPPER_MOTOR_POWER = 0.5;
     }
 
     public static class IntakeConstants {
+
         public static final int INTAKE_MOTOR_ID = 4; 
         public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 5;
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 6;

@@ -28,7 +28,8 @@ public class Climber extends SubsystemBase {
 
     private static Climber instance;
     private ClimberState climberState;
-    private DoubleSolenoid m_solenoid;
+    private DoubleSolenoid m_climberSolenoid;
+    private DoubleSolenoid m_climberBreakSolenoid;
     private NAR_CANSparkMax m_climbMotor1, m_climbMotor2;
     DigitalInput climberLimitSwitch;
 
@@ -54,7 +55,7 @@ public class Climber extends SubsystemBase {
 
         m_climbMotor2.follow((NAR_EMotor)m_climbMotor1);
         //m_climbMotor1.setNeutralMode(Constants.ClimberConstants.CLIMBER_NEUTRAL_MODE);
-        m_solenoid.set(kOff);  
+        //m_solenoid.set(kOff);  
     }
 
     private void configSensors() {
@@ -62,7 +63,9 @@ public class Climber extends SubsystemBase {
     }
     
     private void configPneumatics() {
-        m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
+        m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
+        m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
+
     }
 
     @Override
@@ -93,11 +96,19 @@ public class Climber extends SubsystemBase {
     }
 
     public void extendArm(){
-        m_solenoid.set(kForward);
+        m_climberSolenoid.set(kForward);
     }
 
     public void retractArm(){
-        m_solenoid.set(kReverse);
+        m_climberSolenoid.set(kReverse);
+    }
+
+    public void breakClimb() {
+        m_climberBreakSolenoid.set(kForward);
+    }
+
+    public void unbreakClimb() {
+        m_climberBreakSolenoid.set(kReverse);
     }
 
     public void setClimberState(ClimberState state) {

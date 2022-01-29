@@ -27,8 +27,8 @@ public class IntakeCargo extends CommandBase{
     }
 
     public void end(boolean interrupted){
-        m_intake.stopIntake();
         m_intake.retractIntake();
+        m_intake.stopIntake();
         m_hopper.stopHopper();
     }
 

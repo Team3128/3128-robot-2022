@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.hardware.input.NAR_Joystick;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.ClimbSensor;
+import frc.team3128.commands.Climb;
 import frc.team3128.commands.HopperDefault;
 import frc.team3128.commands.IntakeCargo;
 import frc.team3128.commands.Shoot;
@@ -50,7 +50,11 @@ public class RobotContainer {
 
     private String trajJson = "paths/jude_path_o_doom.wpilib.json";
     private Trajectory trajectory = new Trajectory();
+
     private Command auto;
+    private IntakeCargo intakeCargoCommand;
+    private Shoot shootCommand;
+    private Climb climbCommand;
 
     private boolean DEBUG = false;
 
@@ -90,18 +94,21 @@ public class RobotContainer {
         // 1 (trigger): intake 
         // 2: shoot
         // 8: climb
+        // 9: stop climb
         //
         // left:
-        Shoot shootCmd = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        //TODO MAKE SURE whenHeld() works
+        //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
+        //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+        m_rightStick.getButton(1).whenHeld(intakeCargoCommand);
 
-        m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
-        m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+        // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
+        // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
+        m_rightStick.getButton(2).whenHeld(shootCommand);
 
-        m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCmd));
-        m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
-
-        m_rightStick.getButton(8).whenActive(new Climb(m_climber));
-        m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climbEnd, m_climber));
+        m_rightStick.getButton(8).whenActive(climbCommand);
+        m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
+        //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
 
         // m_rightStick.getButton(1).whenHeld(new IntakeCargo(m_intake, m_hopper));
         // m_rightStick.getButton(2).whenHeld(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCmd));
@@ -121,6 +128,11 @@ public class RobotContainer {
                                 m_drive::tankDriveVolts,
                                 m_drive)
                                 .andThen(() -> m_drive.stop(), m_drive);
+        
+        intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
+        shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        climbCommand = new Climb(m_climber);
+
     }
 
     private void dashboardInit() {
