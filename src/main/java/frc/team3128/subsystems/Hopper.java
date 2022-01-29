@@ -4,15 +4,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.team3128.common.hardware.motor.NAR_TalonSRX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
+import frc.team3128.hardware.motorcontroller.NAR_TalonSRX;
+import frc.team3128.infrastructure.NAR_EMotor;
 import frc.team3128.Constants;
 
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
-
-import edu.wpi.first.wpilibj.DigitalInput;
-
-// commented out code is for if we are using photoelectric sensors (currency piston approach)
 
 public class Hopper extends SubsystemBase {
 
@@ -21,13 +17,13 @@ public class Hopper extends SubsystemBase {
     private NAR_EMotor m_hopper;
     private DoubleSolenoid m_hpiston;
 
-    // private DigitalInput m_bottom, m_top;
     private boolean isEjected;
 
     public Hopper() {
         configMotors();
         configPneumatics();
         configSensors();
+      
         isEjected = true;
     }
 
@@ -99,10 +95,5 @@ public class Hopper extends SubsystemBase {
      */
     public void stopHopper() {
         m_hopper.set(0);
-    }
-
-    @Override
-    public void simulationPeriodic() {
-
     }
 }

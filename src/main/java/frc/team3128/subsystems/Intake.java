@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.IntakeConstants;
-import frc.team3128.common.hardware.motor.NAR_TalonSRX;
+import frc.team3128.hardware.motorcontroller.NAR_TalonSRX;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 

@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 
-import frc.team3128.common.hardware.motor.NAR_TalonFX;
-import frc.team3128.common.hardware.motor.NAR_TalonSRX;
-import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
-import frc.team3128.common.utility.Log;
+import frc.team3128.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.hardware.motorcontroller.NAR_TalonSRX;
+import frc.team3128.infrastructure.NAR_PIDSubsystem;
+import frc.team3128.utility.Log;
 
-public class Shooter extends NAR_PIDSubsystem{
+public class Shooter extends NAR_PIDSubsystem {
     
     public enum ShooterState {
 
