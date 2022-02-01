@@ -106,8 +106,8 @@ public class RobotContainer {
         // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
         m_rightStick.getButton(2).whenHeld(shootCommand);
 
-        m_rightStick.getButton(8).whenActive(climbCommand);
-        m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
+        //m_rightStick.getButton(8).whenActive(climbCommand);
+        //m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
         //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
 
         // m_rightStick.getButton(1).whenHeld(new IntakeCargo(m_intake, m_hopper));

@@ -15,22 +15,30 @@ public class ClimbRetract extends CommandBase{
 
     @Override
     public void initialize() {
-        m_climber.climberRetract();
+        m_climber.climberLeftRetract();
+        m_climber.climberRightRetract();
     }
 
 
     @Override
     public void execute() {
+        if (m_climber.getClimberLeftState() == ClimberState.BOTTOM) {
+            m_climber.climberLeftStop();
+        }
+        if (m_climber.getClimberRightState() == ClimberState.BOTTOM) {
+            m_climber.climberRightStop();
+        }
         
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_climber.climberStop();
+        m_climber.climberLeftStop();
+        m_climber.climberRightStop();
     }
 
     @Override
     public boolean isFinished() {
-        return m_climber.getClimberState() == ClimberState.BOTTOM;
+        return (m_climber.getClimberLeftState() == ClimberState.BOTTOM && m_climber.getClimberRightState() == ClimberState.BOTTOM);
     }
 }
