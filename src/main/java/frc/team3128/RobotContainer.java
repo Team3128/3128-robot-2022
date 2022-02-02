@@ -25,6 +25,7 @@ import frc.team3128.commands.ArcadeDrive;
 import frc.team3128.commands.Climb;
 import frc.team3128.commands.HopperDefault;
 import frc.team3128.commands.IntakeCargo;
+import frc.team3128.commands.RetractHopper;
 import frc.team3128.commands.Shoot;
 import frc.team3128.subsystems.*;
 
@@ -53,7 +54,7 @@ public class RobotContainer {
 
     private Command auto;
     private IntakeCargo intakeCargoCommand;
-    private Shoot shootCommand;
+    private SequentialCommandGroup shootCommand;
     private Climb climbCommand;
 
     private boolean DEBUG = false;
@@ -130,7 +131,8 @@ public class RobotContainer {
                                 .andThen(() -> m_drive.stop(), m_drive);
         
         intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
-        shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD));
+        //shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
         climbCommand = new Climb(m_climber);
 
     }
