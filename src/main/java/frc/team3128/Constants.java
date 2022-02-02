@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import net.thefletcher.revrobotics.enums.IdleMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 
 // CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)

@@ -1,5 +1,9 @@
 package frc.team3128;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.commands.ArcadeDrive;
 //import frc.team3128.commands.TestDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
@@ -17,13 +22,11 @@ import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.NAR_Drivetrain;
-import frc.team3128.subsystems.TestBenchPiston;
-import frc.team3128.subsystems.TestBenchMotor;
 import frc.team3128.commands.Climb;
 import frc.team3128.commands.HopperDefault;
 import frc.team3128.commands.IntakeCargo;
 import frc.team3128.commands.RetractHopper;
-import frc.team3128.commands.Shoot;
+//import frc.team3128.commands.Shoot;
 import frc.team3128.subsystems.*;
 
 /**
@@ -35,9 +38,14 @@ import frc.team3128.subsystems.*;
  */
 public class RobotContainer {
 
-    //private NAR_Drivetrain m_drive;
-    private TestBenchMotor testBenchMotor;
-    private TestBenchPiston testBenchPiston;
+    // Subsystems init
+    private NAR_Drivetrain m_drive = NAR_Drivetrain.getInstance();
+    private Climber m_climber = Climber.getInstance();
+    private Hopper m_hopper = Hopper.getInstance();
+    private Intake m_intake = Intake.getInstance();
+    private Shooter m_shooter = Shooter.getInstance();
+    
+
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
     private Limelight lime;
@@ -45,7 +53,7 @@ public class RobotContainer {
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
 
     private String trajJson = "paths/jude_path_o_doom.wpilib.json";
-    private Trajectory trajectory = new Trajectory();
+    private Trajectory trajectory;
 
     private Command auto;
     private IntakeCargo intakeCargoCommand;
@@ -56,14 +64,10 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        //m_drive = NAR_Drivetrain.getInstance();
-
         //Enable all PIDSubsystems so that useOutput runs
 
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
-        testBenchPiston = new TestBenchPiston();
-        testBenchMotor = new TestBenchMotor(); 
         //m_commandScheduler.setDefaultCommand(testBenchSubsystem, new TestDrive(testBenchSubsystem));
 
         lime = new Limelight("limelight-bog", 0, 0, 0, 0);
@@ -100,26 +104,28 @@ public class RobotContainer {
     }
   
     private void initAutos() {
-        auto = new RamseteCommand(trajectory, 
-                                m_drive::getPose,
-                                new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
-                                new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-                                                            Constants.DriveConstants.kV,
-                                                            Constants.DriveConstants.kA),
-                                Constants.DriveConstants.DRIVE_KINEMATICS,
-                                m_drive::getWheelSpeeds,
-                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                m_drive::tankDriveVolts,
-                                m_drive)
-                                .andThen(() -> m_drive.stop(), m_drive);
+        // auto = new RamseteCommand(trajectory, 
+        //                         m_drive::getPose,
+        //                         new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+        //                         new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+        //                                                     Constants.DriveConstants.kV,
+        //                                                     Constants.DriveConstants.kA),
+        //                         Constants.DriveConstants.DRIVE_KINEMATICS,
+        //                         m_drive::getWheelSpeeds,
+        //                         new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+        //                         new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+        //                         m_drive::tankDriveVolts,
+        //                         m_drive)
+        //                         .andThen(() -> m_drive.stop(), m_drive);
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("Auto test", auto);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
         
         intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
-        shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        // shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), 
+        //                new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
+        //                new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
         //shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
         climbCommand = new Climb(m_climber);
     }
@@ -151,7 +157,7 @@ public class RobotContainer {
     public void updateDashboard(){
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
-        NarwhalDashboard.put("rpm", testBenchMotor.getRPM());
+        NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", ""); // fix this
     }
 }

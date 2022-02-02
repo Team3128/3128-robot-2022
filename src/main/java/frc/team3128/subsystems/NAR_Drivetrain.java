@@ -18,7 +18,6 @@ import frc.team3128.Constants;
 import frc.team3128.Robot;
 import frc.team3128.common.hardware.motorcontroller.*;
 import frc.team3128.common.infrastructure.NAR_EMotor;
-import frc.team3128.common.hardware.motor.NAR_TalonFX;
 
 public class NAR_Drivetrain extends SubsystemBase {
 
