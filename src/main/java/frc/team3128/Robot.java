@@ -4,6 +4,7 @@
 
 package frc.team3128;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -24,17 +25,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit(){
+        // Webcam stuff
         LiveWindow.disableAllTelemetry();
-
-        NarwhalDashboard.startServer();
-        //Log.info("NarwhalRobot", "Starting Dashboard Update Thread...");
-        dashboardUpdateThread = new Thread(this::updateDashboardLoop, "Dashboard Update Thread");
-        dashboardUpdateThread.start();
+        CameraServer.startAutomaticCapture();
     }
 
     @Override
     public void robotPeriodic(){
-        
+        m_robotContainer.updateDashboard();
     }
 
     @Override
@@ -74,25 +72,5 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
 
-    }
-
-    // Narwhal dash stuff (not sure if should be here)
-
-    private void updateDashboard(){
-        NarwhalDashboard.put("time", Timer.getFPGATimestamp());
-        NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
-    }
-
-    private void updateDashboardLoop() {
-        //Log.info("NarwhalRobot", "Dashboard Update Thread starting");
-        while (true) {
-            updateDashboard();
-            try {
-                Thread.sleep(NarwhalDashboard.getUpdateWavelength());
-            } catch (InterruptedException e) {
-                //Log.info("NarwhalRobot", "Dashboard Update Thread shutting down");
-                return;
-            }
-        }
     }
 }

@@ -11,7 +11,7 @@ import org.java_websocket.server.WebSocketServer;
 
 import frc.team3128.common.utility.Log;
 import frc.team3128.common.hardware.limelight.*;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class NarwhalDashboard extends WebSocketServer {
@@ -22,7 +22,7 @@ public class NarwhalDashboard extends WebSocketServer {
         return UPDATE_WAVELENGTH;
     }
 
-    private static HashMap<String, String> data = new HashMap<String, String>();
+    private static HashMap<String, String> debugValues = new HashMap<String, String>();
     private static LinkedHashMap<String, Command> autoPrograms = new LinkedHashMap<String, Command>();
 
     private static HashMap<String, DashButtonCallback> buttons = new HashMap<String, DashButtonCallback>();
@@ -60,7 +60,7 @@ public class NarwhalDashboard extends WebSocketServer {
      * Publishes a string value to NarwhalDashboard
      */
     public static void put(String key, String value) {
-        data.put(key, value);
+        debugValues.put(key, value);
     }
 
     public static void addButton(String key, DashButtonCallback callback) {
@@ -144,9 +144,17 @@ public class NarwhalDashboard extends WebSocketServer {
             while (conn.isOpen()) {
                 String jsonString = "{";
 
-                for (String key : data.keySet()) {
-                    jsonString += "\"" + key + "\":\"" + data.get(key) + "\",";
+                jsonString += "\"debug\": [";
+
+                for (String key : debugValues.keySet()) {
+                    jsonString += String.format("{\"key\": \"%s\", \"value\": \"%s\"},", key, debugValues.get(key));
                 }
+                
+                //SmartDashboard.putBoolean("test", debugValues.isEmpty());
+
+                if (!debugValues.isEmpty())
+                    jsonString = jsonString.substring(0, jsonString.length() - 1);
+                jsonString += "],";
 
                 jsonString += "\"selected_auto\":\"" + selectedAuto + "\",";
 
@@ -155,6 +163,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 if(selectedLimelight != null)
                     jsonString += ",\"selected_pipeline\":\""+limelights.get(selectedLimelight).getSelectedPipeline()+"\"";
 
+               
                 // jsonString += "\"buttons\":[";
                 // for (String buttonName : buttons.keySet()) {
                 // jsonString += "\"" + buttonName + "\",";
@@ -170,18 +179,19 @@ public class NarwhalDashboard extends WebSocketServer {
                     }
                     if (!autoPrograms.isEmpty())
                         jsonString = jsonString.substring(0, jsonString.length() - 1);
-                    jsonString += "]";
+                    jsonString += "],";
 
-                    jsonString += ",\"limelights\": [";
+                    jsonString += "\"limelights\": [";
 
                     for(Limelight lime : limelights.values()) {
                         jsonString += "\""+lime.hostname+"\",";
                     }
-                    jsonString = jsonString.substring(0, jsonString.length()-1);
 
-                    jsonString += "]";
+                    if (!limelights.isEmpty())
+                        jsonString = jsonString.substring(0, jsonString.length() - 1);
+                    jsonString += "],";
 
-                    jsonString += ", \"limelightsOptions\": [";
+                    jsonString += "\"limelightsOptions\": [";
 
                     for(Pipeline pipeline : Pipeline.values()) {
                         jsonString += "\""+pipeline.toString()+"\",";
@@ -195,6 +205,8 @@ public class NarwhalDashboard extends WebSocketServer {
                 }
 
                 jsonString += "}";
+
+                SmartDashboard.putString("json", jsonString);
 
                 conn.send(jsonString);
                 
@@ -220,7 +232,7 @@ public class NarwhalDashboard extends WebSocketServer {
         Log.info("NarwhalDashboard", message);
         String[] parts = message.split(":");
 
-        // Recieve auto selection
+        // Receive auto selection
         if (parts[0].equals("selectAuto")) {
             String programName = parts[1];
 
@@ -228,12 +240,13 @@ public class NarwhalDashboard extends WebSocketServer {
                 selectedAuto = null;
             } else if (autoPrograms.containsKey(programName)) {
                 selectedAuto = programName;
+                SmartDashboard.putString("Auto", programName);
                 Log.info("NarwhalDashboard", "Selected auto program: \"" + selectedAuto + "\"");
             } else {
                 Log.recoverable("NarwhalDashboard", "Auto program \"" + programName + "\" does not exist.");
             }
 
-        // Recieve numerical data (for debug only afaik)
+        // Receive numerical data (for debug only afaik)
         } else if (parts[0].equals("numData")) {
             String key = parts[1];
             String list = parts[2];
@@ -251,7 +264,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 Log.info("NarwhalDashboard", "Recieved, but will not process, numerical data: " + key + " = " + data);
             }
 
-        // Recieve input data (clicking a button on the dash to activate commands)
+        // Receive input data (clicking a button on the dash to activate commands)
         } else if (parts[0].equals("button")) {
             String key = parts[1];
             boolean down = parts[2].equals("down");
@@ -262,7 +275,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 Log.recoverable("NarwhalDashboard", "Button \"" + parts[1] + "\" was never added.");
             }
 
-        // Revieve limelight selection (could be consolidated with pipeline)
+        // Receive limelight selection (could be consolidated with pipeline)
         } else if(parts[0].equals("selectLimelight")){
                 selectedLimelight = parts[1];
 
@@ -272,7 +285,7 @@ public class NarwhalDashboard extends WebSocketServer {
                     Log.info("NarwhalDashboard", "Unable to Parse Limelight Change Request from Dashboard");
                 }
 
-        // Revieve pipeline selection (could be consolidated with limelight)
+        // Receive pipeline selection (could be consolidated with limelight)
         } else if(parts[0].equals("selectPipeline")) {
                 String pipelineStr = parts[1];
 
