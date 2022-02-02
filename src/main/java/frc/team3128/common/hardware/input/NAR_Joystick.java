@@ -30,6 +30,7 @@ public class NAR_Joystick {
 
     public NAR_Joystick(int deviceNumber) {
         buttons = new HashMap<Integer, JoystickButton>();
+        povButtons = new HashMap<Integer, POVButton>();
         stick = new Joystick(deviceNumber);
 
         // Thrustmaster joystick has 16 buttons
