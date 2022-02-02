@@ -1,5 +1,8 @@
 package frc.team3128.common.hardware.motorcontroller;
 
+// import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
@@ -8,6 +11,13 @@ import frc.team3128.common.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.MotorType;
+
+public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
+
+	private double prevValue = 0;
+	private SparkMaxRelativeEncoder encoder;
+	private SimDeviceSim encoderSim;
+	private SimDouble encoderSimVel;
 
 	/**
 	 * 
@@ -26,6 +36,14 @@ import net.thefletcher.revrobotics.enums.MotorType;
 		if(RobotBase.isSimulation()){
 			encoderSim = new SimDeviceSim("CANSparkMax[" + this.getDeviceId() + "] - RelativeEncoder");
 			encoderSimVel = encoderSim.getDouble("Velocity");
+		}
+	}
+
+	@Override
+	public void set(double outputValue) {
+		if (outputValue != prevValue) {
+			super.set(outputValue);
+			prevValue = outputValue;
 		}
 	}
 
