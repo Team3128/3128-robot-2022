@@ -72,14 +72,27 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        m_rightStick.getButton(1).whenActive(new RunCommand(testBenchMotor::run,testBenchMotor));
-        m_rightStick.getButton(1).whenReleased(new RunCommand(testBenchMotor::stop,testBenchMotor));
+      
+    }
+  
+    private void initAutos() {
+        auto = new RamseteCommand(trajectory, 
+                                m_drive::getPose,
+                                new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+                                new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+                                                            Constants.DriveConstants.kV,
+                                                            Constants.DriveConstants.kA),
+                                Constants.DriveConstants.DRIVE_KINEMATICS,
+                                m_drive::getWheelSpeeds,
+                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                                m_drive::tankDriveVolts,
+                                m_drive)
+                                .andThen(() -> m_drive.stop(), m_drive);
 
-        m_rightStick.getButton(8).whenActive(new RunCommand(testBenchPiston::eject,testBenchPiston));
-        m_rightStick.getButton(8).whenReleased(new RunCommand(testBenchPiston::off,testBenchPiston));
-
-        m_rightStick.getButton(10).whenActive(new RunCommand(testBenchPiston::retract,testBenchPiston)); 
-        m_rightStick.getButton(10).whenReleased(new RunCommand(testBenchPiston::off,testBenchPiston));
+        // Setup auto-selector
+        NarwhalDashboard.addAuto("Auto test", auto);
+        // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
     }
 
     private void dashboardInit() {
