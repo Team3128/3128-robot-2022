@@ -60,17 +60,6 @@ public class RobotContainer {
         initAutos();
     }   
 
-    private void initAutos() {
-        Command auto1 = new InstantCommand();
-        Command auto2 = new InstantCommand();
-
-        // Setup auto chooser
-        NarwhalDashboard.clearAutos();
-        NarwhalDashboard.addAuto("Auto test 1", auto1);
-        NarwhalDashboard.addAuto("Auto test 2", auto2);
-        NarwhalDashboard.pushData();
-    }
-
     private void configureButtonBindings() {
       
     }

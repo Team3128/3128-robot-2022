@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
+import frc.team3128.common.utility.Log;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
