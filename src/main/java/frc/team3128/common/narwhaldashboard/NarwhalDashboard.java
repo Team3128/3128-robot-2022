@@ -142,73 +142,44 @@ public class NarwhalDashboard extends WebSocketServer {
 
         (new Thread(() -> {
             while (conn.isOpen()) {
-                String jsonString = "{";
+                JSONObject obj = new JSONObject();
 
-                jsonString += "\"debug\": [";
-
+                JSONArray debugArr = new JSONArray();
                 for (String key : debugValues.keySet()) {
-                    jsonString += String.format("{\"key\": \"%s\", \"value\": \"%s\"},", key, debugValues.get(key));
+                    JSONObject pair = new JSONObject();
+                    pair.put("key", key);
+                    pair.put("value", debugValues.get(key));
                 }
-                
-                //SmartDashboard.putBoolean("test", debugValues.isEmpty());
-
-                if (!debugValues.isEmpty())
-                    jsonString = jsonString.substring(0, jsonString.length() - 1);
-                jsonString += "],";
-
-                jsonString += "\"selected_auto\":\"" + selectedAuto + "\",";
-
-                jsonString += "\"selected_limelight\":\""+selectedLimelight+"\"";
-
-                if(selectedLimelight != null)
-                    jsonString += ",\"selected_pipeline\":\""+limelights.get(selectedLimelight).getSelectedPipeline()+"\"";
 
                
-                // jsonString += "\"buttons\":[";
-                // for (String buttonName : buttons.keySet()) {
-                // jsonString += "\"" + buttonName + "\",";
-                // }
-                // if (!buttons.isEmpty())
-                // jsonString = jsonString.substring(0, jsonString.length() - 1);
-                // jsonString += "],";
-
-                if (!pushed) {
-                    jsonString += ",\"auto_programs\":[";
+                obj.put("selected_auto", selectedAuto);
+                obj.put("selected_limelight", selectedLimelight);
+                if(selectedLimelight != null) {
+                    obj.put("selected_pipeline", limelights.get(selectedLimelight).getSelectedPipeline());
+                }
+                if(!pushed) {
+                    JSONArray autoProgramArr = new JSONArray();
                     for (String autoName : autoPrograms.keySet()) {
-                        jsonString += "\"" + autoName + "\",";
+                        autoProgramArr.add(autoName);
                     }
-                    if (!autoPrograms.isEmpty())
-                        jsonString = jsonString.substring(0, jsonString.length() - 1);
-                    jsonString += "],";
+                    obj.put("auto_programs", autoPrograms);
 
-                    jsonString += "\"limelights\": [";
-
+                    JSONArray limelightsArr = new JSONArray();
                     for(Limelight lime : limelights.values()) {
-                        jsonString += "\""+lime.hostname+"\",";
+                        limelightsArr.add(lime.hostname);
                     }
+                    obj.put("limelights", limelightsArr);
 
-                    if (!limelights.isEmpty())
-                        jsonString = jsonString.substring(0, jsonString.length() - 1);
-                    jsonString += "],";
-
-                    jsonString += "\"limelightsOptions\": [";
-
+                    JSONArray limelightsOptionsArr = new JSONArray();
                     for(Pipeline pipeline : Pipeline.values()) {
-                        jsonString += "\""+pipeline.toString()+"\",";
+                        limelightsOptionsArr.add(pipeline.toString());
                     }
-
-                    jsonString = jsonString.substring(0, jsonString.length()-1);
-
-                    jsonString += "]";
+                    obj.put("limelightsOptions", limelightsOptionsArr);
 
                     pushed = true;
                 }
-
-                jsonString += "}";
-
-                SmartDashboard.putString("json", jsonString);
-
-                conn.send(jsonString);
+                
+                conn.send(obj.toJSONString());
                 
                 try {
                     Thread.sleep(UPDATE_WAVELENGTH);
