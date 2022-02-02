@@ -3,22 +3,21 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
+
+// CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)
 
 public class Constants {
 
     public static class ConversionConstants {
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
-        public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // (sensor units per 100 ms to rpm)
+        public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // rmp to nu/s
+        public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
+        public static final double INCHES_TO_METERS = 0.0254;
     }
 
-    // Speedy Gonzales constants
     public static class DriveConstants {
 
         public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
@@ -26,10 +25,17 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
+        public static final double ARCADE_DRIVE_TURN_DEADBAND = 0.05;
+
+        public static final int KIT_MOTOR_LEFT_LEADER_ID = 1;
+        public static final int KIT_MOTOR_LEFT_FOLLOWER_ID = 2;
+        public static final int KIT_MOTOR_RIGHT_LEADER_ID = 3;
+        public static final int KIT_MOTOR_RIGHT_FOLLOWER_ID = 4;
+
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.59312;
-
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
@@ -42,7 +48,7 @@ public class Constants {
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
         public static final double MAX_DRIVE_VELOCITY = 4; // m/s - Real value ~5
-        public static final double MAX_DRIVE_ACCELERATION = 100; // m/s^2 - I don't know what this number is
+        public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
         //Ramsete constants
@@ -60,59 +66,6 @@ public class Constants {
             kVAngular,          // kvVoltSecondsPerRadian
             kAAngular           // kaVoltSecondsSquaredPerRadian
         );
-    }
-
-    public static class ClimberConstants {
-        public static final int CLIMBER_MOTOR_1_ID = 1;
-        public static final int CLIMBER_MOTOR_2_ID = 2;
-        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
-        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
-
-        public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
-        public static final double CLIMBER_POWER = .5;
-    }
-
-    public static class ShooterConstants {
-        public static final int LEFT_SHOOTER_ID = 2; 
-        public static final double SHOOTER_PID_kP = 1.24e-3;
-        public static final double SHOOTER_PID_kI = 0;
-        public static final double SHOOTER_PID_kD = 0;
-
-        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
-        public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
-
-        public static final int PLATEAU_COUNT = 25;
-
-        public static final double RPM_THRESHOLD_PERCENT = 0.05;
-        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.06;
-        public static final double TIME_TO_MAX_THRESHOLD = 8;
-
-        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
-        LinearSystemId.identifyVelocitySystem(
-            SHOOTER_KV, 
-            SHOOTER_KA
-        );
-        public static final double SHOOTER_RADIUS_METERS = 0.0508;
-        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
-        public static final double SHOOTER_GEARING = 1.5;
-    }
-  
-    public static class HopperConstants {
-        public static final int HOPPER_MOTOR_ID = 11;
-        // public static final int BOTTOM_SENSOR_ID = 12;
-        // public static final int TOP_SENSOR_ID = 13;
-        public static final double HOPPER_MOTOR_POWER = 0.5;
-        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 3;
-        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 4;
-    }
-
-    public static class IntakeConstants {
-        public static final int INTAKE_MOTOR_ID = 4; 
-        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 5;
-        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-
-        public static final double INTAKE_MOTOR_POWER = 0.6;
     }
 
     public static class VisionContants {
@@ -139,5 +92,25 @@ public class Constants {
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
         
+        // Ball Tracking Constants - Mika
+
+        public static final double BALL_TARGET_HEIGHT = 9.5 * ConversionConstants.INCHES_TO_METERS;
+        public static final double BALL_LL_HEIGHT = 21 * ConversionConstants.INCHES_TO_METERS;
+        public static final double BALL_LL_ANGLE = 1.0; // Math.acos(21.0 / 39.0); // 1.002186; // radians
+
+        public static final double GOAL_HORIZONTAL_OFFSET = 0; // goal of x displacement from robot to ball/target - ideally 0 but if limelight not center change 
+        public static final double BALL_THRESHOLD = 5;
+        
+        public static final double BALL_VISION_kF = 0.8;
+        public static final double BALL_VISION_kP = 0.01;
+        public static final double BALL_VISION_kD = 0.00001;
+        public static final double BALL_AUTO_PURSUIT_kF = 0.4;
+
+        public static final double BALL_DECELERATE_START_DISTANCE = 25 * ConversionConstants.INCHES_TO_METERS; 
+        public static final double BALL_DECELERATE_END_DISTANCE = 9.5 * ConversionConstants.INCHES_TO_METERS; 
+
+        public static final double BALL_VEL_THRESHOLD = 2.54; // m/s - 100 in/s 
+        public static final int BALL_VEL_PLATEAU_THRESHOLD = 10;
+
     }
 }

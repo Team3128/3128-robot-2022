@@ -1,9 +1,9 @@
-package frc.team3128.common;
+package frc.team3128.common.infrastructure;
 
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 
-abstract public class NAR_PIDSubsystem extends PIDSubsystem{
+public abstract class NAR_PIDSubsystem extends PIDSubsystem{
     
     // number of successful checks
     private int plateauCount = 0;

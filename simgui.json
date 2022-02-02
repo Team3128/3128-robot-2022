@@ -16,14 +16,11 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/LiveWindow/Climber": "Subsystem",
-      "/LiveWindow/Hopper": "Subsystem",
-      "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/NAR_Drivetrain": "Subsystem",
-      "/LiveWindow/Shooter/PID Controller": "PIDController",
+      "/LiveWindow/TestBenchPiston": "Subsystem",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/NAR_Drivetrain": "Subsystem",

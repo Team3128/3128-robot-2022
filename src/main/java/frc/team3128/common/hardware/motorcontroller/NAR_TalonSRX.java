@@ -1,26 +1,26 @@
-package frc.team3128.common.hardware.motor;
+package frc.team3128.common.hardware.motorcontroller;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import frc.team3128.Robot;
-import frc.team3128.common.NAR_EMotor;
+import edu.wpi.first.wpilibj.RobotBase;
+import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
+
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonSRXSimCollection motorSim;
 
 	/**
-	 * 
 	 * @param deviceNumber device id
 	 */
 	public NAR_TalonSRX(int deviceNumber) {
 		super(deviceNumber);
 
-		if(Robot.isSimulation())
+		if(RobotBase.isSimulation())
 			motorSim = getTalonSRXSimCollection();
 			
 		enableVoltageCompensation(true);
@@ -45,25 +45,29 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 		setSelectedSensorPosition(n);
 	}
 
+	// getInverted() stuff should only be temporary
 	@Override
-	public void setQuadSimPosition(double pos) {
+	public void setSimPosition(double pos) {
+		if(super.getInverted()){
+			pos *= -1;
+		}
 		motorSim.setQuadratureRawPosition((int)pos);
 	}
 
+	// getInverted() stuff should only be temporary
 	@Override
-	public void setQuadSimVelocity(double vel) {
-		motorSim.setQuadratureVelocity((int)vel);
+	public void setSimVelocity(double vel) {
+		if(super.getInverted()){
+			vel *= -1;
+		}
+		motorSim.setQuadratureVelocity((int)(vel / 10)); // convert nu/s to nu/100ms
 	}
 
 	@Override
 	public void follow(NAR_EMotor motor) {
 		if(!(motor instanceof IMotorController)) {
-			throw new RuntimeException("bad follow");
+			throw new RuntimeException("Bad follow: TalonSRX " + getDeviceID() + " attempted to follow non-CTRE motor controller.");
 		}
 		super.follow((IMotorController)motor);
-	}
-	@Override
-	public NAR_EMotor getMotor(){
-		return this;
 	}
 }

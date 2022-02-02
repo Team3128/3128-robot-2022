@@ -92,13 +92,13 @@ public class Limelight {
 
             // }
 
-            for (String valueKey : LimelightConstants.valueKeys) {
+            for (String valueKey : LimelightConstants.VALUE_KEYS) {
                 runningTotal[idx] += limelightTable.getEntry(valueKey).getDouble(0.0);
                 idx++;
             }
         }
         idx = 0;
-        for (String valueKey : LimelightConstants.valueKeys) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS) {
             data.set(valueKey, runningTotal[idx] / numSamples);
             idx++;
         }
@@ -113,7 +113,7 @@ public class Limelight {
                 camtranArray[b] += limelightTable.getEntry("camtran").getDoubleArray(new double[6])[b];
             }
         }
-        for (String valueKey : LimelightConstants.valueKeysPnP) {
+        for (String valueKey : LimelightConstants.VALUE_KEYS_PNP) {
             data.set(valueKey, camtranArray[index] / numSamples);
             index++;
         }
@@ -130,6 +130,10 @@ public class Limelight {
 
     public double calculateYPrimeFromTY(double ty, double targetHeight) {
         return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance;
+    }
+
+    public double calculateDistToGroundTarget(double ty, double targetHeight) {
+        return (-targetHeight + cameraHeight) * Math.tan(ty + cameraAngle) - frontDistance;
     }
 
     public void setLEDMode(LEDMode mode) {
