@@ -5,6 +5,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import net.thefletcher.revrobotics.enums.IdleMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
@@ -71,7 +72,8 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_SENSOR_ID = 0;
+        public static final int CLIMBER_SENSOR_1_ID = 0;
+        public static final int CLIMBER_SENSOR_2_ID = 1;
         public static final int CLIMBER_MOTOR_1_ID = 6;
         public static final int CLIMBER_MOTOR_2_ID = 7;
 
@@ -91,7 +93,7 @@ public class Constants {
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
 
-        public static final NeutralMode CLIMBER_NEUTRAL_MODE = null;
+        public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.5;
     }
 
@@ -131,8 +133,8 @@ public class Constants {
         // public static final int BOTTOM_SENSOR_ID = 12;
         // public static final int TOP_SENSOR_ID = 13;
 
-        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 3;
-        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 4;
+        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
+        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
 
         public static final int HOPPER_DIO_PIN1 = 0;
         public static final int HOPPER_DIO_PIN2 = 1;
