@@ -20,9 +20,9 @@
           "keyRate": 1.0
         },
         {
-          "decKey": 68,
+          "decKey": 65,
           "decayRate": 1.0,
-          "incKey": 65,
+          "incKey": 68,
           "keyRate": 1.0
         }
       ],
@@ -103,6 +103,5 @@
     {
       "guid": "Keyboard0"
     }
-  ],
-  "useEnableDisableHotkeys": true
+  ]
 }

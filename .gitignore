@@ -109,11 +109,6 @@ Temporary Items
 !.vscode/launch.json
 !.vscode/extensions.json
 
-### SimGUI ###
-simgui-ds.json
-simgui-window.json
-simgui.json
-
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -161,5 +156,6 @@ gradle-app.setting
 .settings/
 bin/
 imgui.ini
+
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
