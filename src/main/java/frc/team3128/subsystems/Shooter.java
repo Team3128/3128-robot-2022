@@ -148,7 +148,7 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     @Override
-    protected double getMeasurement() {
+    public double getMeasurement() {
         return m_leftShooter.getSelectedSensorVelocity() * Constants.ConversionConstants.FALCON_NUp100MS_TO_RPM;
     }
 
