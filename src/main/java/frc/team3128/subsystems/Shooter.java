@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
+import frc.team3128.common.infrastructure.NAR_EMotor;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import frc.team3128.common.utility.Log;
 
@@ -35,8 +36,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
 
     //Motors
-    private NAR_TalonFX m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-    //private NAR_TalonSRX m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
+    private NAR_TalonFX m_leftShooter;
+    private NAR_TalonFX m_rightShooter;
 
     private ShooterState shooterState = ShooterState.OFF;
     private double time = 0, preTime = 0;
@@ -48,6 +49,8 @@ public class Shooter extends NAR_PIDSubsystem {
     public Shooter() {
         super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD), Constants.ShooterConstants.PLATEAU_COUNT);
     
+        configMotors();
+
         //Robot is a simulation
         if(Robot.isSimulation()){
             m_shooterSim = new FlywheelSim(
@@ -63,6 +66,17 @@ public class Shooter extends NAR_PIDSubsystem {
             instance = new Shooter();
         }
         return instance;
+    }
+
+    private void configMotors() {
+        m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
+        m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
+
+        m_leftShooter.setInverted(true);
+        m_leftShooter.setInverted(false);
+
+        m_rightShooter.follow((NAR_EMotor) m_leftShooter);
+
     }
 
 
