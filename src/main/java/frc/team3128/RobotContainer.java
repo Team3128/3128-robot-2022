@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -131,7 +132,7 @@ public class RobotContainer {
                                 .andThen(() -> m_drive.stop(), m_drive);
         
         intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
-        shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD));
+        shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
         //shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
         climbCommand = new Climb(m_climber);
 
