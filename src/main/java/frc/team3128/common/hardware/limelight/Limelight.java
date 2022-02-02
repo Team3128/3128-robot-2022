@@ -3,7 +3,6 @@ package frc.team3128.common.hardware.limelight;
 import java.util.Arrays;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.team3128.Constants;
 
 /**
  * Software wrapper to obtain data from and send data to the physical Limelight.
@@ -131,6 +130,10 @@ public class Limelight {
 
     public double calculateYPrimeFromTY(double ty, double targetHeight) {
         return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance;
+    }
+
+    public double calculateDistToGroundTarget(double ty, double targetHeight) {
+        return (-targetHeight + cameraHeight) * Math.tan(ty + cameraAngle) - frontDistance;
     }
 
     public void setLEDMode(LEDMode mode) {

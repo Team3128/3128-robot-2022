@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team3128.commands.ArcadeDrive;
 //import frc.team3128.commands.TestDrive;
@@ -16,6 +19,12 @@ import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.TestBenchPiston;
 import frc.team3128.subsystems.TestBenchMotor;
+import frc.team3128.commands.Climb;
+import frc.team3128.commands.HopperDefault;
+import frc.team3128.commands.IntakeCargo;
+import frc.team3128.commands.RetractHopper;
+import frc.team3128.commands.Shoot;
+import frc.team3128.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -32,12 +41,16 @@ public class RobotContainer {
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
     private Limelight lime;
-    
-    private Command auto;
-
-    private Thread dashboardUpdateThread;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
+
+    private String trajJson = "paths/jude_path_o_doom.wpilib.json";
+    private Trajectory trajectory = new Trajectory();
+
+    private Command auto;
+    private IntakeCargo intakeCargoCommand;
+    private SequentialCommandGroup shootCommand;
+    private Climb climbCommand;
 
     private boolean DEBUG = false;
 
@@ -61,7 +74,29 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-      
+        // Buttons...
+        // right:
+        // 1 (trigger): intake 
+        // 2: shoot
+        // 8: climb
+        // 9: stop climb
+        //
+        // left:
+        //TODO MAKE SURE whenHeld() works
+        //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
+        //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+        m_rightStick.getButton(1).whenHeld(intakeCargoCommand);
+
+        // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
+        // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
+        m_rightStick.getButton(2).whenHeld(shootCommand);
+
+        //m_rightStick.getButton(8).whenActive(climbCommand);
+        //m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
+        //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
+
+        // m_rightStick.getButton(1).whenHeld(new IntakeCargo(m_intake, m_hopper));
+        // m_rightStick.getButton(2).whenHeld(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCmd));
     }
   
     private void initAutos() {
@@ -82,6 +117,11 @@ public class RobotContainer {
         // Setup auto-selector
         NarwhalDashboard.addAuto("Auto test", auto);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
+        
+        intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
+        shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        //shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        climbCommand = new Climb(m_climber);
     }
 
     private void dashboardInit() {

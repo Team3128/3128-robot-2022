@@ -3,6 +3,10 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import net.thefletcher.revrobotics.enums.IdleMode;
+
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N2;
 
@@ -11,6 +15,7 @@ import edu.wpi.first.math.numbers.N2;
 public class Constants {
 
     public static class ConversionConstants {
+
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
         public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // rmp to nu/s
@@ -62,6 +67,90 @@ public class Constants {
             kVAngular,          // kvVoltSecondsPerRadian
             kAAngular           // kaVoltSecondsSquaredPerRadian
         );
+    }
+
+    public static class ClimberConstants {
+
+        public static final int CLIMBER_SENSOR_1_ID = 0;
+        public static final int CLIMBER_SENSOR_2_ID = 1;
+        public static final int CLIMBER_MOTOR_1_ID = 6;
+        public static final int CLIMBER_MOTOR_2_ID = 7;
+
+        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
+        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 7;
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 8;
+
+        public static final double CLIMBER_GEAR_RATIO = 18.9;
+        public static final double AXLE_DIAMETER = 0.7;
+        public static final double CLIMBER_ERROR_RATE = .5; //in inches
+
+        public static final double CLIMBER_HEIGHT = 20; // inches
+
+        public static final double VERTICAL_DISTANCE = 24;  // TODO: change to actual distance
+        public static final double SMALL_VERTICAL_DISTANCE = 6; // TODO: change to actual distance
+        public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
+    
+
+        public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
+        public static final double CLIMBER_POWER = 0.5;
+    }
+
+    public static class ShooterConstants {
+
+        public static final int LEFT_SHOOTER_ID = 8; 
+        public static final int RIGHT_SHOOTER_ID = 9; 
+
+
+        public static final double SHOOTER_PID_kP = 1.24e-3;
+        public static final double SHOOTER_PID_kI = 0;
+        public static final double SHOOTER_PID_kD = 0;
+
+        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
+
+        public static final int PLATEAU_COUNT = 25;
+
+        public static final double RPM_THRESHOLD_PERCENT = 0.05;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.06;
+        public static final double TIME_TO_MAX_THRESHOLD = 8;
+
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            SHOOTER_KV, 
+            SHOOTER_KA
+        );
+        public static final double SHOOTER_RADIUS_METERS = 0.0508;
+        public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
+        public static final double SHOOTER_GEARING = 1.5;
+    }
+  
+    public static class HopperConstants {
+
+        public static final int HOPPER_MOTOR_ID = 5;
+        // public static final int BOTTOM_SENSOR_ID = 12;
+        // public static final int TOP_SENSOR_ID = 13;
+
+        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
+        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+
+        public static final int HOPPER_DIO_PIN1 = 0;
+        public static final int HOPPER_DIO_PIN2 = 1;
+        public static final int HOPPER_MAX_REVERSE_DISTANCE = 0; //set distance
+
+        public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final double REVERSE_HOPPER_MOTOR_POWER = 0.5;
+    }
+
+    public static class IntakeConstants {
+
+        public static final int INTAKE_MOTOR_ID = 5; 
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 3;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 4;
+
+        public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
+
     }
 
     public static class VisionContants {
