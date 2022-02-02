@@ -1,4 +1,4 @@
-package frc.team3128.common.hardware.motorcontroller;
+package frc.team3128.hardware.motorcontroller;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.team3128.common.infrastructure.NAR_EMotor;
+import frc.team3128.infrastructure.NAR_EMotor;
 
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 

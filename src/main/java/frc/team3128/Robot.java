@@ -4,6 +4,7 @@
 
 package frc.team3128;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,12 +21,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit(){
+        // Webcam stuff
         LiveWindow.disableAllTelemetry();
+        CameraServer.startAutomaticCapture();
     }
 
     @Override
     public void robotPeriodic(){
-
+        m_robotContainer.updateDashboard();
     }
 
     @Override

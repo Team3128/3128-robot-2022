@@ -1,26 +1,21 @@
 package frc.team3128;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.CmdBallJoystickPursuit;
-import frc.team3128.commands.CmdBallPursuit;
+//import frc.team3128.commands.TestDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
-
+import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
+import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.NAR_Drivetrain;
+import frc.team3128.subsystems.TestBenchPiston;
+import frc.team3128.subsystems.TestBenchMotor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,82 +26,90 @@ import frc.team3128.subsystems.NAR_Drivetrain;
  */
 public class RobotContainer {
 
-    private NAR_Drivetrain m_drive;
-
+    //private NAR_Drivetrain m_drive;
+    private TestBenchMotor testBenchMotor;
+    private TestBenchPiston testBenchPiston;
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
+    private Limelight lime;
+    
+    private Command auto;
 
-    private Limelight ballLimelight;
+    private Thread dashboardUpdateThread;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
-
-    private String trajJson = "paths/jude_path_o_doom.wpilib.json";
-    private Trajectory trajectory = new Trajectory();
-    private Command auto;
 
     private boolean DEBUG = false;
 
     public RobotContainer() {
 
-        m_drive = NAR_Drivetrain.getInstance();
+        //m_drive = NAR_Drivetrain.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
 
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
+        testBenchPiston = new TestBenchPiston();
+        testBenchMotor = new TestBenchMotor(); 
+        //m_commandScheduler.setDefaultCommand(testBenchSubsystem, new TestDrive(testBenchSubsystem));
 
-        ballLimelight = new Limelight("limelight-sog", Constants.VisionContants.BALL_LL_ANGLE, Constants.VisionContants.BALL_LL_HEIGHT, 0, 0);
+        lime = new Limelight("limelight-bog", 0, 0, 0, 0);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-
-        try {
-            Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJson);
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Me me no open trajectory: " + trajJson, ex.getStackTrace());
-        }
-
-
-        initAutos();
         configureButtonBindings();
         dashboardInit();
+        initAutos();
     }   
 
-    private void configureButtonBindings() {
-        m_rightStick.getButton(1).whenHeld(new CmdBallJoystickPursuit(m_drive, ballLimelight, m_rightStick));
-        m_rightStick.getButton(3).whenPressed(new CmdBallPursuit(m_drive, ballLimelight));
+    private void initAutos() {
+        Command auto1 = new InstantCommand();
+        Command auto2 = new InstantCommand();
+
+        // Setup auto chooser
+        NarwhalDashboard.clearAutos();
+        NarwhalDashboard.addAuto("Auto test 1", auto1);
+        NarwhalDashboard.addAuto("Auto test 2", auto2);
+        NarwhalDashboard.pushData();
     }
 
-    private void initAutos() {
-        auto = new RamseteCommand(trajectory, 
-                                m_drive::getPose,
-                                new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
-                                new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-                                                            Constants.DriveConstants.kV,
-                                                            Constants.DriveConstants.kA),
-                                Constants.DriveConstants.DRIVE_KINEMATICS,
-                                m_drive::getWheelSpeeds,
-                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                m_drive::tankDriveVolts,
-                                m_drive)
-                                .andThen(() -> m_drive.stop(), m_drive);
+    private void configureButtonBindings() {
+        m_rightStick.getButton(1).whenActive(new RunCommand(testBenchMotor::run,testBenchMotor));
+        m_rightStick.getButton(1).whenReleased(new RunCommand(testBenchMotor::stop,testBenchMotor));
+
+        m_rightStick.getButton(8).whenActive(new RunCommand(testBenchPiston::eject,testBenchPiston));
+        m_rightStick.getButton(8).whenReleased(new RunCommand(testBenchPiston::off,testBenchPiston));
+
+        m_rightStick.getButton(10).whenActive(new RunCommand(testBenchPiston::retract,testBenchPiston)); 
+        m_rightStick.getButton(10).whenReleased(new RunCommand(testBenchPiston::off,testBenchPiston));
     }
 
     private void dashboardInit() {
         if (DEBUG) {
-            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            SmartDashboard.putData("Drivetrain", m_drive);
+            //SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+            //SmartDashboard.putData("Drivetrain", m_drive);
         }
-            
+        NarwhalDashboard.startServer();
+        setupLimelights(lime);           
     }
 
     public void stopDrivetrain() {
-        m_drive.stop();
+        //m_drive.stop();
     }
 
     public Command getAutonomousCommand() {
-        m_drive.resetPose(trajectory.getInitialPose()); // change this if the trajectory being run changes
-        return auto;
+        return NarwhalDashboard.getSelectedAuto();
+    }
+
+    private void setupLimelights(Limelight... limelightList) {
+        Log.info("NarwhalRobot", "Setting Up Limelight Chooser...");
+
+        for(Limelight lime : limelightList)
+            NarwhalDashboard.addLimelight(lime);
+    }
+
+    public void updateDashboard(){
+        NarwhalDashboard.put("time", Timer.getMatchTime());
+        NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
+        NarwhalDashboard.put("rpm", testBenchMotor.getRPM());
+        NarwhalDashboard.put("range", ""); // fix this
     }
 }

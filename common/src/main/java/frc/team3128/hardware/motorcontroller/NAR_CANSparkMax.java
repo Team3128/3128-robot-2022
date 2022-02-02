@@ -1,4 +1,4 @@
-package frc.team3128.common.hardware.motorcontroller;
+package frc.team3128.hardware.motorcontroller;
 
 // import com.revrobotics.RelativeEncoder;
 // import com.revrobotics.CANSparkMax;
@@ -7,7 +7,7 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
-import frc.team3128.common.infrastructure.NAR_EMotor;
+import frc.team3128.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.MotorType;
