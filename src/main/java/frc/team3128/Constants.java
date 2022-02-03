@@ -72,10 +72,11 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_SENSOR_1_ID = 0;
-        public static final int CLIMBER_SENSOR_2_ID = 1;
         public static final int CLIMBER_MOTOR_1_ID = 6;
         public static final int CLIMBER_MOTOR_2_ID = 7;
+
+        public static final int CLIMBER_SENSOR_1_ID = 2;
+        public static final int CLIMBER_SENSOR_2_ID = 3;
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
