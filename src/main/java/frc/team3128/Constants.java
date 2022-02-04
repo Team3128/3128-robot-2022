@@ -75,7 +75,6 @@ public class Constants {
             kVAngular,          // kvVoltSecondsPerRadian
             kAAngular           // kaVoltSecondsSquaredPerRadian
         );
-        
     }
 
     public static class ClimberConstants {
@@ -93,7 +92,7 @@ public class Constants {
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
-        public static final double CLIMBER_ERROR_RATE = .5; // inches
+        public static final double CLIMBER_ERROR_RATE = .5; //in inches
 
         public static final double CLIMBER_HEIGHT = 20; // inches
 
