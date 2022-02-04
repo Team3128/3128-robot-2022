@@ -43,8 +43,8 @@ public class Constants {
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.59312;
-        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
 
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
         public static final double DRIVE_NU_TO_METER = ENCODER_DISTANCE_PER_MARK / DRIVE_GEARING; // meters driven per encoder tick
         public static final double DRIVE_NUp100MS_TO_MPS = DRIVE_NU_TO_METER * 10; // sensor units per 100 ms to m/s of drivetrain
@@ -80,11 +80,10 @@ public class Constants {
 
     public static class ClimberConstants {
 
+        public static final int CLIMBER_SENSOR_1_ID = 0;
+        public static final int CLIMBER_SENSOR_2_ID = 1;
         public static final int CLIMBER_MOTOR_1_ID = 6;
         public static final int CLIMBER_MOTOR_2_ID = 7;
-
-        public static final int CLIMBER_SENSOR_1_ID = 2;
-        public static final int CLIMBER_SENSOR_2_ID = 3;
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
