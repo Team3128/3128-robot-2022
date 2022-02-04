@@ -24,6 +24,8 @@ import frc.team3128.Robot;
 import frc.team3128.common.hardware.motorcontroller.*;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
+// CURRENTLY CONFIGURED FOR 4 FALCON DRIVE
+
 public class NAR_Drivetrain extends SubsystemBase {
 
     // Initialize the generic motors

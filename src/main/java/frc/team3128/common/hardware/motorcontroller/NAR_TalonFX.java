@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
+
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 
     private double prevValue = 0;

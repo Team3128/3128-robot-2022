@@ -26,7 +26,7 @@ public class Climber extends SubsystemBase {
     private ClimberState climberRightState;
     private DoubleSolenoid m_climberSolenoid, m_climberBreakSolenoid;
     private NAR_CANSparkMax m_climbMotorL, m_climbMotorR;
-    DigitalInput climberLimitSwitchL, climberLimitSwitchR;
+    private DigitalInput climberLimitSwitchL, climberLimitSwitchR;
 
 
 
@@ -61,24 +61,40 @@ public class Climber extends SubsystemBase {
     }
     
     private void configPneumatics() {
-        m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
-        m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
+        m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 
+                                               ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, 
+                                               ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
+        m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 
+                                                    ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, 
+                                                    ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
     }
 
     @Override
     public void periodic() {
-        if (getClimberLeftState() == ClimberState.BOTTOM && getLeftSwitch() && getCurrentTicksLeft() > (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
+        if (getClimberLeftState() == ClimberState.BOTTOM 
+            && getLeftSwitch() 
+            && getCurrentTicksLeft() > (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
+
             setClimberLeftState(ClimberState.TOP);
         }
-        else if (getClimberLeftState() == ClimberState.TOP && getLeftSwitch() && getCurrentTicksLeft() < (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))){
+        else if (getClimberLeftState() == ClimberState.TOP 
+                 && getLeftSwitch() 
+                 && getCurrentTicksLeft() < (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
+            
             setClimberLeftState(ClimberState.BOTTOM);
             resetLeftEncoder();
         }
 
-        if (getClimberRightState() == ClimberState.BOTTOM && getRightSwitch() && getCurrentTicksRight() > (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
-                setClimberLeftState(ClimberState.TOP);
+        if (getClimberRightState() == ClimberState.BOTTOM 
+            && getRightSwitch() 
+            && getCurrentTicksRight() > (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
+            
+            setClimberLeftState(ClimberState.TOP);
         }
-        else if (getClimberRightState() == ClimberState.TOP && getRightSwitch() && getCurrentTicksRight() < (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))){
+        else if (getClimberRightState() == ClimberState.TOP 
+                && getRightSwitch() 
+                && getCurrentTicksRight() < (getDesiredTicks(Constants.ClimberConstants.CLIMBER_HEIGHT/2))) {
+
             setClimberLeftState(ClimberState.BOTTOM);
             resetRightEncoder();
         }
@@ -148,7 +164,9 @@ public class Climber extends SubsystemBase {
     }
     
     public double getDesiredTicks(double distance) {
-        double desiredTicks = distance * (((Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)*(Constants.ClimberConstants.CLIMBER_GEAR_RATIO)) / ((Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI));
+        double desiredTicks = distance * (((Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION)
+                                       * (Constants.ClimberConstants.CLIMBER_GEAR_RATIO)) 
+                                       / ((Constants.ClimberConstants.AXLE_DIAMETER)*Math.PI));
         return desiredTicks;
     }
 
