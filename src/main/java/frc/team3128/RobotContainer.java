@@ -1,32 +1,16 @@
 package frc.team3128;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team3128.commands.ArcadeDrive;
-//import frc.team3128.commands.TestDrive;
+import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
-import frc.team3128.subsystems.NAR_Drivetrain;
-import frc.team3128.commands.Climb;
-import frc.team3128.commands.HopperDefault;
-import frc.team3128.commands.IntakeCargo;
-import frc.team3128.commands.RetractHopper;
-//import frc.team3128.commands.Shoot;
 import frc.team3128.subsystems.*;
 
 /**
@@ -64,16 +48,17 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        //m_drive = NAR_Drivetrain.getInstance();
+        m_drive = NAR_Drivetrain.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
 
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
-        //m_commandScheduler.setDefaultCommand(testBenchSubsystem, new TestDrive(testBenchSubsystem));
 
         // m_shooterLimelight = new Limelight(hostname, cameraAngle, cameraHeight, frontDistance, targetWidth);
         // m_balLimelight = new Limelight(hostname, cameraAngle, cameraHeight, frontDistance, targetWidth);
+
+        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         configureButtonBindings();
         dashboardInit();
