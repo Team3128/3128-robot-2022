@@ -22,11 +22,11 @@ import frc.team3128.subsystems.*;
  */
 public class RobotContainer {
 
-    private NAR_Drivetrain m_drive;
-    private Intake m_intake;
-    private Shooter m_shooter;
-    private Hopper m_hopper;
-    private Climber m_climber;
+    private NAR_Drivetrain m_drive = NAR_Drivetrain.getInstance();
+    private Intake m_intake = Intake.getInstance();
+    private Shooter m_shooter = Shooter.getInstance();
+    private Hopper m_hopper = Hopper.getInstance();
+    private Climber m_climber = Climber.getInstance();
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -47,9 +47,7 @@ public class RobotContainer {
     private boolean DEBUG = false;
 
     public RobotContainer() {
-
-        m_drive = NAR_Drivetrain.getInstance();
-
+        
         //Enable all PIDSubsystems so that useOutput runs
 
         m_leftStick = new NAR_Joystick(0);
