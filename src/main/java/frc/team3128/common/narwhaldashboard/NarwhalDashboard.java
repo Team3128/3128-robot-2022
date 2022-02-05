@@ -146,13 +146,16 @@ public class NarwhalDashboard extends WebSocketServer {
             while (conn.isOpen()) {
                 JSONObject obj = new JSONObject();
 
+                SmartDashboard.putNumber("Debug", debugValues.size());
+
                 JSONArray debugArr = new JSONArray();
                 for (String key : debugValues.keySet()) {
                     JSONObject pair = new JSONObject();
                     pair.put("key", key);
                     pair.put("value", debugValues.get(key));
+                    debugArr.add(pair);
                 }
-
+                obj.put("debug", debugArr);
                
                 obj.put("selected_auto", selectedAuto);
                 obj.put("selected_limelight", selectedLimelight);
@@ -164,7 +167,7 @@ public class NarwhalDashboard extends WebSocketServer {
                     for (String autoName : autoPrograms.keySet()) {
                         autoProgramArr.add(autoName);
                     }
-                    obj.put("auto_programs", autoPrograms);
+                    obj.put("auto_programs", autoProgramArr);
 
                     JSONArray limelightsArr = new JSONArray();
                     for(Limelight lime : limelights.values()) {

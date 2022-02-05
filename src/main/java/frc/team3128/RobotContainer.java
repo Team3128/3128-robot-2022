@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,8 +34,8 @@ import frc.team3128.subsystems.*;
 public class RobotContainer {
 
     private NAR_Drivetrain m_drive;
-    private Intake m_intake;
     private Shooter m_shooter;
+    private Intake m_intake;   
     private Hopper m_hopper;
     private Climber m_climber;
 
@@ -59,8 +60,8 @@ public class RobotContainer {
     public RobotContainer() {
         
         m_drive = NAR_Drivetrain.getInstance();
-        m_intake = Intake.getInstance();
         m_shooter = Shooter.getInstance();
+        m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
 
@@ -70,12 +71,11 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        // m_shooterLimelight = new Limelight(hostname, cameraAngle, cameraHeight, frontDistance, targetWidth);
-        // m_balLimelight = new Limelight(hostname, cameraAngle, cameraHeight, frontDistance, targetWidth);
+        m_shooterLimelight = new Limelight("pog", 0, 0, 0, 0); // these are very fake right now
+        m_balLimelight = new Limelight("sog", 0, 0, 0, 0);
 
         m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method
-
+        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method ???
 
         try {
             Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJson);
@@ -87,6 +87,9 @@ public class RobotContainer {
         configureButtonBindings();
         dashboardInit();
         initAutos();
+
+        if(RobotBase.isSimulation())
+            DriverStation.silenceJoystickConnectionWarning(true);
     }   
 
     private void configureButtonBindings() {
@@ -101,10 +104,12 @@ public class RobotContainer {
         //TODO MAKE SURE whenHeld() works
         //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
         //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+
         m_rightStick.getButton(1).whenHeld(intakeCargoCommand);
 
         // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
         // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
+        
         m_rightStick.getButton(2).whenHeld(shootCommand);
 
         //m_rightStick.getButton(8).whenActive(climbCommand);
@@ -129,7 +134,7 @@ public class RobotContainer {
                                 .andThen(() -> m_drive.stop(), m_drive);
 
         // Setup auto-selector
-        NarwhalDashboard.addAuto("Auto test", auto);
+        NarwhalDashboard.addAuto("Basic Auto", auto);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
         
         intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
@@ -155,7 +160,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // add this to NarwhalDash
+        // TODO: MAKE HASHMAP CONTAINING INITIAL POSE2D AND AUTO
         m_drive.resetPose(trajectory.getInitialPose());
         return NarwhalDashboard.getSelectedAuto();
     }
