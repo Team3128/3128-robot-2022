@@ -59,7 +59,8 @@ public class RobotContainer {
     private Command auto;
     private CmdIntakeCargo intakeCargoCommand;
     private CmdRetractHopper retractHopperCommand;
-    private CmdShoot shootCommand;
+    private Command shootCommand;
+    private CmdShoot manualShoot;
     private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
 
@@ -190,20 +191,6 @@ public class RobotContainer {
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", "");
-    }
-
-    private void setupLimelights(Limelight... limelightList) {
-        Log.info("NarwhalRobot", "Setting Up Limelight Chooser...");
-
-        for(Limelight ll : limelightList)
-            NarwhalDashboard.addLimelight(ll);
-    }
-
-    public void updateDashboard(){
-        NarwhalDashboard.put("time", Timer.getMatchTime());
-        NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
-        NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", ""); // fix this
     }
 
     public Command getAutonomousCommand() {
