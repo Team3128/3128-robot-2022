@@ -11,6 +11,10 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.*;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,7 +24,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
-
+import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
+import frc.team3128.common.utility.Log;
 import frc.team3128.commands.*;
 import frc.team3128.subsystems.*;
 
@@ -43,6 +49,9 @@ public class RobotContainer {
     private NAR_Joystick m_rightStick;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
+
+    private Limelight m_shooterLimelight;
+    private Limelight m_balLimelight;
 
     private String trajJson = "paths/jude_path_o_doom.wpilib.json";
     private Trajectory trajectory = new Trajectory();
@@ -73,8 +82,8 @@ public class RobotContainer {
         m_shooterLimelight = new Limelight("pog", 0, 0, 0, 0); // these are very fake right now
         m_balLimelight = new Limelight("sog", 0, 0, 0, 0);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method ???
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
+        m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method ???
 
         try {
             Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJson);
@@ -158,6 +167,9 @@ public class RobotContainer {
             SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
             SmartDashboard.putData("Drivetrain", m_drive);
         }
+
+        NarwhalDashboard.startServer();
+        setupLimelights(m_shooterLimelight, m_balLimelight); 
             
     }
 
@@ -178,6 +190,20 @@ public class RobotContainer {
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", "");
+    }
+
+    private void setupLimelights(Limelight... limelightList) {
+        Log.info("NarwhalRobot", "Setting Up Limelight Chooser...");
+
+        for(Limelight ll : limelightList)
+            NarwhalDashboard.addLimelight(ll);
+    }
+
+    public void updateDashboard(){
+        NarwhalDashboard.put("time", Timer.getMatchTime());
+        NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
+        NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
+        NarwhalDashboard.put("range", ""); // fix this
     }
 
     public Command getAutonomousCommand() {
