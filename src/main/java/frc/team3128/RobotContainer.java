@@ -55,7 +55,9 @@ public class RobotContainer {
 
     private Command auto;
     private IntakeCargo intakeCargoCommand;
-    private SequentialCommandGroup shootCommand;
+    private RetractHopper retractHopperCommand;
+    private Shoot shootCommand;
+    private SequentialCommandGroup shootCommand2;
     private Climb climbCommand;
 
     private boolean DEBUG = false;
@@ -103,10 +105,12 @@ public class RobotContainer {
         //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
         //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
         m_rightStick.getButton(1).whenHeld(intakeCargoCommand);
-
+        m_rightStick.getButton(1).whenReleased(retractHopperCommand);
+        
         // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
         // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
-        m_rightStick.getButton(2).whenHeld(shootCommand);
+        m_rightStick.getButton(2).whenHeld(shootCommand2);
+        //m_rightStick.getButton(2).whenHeld(shootCommand);
 
         //m_rightStick.getButton(8).whenActive(climbCommand);
         //m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
@@ -132,8 +136,9 @@ public class RobotContainer {
                                 .andThen(() -> m_drive.stop(), m_drive);
         
         intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
-        shootCommand = new SequentialCommandGroup(new RetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
-        //shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        shootCommand2 = new SequentialCommandGroup(new RetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        retractHopperCommand = new RetractHopper(m_hopper);
         climbCommand = new Climb(m_climber);
 
     }
