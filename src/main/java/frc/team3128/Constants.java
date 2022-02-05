@@ -81,8 +81,8 @@ public class Constants {
 
         public static final int CLIMBER_SENSOR_1_ID = 0;
         public static final int CLIMBER_SENSOR_2_ID = 1;
-        public static final int CLIMBER_MOTOR_1_ID = 6;
-        public static final int CLIMBER_MOTOR_2_ID = 7;
+        public static final int CLIMBER_MOTOR_1_ID = 1;
+        public static final int CLIMBER_MOTOR_2_ID = 2;
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
@@ -105,8 +105,8 @@ public class Constants {
 
     public static class ShooterConstants {
 
-        public static final int LEFT_SHOOTER_ID = 8; 
-        public static final int RIGHT_SHOOTER_ID = 9; 
+        public static final int LEFT_SHOOTER_ID = 4; 
+        public static final int RIGHT_SHOOTER_ID = 5; 
 
         public static final double SHOOTER_PID_kP = 1.24e-3;
         public static final double SHOOTER_PID_kI = 0;
@@ -134,7 +134,7 @@ public class Constants {
   
     public static class HopperConstants {
 
-        public static final int HOPPER_MOTOR_ID = 5;
+        public static final int HOPPER_MOTOR_ID = 6;
         // public static final int BOTTOM_SENSOR_ID = 12;
         // public static final int TOP_SENSOR_ID = 13;
 
@@ -151,7 +151,7 @@ public class Constants {
 
     public static class IntakeConstants {
 
-        public static final int INTAKE_MOTOR_ID = 5; 
+        public static final int INTAKE_MOTOR_ID = 7; 
         public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 3;
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 4;
 
