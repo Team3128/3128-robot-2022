@@ -31,7 +31,7 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 		encoder = (SparkMaxRelativeEncoder) getEncoder();
 		encoder.setPositionConversionFactor(MotorControllerConstants.SPARKMAX_ENCODER_RESOLUTION); // convert rotations to encoder ticks
-		encoder.setVelocityConversionFactor(MotorControllerConstants.SPARKMAX_RPM_TO_CPS); // convert rpm to nu/s
+		encoder.setVelocityConversionFactor(MotorControllerConstants.SPARKMAX_RPM_TO_NUpS); // convert rpm to nu/s
 
 		if(RobotBase.isSimulation()){
 			encoderSim = new SimDeviceSim("CANSparkMax[" + this.getDeviceId() + "] - RelativeEncoder");

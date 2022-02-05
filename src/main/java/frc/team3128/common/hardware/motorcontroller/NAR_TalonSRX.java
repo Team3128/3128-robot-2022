@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
-public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
+public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor {
 
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
@@ -61,6 +61,11 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 			vel *= -1;
 		}
 		motorSim.setQuadratureVelocity((int)(vel / 10)); // convert nu/s to nu/100ms
+	}
+
+	@Override
+	public double getSelectedSensorVelocity() {
+		return super.getSelectedSensorVelocity() * 10; // convert nu/100ms to nu/s
 	}
 
 	@Override

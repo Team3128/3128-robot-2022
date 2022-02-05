@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
-
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 
     private double prevValue = 0;
@@ -61,6 +60,11 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 			vel *= -1;
 		}
 		motorSim.setIntegratedSensorVelocity((int)(vel/10)); // convert nu/s to nu/100ms
+	}
+
+	@Override
+	public double getSelectedSensorVelocity() {
+		return super.getSelectedSensorVelocity() * 10; // convert nu/100ms to nu/s
 	}
 
 	@Override

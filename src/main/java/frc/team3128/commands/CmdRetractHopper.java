@@ -3,10 +3,10 @@ import frc.team3128.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RetractHopper extends CommandBase{
-    private final Hopper m_hopper;
+public class CmdRetractHopper extends CommandBase {
+    private Hopper m_hopper;
 
-    public RetractHopper(Hopper hopper){
+    public CmdRetractHopper(Hopper hopper){
         m_hopper = hopper;
         addRequirements(m_hopper); 
     }

@@ -13,10 +13,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
@@ -42,18 +40,21 @@ public class RobotContainer {
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
 
+    private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
+
     private Limelight m_shooterLimelight;
     private Limelight m_balLimelight;
-
-    private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
 
     private String trajJson = "paths/jude_path_o_doom.wpilib.json";
     private Trajectory trajectory = new Trajectory();
 
     private Command auto;
-    private IntakeCargo intakeCargoCommand;
-    private SequentialCommandGroup shootCommand;
-    private Climb climbCommand;
+    private CmdIntakeCargo intakeCargoCommand;
+    private CmdRetractHopper retractHopperCommand;
+    private Command shootCommand;
+    private CmdShoot manualShoot;
+    private SequentialCommandGroup shootCommand2;
+    private CmdClimb climbCommand;
 
     private boolean DEBUG = false;
 
@@ -74,8 +75,8 @@ public class RobotContainer {
         m_shooterLimelight = new Limelight("pog", 0, 0, 0, 0); // these are very fake right now
         m_balLimelight = new Limelight("sog", 0, 0, 0, 0);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method ???
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
+        m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method ???
 
         try {
             Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJson);
@@ -84,10 +85,10 @@ public class RobotContainer {
             DriverStation.reportError("Me me no open trajectory: " + trajJson, ex.getStackTrace());
         }
 
+        initAutos();
         configureButtonBindings();
         dashboardInit();
-        initAutos();
-
+        
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
     }   
@@ -106,17 +107,20 @@ public class RobotContainer {
         //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
 
         m_rightStick.getButton(1).whenHeld(intakeCargoCommand);
-
+        m_rightStick.getButton(1).whenReleased(retractHopperCommand);
+        
         // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
         // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
-        
-        m_rightStick.getButton(2).whenHeld(shootCommand);
+
+        m_rightStick.getButton(2).whenHeld(shootCommand2);
+        //m_rightStick.getButton(2).whenHeld(shootCommand);
 
         //m_rightStick.getButton(8).whenActive(climbCommand);
         //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
         //m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
     }
-  
+
+
     private void initAutos() {
 
         auto = new RamseteCommand(trajectory, 
@@ -132,31 +136,53 @@ public class RobotContainer {
                                 m_drive::tankDriveVolts,
                                 m_drive)
                                 .andThen(() -> m_drive.stop(), m_drive);
+        
+        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
+                      new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        retractHopperCommand = new CmdRetractHopper(m_hopper);
+        climbCommand = new CmdClimb(m_climber);
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("Basic Auto", auto);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
         
-        intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
-        // shootCommand = new SequentialCommandGroup(
-        //                new RetractHopper(m_hopper), 
-        //                new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
-        //                new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
-        // manualShoot = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
-        climbCommand = new Climb(m_climber);
+        intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
+        shootCommand = new SequentialCommandGroup(
+                          new CmdRetractHopper(m_hopper), 
+                          new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
+                          new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        manualShoot = new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+
     }
 
     private void dashboardInit() {
         if (DEBUG) {
-            //SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            //SmartDashboard.putData("Drivetrain", m_drive);
+            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+            SmartDashboard.putData("Drivetrain", m_drive);
         }
+
         NarwhalDashboard.startServer();
-        setupLimelights(m_shooterLimelight,m_balLimelight);           
+        setupLimelights(m_shooterLimelight, m_balLimelight); 
+            
     }
 
     public void stopDrivetrain() {
         m_drive.stop();
+    }
+  
+    private void setupLimelights(Limelight... limelightList) {
+        Log.info("NarwhalRobot", "Setting up limelight chooser...");
+      
+        for (Limelight ll : limelightList) {
+            NarwhalDashboard.addLimelight(ll);
+        }
+    }
+  
+    public void updateDashboard() {
+        NarwhalDashboard.put("time", Timer.getMatchTime());
+        NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
+        NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
+        NarwhalDashboard.put("range", "");
     }
 
     public Command getAutonomousCommand() {
@@ -165,17 +191,4 @@ public class RobotContainer {
         return NarwhalDashboard.getSelectedAuto();
     }
 
-    private void setupLimelights(Limelight... limelightList) {
-        Log.info("NarwhalRobot", "Setting Up Limelight Chooser...");
-
-        for(Limelight lime : limelightList)
-            NarwhalDashboard.addLimelight(lime);
-    }
-
-    public void updateDashboard(){
-        NarwhalDashboard.put("time", Timer.getMatchTime());
-        NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
-        NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", ""); // fix this
-    }
 }

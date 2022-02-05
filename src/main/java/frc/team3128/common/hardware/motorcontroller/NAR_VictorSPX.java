@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 // To be simmed in the next implementation
 
-public class NAR_VictorSPX extends WPI_VictorSPX{
+public class NAR_VictorSPX extends WPI_VictorSPX {
     
     private double prevValue = 0;
     private ControlMode prevControlMode = ControlMode.Disabled;

@@ -4,7 +4,6 @@ import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import net.thefletcher.revrobotics.enums.IdleMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -19,8 +18,9 @@ public class Constants {
 
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
         public static final double SPARK_ENCODER_RESOLUTION = 42;
-        public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // rmp to nu/s
+        public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // RPM to nu/s
         public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
+        public static final double FALCON_NUpS_TO_RPM = 60 / FALCON_ENCODER_RESOLUTION; // sensor units per second to rpm
 
         public static final double INCHES_TO_METERS = 0.0254;
     }
@@ -38,8 +38,8 @@ public class Constants {
         public static final int KIT_MOTOR_RIGHT_FOLLOWER_ID = 4;
 
         public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
-        public static final double ARCADE_DRIVE_TURN_DEADBAND = 0.05;
 
+        // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.59312;
@@ -75,7 +75,6 @@ public class Constants {
             kVAngular,          // kvVoltSecondsPerRadian
             kAAngular           // kaVoltSecondsSquaredPerRadian
         );
-        
     }
 
     public static class ClimberConstants {
@@ -92,7 +91,7 @@ public class Constants {
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
-        public static final double CLIMBER_ERROR_RATE = .5; // inches
+        public static final double CLIMBER_ERROR_RATE = .5; //in inches
 
         public static final double CLIMBER_HEIGHT = 20; // inches
 
@@ -100,7 +99,6 @@ public class Constants {
         public static final double SMALL_VERTICAL_DISTANCE = 6; // TODO: change to actual distance
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
-
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.5;
     }
@@ -109,7 +107,6 @@ public class Constants {
 
         public static final int LEFT_SHOOTER_ID = 8; 
         public static final int RIGHT_SHOOTER_ID = 9; 
-
 
         public static final double SHOOTER_PID_kP = 1.24e-3;
         public static final double SHOOTER_PID_kI = 0;
@@ -162,7 +159,7 @@ public class Constants {
 
     }
 
-    public static class VisionContants {
+    public static class VisionConstants {
 
         public static final String TOP_HOSTNAME = "limelight-sog";
 

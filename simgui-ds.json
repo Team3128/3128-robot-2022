@@ -14,15 +14,15 @@
       "axisConfig": [
         {},
         {
-          "decKey": 83,
+          "decKey": 87,
           "decayRate": 1.0,
-          "incKey": 87,
+          "incKey": 83,
           "keyRate": 1.0
         },
         {
-          "decKey": 65,
+          "decKey": 68,
           "decayRate": 1.0,
-          "incKey": 68,
+          "incKey": 65,
           "keyRate": 1.0
         }
       ],
@@ -103,5 +103,6 @@
     {
       "guid": "Keyboard0"
     }
-  ]
+  ],
+  "useEnableDisableHotkeys": true
 }

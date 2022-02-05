@@ -1,15 +1,10 @@
 package frc.team3128.subsystems; 
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Encoder;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.Constants.HopperConstants;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
-import frc.team3128.Constants;
-
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class Hopper extends SubsystemBase {
 
@@ -31,27 +26,28 @@ public class Hopper extends SubsystemBase {
     }
 
     public static synchronized Hopper getInstance() {
-        if (instance == null) instance = new Hopper();
+        if (instance == null) 
+            instance = new Hopper();
         return instance;
     }
 
     private void configMotors() {
-        m_hopper = new NAR_TalonSRX(Constants.HopperConstants.HOPPER_MOTOR_ID);
+        m_hopper = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_ID);
     }
 
     private void configPneumatics() {
-    //     m_hopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, Constants.HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
+    //     m_hopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
      }
 
     private void configEncoders() {
-        m_encoder = new Encoder(Constants.HopperConstants.HOPPER_DIO_PIN1, Constants.HopperConstants.HOPPER_DIO_PIN2);
+        m_encoder = new Encoder(HopperConstants.HOPPER_DIO_PIN1, HopperConstants.HOPPER_DIO_PIN2);
         m_encoder.setDistancePerPulse(4./256.);
         m_encoder.setReverseDirection(true);
     }
 
     private void configSensors() {
-        // m_bottom = new DigitalInput(Constants.HopperConstants.BOTTOM_SENSOR_ID);
-        // m_top = new DigitalInput(Constants.HopperConstants.TOP_SENSOR_ID);
+        // m_bottom = new DigitalInput(HopperConstants.BOTTOM_SENSOR_ID);
+        // m_top = new DigitalInput(HopperConstants.TOP_SENSOR_ID);
     }
 
     // public boolean getTop() {
@@ -75,7 +71,7 @@ public class Hopper extends SubsystemBase {
      * @return true if hopper has reversed to desired distance, false if retracted
      */
     public boolean isReversed() {
-        return m_encoder.getDistance() >= Constants.HopperConstants.HOPPER_MAX_REVERSE_DISTANCE;
+        return m_encoder.getDistance() >= HopperConstants.HOPPER_MAX_REVERSE_DISTANCE;
     }
 
     /**
@@ -89,29 +85,29 @@ public class Hopper extends SubsystemBase {
     /**
      * Retracts the piston gate
      */
-    public void retractPistonGate(){
+    // public void retractPistonGate(){
     //     m_hopperSolenoid.set(kReverse);
     //     isEjected = false;
-    }
+    // }
 
     /**
      * Stops the piston gate - emergency stop/power off
      */
-    public void turnPistonOff() {
-    //     m_hopperSolenoid.set(kOff); 
-    }
+    // public void turnPistonOff() {
+    //   m_hopperSolenoid.set(kOff); 
+    // }
 
     /**
      * Runs the hopper using the HOPPER_MOTOR_POWER constant
      */
     public void runHopper() {
-        m_hopper.set(Constants.HopperConstants.HOPPER_MOTOR_POWER);
+        m_hopper.set(HopperConstants.HOPPER_MOTOR_POWER);
 
     }
 
     public void reverseHopper() {
         m_encoder.reset();
-        m_hopper.set(Constants.HopperConstants.REVERSE_HOPPER_MOTOR_POWER); //change later
+        m_hopper.set(HopperConstants.REVERSE_HOPPER_MOTOR_POWER); //change later
     }
 
     /**

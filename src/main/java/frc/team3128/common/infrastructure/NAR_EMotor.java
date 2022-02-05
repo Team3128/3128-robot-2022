@@ -10,7 +10,7 @@ public interface NAR_EMotor extends MotorController {
     public double getSelectedSensorPosition();
 
     /**
-     * @return Current encoder velocity in encoder ticks per 100ms
+     * @return Current encoder velocity in encoder ticks per second
      */
     public double getSelectedSensorVelocity();
 
@@ -37,7 +37,7 @@ public interface NAR_EMotor extends MotorController {
     /**
      * @param motor NAR_EMotor to follow 
      * 
-     * Restrict this to only follow motor controllers of the same type
+     * Restrict this to only follow motor controllers of the same type in subclasses
      */
     public void follow(NAR_EMotor motor);
 }

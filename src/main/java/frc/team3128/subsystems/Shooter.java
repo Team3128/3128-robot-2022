@@ -2,16 +2,16 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import frc.team3128.Constants;
-import frc.team3128.Robot;
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Constants.ConversionConstants;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import frc.team3128.common.utility.Log;
@@ -30,10 +30,10 @@ public class Shooter extends NAR_PIDSubsystem {
         private ShooterState(double RPM) {
             this.shooterRPM = RPM;
         }
+
     }
 
     private static Shooter instance;
-
 
     //Motors
     private NAR_TalonFX m_leftShooter;
@@ -41,22 +41,22 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private ShooterState shooterState = ShooterState.OFF;
     private double time = 0, preTime = 0;
-    private double thresholdPercent = Constants.ShooterConstants.RPM_THRESHOLD_PERCENT;
+    private double thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
 
     private FlywheelSim m_shooterSim;
 
 
     public Shooter() {
-        super(new PIDController(Constants.ShooterConstants.SHOOTER_PID_kP, Constants.ShooterConstants.SHOOTER_PID_kI, Constants.ShooterConstants.SHOOTER_PID_kD), Constants.ShooterConstants.PLATEAU_COUNT);
+        super(new PIDController(ShooterConstants.SHOOTER_PID_kP, ShooterConstants.SHOOTER_PID_kI, ShooterConstants.SHOOTER_PID_kD), ShooterConstants.PLATEAU_COUNT);
     
         configMotors();
 
         //Robot is a simulation
-        if(Robot.isSimulation()){
+        if(RobotBase.isSimulation()){
             m_shooterSim = new FlywheelSim(
-                Constants.ShooterConstants.SHOOTER_CHAR,
-                Constants.ShooterConstants.SHOOTER_GEARBOX,
-                Constants.ShooterConstants.SHOOTER_GEARING 
+                ShooterConstants.SHOOTER_CHAR,
+                ShooterConstants.SHOOTER_GEARBOX,
+                ShooterConstants.SHOOTER_GEARING 
             );
         }
     }
@@ -69,8 +69,8 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     private void configMotors() {
-        m_leftShooter = new NAR_TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_ID);
-        m_rightShooter = new NAR_TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_ID);
+        m_leftShooter = new NAR_TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
+        m_rightShooter = new NAR_TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
 
         m_leftShooter.setInverted(true);
         m_leftShooter.setInverted(false);
@@ -78,7 +78,6 @@ public class Shooter extends NAR_PIDSubsystem {
         m_rightShooter.follow((NAR_EMotor) m_leftShooter);
 
     }
-
 
      /**
      * @return If the shooter is at the setpoint RPM
@@ -100,20 +99,20 @@ public class Shooter extends NAR_PIDSubsystem {
      * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
      */
     public void startPID() {
-        thresholdPercent = Constants.ShooterConstants.RPM_THRESHOLD_PERCENT;
+        thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
         super.setSetpoint(shooterState.shooterRPM);  
         super.startPID();
-        getController().setTolerance(Constants.ShooterConstants.RPM_THRESHOLD_PERCENT * shooterState.shooterRPM);
+        getController().setTolerance(ShooterConstants.RPM_THRESHOLD_PERCENT * shooterState.shooterRPM);
     }
 
     /**
      * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
      */
     public void startPID(double rpm) {
-        thresholdPercent = Constants.ShooterConstants.RPM_THRESHOLD_PERCENT;
+        thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
         super.setSetpoint(rpm);  
         super.startPID();
-        getController().setTolerance(Constants.ShooterConstants.RPM_THRESHOLD_PERCENT * rpm);
+        getController().setTolerance(ShooterConstants.RPM_THRESHOLD_PERCENT * rpm);
     }
 
     /**
@@ -149,7 +148,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return m_leftShooter.getSelectedSensorVelocity() * Constants.ConversionConstants.FALCON_NUp100MS_TO_RPM;
+        return m_leftShooter.getSelectedSensorVelocity() * ConversionConstants.FALCON_NUpS_TO_RPM;
     }
 
     /**
@@ -161,22 +160,19 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + ShooterConstants.SHOOTER_KV*setpoint; //0.003
+        double voltageOutput = output + ShooterConstants.SHOOTER_KV * setpoint; //0.003
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 
         time = RobotController.getFPGATime() / 1e6;
-        if (thresholdPercent < Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += ((time - preTime) * ((Constants.ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - Constants.ShooterConstants.RPM_THRESHOLD_PERCENT)) / Constants.ShooterConstants.TIME_TO_MAX_THRESHOLD);
+        if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
+            thresholdPercent += ((time - preTime) * ((ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT)) / ShooterConstants.TIME_TO_MAX_THRESHOLD);
             getController().setTolerance(thresholdPercent * setpoint);
         }
 
         super.useOutput(setpoint);
 
-        preTime = time;
-
-
-        percentOutput = (percentOutput > 1) ? 1 : ((percentOutput < -1) ? -1 : percentOutput);
+        percentOutput = MathUtil.clamp(percentOutput, -1, 1);
         percentOutput = (setpoint == 0) ? 0 : percentOutput;
 
         m_leftShooter.set(ControlMode.PercentOutput, percentOutput);
@@ -187,6 +183,8 @@ public class Shooter extends NAR_PIDSubsystem {
         //Log.info("Shooter", "setpoint " + setpoint);
         //Log.info("Shooter", "shooterState " + shooterState.shooterRPM);
         SmartDashboard.putNumber("Shooter Encoder", getMeasurement());
+
+        preTime = time;
     }
 
     @Override
@@ -196,14 +194,13 @@ public class Shooter extends NAR_PIDSubsystem {
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
-        //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * Constants.ShooterConstants.SHOOTER_RADIUS_METERS);
+        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * ShooterConstants.SHOOTER_RADIUS_METERS);
+        //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * ShooterConstants.SHOOTER_RADIUS_METERS);
     
-        SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
-        SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
+        // SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
+        // SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
         SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
         
-
     }
 
     public void setMotorVelocity(int rpm) {

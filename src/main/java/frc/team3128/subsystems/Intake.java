@@ -11,8 +11,8 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 public class Intake extends SubsystemBase {
 
-
     private static Intake instance;
+
     private DoubleSolenoid m_intakeSolenoid;
     private NAR_TalonSRX m_intake;
 
@@ -55,10 +55,6 @@ public class Intake extends SubsystemBase {
     public void off() {
         m_intakeSolenoid.set(kOff); 
     }
-
-
-
-
 
 }
 
