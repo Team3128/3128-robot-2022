@@ -63,6 +63,11 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	@Override
+	public double getSelectedSensorVelocity() {
+		return super.getSelectedSensorVelocity() * 10; // convert nu/100ms to nu/s
+	}
+
+	@Override
 	public void follow(NAR_EMotor motor) {
 		if(!(motor instanceof IMotorController)) {
 			throw new RuntimeException("Bad follow: NAR_TalonFX " + getDeviceID() + " attempted to follow non-CTRE motor controller.");

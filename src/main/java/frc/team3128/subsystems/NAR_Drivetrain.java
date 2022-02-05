@@ -1,27 +1,24 @@
 package frc.team3128.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
-
-import net.thefletcher.revrobotics.enums.MotorType;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.DriveConstants;
-import frc.team3128.Robot;
-import frc.team3128.common.hardware.motorcontroller.*;
+import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_Drivetrain extends SubsystemBase {
@@ -43,7 +40,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     // private NAR_EMotor leftFollower = new NAR_CANSparkMax(DriveConstants.KIT_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
     // private NAR_EMotor rightFollower = new NAR_CANSparkMax(DriveConstants.KIT_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
 
-    public static NAR_Drivetrain instance;
+    private static NAR_Drivetrain instance;
 
     private DifferentialDrive robotDrive;
     private DifferentialDrivetrainSim robotDriveSim;
@@ -55,7 +52,6 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     public NAR_Drivetrain(){
 
-        // Not sure what the deal is here
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
         
@@ -68,9 +64,8 @@ public class NAR_Drivetrain extends SubsystemBase {
             new MotorControllerGroup(leftLeader, leftFollower),
             new MotorControllerGroup(rightLeader, rightFollower));
 
-        if(Robot.isSimulation()){
-            robotDriveSim =
-            new DifferentialDrivetrainSim(
+        if(RobotBase.isSimulation()){
+            robotDriveSim = new DifferentialDrivetrainSim(
                 DriveConstants.DRIVE_CHAR,
                 DriveConstants.GEARBOX,
                 DriveConstants.DRIVE_GEARING,
@@ -154,14 +149,14 @@ public class NAR_Drivetrain extends SubsystemBase {
      * @return the left encoder velocity in meters per second
      */
     public double getLeftEncoderSpeed() {
-        return leftLeader.getSelectedSensorVelocity() * DriveConstants.DRIVE_NUp100MS_TO_MPS;
+        return leftLeader.getSelectedSensorVelocity() * DriveConstants.DRIVE_NU_TO_METER;
     }
 
     /**
      * @return the right encoder velocity in meters per second
      */
     public double getRightEncoderSpeed() {
-        return rightLeader.getSelectedSensorVelocity() * DriveConstants.DRIVE_NUp100MS_TO_MPS;
+        return rightLeader.getSelectedSensorVelocity() * DriveConstants.DRIVE_NU_TO_METER;
     }
     
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {

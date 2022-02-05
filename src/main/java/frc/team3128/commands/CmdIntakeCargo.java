@@ -4,14 +4,15 @@ import frc.team3128.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class IntakeCargo extends CommandBase{
-    private final Intake m_intake; 
-    private final Hopper m_hopper;
+public class CmdIntakeCargo extends CommandBase{
+    private Intake m_intake; 
+    private Hopper m_hopper;
 
 
-    public IntakeCargo(Intake intake, Hopper hopper){
+    public CmdIntakeCargo(Intake intake, Hopper hopper){
         m_intake = intake;
         m_hopper = hopper;
+
         addRequirements(m_intake, m_hopper);
     }
 
@@ -22,10 +23,7 @@ public class IntakeCargo extends CommandBase{
         m_hopper.runHopper();
     }
 
-    public void execute(){
-        
-    }
-
+    @Override
     public void end(boolean interrupted){
         m_intake.retractIntake();
         m_intake.stopIntake();
@@ -35,6 +33,4 @@ public class IntakeCargo extends CommandBase{
     public boolean isFinished(){
         return false;
     }
-
-
 }

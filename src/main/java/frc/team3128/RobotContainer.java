@@ -10,24 +10,13 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 
 import frc.team3128.common.hardware.input.NAR_Joystick;
-import frc.team3128.autonomous.Trajectories;
-import frc.team3128.commands.ArcadeDrive;
-import frc.team3128.commands.Climb;
-import frc.team3128.commands.HopperDefault;
-import frc.team3128.commands.IntakeCargo;
-import frc.team3128.commands.RetractHopper;
-import frc.team3128.commands.Shoot;
+
+import frc.team3128.commands.*;
 import frc.team3128.subsystems.*;
 
 /**
@@ -54,11 +43,11 @@ public class RobotContainer {
     private Trajectory trajectory = new Trajectory();
 
     private Command auto;
-    private IntakeCargo intakeCargoCommand;
-    private RetractHopper retractHopperCommand;
-    private Shoot shootCommand;
+    private CmdIntakeCargo intakeCargoCommand;
+    private CmdRetractHopper retractHopperCommand;
+    private CmdShoot shootCommand;
     private SequentialCommandGroup shootCommand2;
-    private Climb climbCommand;
+    private CmdClimb climbCommand;
 
     private boolean DEBUG = false;
 
@@ -76,8 +65,8 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new ArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new HopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
+        m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method
 
 
         try {
@@ -90,6 +79,9 @@ public class RobotContainer {
         initAutos();
         configureButtonBindings();
         dashboardInit();
+
+        if (RobotBase.isSimulation())
+            DriverStation.silenceJoystickConnectionWarning(true);
     }   
 
     private void configureButtonBindings() {
@@ -135,11 +127,11 @@ public class RobotContainer {
                                 m_drive)
                                 .andThen(() -> m_drive.stop(), m_drive);
         
-        intakeCargoCommand = new IntakeCargo(m_intake, m_hopper);
-        shootCommand = new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
-        shootCommand2 = new SequentialCommandGroup(new RetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new Shoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
-        retractHopperCommand = new RetractHopper(m_hopper);
-        climbCommand = new Climb(m_climber);
+        intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
+        shootCommand = new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        retractHopperCommand = new CmdRetractHopper(m_hopper);
+        climbCommand = new CmdClimb(m_climber);
 
     }
 
