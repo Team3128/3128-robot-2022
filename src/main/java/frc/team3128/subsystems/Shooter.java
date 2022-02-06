@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Constants;
 import frc.team3128.Constants.ConversionConstants;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -10,7 +11,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
@@ -23,7 +24,7 @@ public class Shooter extends NAR_PIDSubsystem {
         OFF(0),
         LAUNCHPAD(4800),
         UPPERHUB(0),
-        LOWERHUB(0);
+        LOWERHUB(1250);
 
         public double shooterRPM;
 
@@ -44,6 +45,8 @@ public class Shooter extends NAR_PIDSubsystem {
     private double thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
 
     private FlywheelSim m_shooterSim;
+
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ShooterConstants.SHOOTER_KS, ShooterConstants.SHOOTER_KV, ShooterConstants.SHOOTER_KA);
 
 
     public Shooter() {
@@ -72,8 +75,8 @@ public class Shooter extends NAR_PIDSubsystem {
         m_leftShooter = new NAR_TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
         m_rightShooter = new NAR_TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
 
-        m_leftShooter.setInverted(true);
         m_leftShooter.setInverted(false);
+        m_rightShooter.setInverted(true);
 
         m_rightShooter.follow((NAR_EMotor) m_leftShooter);
 
@@ -160,7 +163,7 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + ShooterConstants.SHOOTER_KV * setpoint; //0.003
+        double voltageOutput = output + feedforward.calculate(setpoint); //0.003
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 

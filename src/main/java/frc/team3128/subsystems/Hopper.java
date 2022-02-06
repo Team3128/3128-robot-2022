@@ -120,16 +120,8 @@ public class Hopper extends SubsystemBase {
         m_hopper.set(0);
     }
 
-    public void vrrmHopper() {
-        m_hopper.set(-0.1);
-    }
-
     public void resetMotorEncoder(){
         m_hopper.setSelectedSensorPosition(0);
-    }
-
-    public int getEncVal() {
-        return m_encoder.get();
     }
 
     public void setNeutralMode(NeutralMode mode) {

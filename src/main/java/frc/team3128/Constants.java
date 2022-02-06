@@ -108,13 +108,13 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double SHOOTER_PID_kP = 1.24e-3;
+        public static final double SHOOTER_PID_kP = 1.24e-5;//0.21576; // 1.24e-3;
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
 
-        public static final double SHOOTER_KS = 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.00163; //Velocity gain in PID Feed Forward
-        public static final double SHOOTER_KA = 0.0349; //Acceleration gain PID Feed Forward
+        public static final double SHOOTER_KS = 0.69257; // 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.10714 / 62.5; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KA = 0.0053359; // 0.0349; //Acceleration gain PID Feed Forward
 
         public static final int PLATEAU_COUNT = 25;
 
@@ -169,6 +169,7 @@ public class Constants {
         public static final double TOP_CAMERA_HEIGHT = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured - also determine units
         public static final double TOP_FRONT_DIST = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured.
         public static final double TARGET_WIDTH = 30.0; //inches
+        public static final double TARGET_HEIGHT = 104 * ConversionConstants.INCHES_TO_METERS;
 
         public static final double VISION_PID_kP = 0.01;
         public static final double VISION_PID_kI = 0.02;

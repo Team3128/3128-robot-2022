@@ -22,6 +22,8 @@ public class CmdHopperDefault extends CommandBase {
         // if shooting, retract gate if ejected and run the hopper
         if (isShooting.getAsBoolean()) { 
             m_hopper.runHopper();
+        } else {
+            m_hopper.stopHopper();
         }
     }
 

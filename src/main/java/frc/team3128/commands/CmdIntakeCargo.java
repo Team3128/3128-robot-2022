@@ -15,7 +15,7 @@ public class CmdIntakeCargo extends CommandBase{
         m_intake = intake;
         m_hopper = hopper;
 
-        addRequirements(m_intake/*, m_hopper*/);
+        addRequirements(m_intake, m_hopper);
     }
 
     @Override

@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.team3128.Constants.VisionConstants;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
@@ -106,9 +108,8 @@ public class RobotContainer {
         //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
         //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
 
-        m_rightStick.getButton(1).whenHeld( new SequentialCommandGroup(
-                                            new SequentialCommandGroup(new InstantCommand(m_intake::ejectIntake, m_intake), new RunCommand(m_intake::runIntakeBack, m_intake)).withTimeout(0.15),
-                                            intakeCargoCommand))
+        m_rightStick.getButton(1).whenHeld(new SequentialCommandGroup(
+                                            new CmdExtendIntake(m_intake).withTimeout(0.1), intakeCargoCommand))
                                 .whenReleased(retractHopperCommand);
         
         // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
@@ -157,7 +158,7 @@ public class RobotContainer {
 
         shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
                           new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
-                          new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+                          new CmdShoot(m_shooter, Shooter.ShooterState.LOWERHUB)));
         manualShoot = new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
 
         // Setup auto-selector
@@ -195,9 +196,7 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", "");
-        
-        NarwhalDashboard.put("Hopper encoder val", m_hopper.getEncVal());
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
     }
 
     public Command getAutonomousCommand() {
