@@ -40,6 +40,10 @@ public class Intake extends SubsystemBase {
         m_intake.set(ControlMode.PercentOutput, IntakeConstants.INTAKE_MOTOR_POWER);
     }
 
+    public void runIntakeBack(){
+        m_intake.set(ControlMode.PercentOutput, -IntakeConstants.INTAKE_MOTOR_POWER);
+    }
+
     public void stopIntake(){
         m_intake.set(ControlMode.PercentOutput, 0);
     }
@@ -54,6 +58,10 @@ public class Intake extends SubsystemBase {
     }
     public void off() {
         m_intakeSolenoid.set(kOff); 
+    }
+
+    public String getSolenoid() {
+        return m_intakeSolenoid.get().toString();
     }
 
 }

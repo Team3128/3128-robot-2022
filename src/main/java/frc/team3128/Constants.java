@@ -32,10 +32,10 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
-        public static final int KIT_MOTOR_LEFT_LEADER_ID = 1;
-        public static final int KIT_MOTOR_LEFT_FOLLOWER_ID = 2;
-        public static final int KIT_MOTOR_RIGHT_LEADER_ID = 3;
-        public static final int KIT_MOTOR_RIGHT_FOLLOWER_ID = 4;
+        // public static final int KIT_MOTOR_LEFT_LEADER_ID = 1;
+        // public static final int KIT_MOTOR_LEFT_FOLLOWER_ID = 2;
+        // public static final int KIT_MOTOR_RIGHT_LEADER_ID = 3;
+        // public static final int KIT_MOTOR_RIGHT_FOLLOWER_ID = 4;
 
         public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
 
@@ -141,19 +141,19 @@ public class Constants {
         public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
         public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
 
-        public static final int HOPPER_DIO_PIN1 = 0;
-        public static final int HOPPER_DIO_PIN2 = 1;
-        public static final int HOPPER_MAX_REVERSE_DISTANCE = 0; //set distance
+        public static final int HOPPER_DIO_PIN1 = 8;
+        public static final int HOPPER_DIO_PIN2 = 9;
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -3; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
-        public static final double REVERSE_HOPPER_MOTOR_POWER = 0.5;
+        public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
     }
 
     public static class IntakeConstants {
 
         public static final int INTAKE_MOTOR_ID = 7; 
-        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 3;
-        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 4;
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 12;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
         public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
 

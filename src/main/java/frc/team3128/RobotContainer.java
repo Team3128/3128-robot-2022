@@ -35,7 +35,7 @@ public class RobotContainer {
     private Shooter m_shooter;
     private Intake m_intake;   
     private Hopper m_hopper;
-    private Climber m_climber;
+    // private Climber m_climber;
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -56,7 +56,7 @@ public class RobotContainer {
     private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
 
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     public RobotContainer() {
         
@@ -64,7 +64,7 @@ public class RobotContainer {
         m_shooter = Shooter.getInstance();
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
-        m_climber = Climber.getInstance();
+        // m_climber = Climber.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
         m_shooter.enable();
@@ -106,14 +106,23 @@ public class RobotContainer {
         //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
         //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
 
-        m_rightStick.getButton(1).whenHeld(intakeCargoCommand);
-        m_rightStick.getButton(1).whenReleased(retractHopperCommand);
+        m_rightStick.getButton(1).whenHeld( new SequentialCommandGroup(
+                                            new SequentialCommandGroup(new InstantCommand(m_intake::ejectIntake, m_intake), new RunCommand(m_intake::runIntakeBack, m_intake)).withTimeout(0.15),
+                                            intakeCargoCommand))
+                                .whenReleased(retractHopperCommand);
         
         // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
         // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
 
+        m_rightStick.getButton(3).whenPressed(retractHopperCommand);
+
+        m_rightStick.getButton(5).whenPressed(new SequentialCommandGroup(new InstantCommand(m_intake::ejectIntake, m_intake), new RunCommand(m_intake::runIntakeBack, m_intake)).withTimeout(0.15))
+                                .whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+        m_rightStick.getButton(6).whenPressed(m_intake::retractIntake, m_intake);
+
         m_rightStick.getButton(2).whenHeld(shootCommand2);
-        //m_rightStick.getButton(2).whenHeld(shootCommand);
+
+        // m_rightStick.getButton(2).whenHeld(shootCommand);
 
         //m_rightStick.getButton(8).whenActive(climbCommand);
         //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
@@ -136,29 +145,33 @@ public class RobotContainer {
                                 m_drive::tankDriveVolts,
                                 m_drive)
                                 .andThen(() -> m_drive.stop(), m_drive);
-        
-        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
-                      new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+    
         retractHopperCommand = new CmdRetractHopper(m_hopper);
-        climbCommand = new CmdClimb(m_climber);
-
-        // Setup auto-selector
-        NarwhalDashboard.addAuto("Basic Auto", auto);
-        // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
+        // climbCommand = new CmdClimb(m_climber);
         
         intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
         shootCommand = new SequentialCommandGroup(
                           new CmdRetractHopper(m_hopper), 
                           new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
                           new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+
+        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
+                          new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
+                          new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
         manualShoot = new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
 
+        // Setup auto-selector
+        NarwhalDashboard.addAuto("Basic Auto", auto);
+        // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
     }
 
     private void dashboardInit() {
         if (DEBUG) {
             SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
             SmartDashboard.putData("Drivetrain", m_drive);
+            SmartDashboard.putData("Intake", m_intake);
+            SmartDashboard.putData("Hopper", m_hopper);
+            SmartDashboard.putData("Shooter", m_shooter);
         }
 
         NarwhalDashboard.startServer();
@@ -183,6 +196,8 @@ public class RobotContainer {
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", "");
+        
+        NarwhalDashboard.put("Hopper encoder val", m_hopper.getEncVal());
     }
 
     public Command getAutonomousCommand() {

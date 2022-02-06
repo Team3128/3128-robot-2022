@@ -13,6 +13,7 @@ public class CmdRetractHopper extends CommandBase {
 
     @Override
     public void initialize() {
+        // m_hopper.resetEncoder();
         m_hopper.reverseHopper();
     }
 

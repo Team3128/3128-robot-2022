@@ -1,5 +1,7 @@
 package frc.team3128.subsystems; 
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.HopperConstants;
@@ -10,7 +12,7 @@ public class Hopper extends SubsystemBase {
 
     private static Hopper instance;
 
-    private NAR_EMotor m_hopper;
+    private NAR_TalonSRX m_hopper;
     //private DoubleSolenoid m_hopperSolenoid;
     private Encoder m_encoder;
 
@@ -21,6 +23,7 @@ public class Hopper extends SubsystemBase {
         configPneumatics();
         configSensors();
         configEncoders();
+        // resetEncoder();
       
         isEjected = true;
     }
@@ -41,7 +44,7 @@ public class Hopper extends SubsystemBase {
 
     private void configEncoders() {
         m_encoder = new Encoder(HopperConstants.HOPPER_DIO_PIN1, HopperConstants.HOPPER_DIO_PIN2);
-        m_encoder.setDistancePerPulse(4./256.);
+        m_encoder.setDistancePerPulse(2.5*Math.PI);
         m_encoder.setReverseDirection(true);
     }
 
@@ -71,7 +74,7 @@ public class Hopper extends SubsystemBase {
      * @return true if hopper has reversed to desired distance, false if retracted
      */
     public boolean isReversed() {
-        return m_encoder.getDistance() >= HopperConstants.HOPPER_MAX_REVERSE_DISTANCE;
+        return m_encoder.getDistance() <= HopperConstants.HOPPER_MAX_REVERSE_DISTANCE;
     }
 
     /**
@@ -115,5 +118,21 @@ public class Hopper extends SubsystemBase {
      */
     public void stopHopper() {
         m_hopper.set(0);
+    }
+
+    public void vrrmHopper() {
+        m_hopper.set(-0.1);
+    }
+
+    public void resetMotorEncoder(){
+        m_hopper.setSelectedSensorPosition(0);
+    }
+
+    public int getEncVal() {
+        return m_encoder.get();
+    }
+
+    public void setNeutralMode(NeutralMode mode) {
+        m_hopper.setNeutralMode(mode);
     }
 }
