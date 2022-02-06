@@ -25,9 +25,14 @@
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
+      "/SmartDashboard/CommandScheduler": "Scheduler",
+      "/SmartDashboard/Drivetrain": "Subsystem",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Hopper": "Subsystem",
+      "/SmartDashboard/Intake": "Subsystem",
       "/SmartDashboard/NAR_Drivetrain": "Subsystem",
-      "/SmartDashboard/Scheduler": "Scheduler"
+      "/SmartDashboard/Scheduler": "Scheduler",
+      "/SmartDashboard/Shooter": "Subsystem"
     },
     "windows": {
       "/SmartDashboard/Field": {
