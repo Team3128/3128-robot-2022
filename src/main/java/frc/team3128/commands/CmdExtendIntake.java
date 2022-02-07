@@ -33,5 +33,4 @@ public class CmdExtendIntake extends WaitCommand {
         m_intake.stopIntake();
     }
 
-    
 }

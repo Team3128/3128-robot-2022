@@ -3,7 +3,6 @@ package frc.team3128.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Shooter;
-import frc.team3128.subsystems.Shooter.ShooterState;
 
 public class CmdShootRPM extends CommandBase {
     private Shooter shooter;

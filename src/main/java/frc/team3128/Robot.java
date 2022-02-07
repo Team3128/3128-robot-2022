@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit(){
         LiveWindow.disableAllTelemetry();
-        CameraServer.startAutomaticCapture();
+        //CameraServer.startAutomaticCapture();
     }
 
     @Override

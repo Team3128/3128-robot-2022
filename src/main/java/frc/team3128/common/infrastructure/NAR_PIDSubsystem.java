@@ -40,14 +40,10 @@ public abstract class NAR_PIDSubsystem extends PIDSubsystem{
      * Increment the plateau counter for each iteration that our RPM is at the setpoint. If 
      * the RPM drifts from the setpoint, set plateau count back to zero.
      * @param setpoint The desired setpoint RPM for the PID Loop
+     * @param percentTolerance the percent of the setpoint used as tolerance
      */
-    public void useOutput(double output, double setpoint, double percent) {
-        // if (getController().atSetpoint() /*&& (setpoint != 0)*/) {
-        //     plateauCount++;
-        // } else {
-        //     plateauCount = 0;
-        // } could still do this
-        if (Math.abs(getMeasurement()-setpoint) <= (percent*setpoint) && (setpoint != 0)) {
+    public void checkPlateau(double setpoint, double percentTolerance) {
+        if (Math.abs(getMeasurement()-setpoint) <= (percentTolerance*setpoint) && (setpoint != 0)) {
             plateauCount++;
         } else {
             plateauCount = 0;

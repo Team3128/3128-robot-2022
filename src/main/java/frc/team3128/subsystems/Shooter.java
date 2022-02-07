@@ -82,14 +82,6 @@ public class Shooter extends NAR_PIDSubsystem {
 
     }
 
-     /**
-     * @return If the shooter is at the setpoint RPM
-     */
-    public boolean atSetpoint() {
-        return m_controller.atSetpoint();// && super.getSetpoint() != 0; TODO: Delete this maybe unless we using pidcontroller
-    }
-
-
     /**
      * Sets the Shooter State for the shooter
      * @param state Desired Shooter State
@@ -139,7 +131,6 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public void stopShoot() {
-        //beginShoot(ShooterState.OFF);
         setSetpoint(0);
     }
 
@@ -164,8 +155,6 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        //getController().setSetpoint(setpoint);
-
         double voltageOutput = output + feedforward.calculate(setpoint); //0.003
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
@@ -176,7 +165,7 @@ public class Shooter extends NAR_PIDSubsystem {
         //     getController().setTolerance(thresholdPercent * setpoint);
         // } TODO: this thresholding could be added back
 
-        super.useOutput(output, setpoint, ShooterConstants.RPM_THRESHOLD_PERCENT);
+        checkPlateau(setpoint, ShooterConstants.RPM_THRESHOLD_PERCENT);
 
         percentOutput = MathUtil.clamp(percentOutput, -1, 1);
         percentOutput = (setpoint == 0) ? 0 : percentOutput;
@@ -209,8 +198,9 @@ public class Shooter extends NAR_PIDSubsystem {
         
     }
 
-    public void setMotorVelocity(int rpm) {
-        //TODO needs characterization
+    public double calculateMotorVelocityFromDist(double dist) {
+        return 3000;
+        //TODO needs interpolation
     }
 }
 

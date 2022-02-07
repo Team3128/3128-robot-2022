@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.team3128.Constants.ClimberConstants;
 import frc.team3128.Constants.VisionConstants;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
@@ -108,16 +109,18 @@ public class RobotContainer {
         // 9: stop climb
         //
         // left:
-        //TODO MAKE SURE whenHeld() works
-        //m_rightStick.getButton(1).whenActive(new IntakeCargo(m_intake, m_hopper));
-        //m_rightStick.getButton(1).whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+        // 10: make climb go up a bit
+        // 11: extend climber piston
+        // 12: retract climber piston
+        // 15: push climber all the way to top magnet
+        // 14: push climber all the way to bottom magnet
 
         m_rightStick.getButton(1).whenHeld(new SequentialCommandGroup(
                                             new CmdExtendIntake(m_intake).withTimeout(0.1), intakeCargoCommand))
                                 .whenReleased(retractHopperCommand);
         
-        // m_rightStick.getButton(2).whenActive(new SequentialCommandGroup(new PrintCommand("button 2 active"), shootCommand));
-        // m_rightStick.getButton(2).whenReleased(new InstantCommand(m_shooter::stopShoot, m_shooter));
+        m_rightStick.getButton(2).whenPressed(shootCommand2) //manualShoot
+                                .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
 
         m_rightStick.getButton(3).whenPressed(retractHopperCommand);
 
@@ -125,14 +128,16 @@ public class RobotContainer {
                                 .whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
         m_rightStick.getButton(6).whenPressed(m_intake::retractIntake, m_intake);
 
-        m_rightStick.getButton(2).whenPressed(shootCommand2) //manualShoot
-                                .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
+        //climber buttons (uncomment when testing climber)
+        // m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.SMALL_VERTICAL_DISTANCE));
+        // m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::extendArm, m_climber));
+        // m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::retractArm, m_climber));
+        // m_leftStick.getButton(15).whenPressed(new CmdClimbExtend(m_climber));
+        // m_leftStick.getButton(14).whenPressed(new CmdClimbRetract(m_climber));
 
-        // m_rightStick.getButton(2).whenHeld(shootCommand);
-
-        //m_rightStick.getButton(8).whenActive(climbCommand);
+        //m_rightStick.getButton(8).whenPressed(climbCommand);
         //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
-        //m_rightStick.getButton(9).whenActive(new InstantCommand(m_climber::climberStop, m_climber));
+        //m_rightStick.getButton(9).whenPressed(new InstantCommand(m_climber::climberStop, m_climber));
     }
 
 
@@ -156,14 +161,13 @@ public class RobotContainer {
         // climbCommand = new CmdClimb(m_climber);
         
         intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
+        //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
                           new CmdRetractHopper(m_hopper), 
-                          new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
-                          new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+                          new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
+                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.getYPrime(VisionConstants.TARGET_HEIGHT, VisionConstants.SAMPLE_RATE)))));
 
-        // shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
-        //                   new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
-        //                   new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        //use this shoot command for testing
         shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper),  
                           new CmdShootRPM(m_shooter, 3000));
         manualShoot = new CmdShootRPM(m_shooter, 3000);
@@ -206,7 +210,7 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
     }
 
     public Command getAutonomousCommand() {
