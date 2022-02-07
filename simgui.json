@@ -1,0 +1,50 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[3128]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Climber": "Subsystem",
+      "/LiveWindow/Hopper": "Subsystem",
+      "/LiveWindow/Intake": "Subsystem",
+      "/LiveWindow/NAR_Drivetrain": "Subsystem",
+      "/LiveWindow/Shooter/PID Controller": "PIDController",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
+      "/SmartDashboard/CommandScheduler": "Scheduler",
+      "/SmartDashboard/Drivetrain": "Subsystem",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Hopper": "Subsystem",
+      "/SmartDashboard/Intake": "Subsystem",
+      "/SmartDashboard/NAR_Drivetrain": "Subsystem",
+      "/SmartDashboard/Scheduler": "Scheduler",
+      "/SmartDashboard/Shooter": "Subsystem"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
+    }
+  }
+}
