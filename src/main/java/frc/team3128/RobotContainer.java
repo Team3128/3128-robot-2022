@@ -54,7 +54,7 @@ public class RobotContainer {
     private CmdIntakeCargo intakeCargoCommand;
     private CmdRetractHopper retractHopperCommand;
     private Command shootCommand;
-    private CmdShoot manualShoot;
+    private CmdShootRPM manualShoot;
     private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
 
@@ -74,11 +74,15 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        m_shooterLimelight = new Limelight("pog", 0, 0, 0, 0); // these are very fake right now
-        m_balLimelight = new Limelight("sog", 0, 0, 0, 0);
+        m_shooterLimelight = new Limelight("limelight-pog", Constants.VisionConstants.TOP_CAMERA_ANGLE, 
+                                                            Constants.VisionConstants.TOP_CAMERA_HEIGHT, 
+                                                            Constants.VisionConstants.TOP_FRONT_DIST, 0); 
+        m_balLimelight = new Limelight("limelight-sog", Constants.VisionConstants.BALL_LL_ANGLE, 
+                                                        Constants.VisionConstants.BALL_LL_HEIGHT, 
+                                                        Constants.VisionConstants.BALL_LL_FRONT_DIST, 0);
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::atSetpoint)); //TODO: make input into this good method ???
+        m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
         try {
             Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJson);
@@ -121,7 +125,8 @@ public class RobotContainer {
                                 .whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
         m_rightStick.getButton(6).whenPressed(m_intake::retractIntake, m_intake);
 
-        m_rightStick.getButton(2).whenHeld(shootCommand2);
+        m_rightStick.getButton(2).whenPressed(shootCommand2) //manualShoot
+                                .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
 
         // m_rightStick.getButton(2).whenHeld(shootCommand);
 
@@ -156,10 +161,12 @@ public class RobotContainer {
                           new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
                           new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
 
-        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
-                          new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
-                          new CmdShoot(m_shooter, Shooter.ShooterState.LOWERHUB)));
-        manualShoot = new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD);
+        // shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper), 
+        //                   new ParallelCommandGroup(new InstantCommand(m_hopper::runHopper, m_hopper), 
+        //                   new CmdShoot(m_shooter, Shooter.ShooterState.LAUNCHPAD)));
+        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper),  
+                          new CmdShootRPM(m_shooter, 3000));
+        manualShoot = new CmdShootRPM(m_shooter, 3000);
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("Basic Auto", auto);
@@ -173,6 +180,9 @@ public class RobotContainer {
             SmartDashboard.putData("Intake", m_intake);
             SmartDashboard.putData("Hopper", m_hopper);
             SmartDashboard.putData("Shooter", m_shooter);
+            SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
+            SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
+            SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
         }
 
         NarwhalDashboard.startServer();

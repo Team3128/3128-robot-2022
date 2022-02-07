@@ -1,28 +1,30 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Shooter.ShooterState;
 
-public class CmdShoot extends CommandBase {
+public class CmdShootRPM extends CommandBase {
     private Shooter shooter;
-    private ShooterState state;
+    private double rpm;
     
-    public CmdShoot(Shooter shooter, ShooterState state) {
+    public CmdShootRPM(Shooter shooter, double rpm) {
         this.shooter = shooter;
-        this.state = state;
+        this.rpm = rpm;
 
         addRequirements(shooter);
     }
     
     @Override
     public void initialize() {
-        shooter.beginShoot(state);
+        shooter.beginShoot(rpm);
     }
     
     @Override
     public void end(boolean interrupted) {
-        shooter.stopShoot();
+        //shooter.stopShoot();
+        Log.info("command shoot", "im cancelling");
     }
     
     @Override

@@ -118,8 +118,8 @@ public class Constants {
 
         public static final int PLATEAU_COUNT = 25;
 
-        public static final double RPM_THRESHOLD_PERCENT = 0.05;
-        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.06;
+        public static final double RPM_THRESHOLD_PERCENT = 0.1;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.11;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
         public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
@@ -165,10 +165,10 @@ public class Constants {
 
         public static final int SAMPLE_RATE = 3;
 
-        public static final double TOP_CAMERA_ANGLE = -26.0; //degrees
-        public static final double TOP_CAMERA_HEIGHT = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured - also determine units
-        public static final double TOP_FRONT_DIST = 0.0; // Daniel - We had this at 0.0 previously, if we want to do more advanced math using vision this value should be measured.
-        public static final double TARGET_WIDTH = 30.0; //inches
+        public static final double TOP_CAMERA_ANGLE = 34.8519 * Math.PI / 180; // radians
+        public static final double TOP_CAMERA_HEIGHT = 26 * ConversionConstants.INCHES_TO_METERS; // meters
+        public static final double TOP_FRONT_DIST = 15*Constants.ConversionConstants.INCHES_TO_METERS; // meters
+        public static final double TARGET_WIDTH = 30.0; //inches - you dont need this - mika
         public static final double TARGET_HEIGHT = 104 * ConversionConstants.INCHES_TO_METERS;
 
         public static final double VISION_PID_kP = 0.01;
@@ -187,7 +187,8 @@ public class Constants {
 
         public static final double BALL_TARGET_HEIGHT = 9.5 * ConversionConstants.INCHES_TO_METERS;
         public static final double BALL_LL_HEIGHT = 21 * ConversionConstants.INCHES_TO_METERS;
-        public static final double BALL_LL_ANGLE = 1.0; // Math.acos(21.0 / 39.0); // 1.002186; // radians
+        public static final double BALL_LL_ANGLE = 65.15 * Math.PI / 180; // 1.0; // Math.acos(21.0 / 39.0); // 1.002186; // radians
+        public static final double BALL_LL_FRONT_DIST = 0; // meters, measure
 
         public static final double GOAL_HORIZONTAL_OFFSET = 0; // goal of x displacement from robot to ball/target - ideally 0 but if limelight not center change 
         public static final double BALL_THRESHOLD = 5;

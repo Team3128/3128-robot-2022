@@ -22,7 +22,7 @@ public class Shooter extends NAR_PIDSubsystem {
     public enum ShooterState {
 
         OFF(0),
-        LAUNCHPAD(4800),
+        LAUNCHPAD(3000),
         UPPERHUB(0),
         LOWERHUB(1250);
 
@@ -86,7 +86,7 @@ public class Shooter extends NAR_PIDSubsystem {
      * @return If the shooter is at the setpoint RPM
      */
     public boolean atSetpoint() {
-        return m_controller.atSetpoint();
+        return m_controller.atSetpoint();// && super.getSetpoint() != 0; TODO: Delete this maybe unless we using pidcontroller
     }
 
 
@@ -104,7 +104,7 @@ public class Shooter extends NAR_PIDSubsystem {
     public void startPID() {
         thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
         super.setSetpoint(shooterState.shooterRPM);  
-        super.startPID();
+        super.resetPlateauCount();
         getController().setTolerance(ShooterConstants.RPM_THRESHOLD_PERCENT * shooterState.shooterRPM);
     }
 
@@ -114,7 +114,7 @@ public class Shooter extends NAR_PIDSubsystem {
     public void startPID(double rpm) {
         thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
         super.setSetpoint(rpm);  
-        super.startPID();
+        super.resetPlateauCount();
         getController().setTolerance(ShooterConstants.RPM_THRESHOLD_PERCENT * rpm);
     }
 
@@ -139,7 +139,8 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public void stopShoot() {
-        beginShoot(ShooterState.OFF);
+        //beginShoot(ShooterState.OFF);
+        setSetpoint(0);
     }
 
     /**
@@ -163,17 +164,19 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
+        //getController().setSetpoint(setpoint);
+
         double voltageOutput = output + feedforward.calculate(setpoint); //0.003
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 
         time = RobotController.getFPGATime() / 1e6;
-        if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += ((time - preTime) * ((ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT)) / ShooterConstants.TIME_TO_MAX_THRESHOLD);
-            getController().setTolerance(thresholdPercent * setpoint);
-        }
+        // if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
+        //     thresholdPercent += ((time - preTime) * ((ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT)) / ShooterConstants.TIME_TO_MAX_THRESHOLD);
+        //     getController().setTolerance(thresholdPercent * setpoint);
+        // } TODO: this thresholding could be added back
 
-        super.useOutput(setpoint);
+        super.useOutput(output, setpoint, ShooterConstants.RPM_THRESHOLD_PERCENT);
 
         percentOutput = MathUtil.clamp(percentOutput, -1, 1);
         percentOutput = (setpoint == 0) ? 0 : percentOutput;
