@@ -1,11 +1,12 @@
 package frc.team3128;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.HashMap;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,8 +16,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.team3128.Constants.ClimberConstants;
-import frc.team3128.Constants.VisionConstants;
+import frc.team3128.Constants.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
@@ -48,16 +48,32 @@ public class RobotContainer {
     private Limelight m_shooterLimelight;
     private Limelight m_balLimelight;
 
-    private String trajJson = "paths/jude_path_o_doom.wpilib.json";
-    private Trajectory trajectory = new Trajectory();
+    private String[] trajJson = {"paths/2_BallBot_i.wpilib.json", 
+                                "paths/2_BallFar_i.wpilib.json", 
+                                "paths/2_BallFar_ii.wpilib.json", 
+                                "paths/2_BallFar_iii.wpilib.json", 
+                                "paths/2_BallMid_i.wpilib.json", // haha mid
+                                "paths/2_BallTop_i.wpilib.json", 
+                                "paths/3_Ball_i.wpilib.json", 
+                                "paths/3_Ball_ii.wpilib.json", 
+                                "paths/3_Ball_iii.wpilib.json", 
+                                "paths/3_Ball_iv.wpilib.json", 
+                                "paths/4_Ball_i.wpilib.json", 
+                                "paths/4_Ball_ii.wpilib.json"};
+    private Trajectory[] trajectory = new Trajectory[trajJson.length];
 
-    private Command auto;
+    
     private CmdIntakeCargo intakeCargoCommand;
+    private SequentialCommandGroup extendIntakeAndRun;
     private CmdRetractHopper retractHopperCommand;
     private Command shootCommand;
     private CmdShootRPM manualShoot;
     private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
+
+    private HashMap<Command, Pose2d> initialPoses;
+    private Command auto_2balltop;
+    private Command auto_3ball;
 
     private boolean DEBUG = true;
 
@@ -75,21 +91,27 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        m_shooterLimelight = new Limelight("limelight-pog", Constants.VisionConstants.TOP_CAMERA_ANGLE, 
-                                                            Constants.VisionConstants.TOP_CAMERA_HEIGHT, 
-                                                            Constants.VisionConstants.TOP_FRONT_DIST, 0); 
-        m_balLimelight = new Limelight("limelight-sog", Constants.VisionConstants.BALL_LL_ANGLE, 
-                                                        Constants.VisionConstants.BALL_LL_HEIGHT, 
-                                                        Constants.VisionConstants.BALL_LL_FRONT_DIST, 0);
+        m_shooterLimelight = new Limelight("limelight-pog", VisionConstants.TOP_CAMERA_ANGLE, 
+                                                            VisionConstants.TOP_CAMERA_HEIGHT, 
+                                                            VisionConstants.TOP_FRONT_DIST, 0); 
+        m_balLimelight = new Limelight("limelight-sog", VisionConstants.BALL_LL_ANGLE, 
+                                                        VisionConstants.BALL_LL_HEIGHT, 
+                                                        VisionConstants.BALL_LL_FRONT_DIST, 0);
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
         m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
+        initialPoses = new HashMap<Command, Pose2d>();
+        initialPoses.put(auto_2balltop, trajectory[5].getInitialPose());
+        initialPoses.put(auto_3ball, trajectory[6].getInitialPose());
+
         try {
-            Path trajPath = Filesystem.getDeployDirectory().toPath().resolve(trajJson);
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajPath);
+            for (int i = 0; i < trajJson.length; i++) {
+                // Get a path from the string specified in trajJson, and load it into trajectory[i]
+                trajectory[i] = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajJson[i]));
+            }
         } catch (IOException ex) {
-            DriverStation.reportError("Me me no open trajectory: " + trajJson, ex.getStackTrace());
+            DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
         }
 
         initAutos();
@@ -116,7 +138,7 @@ public class RobotContainer {
         // 14: push climber all the way to bottom magnet
 
         m_rightStick.getButton(1).whenHeld(new SequentialCommandGroup(
-                                            new CmdExtendIntake(m_intake).withTimeout(0.1), intakeCargoCommand))
+                                            new CmdExtendIntake(m_intake), intakeCargoCommand))
                                 .whenReleased(retractHopperCommand);
         
         m_rightStick.getButton(2).whenPressed(shootCommand2) //manualShoot
@@ -143,24 +165,13 @@ public class RobotContainer {
 
     private void initAutos() {
 
-        auto = new RamseteCommand(trajectory, 
-                                m_drive::getPose,
-                                new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
-                                new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-                                                            Constants.DriveConstants.kV,
-                                                            Constants.DriveConstants.kA),
-                                Constants.DriveConstants.DRIVE_KINEMATICS,
-                                m_drive::getWheelSpeeds,
-                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                                m_drive::tankDriveVolts,
-                                m_drive)
-                                .andThen(() -> m_drive.stop(), m_drive);
-    
         retractHopperCommand = new CmdRetractHopper(m_hopper);
         // climbCommand = new CmdClimb(m_climber);
         
         intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
+
+        extendIntakeAndRun = new SequentialCommandGroup(new CmdExtendIntake(m_intake), intakeCargoCommand);
+
         //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
                           new CmdRetractHopper(m_hopper), 
@@ -172,9 +183,45 @@ public class RobotContainer {
                           new CmdShootRPM(m_shooter, 3000));
         manualShoot = new CmdShootRPM(m_shooter, 3000);
 
+
+        auto_2balltop = new ParallelCommandGroup(
+            extendIntakeAndRun,
+            new SequentialCommandGroup(trajRamsete(5),
+                                        new InstantCommand(m_drive::stop, m_drive),
+                                        shootCommand2)
+        );
+
+        auto_3ball = new SequentialCommandGroup(
+            shootCommand2.withTimeout(4), // Edit this timeout when tested
+            new ParallelCommandGroup(extendIntakeAndRun,
+                new SequentialCommandGroup(
+                    trajRamsete(6),
+                    trajRamsete(7),
+                    trajRamsete(8),
+                    trajRamsete(9),
+                    shootCommand2.withTimeout(4)
+                ))
+        );
+
         // Setup auto-selector
-        NarwhalDashboard.addAuto("Basic Auto", auto);
+        NarwhalDashboard.addAuto("Basic Auto", auto_2balltop);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
+    }
+
+    // Helper for initAutos so we don't clog it up with all of these params
+    private RamseteCommand trajRamsete(int i) {
+        return new RamseteCommand(trajectory[i], 
+                            m_drive::getPose,
+                            new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+                            new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+                                                        Constants.DriveConstants.kV,
+                                                        Constants.DriveConstants.kA),
+                            Constants.DriveConstants.DRIVE_KINEMATICS,
+                            m_drive::getWheelSpeeds,
+                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                            m_drive::tankDriveVolts,
+                            m_drive);
     }
 
     private void dashboardInit() {
@@ -215,8 +262,9 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // TODO: MAKE HASHMAP CONTAINING INITIAL POSE2D AND AUTO
-        m_drive.resetPose(trajectory.getInitialPose());
-        return NarwhalDashboard.getSelectedAuto();
+        m_drive.resetPose(initialPoses.get(auto_2balltop));
+        // return NarwhalDashboard.getSelectedAuto();
+        return auto_2balltop;
     }
 
 }
