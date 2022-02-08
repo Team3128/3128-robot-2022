@@ -118,7 +118,7 @@ public class Constants {
 
         public static final int PLATEAU_COUNT = 1;
 
-        public static final double RPM_THRESHOLD_PERCENT = 0.1;
+        public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.11;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
@@ -145,7 +145,7 @@ public class Constants {
         public static final int HOPPER_DIO_PIN2 = 9;
         public static final double HOPPER_MAX_REVERSE_DISTANCE = -3; //set distance
 
-        public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final double HOPPER_MOTOR_POWER = 0.38;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
     }
 

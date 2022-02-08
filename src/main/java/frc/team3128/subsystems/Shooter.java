@@ -22,7 +22,7 @@ public class Shooter extends NAR_PIDSubsystem {
     public enum ShooterState {
 
         OFF(0),
-        LAUNCHPAD(3000),
+        LAUNCHPAD(3300),
         UPPERHUB(0),
         LOWERHUB(1250);
 

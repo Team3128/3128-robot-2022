@@ -119,7 +119,7 @@ public class RobotContainer {
                                             new CmdExtendIntake(m_intake).withTimeout(0.1), intakeCargoCommand))
                                 .whenReleased(retractHopperCommand);
         
-        m_rightStick.getButton(2).whenPressed(shootCommand2) //manualShoot
+        m_rightStick.getButton(7).whenPressed(manualShoot) //commandShoot2
                                 .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
 
         m_rightStick.getButton(3).whenPressed(retractHopperCommand);
@@ -170,7 +170,7 @@ public class RobotContainer {
         //use this shoot command for testing
         shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper),  
                           new CmdShootRPM(m_shooter, 3000));
-        manualShoot = new CmdShootRPM(m_shooter, 3000);
+        manualShoot = new CmdShootRPM(m_shooter, 3580);
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("Basic Auto", auto);
@@ -187,6 +187,7 @@ public class RobotContainer {
             SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
             SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
             SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
+            SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
         }
 
         NarwhalDashboard.startServer();

@@ -1,6 +1,7 @@
 package frc.team3128.common.infrastructure;
 
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import frc.team3128.common.utility.Log;
 import edu.wpi.first.math.controller.PIDController;
 
 public abstract class NAR_PIDSubsystem extends PIDSubsystem{
@@ -45,6 +46,7 @@ public abstract class NAR_PIDSubsystem extends PIDSubsystem{
     public void checkPlateau(double setpoint, double percentTolerance) {
         if (Math.abs(getMeasurement()-setpoint) <= (percentTolerance*setpoint) && (setpoint != 0)) {
             plateauCount++;
+            Log.info("plat", plateauCount+"");
         } else {
             plateauCount = 0;
         }
