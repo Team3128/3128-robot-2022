@@ -167,19 +167,19 @@ public class NarwhalDashboard extends WebSocketServer {
                     for (String autoName : autoPrograms.keySet()) {
                         autoProgramArr.add(autoName);
                     }
-                    obj.put("auto_programs", autoProgramArr);
+                    obj.put("auto", autoProgramArr);
 
                     JSONArray limelightsArr = new JSONArray();
                     for(Limelight lime : limelights.values()) {
                         limelightsArr.add(lime.hostname);
                     }
-                    obj.put("limelights", limelightsArr);
+                    obj.put("limelight", limelightsArr);
 
                     JSONArray limelightsOptionsArr = new JSONArray();
                     for(Pipeline pipeline : Pipeline.values()) {
                         limelightsOptionsArr.add(pipeline.toString());
                     }
-                    obj.put("limelightsOptions", limelightsOptionsArr);
+                    obj.put("pipeline", limelightsOptionsArr);
 
                     pushed = true;
                 }
@@ -209,7 +209,7 @@ public class NarwhalDashboard extends WebSocketServer {
         String[] parts = message.split(":");
 
         // Receive auto selection
-        if (parts[0].equals("selectAuto")) {
+        if (parts[0].equals("selectauto")) {
             String programName = parts[1];
 
             if (programName.equals("null")) {
@@ -252,7 +252,7 @@ public class NarwhalDashboard extends WebSocketServer {
             }
 
         // Receive limelight selection (could be consolidated with pipeline)
-        } else if(parts[0].equals("selectLimelight")){
+        } else if(parts[0].equals("selectlimelight")){
                 selectedLimelight = parts[1];
 
                 if(selectedLimelight.equals("null")){
@@ -262,7 +262,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 }
 
         // Receive pipeline selection (could be consolidated with limelight)
-        } else if(parts[0].equals("selectPipeline")) {
+        } else if(parts[0].equals("selectpipeline")) {
                 String pipelineStr = parts[1];
 
                 if(pipelineStr.equals("null")){

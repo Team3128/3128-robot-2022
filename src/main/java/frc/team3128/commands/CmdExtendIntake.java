@@ -10,7 +10,7 @@ public class CmdExtendIntake extends WaitCommand {
     private Intake m_intake;
 
     public CmdExtendIntake(Intake intake) {
-        super(0.15);
+        super(0.1);
         m_intake = intake;
 
         addRequirements(intake);
