@@ -79,15 +79,15 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_SENSOR_1_ID = 0;
-        public static final int CLIMBER_SENSOR_2_ID = 1;
-        public static final int CLIMBER_MOTOR_1_ID = 1;
-        public static final int CLIMBER_MOTOR_2_ID = 2;
+        public static final int CLIMBER_SENSOR_LEFT_ID = 0;
+        public static final int CLIMBER_SENSOR_RIGHT_ID = 1;
+        public static final int CLIMBER_MOTOR_LEFT_ID = 6;
+        public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
-        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 2;
-        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 7;
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 8;
+        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 14;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 2;
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 13;
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -100,7 +100,7 @@ public class Constants {
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
-        public static final double CLIMBER_POWER = 0.5;
+        public static final double CLIMBER_POWER = 0.6;
     }
 
     public static class ShooterConstants {
@@ -143,7 +143,7 @@ public class Constants {
 
         public static final int HOPPER_DIO_PIN1 = 8;
         public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -3; //set distance
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -1; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this

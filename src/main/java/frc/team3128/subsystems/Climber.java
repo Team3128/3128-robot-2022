@@ -6,6 +6,7 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.ClimberConstants;
 import frc.team3128.Constants.ConversionConstants;
@@ -46,16 +47,16 @@ public class Climber extends SubsystemBase {
     }
 
     private void configMotors() {
-        m_leftMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_1_ID, MotorType.kBrushless);
-        m_rightMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_2_ID, MotorType.kBrushless);
+        m_leftMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_LEFT_ID, MotorType.kBrushless);
+        m_rightMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID, MotorType.kBrushless);
 
         m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
         m_rightMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
     }
 
     private void configSensors() {
-        m_leftLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_1_ID);
-        m_rightLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_2_ID);
+        m_leftLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_LEFT_ID);
+        m_rightLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_RIGHT_ID);
     }
     
     private void configPneumatics() {
@@ -84,6 +85,10 @@ public class Climber extends SubsystemBase {
             setLeftState(ClimberState.BOTTOM);
             resetRightEncoder();
         }
+
+        SmartDashboard.putString("Climber L state", leftState.toString());
+        SmartDashboard.putString("Climber R state", rightState.toString());
+
     }
     
     public void leftRetract(){
@@ -110,6 +115,21 @@ public class Climber extends SubsystemBase {
         }
     }
 
+    public void extendBoth() {
+        m_rightMotor.set(ClimberConstants.CLIMBER_POWER);
+        m_leftMotor.set(ClimberConstants.CLIMBER_POWER);
+    }
+
+    public void retractBoth() {
+        m_rightMotor.set(-ClimberConstants.CLIMBER_POWER);
+        m_leftMotor.set(-ClimberConstants.CLIMBER_POWER);
+    }
+
+    public void stopBoth() {
+        m_rightMotor.set(0);
+        m_leftMotor.set(0);
+    }
+
     public void leftStop(){
         m_leftMotor.set(0);
     }
@@ -118,19 +138,19 @@ public class Climber extends SubsystemBase {
         m_rightMotor.set(0);
     }
 
-    public void extendArm(){
+    public void extendPiston(){
         m_climberSolenoid.set(kForward);
     }
 
-    public void retractArm(){
+    public void retractPiston(){
         m_climberSolenoid.set(kReverse);
     }
 
-    public void breakClimb() {
+    public void engageBreak() {
         m_climberBreakSolenoid.set(kForward);
     }
 
-    public void unbreakClimb() {
+    public void disengageBreak() {
         m_climberBreakSolenoid.set(kReverse);
     }
 

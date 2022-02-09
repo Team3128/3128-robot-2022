@@ -15,13 +15,13 @@ public class CmdClimb extends SequentialCommandGroup{
             new CmdClimbEncoder(m_climber, Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE),
            
             //piston extend
-            new InstantCommand(() -> m_climber.extendArm()),
+            new InstantCommand(() -> m_climber.extendPiston()),
             
             //elev extend
             new CmdClimbExtend(m_climber),
             
             //piston retract
-            new InstantCommand(() -> m_climber.retractArm()),
+            new InstantCommand(() -> m_climber.retractPiston()),
             
             //elev retract
             new CmdClimbRetract(m_climber),
@@ -32,13 +32,13 @@ public class CmdClimb extends SequentialCommandGroup{
             new CmdClimbEncoder(m_climber, Constants.ClimberConstants.SMALL_VERTICAL_DISTANCE),
            
             //piston extend
-            new InstantCommand(() -> m_climber.extendArm()),
+            new InstantCommand(() -> m_climber.extendPiston()),
             
             //elev extend
             new CmdClimbExtend(m_climber),
             
             //piston retract
-            new InstantCommand(() -> m_climber.retractArm()),
+            new InstantCommand(() -> m_climber.retractPiston()),
             
             //elev retract
             new CmdClimbRetract(m_climber)

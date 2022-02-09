@@ -24,12 +24,12 @@ public class CmdIntakeCargo extends CommandBase{
         //m_hopper.stopHopper();
         m_intake.runIntake();
         m_hopper.runHopper();
-        m_hopper.setNeutralMode(NeutralMode.Brake);
+        // m_hopper.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
     public void end(boolean interrupted){
-        // m_intake.retractIntake();
+        m_intake.retractIntake();
         m_intake.stopIntake();
         m_hopper.stopHopper();
     }

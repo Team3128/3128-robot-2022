@@ -5,11 +5,13 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class CmdRetractHopper extends CommandBase {
+public class CmdRetractHopperShooting extends CommandBase {
     private Hopper m_hopper;
+    private BooleanSupplier isShooting;
 
-    public CmdRetractHopper(Hopper hopper) {
+    public CmdRetractHopperShooting(Hopper hopper, BooleanSupplier isShooting) {
         m_hopper = hopper;
+        this.isShooting = isShooting;
         addRequirements(m_hopper); 
     }
 
@@ -21,6 +23,11 @@ public class CmdRetractHopper extends CommandBase {
 
     @Override
     public void execute() {
+        if (isShooting.getAsBoolean()) { 
+            m_hopper.runHopper();
+        } else {
+            m_hopper.stopHopper();
+        }
     }
 
     @Override
