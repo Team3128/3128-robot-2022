@@ -1,7 +1,5 @@
 package frc.team3128.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.subsystems.Intake;
 

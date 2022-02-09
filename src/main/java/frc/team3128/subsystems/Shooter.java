@@ -3,7 +3,6 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import frc.team3128.Constants.ShooterConstants;
-import frc.team3128.Constants;
 import frc.team3128.Constants.ConversionConstants;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
