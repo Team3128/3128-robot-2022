@@ -72,8 +72,8 @@ public class RobotContainer {
     private CmdClimb climbCommand;
 
     private HashMap<Command, Pose2d> initialPoses;
-    private Command auto_2balltop;
-    private Command auto_3ball;
+    // private Command auto_2balltop;
+    // private Command auto_3ball;
 
     private boolean DEBUG = true;
 
@@ -101,9 +101,7 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
         m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
-        initialPoses = new HashMap<Command, Pose2d>();
-        initialPoses.put(auto_2balltop, trajectory[5].getInitialPose());
-        initialPoses.put(auto_3ball, trajectory[6].getInitialPose());
+        
 
         try {
             for (int i = 0; i < trajJson.length; i++) {
@@ -117,6 +115,10 @@ public class RobotContainer {
         initAutos();
         configureButtonBindings();
         dashboardInit();
+
+        initialPoses = new HashMap<Command, Pose2d>();
+        // initialPoses.put(auto_2balltop, trajectory[5].getInitialPose());
+        // initialPoses.put(auto_3ball, trajectory[6].getInitialPose());
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -137,11 +139,10 @@ public class RobotContainer {
         // 15: push climber all the way to top magnet
         // 14: push climber all the way to bottom magnet
 
-        m_rightStick.getButton(1).whenHeld(new SequentialCommandGroup(
-                                            new CmdExtendIntake(m_intake), intakeCargoCommand))
+        m_rightStick.getButton(1).whenHeld(extendIntakeAndRun)
                                 .whenReleased(retractHopperCommand);
         
-        m_rightStick.getButton(7).whenPressed(manualShoot) //commandShoot2
+        m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
                                 .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
 
         m_rightStick.getButton(3).whenPressed(retractHopperCommand);
@@ -181,30 +182,30 @@ public class RobotContainer {
         //use this shoot command for testing
         shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper),  
                           new CmdShootRPM(m_shooter, 3000));
-        manualShoot = new CmdShootRPM(m_shooter, 3580);
+        manualShoot = new CmdShootRPM(m_shooter, 4500);
 
 
-        auto_2balltop = new ParallelCommandGroup(
-            extendIntakeAndRun,
-            new SequentialCommandGroup(trajRamsete(5),
-                                        new InstantCommand(m_drive::stop, m_drive),
-                                        shootCommand2)
-        );
+        // auto_2balltop = new ParallelCommandGroup(
+        //     extendIntakeAndRun,
+        //     new SequentialCommandGroup(trajRamsete(5),
+        //                                 new InstantCommand(m_drive::stop, m_drive),
+        //                                 shootCommand2)
+        // );
 
-        auto_3ball = new SequentialCommandGroup(
-            shootCommand2.withTimeout(4), // Edit this timeout when tested
-            new ParallelCommandGroup(extendIntakeAndRun,
-                new SequentialCommandGroup(
-                    trajRamsete(6),
-                    trajRamsete(7),
-                    trajRamsete(8),
-                    trajRamsete(9),
-                    shootCommand2.withTimeout(4)
-                ))
-        );
+        // auto_3ball = new SequentialCommandGroup(
+        //     shootCommand2.withTimeout(4), // Edit this timeout when tested
+        //     new ParallelCommandGroup(extendIntakeAndRun,
+        //         new SequentialCommandGroup(
+        //             trajRamsete(6),
+        //             trajRamsete(7),
+        //             trajRamsete(8),
+        //             trajRamsete(9),
+        //             shootCommand2.withTimeout(4)
+        //         ))
+        // );
 
         // Setup auto-selector
-        NarwhalDashboard.addAuto("Basic Auto", auto_2balltop);
+        // NarwhalDashboard.addAuto("Basic Auto", auto_2balltop);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
     }
 
@@ -263,9 +264,10 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // TODO: MAKE HASHMAP CONTAINING INITIAL POSE2D AND AUTO
-        m_drive.resetPose(initialPoses.get(auto_2balltop));
+        // m_drive.resetPose(initialPoses.get(auto_2balltop));
         // return NarwhalDashboard.getSelectedAuto();
-        return auto_2balltop;
+        // return auto_2balltop;
+        return null;
     }
 
 }

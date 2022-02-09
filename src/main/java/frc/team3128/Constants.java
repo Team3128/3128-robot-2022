@@ -145,7 +145,7 @@ public class Constants {
         public static final int HOPPER_DIO_PIN2 = 9;
         public static final double HOPPER_MAX_REVERSE_DISTANCE = -3; //set distance
 
-        public static final double HOPPER_MOTOR_POWER = 0.38;
+        public static final double HOPPER_MOTOR_POWER = 0.3;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
     }
 
