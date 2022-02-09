@@ -165,7 +165,7 @@ public class Constants {
 
         public static final int SAMPLE_RATE = 3;
 
-        public static final double TOP_CAMERA_ANGLE = (90 - 34.8519) * Math.PI / 180; // radians
+        public static final double TOP_CAMERA_ANGLE = (34.8519) * Math.PI / 180; // radians
         public static final double TOP_CAMERA_HEIGHT = 26; // in 
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
