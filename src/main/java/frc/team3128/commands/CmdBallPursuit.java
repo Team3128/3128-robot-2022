@@ -88,8 +88,7 @@ public class CmdBallPursuit extends CommandBase {
                     feedbackPower = Math.min(Math.max(feedbackPower, -1), 1);
                     
                     // calculations to decelerate as the robot nears the target
-                    previousVerticalAngle = ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
-                    double approxDistance = ballLimelight.calculateDistToGroundTarget(previousVerticalAngle, VisionConstants.BALL_TARGET_HEIGHT / 2);
+                    double approxDistance = ballLimelight.calculateDistToGroundTarget(VisionConstants.BALL_TARGET_HEIGHT / 2);
 
                     double multiplier = 1.0 - Math.min(Math.max((VisionConstants.BALL_DECELERATE_START_DISTANCE - approxDistance)
                             / (VisionConstants.BALL_DECELERATE_START_DISTANCE - 
@@ -138,8 +137,7 @@ public class CmdBallPursuit extends CommandBase {
 
         // if in feedback and only 1 ball length away, stop command & give control back to teleop (but not if ball is bouncing and messing up the math)
         if (aimState == BallPursuitState.FEEDBACK) {
-            previousVerticalAngle = ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
-            double approxDistance = ballLimelight.calculateDistToGroundTarget(previousVerticalAngle, VisionConstants.BALL_TARGET_HEIGHT / 2);
+            double approxDistance = ballLimelight.calculateDistToGroundTarget(VisionConstants.BALL_TARGET_HEIGHT / 2);
             if (VisionConstants.BALL_DECELERATE_END_DISTANCE > approxDistance && previousVerticalAngle < 20*Math.PI/180) {
                 Log.info("CmdBallPursuit", "decelerated! ending command now");
                 return true;

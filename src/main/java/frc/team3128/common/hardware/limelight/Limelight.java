@@ -132,7 +132,13 @@ public class Limelight {
         return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance;
     }
 
-    public double calculateDistToGroundTarget(double ty, double targetHeight) {
+    public double calculateDistToTopTarget(double targetHeight) {
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
+        return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance; 
+    }
+
+    public double calculateDistToGroundTarget(double targetHeight) {
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
         return (-targetHeight + cameraHeight) * Math.tan(ty + cameraAngle) - frontDistance;
     }
 

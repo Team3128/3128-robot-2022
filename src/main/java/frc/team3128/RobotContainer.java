@@ -68,7 +68,7 @@ public class RobotContainer {
     private SequentialCommandGroup extendIntakeAndRun;
     private CmdRetractHopper retractHopperCommand;
     private Command shootCommand;
-    private SequentialCommandGroup manualShoot;
+    private ParallelCommandGroup manualShoot;
     private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
 
@@ -178,17 +178,12 @@ public class RobotContainer {
         shootCommand = new SequentialCommandGroup(
                           new CmdRetractHopper(m_hopper), 
                           new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
-                          new InstantCommand(m_shooterLimelight::turnLEDOn),
-                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT)))));
+                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT)))));
 
         //use this shoot command for testing
-        manualShoot = new SequentialCommandGroup(
-                        new InstantCommand(m_shooterLimelight::turnLEDOn),
-                        new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
-                        new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT)))));
-
-        
-                        
+        manualShoot = new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
+                        new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(
+                                        m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))));
 
 
         // auto_2balltop = new ParallelCommandGroup(
@@ -265,8 +260,8 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
     }
 
     public Command getAutonomousCommand() {

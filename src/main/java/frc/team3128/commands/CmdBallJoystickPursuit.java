@@ -106,8 +106,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     double forwardPower = MathUtil.clamp(VisionConstants.BALL_AUTO_PURSUIT_kF + x * throttle, -1, 1);
                     
                     // calculations to decelerate as the robot nears the target
-                    previousVerticalAngle = ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
-                    approxDistance = ballLimelight.calculateDistToGroundTarget(previousVerticalAngle, VisionConstants.BALL_TARGET_HEIGHT / 2);
+                    approxDistance = ballLimelight.calculateDistToGroundTarget(VisionConstants.BALL_TARGET_HEIGHT / 2);
 
                     // multiplier = 1.0 - Math.min(Math.max((Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - approxDistance)
                     //         / (Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - 
