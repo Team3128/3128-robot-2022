@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.team3128.Constants.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
+import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
@@ -67,7 +68,7 @@ public class RobotContainer {
     private SequentialCommandGroup extendIntakeAndRun;
     private CmdRetractHopper retractHopperCommand;
     private Command shootCommand;
-    private CmdShootRPM manualShoot;
+    private SequentialCommandGroup manualShoot;
     private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
 
@@ -91,7 +92,7 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        m_shooterLimelight = new Limelight("limelight-pog", VisionConstants.TOP_CAMERA_ANGLE, 
+        m_shooterLimelight = new Limelight("limelight-cog", VisionConstants.TOP_CAMERA_ANGLE, 
                                                             VisionConstants.TOP_CAMERA_HEIGHT, 
                                                             VisionConstants.TOP_FRONT_DIST, 0); 
         m_balLimelight = new Limelight("limelight-sog", VisionConstants.BALL_LL_ANGLE, 
@@ -177,12 +178,17 @@ public class RobotContainer {
         shootCommand = new SequentialCommandGroup(
                           new CmdRetractHopper(m_hopper), 
                           new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
-                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.getYPrime(VisionConstants.TARGET_HEIGHT, VisionConstants.SAMPLE_RATE)))));
+                          new InstantCommand(m_shooterLimelight::turnLEDOn),
+                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT)))));
 
         //use this shoot command for testing
-        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper),  
-                          new CmdShootRPM(m_shooter, 3000));
-        manualShoot = new CmdShootRPM(m_shooter, 4500);
+        manualShoot = new SequentialCommandGroup(
+                        new InstantCommand(m_shooterLimelight::turnLEDOn),
+                        new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
+                        new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT)))));
+
+        
+                        
 
 
         // auto_2balltop = new ParallelCommandGroup(
@@ -260,6 +266,7 @@ public class RobotContainer {
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
     }
 
     public Command getAutonomousCommand() {

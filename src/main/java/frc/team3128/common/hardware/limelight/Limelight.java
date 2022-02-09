@@ -140,6 +140,15 @@ public class Limelight {
         limelightTable.getEntry("ledMode").setNumber(mode.getLEDMode());
     }
 
+    public void turnLEDOn() {
+        setLEDMode(LEDMode.ON);
+    }
+
+    public void turnLEDOff() {
+        setLEDMode(LEDMode.OFF);
+    }
+    
+
     public void setStreamMode(StreamMode mode) {
         limelightTable.getEntry("stream").setNumber(mode.getStream());
     }

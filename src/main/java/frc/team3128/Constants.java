@@ -145,7 +145,7 @@ public class Constants {
         public static final int HOPPER_DIO_PIN2 = 9;
         public static final double HOPPER_MAX_REVERSE_DISTANCE = -3; //set distance
 
-        public static final double HOPPER_MOTOR_POWER = 0.3;
+        public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
     }
 
@@ -165,11 +165,10 @@ public class Constants {
 
         public static final int SAMPLE_RATE = 3;
 
-        public static final double TOP_CAMERA_ANGLE = 34.8519 * Math.PI / 180; // radians
-        public static final double TOP_CAMERA_HEIGHT = 26 * ConversionConstants.INCHES_TO_METERS; // meters
-        public static final double TOP_FRONT_DIST = 15*Constants.ConversionConstants.INCHES_TO_METERS; // meters
-        public static final double TARGET_WIDTH = 30.0; //inches - you dont need this - mika
-        public static final double TARGET_HEIGHT = 104 * ConversionConstants.INCHES_TO_METERS;
+        public static final double TOP_CAMERA_ANGLE = (90- 34.8519) * Math.PI / 180; // radians
+        public static final double TOP_CAMERA_HEIGHT = 26; // in 
+        public static final double TOP_FRONT_DIST = 0;
+        public static final double TARGET_HEIGHT = 104;
 
         public static final double VISION_PID_kP = 0.01;
         public static final double VISION_PID_kI = 0.02;
