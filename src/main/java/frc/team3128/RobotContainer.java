@@ -3,6 +3,8 @@ package frc.team3128;
 import java.io.IOException;
 import java.util.HashMap;
 
+import javax.management.InstanceAlreadyExistsException;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -147,7 +149,7 @@ public class RobotContainer {
                                 // .whenReleased(retractHopperCommand); Garrison said no to this
         
         m_rightStick.getButton(2).whenPressed(shootCommand)
-                                .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
+                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
         m_rightStick.getButton(3).whenPressed(retractHopperCommand);
 
@@ -157,7 +159,7 @@ public class RobotContainer {
         m_rightStick.getButton(6).whenPressed(m_intake::retractIntake, m_intake);
 
         m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
-                                .whenReleased(new InstantCommand(m_shooter::stopShoot,m_shooter));
+                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
         //LEFT
         m_leftStick.getButton(1).whenHeld(lowerHubShoot);
@@ -200,16 +202,15 @@ public class RobotContainer {
 
         //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
+                          new InstantCommand(m_shooterLimelight::turnLEDOn),
                           new CmdRetractHopperShooting(m_hopper, m_shooter::isReady), 
                           new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
-                          new InstantCommand(m_shooterLimelight::turnLEDOn),
-                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT)))));
+                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT)))));
 
         //use this shoot command for testing
         manualShoot = new SequentialCommandGroup(
-                        new InstantCommand(m_shooterLimelight::turnLEDOn),
-                        new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
-                        new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT)))));
+                        new InstantCommand(m_shooterLimelight::turnLEDOn), 
+                        new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT))));
 
         lowerHubShoot = new SequentialCommandGroup(
             new CmdShootRPM(m_shooter, 1250)  
@@ -291,8 +292,8 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT));
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
     }
 
     public Command getAutonomousCommand() {
