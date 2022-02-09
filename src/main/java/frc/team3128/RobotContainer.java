@@ -103,7 +103,7 @@ public class RobotContainer {
                                                         VisionConstants.BALL_LL_FRONT_DIST, 0);
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-        m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
+        //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
         
 
@@ -202,19 +202,29 @@ public class RobotContainer {
 
         //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
-                          new InstantCommand(m_shooterLimelight::turnLEDOn),
-                          new CmdRetractHopperShooting(m_hopper, m_shooter::isReady), 
-                          new ParallelCommandGroup(new CmdAlign(m_drive, m_shooterLimelight), 
-                          new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT)))));
+                        new InstantCommand(m_shooterLimelight::turnLEDOn),
+                        new CmdRetractHopper(m_hopper), 
+                        new ParallelCommandGroup(
+                            new CmdAlign(m_drive, m_shooterLimelight), 
+                            new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
+            );
 
         //use this shoot command for testing
         manualShoot = new SequentialCommandGroup(
                         new InstantCommand(m_shooterLimelight::turnLEDOn), 
-                        new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateYPrimeFromTY(m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, VisionConstants.SAMPLE_RATE) * Math.PI / 180, VisionConstants.TARGET_HEIGHT))));
+                        new CmdRetractHopper(m_hopper),
+                        new ParallelCommandGroup(
+                            new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
+            );
 
         lowerHubShoot = new SequentialCommandGroup(
-            new CmdShootRPM(m_shooter, 1250)  
-        );
+                            new CmdRetractHopper(m_hopper),
+                            new ParallelCommandGroup(
+                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                new CmdShootRPM(m_shooter,1250))
+            );
                         
 
 

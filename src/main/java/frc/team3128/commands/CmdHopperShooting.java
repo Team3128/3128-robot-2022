@@ -1,28 +1,25 @@
 package frc.team3128.commands;
-import frc.team3128.subsystems.Hopper;
 
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team3128.subsystems.Hopper;
 
-public class CmdRetractHopperShooting extends CommandBase {
+public class CmdHopperShooting extends CommandBase {
+
     private Hopper m_hopper;
     private BooleanSupplier isShooting;
 
-    public CmdRetractHopperShooting(Hopper hopper, BooleanSupplier isShooting) {
+    public CmdHopperShooting(Hopper hopper, BooleanSupplier isShooting) {
         m_hopper = hopper;
         this.isShooting = isShooting;
-        addRequirements(m_hopper); 
-    }
 
-    @Override
-    public void initialize() {
-        // m_hopper.resetEncoder();
-        m_hopper.reverseHopper();
+        addRequirements(m_hopper);
     }
 
     @Override
     public void execute() {
+        // if shooting, retract gate if ejected and run the hopper
         if (isShooting.getAsBoolean()) { 
             m_hopper.runHopper();
         } else {
@@ -37,6 +34,7 @@ public class CmdRetractHopperShooting extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_hopper.isReversed();
+        return false;
     }
+
 }
