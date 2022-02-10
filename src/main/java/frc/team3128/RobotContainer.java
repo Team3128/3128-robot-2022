@@ -75,11 +75,11 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_2balltop;
-    private Command auto_2ballmid;
-    private Command auto_2ballbot;
-    private Command auto_3ballTerm;
-    private Command auto_3fishball;
+    private Command auto_2BallTop;
+    private Command auto_2BallMid;
+    private Command auto_2BallBot;
+    private Command auto_3BallTerminal;
+    private Command auto_3BallHook;
 
 
     private boolean DEBUG = true;
@@ -109,11 +109,11 @@ public class RobotContainer {
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
         initialPoses = new HashMap<Command, Pose2d>();
-        initialPoses.put(auto_2ballbot, trajectory[0].getInitialPose());
-        initialPoses.put(auto_2ballmid, trajectory[1].getInitialPose());
-        initialPoses.put(auto_2balltop, trajectory[2].getInitialPose());
-        initialPoses.put(auto_3fishball, trajectory[3].getInitialPose());
-        initialPoses.put(auto_3ballTerm, trajectory[5].getInitialPose());
+        initialPoses.put(auto_2BallBot, trajectory[0].getInitialPose());
+        initialPoses.put(auto_2BallMid, trajectory[1].getInitialPose());
+        initialPoses.put(auto_2BallTop, trajectory[2].getInitialPose());
+        initialPoses.put(auto_3BallHook, trajectory[3].getInitialPose());
+        initialPoses.put(auto_3BallTerminal, trajectory[5].getInitialPose());
 
         try {
             for (int i = 0; i < trajJson.length; i++) {
@@ -234,53 +234,66 @@ public class RobotContainer {
                                 new CmdShootRPM(m_shooter,1250))
             );
                         
-        shootCommand2 = new SequentialCommandGroup(new CmdRetractHopper(m_hopper),  
-                          new CmdShootRPM(m_shooter, 3000));
-        auto_2ballbot = new ParallelCommandGroup(
-            extendIntakeAndRun,
-            new SequentialCommandGroup(trajRamsete(0),
-                                       new InstantCommand(m_drive::stop, m_drive),
-                                       shootCommand2)
-        );
-        auto_2ballmid = new ParallelCommandGroup(
-            extendIntakeAndRun,
-            new SequentialCommandGroup(trajRamsete(1),
-                                       new InstantCommand(m_drive::stop, m_drive),
-                                       shootCommand2)
-        );
-        auto_2balltop = new ParallelCommandGroup(
-            extendIntakeAndRun,
-            new SequentialCommandGroup(trajRamsete(2),
-                                       new InstantCommand(m_drive::stop, m_drive),
-                                       shootCommand2)
-        );
+        shootCommand2 = new SequentialCommandGroup(
+                            new CmdRetractHopper(m_hopper),  
+                            new ParallelCommandGroup(
+                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                new CmdShootRPM(m_shooter,3000))
+            );
 
-        auto_3fishball = new SequentialCommandGroup(
-            shootCommand2.withTimeout(4), // Edit this timeout when tested
-            new ParallelCommandGroup(extendIntakeAndRun,
-                new SequentialCommandGroup(
-                    trajRamsete(3),
-                    trajRamsete(4),
-                    new InstantCommand(m_drive::stop, m_drive),
-                    shootCommand2.withTimeout(4)
-                ))
-        );
-        auto_3ballTerm = new SequentialCommandGroup(
-            shootCommand2.withTimeout(4), // Edit this timeout when tested
-            new ParallelCommandGroup(extendIntakeAndRun,
-                new SequentialCommandGroup(
-                    trajRamsete(5),
-                    trajRamsete(6),
-                    trajRamsete(7),
-                    trajRamsete(8),
-                    new InstantCommand(m_drive::stop, m_drive),
-                    shootCommand2.withTimeout(4)
-                ))
-        );
+        //AUTONOMOUS ROUTINES
+        auto_2BallBot = new ParallelCommandGroup(
+                            extendIntakeAndRun,
+                            new SequentialCommandGroup(
+                                trajRamsete(0),
+                                new InstantCommand(m_drive::stop, m_drive),
+                                shootCommand2.withTimeout(4))
+            );
+        
+        auto_2BallMid = new ParallelCommandGroup(
+                            extendIntakeAndRun,
+                            new SequentialCommandGroup(
+                                trajRamsete(1),
+                                new InstantCommand(m_drive::stop, m_drive),
+                                shootCommand2.withTimeout(4))
+            );
+        auto_2BallTop = new ParallelCommandGroup(
+                            extendIntakeAndRun,
+                            new SequentialCommandGroup(
+                                trajRamsete(2),
+                                new InstantCommand(m_drive::stop, m_drive),
+                                shootCommand2.withTimeout(4))
+            );
+
+        auto_3BallHook = new SequentialCommandGroup(
+                            shootCommand2.withTimeout(4), // Edit this timeout when tested
+                            new ParallelCommandGroup(extendIntakeAndRun,
+                                new SequentialCommandGroup(
+                                    trajRamsete(3),
+                                    trajRamsete(4),
+                                    new InstantCommand(m_drive::stop, m_drive),
+                                    shootCommand2.withTimeout(4)
+                                ))
+            );
+        auto_3BallTerminal = new SequentialCommandGroup(
+                            shootCommand2.withTimeout(4), // Edit this timeout when tested
+                            new ParallelCommandGroup(extendIntakeAndRun,
+                                new SequentialCommandGroup(
+                                    trajRamsete(5),
+                                    trajRamsete(6),
+                                    trajRamsete(7),
+                                    trajRamsete(8),
+                                    new InstantCommand(m_drive::stop, m_drive),
+                                    shootCommand2.withTimeout(4)
+                                ))
+            );
 
         // Setup auto-selector
-        //NarwhalDashboard.addAuto("Basic Auto", auto_2balltop);
-        // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
+        NarwhalDashboard.addAuto("Auto 2 Ball Bottom", auto_2BallBot);
+        NarwhalDashboard.addAuto("Auto 2 Ball Mid", auto_2BallMid);
+        NarwhalDashboard.addAuto("Auto 2 Ball Top", auto_2BallTop);
+        NarwhalDashboard.addAuto("Auto 3 Ball Hook", auto_3BallHook);
+        NarwhalDashboard.addAuto("Auto 3 Ball Terminal", auto_3BallTerminal);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
