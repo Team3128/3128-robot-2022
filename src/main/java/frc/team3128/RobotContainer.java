@@ -245,17 +245,15 @@ public class RobotContainer {
         auto_2BallBot = new SequentialCommandGroup(
 
                             new CmdExtendIntake(m_intake).withTimeout(0.1),
-                            new InstantCommand(() -> {
+
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(0).andThen(m_drive::stop, m_drive),
+
+                                new InstantCommand(() -> {
                                 m_intake.runIntake();
                                 m_hopper.runHopper();
-                            }, m_intake, m_hopper),
-
-                            trajectoryCmd(0),
-                            new InstantCommand(() -> {
-                                m_drive.stop();
-                                m_intake.stopIntake();
-                                m_hopper.stopHopper();
-                            }, m_drive, m_intake, m_hopper),
+                                }, m_intake, m_hopper)
+                            ),
 
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
@@ -268,17 +266,15 @@ public class RobotContainer {
         auto_2BallMid = new SequentialCommandGroup(
 
                             new CmdExtendIntake(m_intake).withTimeout(0.1),
-                            new InstantCommand(() -> {
-                                m_intake.runIntake();
-                                m_hopper.runHopper();
-                            }, m_intake, m_hopper),
+                            
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(1).andThen(m_drive::stop, m_drive),
 
-                            trajectoryCmd(1),
-                            new InstantCommand(() -> {
-                                m_drive.stop();
-                                m_intake.stopIntake();
-                                m_hopper.stopHopper();
-                            }, m_drive, m_intake, m_hopper),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
 
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
@@ -291,17 +287,15 @@ public class RobotContainer {
         auto_2BallTop = new SequentialCommandGroup(
 
                             new CmdExtendIntake(m_intake).withTimeout(0.1),
-                            new InstantCommand(() -> {
-                                m_intake.runIntake();
-                                m_hopper.runHopper();
-                            }, m_intake, m_hopper),
+                                            
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(2).andThen(m_drive::stop, m_drive),
 
-                            trajectoryCmd(2),
-                            new InstantCommand(() -> {
-                                m_drive.stop();
-                                m_intake.stopIntake();
-                                m_hopper.stopHopper();
-                            }, m_drive, m_intake, m_hopper),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
 
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
@@ -320,18 +314,17 @@ public class RobotContainer {
                             ).withTimeout(4),
 
                             new CmdExtendIntake(m_intake).withTimeout(0.1),
-                            new InstantCommand(() -> {
-                                m_intake.runIntake();
-                                m_hopper.runHopper();
-                            }, m_intake, m_hopper),
-
-                            trajectoryCmd(3),
-                            trajectoryCmd(4),
-                            new InstantCommand(() -> {
-                                m_drive.stop();
-                                m_intake.stopIntake();
-                                m_hopper.stopHopper();
-                            }, m_drive, m_intake, m_hopper),
+                            new ParallelDeadlineGroup(
+                                new SequentialCommandGroup(
+                                    trajectoryCmd(3),
+                                    trajectoryCmd(4),
+                                    new InstantCommand(m_drive::stop, m_drive)
+                                ),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
 
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
@@ -350,20 +343,19 @@ public class RobotContainer {
                             ).withTimeout(4), // Edit this timeout when tested
 
                             new CmdExtendIntake(m_intake).withTimeout(0.1),
-                            new InstantCommand(() -> {
-                                m_intake.runIntake();
-                                m_hopper.runHopper();
-                            }, m_intake, m_hopper),
-
-                            trajectoryCmd(5),
-                            trajectoryCmd(6),
-                            trajectoryCmd(7),
-                            trajectoryCmd(8),
-                            new InstantCommand(() -> {
-                                m_drive.stop();
-                                m_intake.stopIntake();
-                                m_hopper.stopHopper();
-                            }, m_drive, m_intake, m_hopper),
+                            new ParallelDeadlineGroup(
+                                new SequentialCommandGroup(
+                                    trajectoryCmd(5),
+                                    trajectoryCmd(6),
+                                    trajectoryCmd(7),
+                                    trajectoryCmd(8),
+                                    new InstantCommand(m_drive::stop, m_drive)
+                                ),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
 
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
