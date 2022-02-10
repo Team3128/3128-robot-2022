@@ -124,13 +124,10 @@ public class RobotContainer {
             DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
         }
 
-        initAutos();
-        configureButtonBindings();
         dashboardInit();
-
-        initialPoses = new HashMap<Command, Pose2d>();
-        // initialPoses.put(auto_2balltop, trajectory[5].getInitialPose());
-        // initialPoses.put(auto_3ball, trajectory[6].getInitialPose());
+        limelightsInit(m_shooterLimelight, m_balLimelight); 
+        autosInit();
+        configureButtonBindings();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -199,7 +196,7 @@ public class RobotContainer {
     }
 
 
-    private void initAutos() {
+    private void autosInit() {
 
         retractHopperCommand = new CmdRetractHopper(m_hopper);
         // climbCommand = new CmdClimb(m_climber);
@@ -289,11 +286,11 @@ public class RobotContainer {
             );
 
         // Setup auto-selector
-        NarwhalDashboard.addAuto("Auto 2 Ball Bottom", auto_2BallBot);
-        NarwhalDashboard.addAuto("Auto 2 Ball Mid", auto_2BallMid);
-        NarwhalDashboard.addAuto("Auto 2 Ball Top", auto_2BallTop);
-        NarwhalDashboard.addAuto("Auto 3 Ball Hook", auto_3BallHook);
-        NarwhalDashboard.addAuto("Auto 3 Ball Terminal", auto_3BallTerminal);
+        NarwhalDashboard.addAuto("2 Ball Bottom", auto_2BallBot);
+        NarwhalDashboard.addAuto("2 Ball Mid", auto_2BallMid);
+        NarwhalDashboard.addAuto("2 Ball Top", auto_2BallTop);
+        NarwhalDashboard.addAuto("3 Ball Hook", auto_3BallHook);
+        NarwhalDashboard.addAuto("3 Ball Terminal", auto_3BallTerminal);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
@@ -325,16 +322,14 @@ public class RobotContainer {
             SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
         }
 
-        NarwhalDashboard.startServer();
-        setupLimelights(m_shooterLimelight, m_balLimelight); 
-            
+        NarwhalDashboard.startServer();       
     }
 
     public void stopDrivetrain() {
         m_drive.stop();
     }
   
-    private void setupLimelights(Limelight... limelightList) {
+    private void limelightsInit(Limelight... limelightList) {
         Log.info("NarwhalRobot", "Setting up limelight chooser...");
       
         for (Limelight ll : limelightList) {
@@ -351,11 +346,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // TODO: MAKE HASHMAP CONTAINING INITIAL POSE2D AND AUTO
-        // m_drive.resetPose(initialPoses.get(auto_2balltop));
-        // return NarwhalDashboard.getSelectedAuto();
-        // return auto_2balltop;
-        return null;
+        m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
+        return NarwhalDashboard.getSelectedAuto();
     }
 
 }
