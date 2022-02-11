@@ -92,7 +92,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
-          
+        field.setRobotPose(getPose());   
         
         SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
         SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
@@ -126,8 +126,6 @@ public class NAR_Drivetrain extends SubsystemBase {
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
         angle.set(robotDriveSim.getHeading().getDegrees()); // @Nathan: I tested this out, this seems to work. This preserves parity w/ the real robot in angle, odometry
         SmartDashboard.putNumber("Sim Gyro", angle.get());
-
-        field.setRobotPose(getPose()); 
     }
         
     public double getHeading() {

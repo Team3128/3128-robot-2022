@@ -198,7 +198,8 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public double calculateMotorVelocityFromDist(double dist) {
-        return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196;
+        return 0.00971*Math.pow(dist, 3) - 0.289*Math.pow(dist, 2) - 52.17*dist + 5196;
+        //TODO needs interpolation
     }
 }
 
