@@ -112,8 +112,8 @@ public class Constants {
         public static final double SHOOTER_PID_kI = 0;
         public static final double SHOOTER_PID_kD = 0;
 
-        public static final double SHOOTER_KS = 0.69257; // 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.10714 / 62.5; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KS = 0.3; // 0.711; //Static gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.10714 / 60; // 0.00163; //Velocity gain in PID Feed Forward
         public static final double SHOOTER_KA = 0.0053359; // 0.0349; //Acceleration gain PID Feed Forward
 
         public static final int PLATEAU_COUNT = 1;
