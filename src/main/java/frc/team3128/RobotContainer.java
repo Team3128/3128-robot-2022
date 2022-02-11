@@ -51,15 +51,19 @@ public class RobotContainer {
     private Limelight m_shooterLimelight;
     private Limelight m_balLimelight;
 
-    private String[] trajJson = {"paths/2_BallBot_i.wpilib.json", 
-                                "paths/2_BallMid_i.wpilib.json", 
-                                "paths/2_BallTop_i.wpilib.json", 
-                                "paths/3_Ball_i.wpilib.json", 
-                                "paths/3_Ball_ii.wpilib.json",
-                                "paths/3_BallTerm_i.wpilib.json",
-                                "paths/3_BallTerm_ii.wpilib.json",
-                                "paths/3_BallTerm_iii.wpilib.json",
-                                "paths/3_BallTerm_IV.wpilib.json"
+    private String[] trajJson = {"paths/2_BallBot_i.wpilib.json", //0
+                                "paths/2_BallMid_i.wpilib.json", //1
+                                "paths/2_BallTop_i.wpilib.json", //2
+                                "paths/3_Ball_i.wpilib.json",    //3
+                                "paths/3_Ball_ii.wpilib.json",   //4
+                                "paths/3_BallTerm_i.wpilib.json", //5
+                                "paths/3_BallTerm_ii.wpilib.json", //6
+                                "paths/3_BallTerm_iii.wpilib.json", //7
+                                "paths/3_BallTerm_IV.wpilib.json",  //8
+                                "paths/3_BallHK_i.wpilib.json",    //9
+                                "paths/3_BallHK_ii.wpilib.json"    //10
+                                "paths/4_BallE_i.wpilib.json",     //11
+                                "paths/4_BallE_ii.wpilib.json",    //12
                                 };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
 
@@ -80,7 +84,8 @@ public class RobotContainer {
     private Command auto_2ballbot;
     private Command auto_3ballTerm;
     private Command auto_3fishball;
-
+    private Command auto_3hersheyKiss;
+    private Command auto_4BallE;
 
     private boolean DEBUG = true;
 
@@ -114,6 +119,8 @@ public class RobotContainer {
         initialPoses.put(auto_2balltop, trajectory[2].getInitialPose());
         initialPoses.put(auto_3fishball, trajectory[3].getInitialPose());
         initialPoses.put(auto_3ballTerm, trajectory[5].getInitialPose());
+        initialPoses.put(auto_3hersheyKiss, trajectory[9].getInitialPose());
+        initialPoses.put(auto_4BallE, trajectory[11].getInitialPose());
 
         try {
             for (int i = 0; i < trajJson.length; i++) {
@@ -207,7 +214,7 @@ public class RobotContainer {
         intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
 
         extendIntakeAndRun = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), intakeCargoCommand);
-
+        
         //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
                         new InstantCommand(m_shooterLimelight::turnLEDOn),
@@ -277,7 +284,26 @@ public class RobotContainer {
                     shootCommand2.withTimeout(4)
                 ))
         );
-
+        auto_3hersheyKiss = new SequentialCommandGroup(
+            shootCommand2.withTimeout(4)
+            new ParallelCommandGroup(extendIntakeAndRun,
+                new SequentialCommandGroup(
+                    trajRamsete(9),
+                    trajRamsete(10)
+                    new InstantCommand(m_drive::stop,m_drive)
+                    shootCommand2.withTimeout(4)
+                ))
+        )
+        auto_4ballE = new SequentialCommandGroup(
+            new ParallelCommandGroup(extendIntakeAndRun,
+                trajRamsete(11),
+                newInstantCommand(m_drive::stop,m_drive)
+                shootCommand2.withTimeout(4)
+                trajRamsete(12),
+                newInstantCommand(m_drive::stop,m_drive)
+                shootCommand2.withTimeout(4)
+            ),
+        )
         // Setup auto-selector
         //NarwhalDashboard.addAuto("Basic Auto", auto_2balltop);
         // NarwhalDashboard.addAuto("Ball Pursuit", cmdBallPursuit);
