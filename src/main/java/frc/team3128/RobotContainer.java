@@ -1,9 +1,8 @@
 package frc.team3128;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
-
-import javax.management.InstanceAlreadyExistsException;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -21,9 +20,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.team3128.Constants.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
-import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
-import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
@@ -116,16 +113,6 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
-        initialPoses = new HashMap<Command, Pose2d>();
-
-        try {
-            for (int i = 0; i < trajJson.length; i++) {
-                // Get a path from the string specified in trajJson, and load it into trajectory[i]
-                trajectory[i] = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(trajJson[i]));
-            }
-        } catch (IOException ex) {
-            DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
-        }
 
         initAutos();
         initDashboard();
@@ -201,6 +188,18 @@ public class RobotContainer {
 
     private void initAutos() {
 
+        try {
+            for (int i = 0; i < trajJson.length; i++) {
+                // Get a path from the string specified in trajJson, and load it into trajectory[i]
+                Path path = Filesystem.getDeployDirectory().toPath().resolve(trajJson[i]);
+                trajectory[i] = TrajectoryUtil.fromPathweaverJson(path);
+            }
+        } catch (IOException ex) {
+            DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
+        }
+
+        initialPoses = new HashMap<Command, Pose2d>();
+
         retractHopperCommand = new CmdRetractHopper(m_hopper);
         // climbCommand = new CmdClimb(m_climber);
         
@@ -216,7 +215,7 @@ public class RobotContainer {
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
                             new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
-            );
+        );
 
         //use this shoot command for testing
         manualShoot = new SequentialCommandGroup(
@@ -225,29 +224,22 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
                             new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
-            );
+        );
 
         lowerHubShoot = new SequentialCommandGroup(
                             new CmdRetractHopper(m_hopper),
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                                 new CmdShootRPM(m_shooter,1250))
-            );
+        );
                         
         shootCommand2 = new SequentialCommandGroup(
                             new CmdRetractHopper(m_hopper),  
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                                 new CmdShootRPM(m_shooter,3000))
-            );
+        );
 
-        initialPoses.put(auto_2BallBot, trajectory[0].getInitialPose());
-        initialPoses.put(auto_2BallMid, trajectory[1].getInitialPose());
-        initialPoses.put(auto_2BallTop, trajectory[2].getInitialPose());
-        initialPoses.put(auto_3BallHook, trajectory[3].getInitialPose());
-        initialPoses.put(auto_3BallTerminal, trajectory[5].getInitialPose());
-        //initialPoses.put(auto_3BallHersheyKiss, trajectory[9].getInitialPose());
-        //initialPoses.put(auto_4BallE, trajectory[11].getInitialPose());
 
         //AUTONOMOUS ROUTINES
         auto_2BallBot = new SequentialCommandGroup(
@@ -340,7 +332,7 @@ public class RobotContainer {
                 new CmdShootRPM(m_shooter, 3250)
             ).withTimeout(3)
 
-);
+        );
         
         auto_3BallTerminal = new SequentialCommandGroup(
 
@@ -373,27 +365,72 @@ public class RobotContainer {
 
         );
 
-        //TODO: make good :)
-        // auto_3BallHersheyKiss = new SequentialCommandGroup(
-        //     shootCommand2.withTimeout(4),
-        //     new ParallelCommandGroup(extendIntakeAndRun,
-        //         new SequentialCommandGroup(
-        //             trajectoryCmd(9),
-        //             trajectoryCmd(10),
-        //             new InstantCommand(m_drive::stop,m_drive),
-        //             shootCommand2.withTimeout(4)
-        //         ))
-        // );
-        // auto_4BallE = new SequentialCommandGroup(
-        //     new ParallelCommandGroup(extendIntakeAndRun,
-        //         trajectoryCmd(11),
-        //         new InstantCommand(m_drive::stop,m_drive),
-        //         shootCommand2.withTimeout(4),
-        //         trajectoryCmd(12),
-        //         new InstantCommand(m_drive::stop,m_drive),
-        //         shootCommand2.withTimeout(4)
-        //     )
-        // );
+        auto_3BallHersheyKiss = new SequentialCommandGroup(
+                            new CmdRetractHopper(m_hopper).withTimeout(0.5),
+                            new ParallelCommandGroup(
+                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                new CmdShootRPM(m_shooter, 3000)
+                            ).withTimeout(4),
+                            
+                            new CmdExtendIntake(m_intake).withTimeout(0.1),
+                            new ParallelDeadlineGroup(
+                                new SequentialCommandGroup(
+                                    trajectoryCmd(9),
+                                    trajectoryCmd(10),
+                                    new InstantCommand(m_drive::stop, m_drive)
+                                ),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
+
+                            new CmdRetractHopper(m_hopper).withTimeout(0.5),
+                            new ParallelCommandGroup(
+                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                new CmdShootRPM(m_shooter, 3000)
+                            )
+        );
+
+        auto_4BallE = new SequentialCommandGroup(
+
+                            new CmdExtendIntake(m_intake).withTimeout(0.1),
+                            new ParallelDeadlineGroup(
+                                new SequentialCommandGroup(
+                                    trajectoryCmd(11),
+                                    new InstantCommand(m_drive::stop, m_drive)
+                                ),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
+
+                            new CmdRetractHopper(m_hopper).withTimeout(0.5),
+                            new ParallelCommandGroup(
+                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                new CmdShootRPM(m_shooter, 3000)
+                            ),
+
+                            new CmdExtendIntake(m_intake).withTimeout(0.1),
+                            new ParallelDeadlineGroup(
+                                new SequentialCommandGroup(
+                                    trajectoryCmd(12),
+                                    new InstantCommand(m_drive::stop, m_drive)
+                                ),
+                                new InstantCommand(() -> {
+                                    m_intake.runIntake();
+                                    m_hopper.runHopper();
+                                }, m_intake, m_hopper)
+                            ),
+
+                            new CmdRetractHopper(m_hopper).withTimeout(0.5),
+                            new ParallelCommandGroup(
+                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                new CmdShootRPM(m_shooter, 3000)
+                            )
+
+        );
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("2 Ball Bottom", auto_2BallBot);
@@ -401,8 +438,8 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("2 Ball Top", auto_2BallTop);
         NarwhalDashboard.addAuto("3 Ball Hook", auto_3BallHook);
         NarwhalDashboard.addAuto("3 Ball Terminal", auto_3BallTerminal);
-        // NarwhalDashboard.addAuto("3 Ball Hershey Kiss", auto_3BallHersheyKiss);
-        // NarwhalDashboard.addAuto("4 Ball E", auto_4BallE);
+        NarwhalDashboard.addAuto("3 Ball Hershey Kiss", auto_3BallHersheyKiss);
+        NarwhalDashboard.addAuto("4 Ball E", auto_4BallE);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
@@ -463,8 +500,19 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        
+        // I don't understand why putting this in the constructor or initAutos doesn't work, so I put it here and it works (in sim)
+        initialPoses.put(auto_2BallBot, trajectory[0].getInitialPose());
+        initialPoses.put(auto_2BallMid, trajectory[1].getInitialPose());
+        initialPoses.put(auto_2BallTop, trajectory[2].getInitialPose());
+        initialPoses.put(auto_3BallHook, trajectory[3].getInitialPose());
+        initialPoses.put(auto_3BallTerminal, trajectory[5].getInitialPose());
+        initialPoses.put(auto_3BallHersheyKiss, trajectory[9].getInitialPose());
+        initialPoses.put(auto_4BallE, trajectory[11].getInitialPose());
+
         m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
         return NarwhalDashboard.getSelectedAuto();
+
     }
 
 }
