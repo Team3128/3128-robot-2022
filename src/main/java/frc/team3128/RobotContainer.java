@@ -214,7 +214,9 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
+                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(
+                                            m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3)))
+                                            // this is -3 because magic number (ll math on kitbot overestimates by -3 for some reason)
         );
 
         //use this shoot command for testing
@@ -223,7 +225,9 @@ public class RobotContainer {
                         new CmdRetractHopper(m_hopper),
                         new ParallelCommandGroup(
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
+                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(
+                                            m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3)))
+                                            // this is -3 because magic number (ll math on kitbot overestimates by -3 for some reason)
         );
 
         lowerHubShoot = new SequentialCommandGroup(
@@ -490,8 +494,8 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3);
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3);
 
         // SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
         // SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
