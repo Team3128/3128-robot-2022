@@ -135,8 +135,8 @@ public class Constants {
     public static class HopperConstants {
 
         public static final int HOPPER_MOTOR_ID = 6;
-        // public static final int BOTTOM_SENSOR_ID = 12;
-        // public static final int TOP_SENSOR_ID = 13;
+        public static final int BOTTOM_SENSOR_ID = 12;
+        public static final int TOP_SENSOR_ID = 13;
 
         public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
         public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
@@ -147,6 +147,7 @@ public class Constants {
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
+
     }
 
     public static class IntakeConstants {
