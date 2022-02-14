@@ -32,12 +32,8 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
-        // public static final int KIT_MOTOR_LEFT_LEADER_ID = 1;
-        // public static final int KIT_MOTOR_LEFT_FOLLOWER_ID = 2;
-        // public static final int KIT_MOTOR_RIGHT_LEADER_ID = 3;
-        // public static final int KIT_MOTOR_RIGHT_FOLLOWER_ID = 4;
-
         public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
+        public static final double ARCADE_DRIVE_RATE_LIMIT = 0.5; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
@@ -79,8 +75,8 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_SENSOR_LEFT_ID = 0;
-        public static final int CLIMBER_SENSOR_RIGHT_ID = 1;
+        public static final int CLIMBER_SENSOR_LEFT_ID = 7;
+        public static final int CLIMBER_SENSOR_RIGHT_ID = 6;
         public static final int CLIMBER_MOTOR_LEFT_ID = 6;
         public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 

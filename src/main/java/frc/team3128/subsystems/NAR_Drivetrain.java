@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -49,6 +50,8 @@ public class NAR_Drivetrain extends SubsystemBase {
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
 
     private static Field2d field;
+    
+    private SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.ARCADE_DRIVE_RATE_LIMIT);
 
     public NAR_Drivetrain(){
 
@@ -164,7 +167,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double x, double y) {
-        robotDrive.arcadeDrive(x, y, false);
+        robotDrive.arcadeDrive(filter.calculate(x), y, false);
     }
 
     public void stop() {
