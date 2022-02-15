@@ -89,7 +89,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     double currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
 
                     currentTime = RobotController.getFPGATime() / 1e6; 
-                    currentError = currentHorizontalOffset;
+                    currentError = VisionConstants.GOAL_HORIZONTAL_OFFSET - currentHorizontalOffset;
 
                     // PID feedback loop for left+right powers based on horizontal offset errors
                     double feedbackPower = 0;
