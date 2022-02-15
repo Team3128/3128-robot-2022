@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.ClimberConstants;
 import frc.team3128.Constants.ConversionConstants;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
+import frc.team3128.common.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class Climber extends SubsystemBase {
@@ -26,7 +27,7 @@ public class Climber extends SubsystemBase {
 
     private DoubleSolenoid m_climberSolenoid, m_climberBreakSolenoid;
     private NAR_CANSparkMax m_leftMotor, m_rightMotor;
-    private DigitalInput m_leftLimitSwitch;
+    private DigitalInput m_leftLimitSwitch, m_rightLimitSwitch;
 
     public Climber() {
         climberState = ClimberState.BOTTOM;
@@ -47,12 +48,14 @@ public class Climber extends SubsystemBase {
     private void configMotors() {
         m_leftMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_LEFT_ID, MotorType.kBrushless);
         m_rightMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID, MotorType.kBrushless);
-        m_rightMotor.follow(m_leftMotor, true);
 
+        m_rightMotor.follow(m_leftMotor, true);
+        
         m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
     }
 
     private void configSensors() {
+
         m_leftLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_LEFT_ID);
         m_rightLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_RIGHT_ID);
     }
@@ -76,8 +79,7 @@ public class Climber extends SubsystemBase {
             resetLeftEncoder();
         }
 
-        SmartDashboard.putString("Climber L state", climberState.toString());
-        SmartDashboard.putString("Climber R state", rightState.toString());
+        SmartDashboard.putString("Climber state", climberState.toString());
 
     }
 
@@ -118,6 +120,10 @@ public class Climber extends SubsystemBase {
 
     public boolean getLeftSwitch() {
         return !m_leftLimitSwitch.get();
+    }
+
+    public boolean getRightSwitch() {
+        return !m_rightLimitSwitch.get();
     }
     
     public double getDesiredTicks(double distance) {
