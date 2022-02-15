@@ -94,7 +94,7 @@ public class CmdAlign extends CommandBase {
                     plateauCount++;
                     if (plateauCount > VisionConstants.ALIGN_PLATEAU_COUNT) {
                         isAligned = true;
-                        // m_limelight.setLEDMode(LEDMode.OFF);
+                        m_limelight.setLEDMode(LEDMode.OFF);
                     }
                 }
                 else {

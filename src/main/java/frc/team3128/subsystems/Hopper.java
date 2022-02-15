@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.HopperConstants;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
@@ -51,7 +50,7 @@ public class Hopper extends SubsystemBase {
 
     private void configEncoders() {
         m_encoder = new Encoder(HopperConstants.HOPPER_DIO_PIN1, HopperConstants.HOPPER_DIO_PIN2);
-        // m_encoder.setDistancePerPulse(2.5*Math.PI);
+        m_encoder.setDistancePerPulse(2.5*Math.PI);
         m_encoder.setReverseDirection(true);
     }
 
@@ -67,8 +66,6 @@ public class Hopper extends SubsystemBase {
 
         wasIn = m_sensorIn.get();
         wasOut = m_sensorOut.get();
-
-        SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
     }
 
     // public boolean getTop() {
