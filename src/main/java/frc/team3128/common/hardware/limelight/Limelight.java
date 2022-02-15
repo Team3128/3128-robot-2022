@@ -60,10 +60,8 @@ public class Limelight {
         int count = 0;
 
         while (count <= numSamples) {
-            if (hasValidTarget()) {
-                runningTotal += limelightTable.getEntry(key.getKey()).getDouble(0.0);
-                count += 1;
-            }
+            runningTotal += limelightTable.getEntry(key.getKey()).getDouble(0.0);
+            count += 1;
         }
 
         return runningTotal / numSamples;

@@ -126,7 +126,6 @@ public class Constants {
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
-        public static final int MAX_RPM = 6000; // not sure if this is accurate
     }
   
     public static class HopperConstants {
