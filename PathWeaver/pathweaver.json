@@ -5,5 +5,5 @@
   "maxAcceleration": 2.0,
   "trackWidth": 0.59312,
   "gameName": "Rapid React",
-  "outputDir": ".."
+  "outputDir": "../src/main/deploy/paths"
 }
