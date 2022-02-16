@@ -15,30 +15,22 @@ public class CmdClimbExtend extends CommandBase{
 
     @Override
     public void initialize() {
-        m_climber.leftExtend();
-        m_climber.rightExtend();
+        m_climber.bothExtend();
     }
 
 
     @Override
     public void execute() {
-        if (m_climber.getLeftState() == ClimberState.TOP) {
-            m_climber.leftStop();
-        }
-        if (m_climber.getRightState() == ClimberState.TOP) {
-            m_climber.rightStop();
-        }
         
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_climber.leftStop();
-        m_climber.rightStop();
+        m_climber.bothStop();
     }
 
     @Override
     public boolean isFinished() {
-        return (m_climber.getLeftState() == ClimberState.TOP && m_climber.getRightState() == ClimberState.TOP);
+        return (m_climber.getclimberState() == ClimberState.TOP);
     }
 }

@@ -2,6 +2,7 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.HopperConstants;
@@ -16,6 +17,12 @@ public class Hopper extends SubsystemBase {
     private Encoder m_encoder;
 
     private boolean isEjected;
+
+    //Photoelectric Sensors (Not Used As Of Now)
+    private DigitalInput m_sensorIn, m_sensorOut;
+    private boolean wasIn, wasOut;
+    //Sets Ball Count at Beginning of Match
+    private int ballCount = 0;
 
     public Hopper() {
         configMotors();
@@ -48,8 +55,17 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configSensors() {
-        // m_bottom = new DigitalInput(HopperConstants.BOTTOM_SENSOR_ID);
-        // m_top = new DigitalInput(HopperConstants.TOP_SENSOR_ID);
+        m_sensorIn = new DigitalInput(HopperConstants.BOTTOM_SENSOR_ID);
+        m_sensorOut = new DigitalInput(HopperConstants.TOP_SENSOR_ID);
+    }
+
+    @Override
+    public void periodic() {
+        if(wasIn && !m_sensorIn.get()) ballCount++;
+        if(wasOut && !m_sensorOut.get()) ballCount--;
+
+        wasIn = m_sensorIn.get();
+        wasOut = m_sensorOut.get();
     }
 
     // public boolean getTop() {

@@ -22,21 +22,19 @@ public class Climber extends SubsystemBase {
 
     private static Climber instance;
 
-    private ClimberState leftState, rightState;
+    private ClimberState climberState;
 
     private DoubleSolenoid m_climberSolenoid, m_climberBreakSolenoid;
     private NAR_CANSparkMax m_leftMotor, m_rightMotor;
     private DigitalInput m_leftLimitSwitch, m_rightLimitSwitch;
 
     public Climber() {
-        leftState = ClimberState.BOTTOM;
-        rightState = ClimberState.BOTTOM;
+        climberState = ClimberState.BOTTOM;
 
         configMotors();
         configSensors();
         configPneumatics();
         resetLeftEncoder();
-        resetRightEncoder();
     }
 
     public static synchronized Climber getInstance() {
@@ -49,9 +47,9 @@ public class Climber extends SubsystemBase {
     private void configMotors() {
         m_leftMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_LEFT_ID, MotorType.kBrushless);
         m_rightMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID, MotorType.kBrushless);
+        m_rightMotor.follow(m_leftMotor, true);
 
         m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
-        m_rightMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
     }
 
     private void configSensors() {
@@ -70,72 +68,31 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getLeftState() == ClimberState.BOTTOM && getLeftSwitch() && getCurrentTicksLeft() > (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))) {
-            setLeftState(ClimberState.TOP);
+        if (getclimberState() == ClimberState.BOTTOM && getLeftSwitch() && getCurrentTicksLeft() > (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))) {
+            setclimberState(ClimberState.TOP);
         }
-        else if (getLeftState() == ClimberState.TOP && getLeftSwitch() && getCurrentTicksLeft() < (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))){
-            setLeftState(ClimberState.BOTTOM);
+        else if (getclimberState() == ClimberState.TOP && getLeftSwitch() && getCurrentTicksLeft() < (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))){
+            setclimberState(ClimberState.BOTTOM);
             resetLeftEncoder();
         }
 
-        if (getRightState() == ClimberState.BOTTOM && getRightSwitch() && getCurrentTicksRight() > (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))) {
-                setLeftState(ClimberState.TOP);
-        }
-        else if (getRightState() == ClimberState.TOP && getRightSwitch() && getCurrentTicksRight() < (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))){
-            setLeftState(ClimberState.BOTTOM);
-            resetRightEncoder();
-        }
-
-        SmartDashboard.putString("Climber L state", leftState.toString());
-        SmartDashboard.putString("Climber R state", rightState.toString());
+        SmartDashboard.putString("Climber L state", climberState.toString());
 
     }
-    
-    public void leftRetract(){
-        if (getLeftState() == ClimberState.TOP){
-            m_leftMotor.set(-ClimberConstants.CLIMBER_POWER);
-        }
-    }
 
-    public void rightRetract(){
-        if (getLeftState() == ClimberState.TOP){
-            m_rightMotor.set(-ClimberConstants.CLIMBER_POWER);
-        }
-    }
-
-    public void leftExtend(){
-        if (getLeftState() == ClimberState.BOTTOM){
-            m_leftMotor.set(ClimberConstants.CLIMBER_POWER);
-        }
-    }
-
-    public void rightExtend(){
-        if (getRightState() == ClimberState.BOTTOM){
-            m_rightMotor.set(ClimberConstants.CLIMBER_POWER);
-        }
-    }
-
-    public void extendBoth() {
+    public void bothExtend() {
         m_rightMotor.set(ClimberConstants.CLIMBER_POWER);
         m_leftMotor.set(ClimberConstants.CLIMBER_POWER);
     }
 
-    public void retractBoth() {
+    public void bothRetract() {
         m_rightMotor.set(-ClimberConstants.CLIMBER_POWER);
         m_leftMotor.set(-ClimberConstants.CLIMBER_POWER);
     }
 
-    public void stopBoth() {
+    public void bothStop() {
         m_rightMotor.set(0);
         m_leftMotor.set(0);
-    }
-
-    public void leftStop(){
-        m_leftMotor.set(0);
-    }
-
-    public void rightStop(){
-        m_rightMotor.set(0);
     }
 
     public void extendPiston(){
@@ -154,19 +111,12 @@ public class Climber extends SubsystemBase {
         m_climberBreakSolenoid.set(kReverse);
     }
 
-    public void setLeftState(ClimberState state) {
-        leftState = state;
-    }
-    public void setRightState(ClimberState state) {
-        rightState = state;
+    public void setclimberState(ClimberState state) {
+        climberState = state;
     }
 
     public boolean getLeftSwitch() {
         return !m_leftLimitSwitch.get();
-    }
-    
-    public boolean getRightSwitch() {
-        return !m_rightLimitSwitch.get();
     }
     
     public double getDesiredTicks(double distance) {
@@ -177,24 +127,12 @@ public class Climber extends SubsystemBase {
     public double getCurrentTicksLeft() {
         return m_leftMotor.getSelectedSensorPosition();
     }
-    
-    public double getCurrentTicksRight() {
-        return m_rightMotor.getSelectedSensorPosition();
-    }
 
-    public ClimberState getLeftState() {
-        return leftState;
+    public ClimberState getclimberState() {
+        return climberState;
     }
-    
-    public ClimberState getRightState() {
-        return rightState;
-    } 
 
     public void resetLeftEncoder() {
         m_rightMotor.setEncoderPosition(0);
     }
-    public void resetRightEncoder() {
-        m_rightMotor.setEncoderPosition(0);
-    }
-
 }
