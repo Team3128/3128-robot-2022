@@ -31,6 +31,6 @@ public class CmdClimbExtend extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return m_climber.getclimberState() == ClimberState.TOP;
+        return m_climber.getState() == ClimberState.TOP;
     }
 }

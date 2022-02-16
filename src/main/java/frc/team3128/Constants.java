@@ -96,7 +96,11 @@ public class Constants {
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
-        public static final double CLIMBER_POWER = 0.6;
+        public static final double CLIMBER_POWER = -0.6;
+
+        public static final double CLIMB_ENC_DIAG_EXTENSION = -7850; //-7379
+        public static final double CLIMB_ENC_TO_TOP = -7825;
+
     }
 
     public static class ShooterConstants {
@@ -113,9 +117,8 @@ public class Constants {
         public static final double SHOOTER_KA = 0.0053359; // 0.0349; //Acceleration gain PID Feed Forward
 
         public static final int PLATEAU_COUNT = 1;
-
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
-        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.11;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.10;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
         public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
@@ -150,7 +153,7 @@ public class Constants {
 
         public static final int INTAKE_MOTOR_ID = 7; 
         public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 12;
-        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 4;
 
         public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
 
@@ -174,8 +177,8 @@ public class Constants {
 
         public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 1; //degrees
-        public static final double TX_THRESHOLD_MAX = 2; //degrees
+        public static final double TX_THRESHOLD = 5; //degrees
+        public static final double TX_THRESHOLD_MAX = 10; //degrees
         public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 

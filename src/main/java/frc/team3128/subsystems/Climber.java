@@ -49,6 +49,7 @@ public class Climber extends SubsystemBase {
         m_leftMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_LEFT_ID, MotorType.kBrushless);
         m_rightMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID, MotorType.kBrushless);
 
+        m_leftMotor.setInverted(true);
         m_rightMotor.follow(m_leftMotor, true);
         
         m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
@@ -71,15 +72,23 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getclimberState() == ClimberState.BOTTOM && getLeftSwitch() && getCurrentTicksLeft() > (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))) {
-            setclimberState(ClimberState.TOP);
+
+        if (getLeftSwitch()) {
+            if (getState() == ClimberState.BOTTOM && Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
+                setclimberState(ClimberState.TOP);
+            }
+            else if (getState() == ClimberState.TOP && Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
+                setclimberState(ClimberState.BOTTOM);
+                // resetLeftEncoder();
+            }
         }
-        else if (getclimberState() == ClimberState.TOP && getLeftSwitch() && getCurrentTicksLeft() < (getDesiredTicks(ClimberConstants.CLIMBER_HEIGHT/2))){
-            setclimberState(ClimberState.BOTTOM);
-            resetLeftEncoder();
-        }
+        
 
         SmartDashboard.putString("Climber state", climberState.toString());
+
+        SmartDashboard.putBoolean("Climber left limit switch", getLeftSwitch());
+        SmartDashboard.putBoolean("Climber right limit switch", getRightSwitch());
+        SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
 
     }
 
@@ -127,7 +136,7 @@ public class Climber extends SubsystemBase {
     }
     
     public double getDesiredTicks(double distance) {
-        double desiredTicks = distance * (((ConversionConstants.SPARK_ENCODER_RESOLUTION)*(ClimberConstants.CLIMBER_GEAR_RATIO)) / ((ClimberConstants.AXLE_DIAMETER)*Math.PI));
+        double desiredTicks = distance * (ConversionConstants.SPARK_ENCODER_RESOLUTION * ClimberConstants.CLIMBER_GEAR_RATIO) / (ClimberConstants.AXLE_DIAMETER * Math.PI);
         return desiredTicks;
     }
 
@@ -135,11 +144,11 @@ public class Climber extends SubsystemBase {
         return m_leftMotor.getSelectedSensorPosition();
     }
 
-    public ClimberState getclimberState() {
+    public ClimberState getState() {
         return climberState;
     }
 
     public void resetLeftEncoder() {
-        m_rightMotor.setEncoderPosition(0);
+        m_leftMotor.setEncoderPosition(0);
     }
 }
