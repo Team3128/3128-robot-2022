@@ -26,7 +26,7 @@ public class Climber extends SubsystemBase {
 
     private DoubleSolenoid m_climberSolenoid, m_climberBreakSolenoid;
     private NAR_CANSparkMax m_leftMotor, m_rightMotor;
-    private DigitalInput m_leftLimitSwitch;
+    private DigitalInput m_leftLimitSwitch, m_rightLimitSwitch;
 
     public Climber() {
         climberState = ClimberState.BOTTOM;
@@ -77,7 +77,6 @@ public class Climber extends SubsystemBase {
         }
 
         SmartDashboard.putString("Climber L state", climberState.toString());
-        SmartDashboard.putString("Climber R state", rightState.toString());
 
     }
 
