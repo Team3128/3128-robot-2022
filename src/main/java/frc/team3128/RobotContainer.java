@@ -39,6 +39,7 @@ public class RobotContainer {
     private Intake m_intake;   
     private Hopper m_hopper;
     private Climber m_climber;
+    private AdjustableShooter m_adjustableShooter; 
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -93,6 +94,7 @@ public class RobotContainer {
         
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
+        m_adjustableShooter = AdjustableShooter.getInstance(); 
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
@@ -112,7 +114,7 @@ public class RobotContainer {
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
-
+         
 
         initAutos();
         initDashboard();
@@ -152,12 +154,17 @@ public class RobotContainer {
                                 .whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
 
         m_rightStick.getButton(6).whenPressed(m_intake::retractIntake, m_intake);
+        m_rightStick.getButton(8).whenPressed(m_adjustableShooter::hoodUp, m_adjustableShooter)
+                                .whenReleased(m_adjustableShooter::hoodStop); 
 
         m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
                                 .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
         //LEFT
         m_leftStick.getButton(1).whenHeld(lowerHubShoot);
+
+        m_leftStick.getButton(8).whenPressed(m_adjustableShooter::hoodDown, m_adjustableShooter)
+                                .whenReleased(m_adjustableShooter::hoodStop);
 
         m_leftStick.getButton(9).whenPressed(new InstantCommand(m_climber::extendBoth, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::stopBoth, m_climber));
@@ -169,7 +176,6 @@ public class RobotContainer {
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
         m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::engageBreak, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::disengageBreak, m_climber));
-
         
 
 
