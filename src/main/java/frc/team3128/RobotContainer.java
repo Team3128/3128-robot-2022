@@ -21,6 +21,7 @@ import frc.team3128.Constants.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
@@ -126,10 +127,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Buttons...
         // right:
-        // 1: shoot high goal
-        // 2: intake
-        // 3: pursue balls
-        // 4: lower hub shoot
+        // 1 (trigger): intake 
+        // 2: shoot
         // 8: climb
         // 9: stop climb
         //
@@ -148,13 +147,12 @@ public class RobotContainer {
         m_rightStick.getButton(1).whenPressed(shootCommand)
                                 .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
-        m_rightStick.getButton(3).whenPressed(retractHopperCommand);
+        // m_rightStick.getButton(4).whenPressed(retractHopperCommand);
 
         // m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
         //                         .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
-        //m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
-        //                        .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
+        // m_rightStick.getButton(3).whenHeld(new CmdBallPursuit(m_drive, m_ballLimelight));
 
         m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle), new WaitCommand(0.5).andThen(new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1).andThen(new CmdIntakeCargo(m_intake, m_hopper))))));    
 
@@ -181,7 +179,7 @@ public class RobotContainer {
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));
 
         m_rightStick.getButton(5).whenPressed(climbCommand);
-   
+        
     }
 
 
@@ -466,10 +464,6 @@ public class RobotContainer {
             SmartDashboard.putData("Intake", m_intake);
             SmartDashboard.putData("Hopper", m_hopper);
             SmartDashboard.putData("Shooter", m_shooter);
-            SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
-            SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
-            SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
-            SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
         }
 
         NarwhalDashboard.startServer();       
@@ -486,7 +480,7 @@ public class RobotContainer {
             NarwhalDashboard.addLimelight(ll);
         }
     }
-  
+
     public void updateDashboard() {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
@@ -500,10 +494,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
 
-        // SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
-        // SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
-        // SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
-        // SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
+        SmartDashboard.putString("Intake state:", m_intake.getSolenoid());
     }
 
     public Command getAutonomousCommand() {
