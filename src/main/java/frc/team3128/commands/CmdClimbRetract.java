@@ -31,6 +31,6 @@ public class CmdClimbRetract extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return m_climber.getState() == ClimberState.BOTTOM;
+        return m_climber.getState() == ClimberState.RETRACTED;
     }
 }

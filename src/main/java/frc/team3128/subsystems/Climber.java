@@ -17,8 +17,8 @@ import net.thefletcher.revrobotics.enums.MotorType;
 public class Climber extends SubsystemBase {
     
     public enum ClimberState {
-        BOTTOM,
-        TOP;
+        EXTENDED,
+        RETRACTED;
     }
 
     private static Climber instance;
@@ -30,11 +30,12 @@ public class Climber extends SubsystemBase {
     private DigitalInput m_leftLimitSwitch, m_rightLimitSwitch;
 
     public Climber() {
-        climberState = ClimberState.BOTTOM;
+        climberState = ClimberState.RETRACTED;
 
         configMotors();
         configSensors();
         configPneumatics();
+
         resetLeftEncoder();
     }
 
@@ -74,12 +75,14 @@ public class Climber extends SubsystemBase {
     public void periodic() {
 
         if (getLeftSwitch()) {
-            if (getState() == ClimberState.BOTTOM && Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
-                setclimberState(ClimberState.TOP);
+            //if state is retracted and encoder count is closer to top encoder count
+            if (getState() == ClimberState.RETRACTED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
+                setState(ClimberState.EXTENDED);
             }
-            else if (getState() == ClimberState.TOP && Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
-                setclimberState(ClimberState.BOTTOM);
-                // resetLeftEncoder();
+            //if state is extended and encoder count is closer to zero
+            else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() > ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
+                setState(ClimberState.RETRACTED);
+                resetLeftEncoder();
             }
         }
         
@@ -123,7 +126,7 @@ public class Climber extends SubsystemBase {
         m_climberBreakSolenoid.set(kReverse);
     }
 
-    public void setclimberState(ClimberState state) {
+    public void setState(ClimberState state) {
         climberState = state;
     }
 

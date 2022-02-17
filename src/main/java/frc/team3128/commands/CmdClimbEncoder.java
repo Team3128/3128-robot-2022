@@ -1,14 +1,12 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team3128.Constants;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Climber;
 
 public class CmdClimbEncoder extends CommandBase{
     private final Climber m_climber;
     private final double m_distance;
-    private double leftTicks;
     private boolean isGoingDown;
 
     // Bottom = 0
@@ -22,12 +20,13 @@ public class CmdClimbEncoder extends CommandBase{
     @Override
     public void initialize() {
         //leftTicks = m_climber.getCurrentTicksLeft() + m_climber.getDesiredTicks(m_distance);
-
-        if (Math.abs(m_distance) > Math.abs(m_climber.getCurrentTicksLeft())) {
+        //if distance is less than the current encoder value (more negative), go up
+        if (m_distance < m_climber.getCurrentTicksLeft()) {
             m_climber.bothExtend();
             isGoingDown = false;
             Log.info("CmdClimbEncoder", "going up");
         }
+        //if distance is closer to zero than current encoder value, go down
         else {
             m_climber.bothRetract();
             isGoingDown = true;

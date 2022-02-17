@@ -221,8 +221,8 @@ public class RobotContainer {
                         new CmdRetractHopper(m_hopper),
                         new ParallelCommandGroup(
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(
-                                            m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT))))
+                            new CmdShootDist(m_shooter, m_shooterLimelight)
+                        )
         );
 
         lowerHubShoot = new SequentialCommandGroup(

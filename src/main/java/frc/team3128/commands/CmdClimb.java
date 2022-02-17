@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.subsystems.Climber;
-import frc.team3128.Constants;
 import frc.team3128.Constants.ClimberConstants;
 
 public class CmdClimb extends SequentialCommandGroup{
@@ -23,7 +22,7 @@ public class CmdClimb extends SequentialCommandGroup{
             //piston extend
             new InstantCommand(() -> m_climber.extendPiston()),
             
-            new WaitCommand(1),
+            new WaitCommand(0.5),
             
             //elev extend
             new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION),
@@ -33,7 +32,7 @@ public class CmdClimb extends SequentialCommandGroup{
             //piston retract
             new InstantCommand(() -> m_climber.retractPiston()),
             
-            new WaitCommand(2),
+            new WaitCommand(0.5),
 
             //elev retract
             new CmdClimbEncoder(m_climber, 0)
