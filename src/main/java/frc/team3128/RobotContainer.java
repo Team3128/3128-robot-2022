@@ -21,6 +21,7 @@ import frc.team3128.Constants.*;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
@@ -104,7 +105,7 @@ public class RobotContainer {
         m_rightStick = new NAR_Joystick(1);
 
         m_shooterLimelight = new Limelight("limelight-cog", VisionConstants.TOP_CAMERA_ANGLE, 
-                                                            VisionConstants.TOP_CAMERA_HEIGHT, 
+                                                             VisionConstants.TOP_CAMERA_HEIGHT, 
                                                             VisionConstants.TOP_FRONT_DIST, 0); 
         m_ballLimelight = new Limelight("limelight-sog", VisionConstants.BALL_LL_ANGLE, 
                                                         VisionConstants.BALL_LL_HEIGHT, 
@@ -126,10 +127,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Buttons...
         // right:
-        // 1: shoot high goal
-        // 2: intake
-        // 3: pursue balls
-        // 4: lower hub shoot
+        // 1 (trigger): intake 
+        // 2: shoot
         // 8: climb
         // 9: stop climb
         //
@@ -148,45 +147,39 @@ public class RobotContainer {
         m_rightStick.getButton(1).whenPressed(shootCommand)
                                 .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
-        m_rightStick.getButton(3).whenPressed(retractHopperCommand);
+        // m_rightStick.getButton(4).whenPressed(retractHopperCommand);
 
-        m_rightStick.getButton(5).whenPressed(new SequentialCommandGroup(new InstantCommand(m_intake::ejectIntake, m_intake), new RunCommand(m_intake::runIntakeBack, m_intake)).withTimeout(0.15))
-                                .whenReleased(new InstantCommand(m_intake::stopIntake, m_intake));
+        // m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
+        //                         .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
-        m_rightStick.getButton(6).whenPressed(m_intake::retractIntake, m_intake);
+        // m_rightStick.getButton(3).whenHeld(new CmdBallPursuit(m_drive, m_ballLimelight));
 
-        //m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
-        //                        .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
+        m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle), new WaitCommand(0.5).andThen(new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1).andThen(new CmdIntakeCargo(m_intake, m_hopper))))));    
 
-        m_rightStick.getButton(3).whenHeld(new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
-                            
         //LEFT
         m_rightStick.getButton(4).whenHeld(lowerHubShoot);
 
-        m_leftStick.getButton(9).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
+        m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
+        m_leftStick.getButton(14).whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
-        m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
-        m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::engageBreak, m_climber));
-        m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::disengageBreak, m_climber));
+        m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
+        m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
+        m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::engageBreak, m_climber));
+        m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::disengageBreak, m_climber));
 
+        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
+        m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
+        m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, 0));
+
+        m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
+
+        m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));
+
+        m_rightStick.getButton(5).whenPressed(climbCommand);
         
-
-
-        //climber buttons (uncomment when testing climber)
-        // m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.SMALL_VERTICAL_DISTANCE));
-        // m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::extendArm, m_climber));
-        // m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::retractArm, m_climber));
-        // m_leftStick.getButton(15).whenPressed(new CmdClimbExtend(m_climber));
-        // m_leftStick.getButton(14).whenPressed(new CmdClimbRetract(m_climber));
-
-        //m_rightStick.getButton(8).whenPressed(climbCommand);
-        //m_rightStick.getButton(8).whenReleased(new InstantCommand(m_climber::climberStop, m_climber));
-        //m_rightStick.getButton(9).whenPressed(new InstantCommand(m_climber::climberStop, m_climber));
     }
 
 
@@ -205,7 +198,7 @@ public class RobotContainer {
         initialPoses = new HashMap<Command, Pose2d>();
 
         retractHopperCommand = new CmdRetractHopper(m_hopper);
-        // climbCommand = new CmdClimb(m_climber);
+        climbCommand = new CmdClimb(m_climber);
         
         intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
 
@@ -218,9 +211,8 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(
-                                            m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3)))
-                                            // this is -3 because magic number (ll math on kitbot overestimates by -3 for some reason)
+                            new CmdShootDist(m_shooter, m_shooterLimelight)
+                        )
         );
 
         //use this shoot command for testing
@@ -229,16 +221,15 @@ public class RobotContainer {
                         new CmdRetractHopper(m_hopper),
                         new ParallelCommandGroup(
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootRPM(m_shooter, m_shooter.calculateMotorVelocityFromDist(
-                                            m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3)))
-                                            // this is -3 because magic number (ll math on kitbot overestimates by -3 for some reason)
+                            new CmdShootDist(m_shooter, m_shooterLimelight)
+                        )
         );
 
         lowerHubShoot = new SequentialCommandGroup(
                             new CmdRetractHopper(m_hopper),
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter,1250))
+                                new CmdShootRPM(m_shooter, 1200))
         );
                         
         shootCommand2 = new SequentialCommandGroup(
@@ -473,10 +464,6 @@ public class RobotContainer {
             SmartDashboard.putData("Intake", m_intake);
             SmartDashboard.putData("Hopper", m_hopper);
             SmartDashboard.putData("Shooter", m_shooter);
-            SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
-            SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
-            SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
-            SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
         }
 
         NarwhalDashboard.startServer();       
@@ -493,18 +480,21 @@ public class RobotContainer {
             NarwhalDashboard.addLimelight(ll);
         }
     }
-  
+
     public void updateDashboard() {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3);
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 3);
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2));
 
-        // SmartDashboard.putBoolean("Shooter at Setpoint", m_shooter.isReady());
-        // SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
-        // SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
-        // SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
+        SmartDashboard.putBoolean("Shooter is ready", m_shooter.isReady());
+        SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
+        SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
+        SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
+
+        SmartDashboard.putString("Intake state:", m_intake.getSolenoid());
     }
 
     public Command getAutonomousCommand() {
