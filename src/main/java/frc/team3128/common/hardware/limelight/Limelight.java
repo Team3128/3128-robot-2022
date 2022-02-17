@@ -60,8 +60,11 @@ public class Limelight {
         int count = 0;
 
         while (count <= numSamples) {
-            runningTotal += limelightTable.getEntry(key.getKey()).getDouble(0.0);
-            count += 1;
+            double sample = limelightTable.getEntry(key.getKey()).getDouble(0.0);
+            if (sample != 0) {
+                runningTotal += sample;
+                count += 1;
+            }
         }
 
         return runningTotal / numSamples;
@@ -135,15 +138,14 @@ public class Limelight {
     public double calculateDistToTopTarget(double targetHeight) {
         if (!hasValidTarget())
             return -1;
-        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180 * 2/3;
-        
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
         return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance; 
     }
 
     public double calculateDistToGroundTarget(double targetHeight) {
         if (!hasValidTarget())
             return -1;
-        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180;
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 2) * Math.PI / 180;
         return (-targetHeight + cameraHeight) * Math.tan(ty + cameraAngle) - frontDistance;
     }
 
