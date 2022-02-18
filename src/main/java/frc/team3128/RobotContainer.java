@@ -267,7 +267,7 @@ public class RobotContainer {
         
         auto_2BallMid = new SequentialCommandGroup(
 
-                            new CmdExtendIntake(m_intake).withTimeout(0.1),
+                            new CmdExtendIntake(m_intake).withTimeout(0.125),
                             
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(1).andThen(m_drive::stop, m_drive),
@@ -277,12 +277,18 @@ public class RobotContainer {
                                     m_hopper.runHopper();
                                 }, m_intake, m_hopper)
                             ),
+                            
+                            new InstantCommand(m_intake::retractIntake, m_intake),
+                            new InstantCommand(() -> {
+                                m_intake.stopIntake();
+                                m_hopper.stopHopper();
+                            }, m_intake, m_hopper),
 
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 3500)
-                            ).withTimeout(4)
+                                new CmdShootRPM(m_shooter, 3250)
+                            ).withTimeout(2)
 
         );
 
@@ -372,9 +378,9 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                                 new CmdShootRPM(m_shooter, 3000)
-                            ).withTimeout(4),
+                            ).withTimeout(2),
                             
-                            new CmdExtendIntake(m_intake).withTimeout(0.1),
+                            new CmdExtendIntake(m_intake).withTimeout(0.125),
                             new ParallelDeadlineGroup(
                                 new SequentialCommandGroup(
                                     trajectoryCmd(9),
@@ -387,11 +393,17 @@ public class RobotContainer {
                                 }, m_intake, m_hopper)
                             ),
 
+                            new InstantCommand(m_intake::retractIntake, m_intake),
+                            new InstantCommand(() -> {
+                                m_intake.stopIntake();
+                                m_hopper.stopHopper();
+                            }, m_intake, m_hopper),
+
                             new CmdRetractHopper(m_hopper).withTimeout(0.5),
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 3000)
-                            )
+                                new CmdShootRPM(m_shooter, 3350)
+                            ).withTimeout(2)
         );
 
         auto_4BallE = new SequentialCommandGroup(
@@ -511,8 +523,11 @@ public class RobotContainer {
         initialPoses.put(auto_3BallHersheyKiss, trajectory[9].getInitialPose());
         initialPoses.put(auto_4BallE, trajectory[11].getInitialPose());
 
-        m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
-        return NarwhalDashboard.getSelectedAuto();
+        // m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
+        // return NarwhalDashboard.getSelectedAuto();
+
+        m_drive.resetPose(trajectory[9].getInitialPose());
+        return auto_3BallHersheyKiss;
 
     }
 
