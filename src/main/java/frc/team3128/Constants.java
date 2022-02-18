@@ -38,7 +38,7 @@ public class Constants {
         // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
-        public static final double TRACK_WIDTH_METERS = 0.59312;
+        public static final double TRACK_WIDTH_METERS = 0.56994;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
@@ -46,20 +46,20 @@ public class Constants {
         public static final double DRIVE_NUp100MS_TO_MPS = DRIVE_NU_TO_METER * 10; // sensor units per 100 ms to m/s of drivetrain
         public static final double MAX_DRIVE_VEL_NUp100MS = 6380 * ConversionConstants.FALCON_ENCODER_RESOLUTION / 60 / 10; // max angular velocity of drivetrain (encoder, not wheel) in sensor units per 100 ms - 6380 RPM * RESOLUTION nu/rot * 1 min/60s * 1s/(10*100ms)
 
-        public static final double kS = 0.63899;
-        public static final double kV = 2.1976;
-        public static final double kA = 0.12023;
+        public static final double kS = 0.73678;
+        public static final double kV = 2.0983;
+        public static final double kA = 0.317; // watch out for this number - pretty high
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
-        public static final double MAX_DRIVE_VELOCITY = 4; // m/s - Real value ~5
+        public static final double MAX_DRIVE_VELOCITY = 2; // m/s - Real value ~5
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
         //Ramsete constants
         public static final double RAMSETE_B = 2; //default value - don't change unless absolutely necessary
         public static final double RAMSETE_ZETA = 0.7; //default value - don't change unless absolutely necessary
-        public static final double RAMSETE_KP = 2.1963;
+        public static final double RAMSETE_KP = 2.9366;
 
         public static final Boolean GYRO_REVERSED = false;
 
