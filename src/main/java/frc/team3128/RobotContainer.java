@@ -70,11 +70,10 @@ public class RobotContainer {
     
     private CmdIntakeCargo intakeCargoCommand;
     private SequentialCommandGroup extendIntakeAndRun;
-    private CmdRetractHopper retractHopperCommand;
+    private SequentialCommandGroup extendIntakeAndReverse;
     private Command shootCommand;
     private SequentialCommandGroup manualShoot;
     private SequentialCommandGroup lowerHubShoot;
-    private SequentialCommandGroup shootCommand2;
     private CmdClimb climbCommand;
 
     private HashMap<Command, Pose2d> initialPoses;
@@ -128,36 +127,52 @@ public class RobotContainer {
         // Buttons...
         // right:
         // 1 (trigger): intake 
-        // 2: shoot
-        // 8: climb
-        // 9: stop climb
+        // 2: shoot upper hub
+        // 3: ball pursuit
+        // 4: shoot lower hub
+        // 5: climb from mid to high
+        // 6: extend climber elev to height for mid to high climb
+        // 7: retract climber elev to 0
+        // 8: reverse intake
         //
         // left:
-        // 9: make climber go up
-        // 10: make climb go down
-        // 11: extend climber piston
-        // 12: retract climber piston
-        // 15: push climber all the way to top magnet
-        // 14: push climber all the way to bottom magnet
+        // 2: reset climber encoder
+        //
+        // 5: extend climber slightly (for hooking stationary hooks while climbing)
+        // 8: extend climber to diagonal extension
+        // 9: extend climber to top
+        // 10: retract climber to 0
+        // 11: engage friction break
+        // 12: extend climber piston
+        // 13: climber go up while held
+        // 14: climber go down while held 
+        // 15: retract climber piston
+        // 16: disengage friction break
 
         //RIGHT
-        m_rightStick.getButton(2).whenHeld(extendIntakeAndRun);
-                                // .whenReleased(retractHopperCommand); Garrison said no to this
-        
         m_rightStick.getButton(1).whenPressed(shootCommand)
                                 .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
 
-        // m_rightStick.getButton(4).whenPressed(retractHopperCommand);
-
-        // m_rightStick.getButton(11).whenPressed(manualShoot) //manualShoot
-        //                         .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
-
-        // m_rightStick.getButton(3).whenHeld(new CmdBallPursuit(m_drive, m_ballLimelight));
-
+        m_rightStick.getButton(2).whenHeld(extendIntakeAndRun);
+        
         m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle), new WaitCommand(0.5).andThen(new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1).andThen(new CmdIntakeCargo(m_intake, m_hopper))))));    
 
-        //LEFT
         m_rightStick.getButton(4).whenHeld(lowerHubShoot);
+
+        m_rightStick.getButton(5).whenPressed(climbCommand);
+
+        m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
+
+        m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(m_climber, 0));
+
+        m_rightStick.getButton(8).whenPressed(extendIntakeAndReverse);
+ 
+        //LEFT
+
+        m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
+
+        m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
+
 
         m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
@@ -174,12 +189,6 @@ public class RobotContainer {
         m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, 0));
 
-        m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
-
-        m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));
-
-        m_rightStick.getButton(5).whenPressed(climbCommand);
-        
     }
 
 
@@ -197,12 +206,13 @@ public class RobotContainer {
 
         initialPoses = new HashMap<Command, Pose2d>();
 
-        retractHopperCommand = new CmdRetractHopper(m_hopper);
         climbCommand = new CmdClimb(m_climber);
         
         intakeCargoCommand = new CmdIntakeCargo(m_intake, m_hopper);
 
         extendIntakeAndRun = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), intakeCargoCommand);
+        extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdReverseIntake(m_intake, m_hopper));
+
 
         //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
@@ -230,13 +240,6 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                                 new CmdShootRPM(m_shooter, 1200))
-        );
-                        
-        shootCommand2 = new SequentialCommandGroup(
-                            new CmdRetractHopper(m_hopper),  
-                            new ParallelCommandGroup(
-                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter,3000))
         );
 
 
