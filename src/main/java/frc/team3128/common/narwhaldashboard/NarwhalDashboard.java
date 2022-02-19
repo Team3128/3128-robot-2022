@@ -90,13 +90,6 @@ public class NarwhalDashboard extends WebSocketServer {
         autoPrograms.put(name, program);
     }
 
-    /**
-     * Sends new set of initial data to NarwhalDashboard.
-     */
-    public static void pushData() {
-        pushed = false;
-    }
-
     public static void addLimelight(Limelight light) {
         limelights.put(light.hostname, light);
     }
@@ -200,6 +193,7 @@ public class NarwhalDashboard extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         // Log.info("NarwhalDashboard", conn.getRemoteSocketAddress().getHostName() + "
         // has closed its connection.");
+        pushed = false;
     }
 
     // Called by request from web server 
