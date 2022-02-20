@@ -18,7 +18,7 @@ public class CmdReverseIntake extends CommandBase{
 
     @Override
     public void initialize() {
-        m_intake.runIntake();
+        m_intake.runIntakeBack();
         m_hopper.reverseHopper();
     }
 

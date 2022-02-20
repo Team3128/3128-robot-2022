@@ -46,7 +46,7 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configPneumatics() {
-    //     m_hopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
+    //     m_hopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
      }
 
     private void configEncoders() {

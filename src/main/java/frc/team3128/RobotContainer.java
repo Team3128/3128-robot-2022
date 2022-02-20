@@ -56,8 +56,8 @@ public class RobotContainer {
                                 "paths/3_Ball_i.wpilib.json", //3
                                 "paths/3_Ball_ii.wpilib.json", //4
                                 
-                                "paths/3_Ball_HKi.wpilib.json", //5
-                                "paths/3_Ball_HKii.wpilib.json", //6
+                                "paths/3_BallHK_i.wpilib.json", //5
+                                "paths/3_BallHK_ii.wpilib.json", //6
 
                                 "paths/3_BallTerm_i.wpilib.json", //7
                                 "paths/3_BallTerm_ii.wpilib.json", //8
@@ -78,6 +78,9 @@ public class RobotContainer {
 
                                 "paths/leaveTerm_i.wpilib.json", //19
                                 "paths/leaveTerm_ii.wpilib.json", //20
+
+                                "paths/4_BallTerm_iii.wpilib.json",
+                                "paths/4_BallTerm_iv.wpilib.json"
                                 };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
 
@@ -173,7 +176,7 @@ public class RobotContainer {
 
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(m_climber, 0));
 
-        m_rightStick.getButton(8).whenPressed(extendIntakeAndReverse);
+        m_rightStick.getButton(8).whenHeld(extendIntakeAndReverse);
  
         //LEFT
 
@@ -224,6 +227,7 @@ public class RobotContainer {
                         new InstantCommand(m_shooterLimelight::turnLEDOn),
                         new CmdRetractHopper(m_hopper), 
                         new ParallelCommandGroup(
+                            new InstantCommand(m_shooterLimelight::turnLEDOn),
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
                             new CmdShootDist(m_shooter, m_shooterLimelight)
@@ -244,7 +248,7 @@ public class RobotContainer {
                             new CmdRetractHopper(m_hopper),
                             new ParallelCommandGroup(
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1200))
+                                new CmdShootRPM(m_shooter, 1275))
         );
 
 
@@ -396,13 +400,13 @@ public class RobotContainer {
                                 new SequentialCommandGroup(
                                     trajectoryCmd(14),
                                     new InstantCommand(m_drive::stop, m_drive),
-                                    new WaitCommand(1)
+                                    new WaitCommand(0.5)
                                 ),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
-                            trajectoryCmd(19),
-                            trajectoryCmd(20),
+                            trajectoryCmd(21),
+                            trajectoryCmd(22),
                             new InstantCommand(m_drive::stop, m_drive),
 
                             //shoot two balls
@@ -411,7 +415,13 @@ public class RobotContainer {
 
         auto_5Ball = new SequentialCommandGroup(
 
-                            retractHopperAndShootCmd(3250),
+                            new SequentialCommandGroup(
+                                new CmdRetractHopper(m_hopper).withTimeout(0.5),
+                                new ParallelCommandGroup(
+                                    new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                                    new CmdShootRPM(m_shooter, 3250)
+                                ).withTimeout(1)
+                            ),
 
                             //pick up first ball
                             new ParallelDeadlineGroup(
@@ -423,7 +433,7 @@ public class RobotContainer {
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
-                            retractHopperAndShootCmd(3250),
+                            retractHopperAndShootCmd(3750),
                             
                             trajectoryCmd(17),
 
@@ -431,7 +441,7 @@ public class RobotContainer {
                                 new SequentialCommandGroup(
                                     trajectoryCmd(18),
                                     new InstantCommand(m_drive::stop, m_drive),
-                                    new WaitCommand(1)
+                                    new WaitCommand(0.5)
                                 ),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
@@ -441,7 +451,7 @@ public class RobotContainer {
                             new InstantCommand(m_drive::stop, m_drive),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3000)
+                            retractHopperAndShootCmd(3750)
         );
 
         // Setup auto-selector
@@ -510,8 +520,8 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 4);
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 4);
         SmartDashboard.putNumber("ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2));
 
         SmartDashboard.putBoolean("Shooter is ready", m_shooter.isReady());
@@ -536,8 +546,11 @@ public class RobotContainer {
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
 
 
-        m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
-        return NarwhalDashboard.getSelectedAuto();
+        // m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
+        // return NarwhalDashboard.getSelectedAuto();
+
+        m_drive.resetPose(trajectory[13].getInitialPose());
+        return auto_4BallTerm;
 
     }
 

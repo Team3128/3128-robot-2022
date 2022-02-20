@@ -63,10 +63,10 @@ public class Climber extends SubsystemBase {
     }
     
     private void configPneumatics() {
-        m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 
+        m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
                                                 ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
-        m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 
+        m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
     }
