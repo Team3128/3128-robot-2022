@@ -2,6 +2,7 @@ package frc.team3128;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -49,6 +50,7 @@ public class RobotContainer {
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
+<<<<<<< HEAD
     private String[] trajJson = {"paths/2_BallBot_i.wpilib.json", //0
                                 "paths/2_BallMid_i.wpilib.json", //1
                                 "paths/2_BallTop_i.wpilib.json", //2
@@ -82,8 +84,10 @@ public class RobotContainer {
                                 "paths/4_BallTerm_iii.wpilib.json",
                                 "paths/4_BallTerm_iv.wpilib.json"
                                 };
+=======
+    private String[] trajJson = Filesystem.getDeployDirectory().toPath().resolve("paths").toFile().list();
+>>>>>>> 78bbc7e84fdcc48a88303c556a91036af29791bf
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
-
     
     private SequentialCommandGroup extendIntakeAndReverse;
     private Command shootCommand;
@@ -205,10 +209,12 @@ public class RobotContainer {
 
     private void initAutos() {
 
+        Arrays.sort(trajJson);
+
         try {
             for (int i = 0; i < trajJson.length; i++) {
                 // Get a path from the string specified in trajJson, and load it into trajectory[i]
-                Path path = Filesystem.getDeployDirectory().toPath().resolve(trajJson[i]);
+                Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(trajJson[i]);
                 trajectory[i] = TrajectoryUtil.fromPathweaverJson(path);
             }
         } catch (IOException ex) {
