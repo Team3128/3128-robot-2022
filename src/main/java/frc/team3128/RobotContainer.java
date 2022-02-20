@@ -86,8 +86,8 @@ public class RobotContainer {
     private Command auto_3BallHersheyKiss;
     private Command auto_4BallE;
 
-
     private boolean DEBUG = true;
+    private boolean drivePseudoGearshift = false;
 
     public RobotContainer() {
         
@@ -110,7 +110,7 @@ public class RobotContainer {
                                                         VisionConstants.BALL_LL_HEIGHT, 
                                                         VisionConstants.BALL_LL_FRONT_DIST, 0);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> drivePseudoGearshift));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
 
@@ -167,6 +167,8 @@ public class RobotContainer {
 
         m_rightStick.getButton(8).whenPressed(extendIntakeAndReverse);
  
+        m_rightStick.getLeftPOVButton().whenPressed(() -> drivePseudoGearshift = !drivePseudoGearshift);
+
         //LEFT
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
