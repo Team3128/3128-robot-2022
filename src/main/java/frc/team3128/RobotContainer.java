@@ -2,6 +2,7 @@ package frc.team3128;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -49,38 +50,8 @@ public class RobotContainer {
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
-    private String[] trajJson = {"paths/2_BallBot_i.wpilib.json", //0
-                                "paths/2_BallMid_i.wpilib.json", //1
-                                "paths/2_BallTop_i.wpilib.json", //2
-
-                                "paths/3_Ball_i.wpilib.json", //3
-                                "paths/3_Ball_ii.wpilib.json", //4
-                                
-                                "paths/3_Ball_HKi.wpilib.json", //5
-                                "paths/3_Ball_HKii.wpilib.json", //6
-
-                                "paths/3_BallTerm_i.wpilib.json", //7
-                                "paths/3_BallTerm_ii.wpilib.json", //8
-
-                                "paths/4_Ball_i.wpilib.json", //9
-                                "paths/4_Ball_ii.wpilib.json", //10
-
-                                "paths/4_BallE_i.wpilib.json", //11 
-                                "paths/4_BallE_ii.wpilib.json", //12
-
-                                "paths/4_BallTerm_i.wpilib.json", //13
-                                "paths/4_BallTerm_ii.wpilib.json", //14
-
-                                "paths/5_Ball_i.wpilib.json", //15
-                                "paths/5_Ball_ii.wpilib.json", //16 
-                                "paths/5_Ball_iii.wpilib.json", //17
-                                "paths/5_Ball_iv.wpilib.json", //18
-
-                                "paths/leaveTerm_i.wpilib.json", //19
-                                "paths/leaveTerm_ii.wpilib.json", //20
-                                };
+    private String[] trajJson = Filesystem.getDeployDirectory().toPath().resolve("paths").toFile().list();
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
-
     
     private SequentialCommandGroup extendIntakeAndReverse;
     private Command shootCommand;
@@ -202,10 +173,12 @@ public class RobotContainer {
 
     private void initAutos() {
 
+        Arrays.sort(trajJson);
+
         try {
             for (int i = 0; i < trajJson.length; i++) {
                 // Get a path from the string specified in trajJson, and load it into trajectory[i]
-                Path path = Filesystem.getDeployDirectory().toPath().resolve(trajJson[i]);
+                Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(trajJson[i]);
                 trajectory[i] = TrajectoryUtil.fromPathweaverJson(path);
             }
         } catch (IOException ex) {
