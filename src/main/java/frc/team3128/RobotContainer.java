@@ -50,43 +50,7 @@ public class RobotContainer {
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
-<<<<<<< HEAD
-    private String[] trajJson = {"paths/2_BallBot_i.wpilib.json", //0
-                                "paths/2_BallMid_i.wpilib.json", //1
-                                "paths/2_BallTop_i.wpilib.json", //2
-
-                                "paths/3_Ball_i.wpilib.json", //3
-                                "paths/3_Ball_ii.wpilib.json", //4
-                                
-                                "paths/3_BallHK_i.wpilib.json", //5
-                                "paths/3_BallHK_ii.wpilib.json", //6
-
-                                "paths/3_BallTerm_i.wpilib.json", //7
-                                "paths/3_BallTerm_ii.wpilib.json", //8
-
-                                "paths/4_Ball_i.wpilib.json", //9
-                                "paths/4_Ball_ii.wpilib.json", //10
-
-                                "paths/4_BallE_i.wpilib.json", //11 
-                                "paths/4_BallE_ii.wpilib.json", //12
-
-                                "paths/4_BallTerm_i.wpilib.json", //13
-                                "paths/4_BallTerm_ii.wpilib.json", //14
-
-                                "paths/5_Ball_i.wpilib.json", //15
-                                "paths/5_Ball_ii.wpilib.json", //16 
-                                "paths/5_Ball_iii.wpilib.json", //17
-                                "paths/5_Ball_iv.wpilib.json", //18
-
-                                "paths/leaveTerm_i.wpilib.json", //19
-                                "paths/leaveTerm_ii.wpilib.json", //20
-
-                                "paths/4_BallTerm_iii.wpilib.json",
-                                "paths/4_BallTerm_iv.wpilib.json"
-                                };
-=======
     private String[] trajJson = Filesystem.getDeployDirectory().toPath().resolve("paths").toFile().list();
->>>>>>> 78bbc7e84fdcc48a88303c556a91036af29791bf
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
     private SequentialCommandGroup extendIntakeAndReverse;
