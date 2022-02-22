@@ -8,7 +8,7 @@ public class CmdExtendIntake extends WaitCommand {
     private Intake m_intake;
 
     public CmdExtendIntake(Intake intake) {
-        super(0.1);
+        super(0.125);
         m_intake = intake;
 
         addRequirements(intake);
@@ -16,12 +16,7 @@ public class CmdExtendIntake extends WaitCommand {
 
     @Override
     public void initialize() {
-        if (m_intake.getSolenoid().equals("kReverse")) {
-            m_intake.runIntakeBack();
-        }
-        if (m_intake.getSolenoid().equals("kForward")) {
-            m_intake.runIntake();
-        }
+        m_intake.runIntakeBack();
 
         m_intake.ejectIntake();
     }
