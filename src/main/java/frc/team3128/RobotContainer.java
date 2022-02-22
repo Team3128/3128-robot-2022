@@ -64,6 +64,7 @@ public class RobotContainer {
     private Command auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_4BallE, auto_4BallTerm, auto_5Ball;
 
     private boolean DEBUG = true;
+    private boolean driveHalfSpeed = false;
 
     public RobotContainer() {
         
@@ -86,7 +87,7 @@ public class RobotContainer {
                                                         VisionConstants.BALL_LL_HEIGHT, 
                                                         VisionConstants.BALL_LL_FRONT_DIST, 0);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
 
@@ -127,7 +128,7 @@ public class RobotContainer {
 
         //RIGHT
         m_rightStick.getButton(1).whenPressed(shootCommand)
-                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot,m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
+                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)/*, new InstantCommand(m_shooterLimelight::turnLEDOff)*/));
 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun(m_intake, m_hopper));
         
@@ -147,6 +148,8 @@ public class RobotContainer {
         m_rightStick.getButton(8).whenHeld(extendIntakeAndReverse);
  
         //LEFT
+
+        m_leftStick.getButton(1).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
@@ -197,7 +200,6 @@ public class RobotContainer {
                         new InstantCommand(m_shooterLimelight::turnLEDOn),
                         new CmdRetractHopper(m_hopper), 
                         new ParallelCommandGroup(
-                            new InstantCommand(m_shooterLimelight::turnLEDOn),
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
                             new CmdShootDist(m_shooter, m_shooterLimelight)
@@ -217,6 +219,7 @@ public class RobotContainer {
         lowerHubShoot = new SequentialCommandGroup(
                             new CmdRetractHopper(m_hopper),
                             new ParallelCommandGroup(
+                                new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                                 new CmdShootRPM(m_shooter, 1275))
         );
@@ -483,6 +486,7 @@ public class RobotContainer {
       
         for (Limelight ll : limelightList) {
             NarwhalDashboard.addLimelight(ll);
+            ll.turnLEDOff();
         }
     }
 
@@ -490,8 +494,8 @@ public class RobotContainer {
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 4);
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT) - 4);
+        NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
         SmartDashboard.putNumber("ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2));
 
         SmartDashboard.putBoolean("Shooter is ready", m_shooter.isReady());
@@ -500,6 +504,8 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
 
         SmartDashboard.putString("Intake state:", m_intake.getSolenoid());
+
+        SmartDashboard.putString("Drive half speed", String.valueOf(driveHalfSpeed));
     }
 
     public Command getAutonomousCommand() {
@@ -515,12 +521,17 @@ public class RobotContainer {
         initialPoses.put(auto_4BallTerm, trajectory[13].getInitialPose());
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
 
+        Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        // m_drive.resetPose(initialPoses.get(NarwhalDashboard.getSelectedAuto()));
-        // return NarwhalDashboard.getSelectedAuto();
+        if (dashboardSelectedAuto == null) {
+            return null;
+        }
 
-        m_drive.resetPose(trajectory[13].getInitialPose());
-        return auto_4BallTerm;
+        m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
+        return dashboardSelectedAuto;
+
+        // m_drive.resetPose(trajectory[13].getInitialPose());
+        // return auto_4BallTerm;
 
     }
 

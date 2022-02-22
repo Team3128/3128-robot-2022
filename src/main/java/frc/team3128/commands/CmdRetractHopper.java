@@ -1,8 +1,6 @@
 package frc.team3128.commands;
 import frc.team3128.subsystems.Hopper;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class CmdRetractHopper extends CommandBase {

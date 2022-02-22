@@ -32,7 +32,7 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = 0.55;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.70;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 0.5; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         // Drive characterization - taken from Speedy Gonzales
@@ -142,7 +142,7 @@ public class Constants {
 
         public static final int HOPPER_DIO_PIN1 = 8;
         public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -512; //set distance
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -22000; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this

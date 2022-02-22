@@ -52,7 +52,7 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     private static Field2d field;
     
-    private SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.ARCADE_DRIVE_RATE_LIMIT);
+    // private SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.ARCADE_DRIVE_RATE_LIMIT);
 
     public NAR_Drivetrain(){
 
@@ -175,7 +175,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double x, double y) {
-        robotDrive.arcadeDrive(filter.calculate(x), y, false);
+        robotDrive.arcadeDrive(x, y, false);
     }
 
     public void stop() {
