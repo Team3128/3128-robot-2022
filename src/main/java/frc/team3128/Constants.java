@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 
-// CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Speedy G)
+// CURRENTLY CONFIGURED FOR 4 FALCON DRIVE (Compbot)
 
 public class Constants {
 
@@ -32,7 +32,7 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.70;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 0.5; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         // Drive characterization - taken from Speedy Gonzales
@@ -52,8 +52,8 @@ public class Constants {
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
-        public static final double MAX_DRIVE_VELOCITY = 2; // m/s - Real value ~5
-        public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
+        public static final double MAX_DRIVE_VELOCITY = 5; // m/s - Real value ~5
+        public static final double MAX_DRIVE_ACCELERATION = 3; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
         //Ramsete constants
@@ -81,9 +81,9 @@ public class Constants {
         public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
-        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 14;
+        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
         public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 2;
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 13;
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 5;
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -137,12 +137,12 @@ public class Constants {
         public static final int BOTTOM_SENSOR_ID = 12;
         public static final int TOP_SENSOR_ID = 13;
 
-        public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
-        public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+        //public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
+        //public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
 
         public static final int HOPPER_DIO_PIN1 = 8;
         public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -512; //set distance
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -22000; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
@@ -152,8 +152,8 @@ public class Constants {
     public static class IntakeConstants {
 
         public static final int INTAKE_MOTOR_ID = 7; 
-        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 12;
-        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 4;
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 4;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
         public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
 

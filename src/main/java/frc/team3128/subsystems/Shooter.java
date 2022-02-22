@@ -160,10 +160,10 @@ public class Shooter extends NAR_PIDSubsystem {
         double percentOutput = voltageOutput/voltage;
 
         time = RobotController.getFPGATime() / 1e6;
-        // if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
-        //     thresholdPercent += ((time - preTime) * ((ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT)) / ShooterConstants.TIME_TO_MAX_THRESHOLD);
-        //     getController().setTolerance(thresholdPercent * setpoint);
-        // } TODO: this thresholding could be added back
+        if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
+            thresholdPercent += ((time - preTime) * ((ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT)) / ShooterConstants.TIME_TO_MAX_THRESHOLD);
+            getController().setTolerance(thresholdPercent * setpoint);
+        }
 
         checkPlateau(setpoint, ShooterConstants.RPM_THRESHOLD_PERCENT);
 

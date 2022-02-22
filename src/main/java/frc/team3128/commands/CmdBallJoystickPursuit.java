@@ -21,7 +21,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
     private NAR_Drivetrain m_drivetrain;
     private Limelight ballLimelight;
 
-    private double powerMult = 0.7;
+    private double powerMult = 0.5;
 
     private double previousVerticalAngle;
     private double approxDistance;

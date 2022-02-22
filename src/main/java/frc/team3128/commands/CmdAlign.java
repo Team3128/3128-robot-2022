@@ -48,7 +48,7 @@ public class CmdAlign extends CommandBase {
 
     @Override
     public void initialize() {
-        m_limelight.setLEDMode(LEDMode.ON);
+        // m_limelight.setLEDMode(LEDMode.ON);
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
     }
