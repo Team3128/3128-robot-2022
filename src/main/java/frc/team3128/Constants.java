@@ -34,7 +34,6 @@ public class Constants {
 
         public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 0.5; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
-        public static final double PSEUDO_GEARSHIFT_MULT = 0.5; //multiplier for throttle when in weird pseudo gearshift mode
 
         // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
