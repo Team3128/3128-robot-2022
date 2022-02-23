@@ -80,10 +80,10 @@ public class Constants {
         public static final int CLIMBER_MOTOR_LEFT_ID = 6;
         public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 
-        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 1;
+        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 2; 
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 2;
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 5;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0;
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7;
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -96,10 +96,11 @@ public class Constants {
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
-        public static final double CLIMBER_POWER = -0.6;
+        public static final double CLIMBER_POWER = 0.6;
 
-        public static final double CLIMB_ENC_DIAG_EXTENSION = -7850; //-7379
-        public static final double CLIMB_ENC_TO_TOP = -7825;
+        public static final double CLIMB_ENC_DIAG_EXTENSION = 6045;//same as diag extension rn // old-7850; //-7379
+        public static final double CLIMB_ENC_TO_TOP = 6045; // old -7825;
+        public static final double TOLERANCE_TICKS = 100;
 
     }
 

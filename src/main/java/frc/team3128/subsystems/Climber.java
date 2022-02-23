@@ -54,6 +54,8 @@ public class Climber extends SubsystemBase {
         m_rightMotor.follow(m_leftMotor, true);
         
         m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_rightMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+
     }
 
     private void configSensors() {
@@ -74,13 +76,13 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
 
-        if (getLeftSwitch()) {
+        if (getLeftSwitch() || getRightSwitch()) {
             //if state is retracted and encoder count is closer to top encoder count
-            if (getState() == ClimberState.RETRACTED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
+            if (getState() == ClimberState.RETRACTED && getCurrentTicksLeft() > ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
                 setState(ClimberState.EXTENDED);
             }
             //if state is extended and encoder count is closer to zero
-            else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() > ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
+            else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
                 setState(ClimberState.RETRACTED);
                 resetLeftEncoder();
             }
@@ -92,6 +94,9 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putBoolean("Climber left limit switch", getLeftSwitch());
         SmartDashboard.putBoolean("Climber right limit switch", getRightSwitch());
         SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
+        SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
+        SmartDashboard.putString("Climber friction brake piston", m_climberBreakSolenoid.get().toString());
+
 
     }
 

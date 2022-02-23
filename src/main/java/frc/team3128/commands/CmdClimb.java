@@ -11,11 +11,11 @@ public class CmdClimb extends SequentialCommandGroup{
     public CmdClimb(Climber m_climber){
         addCommands(
             //Climber is manually fully retracted on Mid Bar
-            new CmdClimbEncoder(m_climber, 560),
+            new CmdClimbEncoder(m_climber, -210),
 
             new WaitCommand(2),
             //elev extend a wee bit
-            new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+            new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
            
             new WaitCommand(2),
 
@@ -32,7 +32,7 @@ public class CmdClimb extends SequentialCommandGroup{
             //piston retract
             new InstantCommand(() -> m_climber.retractPiston()),
             
-            new WaitCommand(0.5),
+            new WaitCommand(1),
 
             //elev retract
             new CmdClimbEncoder(m_climber, 0)
