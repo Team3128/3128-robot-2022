@@ -20,15 +20,20 @@ public class Shooter extends NAR_PIDSubsystem {
     
     public enum ShooterState {
 
-        OFF(0),
-        LAUNCHPAD(3300),
-        UPPERHUB(0),
-        LOWERHUB(1250);
+        OFF(0, 0, 0, 0),
+        UPPERHUB(0, ShooterConstants.HIGH_kP, ShooterConstants.HIGH_kI, ShooterConstants.HIGH_kD),
+        LOWERHUB(1250, ShooterConstants.LOW_kP, ShooterConstants.LOW_kI, ShooterConstants.LOW_kD);
 
         public double shooterRPM;
+        public double kP;
+        public double kI;
+        public double kD;
 
-        private ShooterState(double RPM) {
+        private ShooterState(double RPM, double kP, double kI, double kD) {
             this.shooterRPM = RPM;
+            this.kP = kP;
+            this.kI = kI;
+            this.kD = kD;
         }
 
     }
@@ -49,7 +54,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
 
     public Shooter() {
-        super(new PIDController(ShooterConstants.SHOOTER_PID_kP, ShooterConstants.SHOOTER_PID_kI, ShooterConstants.SHOOTER_PID_kD), ShooterConstants.PLATEAU_COUNT);
+        super(new PIDController(ShooterConstants.LOW_kP, ShooterConstants.LOW_kI, ShooterConstants.LOW_kD), ShooterConstants.PLATEAU_COUNT);
     
         configMotors();
 
@@ -87,6 +92,8 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     public void setState(ShooterState state) {
         this.shooterState = state;
+        
+        m_controller.setPID(shooterState.kP, shooterState.kI, shooterState.kD);
     }
 
     /**

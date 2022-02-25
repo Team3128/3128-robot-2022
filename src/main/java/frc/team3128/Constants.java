@@ -48,7 +48,7 @@ public class Constants {
 
         public static final double kS = 0.73678;
         public static final double kV = 2.0983;
-        public static final double kA = 0.317; // watch out for this number - pretty high
+        public static final double kA = 0.317;
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
@@ -109,12 +109,16 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double SHOOTER_PID_kP = 0; //1.24e-6;//0.21576; // 1.24e-3;
-        public static final double SHOOTER_PID_kI = 0;
-        public static final double SHOOTER_PID_kD = 0;
+        public static final double LOW_kP = 0; //1.24e-6;//0.21576; // 1.24e-3;
+        public static final double LOW_kI = 0;
+        public static final double LOW_kD = 0;
+
+        public static final double HIGH_kP = 0;
+        public static final double HIGH_kI = 0;
+        public static final double HIGH_kD = 0;
 
         public static final double SHOOTER_KS = 0.2; // 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.10714 / 60; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double SHOOTER_KV = 0.0017857; // 0.00163; //Velocity gain in PID Feed Forward
         public static final double SHOOTER_KA = 0.0053359; // 0.0349; //Acceleration gain PID Feed Forward
 
         public static final int PLATEAU_COUNT = 1;
