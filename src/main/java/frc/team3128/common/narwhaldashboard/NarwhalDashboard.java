@@ -1,9 +1,11 @@
 package frc.team3128.common.narwhaldashboard;
 
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -12,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import frc.team3128.common.utility.Log;
+import frc.team3128.ConstantsInt;
 import frc.team3128.common.hardware.limelight.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +38,7 @@ public class NarwhalDashboard extends WebSocketServer {
     private static String selectedAuto = null;
     private static String selectedLimelight = null;
     private static boolean pushed = false;
+    private static volatile boolean constantsChanged = true;
 
     public NarwhalDashboard(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -159,6 +163,33 @@ public class NarwhalDashboard extends WebSocketServer {
                 if(selectedLimelight != null) {
                     obj.put("selected_pipeline", limelights.get(selectedLimelight).getSelectedPipeline());
                 }
+
+
+                if(constantsChanged) {
+                JSONArray constantsArr = new JSONArray();
+                for(String category : ConstantsInt.categories.keySet()) {
+                    JSONArray catArr = new JSONArray();
+                    List<Field> fields = ConstantsInt.getConstantInfo(category);
+                    for(Field field : fields) {
+                        try {
+                        Object value = field.get(null);
+                        JSONObject newConstant = new JSONObject();
+                        newConstant.put("name", field.getName());
+                        newConstant.put("value", value);
+                        
+                        String fieldType = field.getType().toString();
+                        newConstant.put("type", fieldType.substring(fieldType.indexOf(".")+1));
+
+                        catArr.add(newConstant);
+                        }
+                        catch(IllegalAccessException e) {
+                            continue;
+                        }
+                    }       
+                }
+                constantsChanged = false;
+                }
+
                 if(!pushed) {
                     JSONArray autoProgramArr = new JSONArray();
                     for (String autoName : autoPrograms.keySet()) {
@@ -271,7 +302,14 @@ public class NarwhalDashboard extends WebSocketServer {
                 else {
                     Log.info("NarwhalDashboard", "Unable to Parse Pipeline Change Request from Dashboard");
                 }
-        } else {
+        }
+        else if(parts[0].equals("changeconstant")) {
+            String category = parts[1];
+            String name = parts[2];
+            String value = parts[3];
+            ConstantsInt.updateConstant(category, name, value);
+        }
+        else {
             Log.info("NarwhalDashboard", "Message recieved: " + message);
         }
         
