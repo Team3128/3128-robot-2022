@@ -26,6 +26,7 @@ import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
+import frc.team3128.subsystems.Shooter.ShooterState;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -199,6 +200,7 @@ public class RobotContainer {
         shootCommand = new SequentialCommandGroup(
                         new InstantCommand(m_shooterLimelight::turnLEDOn),
                         new CmdRetractHopper(m_hopper), 
+                        new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                         new ParallelCommandGroup(
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
@@ -210,6 +212,7 @@ public class RobotContainer {
         manualShoot = new SequentialCommandGroup(
                         new InstantCommand(m_shooterLimelight::turnLEDOn), 
                         new CmdRetractHopper(m_hopper),
+                        new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                         new ParallelCommandGroup(
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
                             new CmdShootDist(m_shooter, m_shooterLimelight)
@@ -218,6 +221,7 @@ public class RobotContainer {
 
         lowerHubShoot = new SequentialCommandGroup(
                             new CmdRetractHopper(m_hopper),
+                            new InstantCommand(() -> m_shooter.setState(ShooterState.LOWERHUB)),
                             new ParallelCommandGroup(
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
@@ -458,6 +462,7 @@ public class RobotContainer {
     private SequentialCommandGroup retractHopperAndShootCmd(int RPM) {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
