@@ -34,6 +34,7 @@ public class Intake extends SubsystemBase {
     }
     private void configPneumatics() {
         m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.INTAKE_SOLENOID_FORWARD_CHANNEL_ID, IntakeConstants.INTAKE_SOLENOID_BACKWARD_CHANNEL_ID);
+        retractIntake();
     }
 
     public void runIntake(){

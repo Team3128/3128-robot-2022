@@ -110,6 +110,10 @@ public class NarwhalDashboard extends WebSocketServer {
         return autoPrograms.get(selectedAuto);
     }
 
+    public static void setSelectedLimelight(Limelight ll){
+        selectedLimelight = ll.hostname;
+    }
+
     /**
      * Starts the NarwhalDashboard server. This opens it up to be able to be
      * connected to by client devices (the DS Laptop, a tablet controller, etc) and

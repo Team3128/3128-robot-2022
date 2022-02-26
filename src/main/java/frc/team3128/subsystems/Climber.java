@@ -71,6 +71,9 @@ public class Climber extends SubsystemBase {
         m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
+
+        retractPiston();
+        disengageBreak();
     }
 
     @Override
@@ -84,7 +87,7 @@ public class Climber extends SubsystemBase {
             //if state is extended and encoder count is closer to zero
             else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
                 setState(ClimberState.RETRACTED);
-                resetLeftEncoder();
+                //resetLeftEncoder();
             }
         }
         

@@ -96,11 +96,11 @@ public class Constants {
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
-        public static final double CLIMBER_POWER = 0.6;
+        public static final double CLIMBER_POWER = 0.9;
 
-        public static final double CLIMB_ENC_DIAG_EXTENSION = 6045;//same as diag extension rn // old-7850; //-7379
-        public static final double CLIMB_ENC_TO_TOP = 6045; // old -7825;
-        public static final double TOLERANCE_TICKS = 100;
+        public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
+        public static final double CLIMB_ENC_TO_TOP = 6300; // old -7825;
+        public static final double TOLERANCE_TICKS = 50;
 
     }
 

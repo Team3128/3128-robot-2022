@@ -169,7 +169,7 @@ public class RobotContainer {
 
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
         m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
-        m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, 0));
+        m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
     }
 
@@ -436,7 +436,7 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("3 Ball Hershey Kiss", auto_3BallHersheyKiss);
         NarwhalDashboard.addAuto("4 Ball E", auto_4BallE);
         NarwhalDashboard.addAuto("4 Ball Terminal", auto_4BallTerm);
-        NarwhalDashboard.addAuto("5 Ball ??????", auto_5Ball);
+        NarwhalDashboard.addAuto("5 Ball", auto_5Ball);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
@@ -473,6 +473,8 @@ public class RobotContainer {
             SmartDashboard.putData("Hopper", m_hopper);
             SmartDashboard.putData("Shooter", m_shooter);
         }
+
+        NarwhalDashboard.setSelectedLimelight(m_ballLimelight);
 
         NarwhalDashboard.startServer();       
     }
@@ -533,6 +535,12 @@ public class RobotContainer {
         // m_drive.resetPose(trajectory[13].getInitialPose());
         // return auto_4BallTerm;
 
+    }
+
+    public void initPneumatics() {
+        m_climber.retractPiston();
+        m_climber.disengageBreak();
+        m_intake.retractIntake();
     }
 
 }
