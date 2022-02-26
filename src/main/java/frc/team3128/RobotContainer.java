@@ -147,6 +147,38 @@ public class RobotContainer {
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(m_climber, 0));
 
         m_rightStick.getButton(8).whenHeld(extendIntakeAndReverse);
+
+        m_rightStick.getButton(13).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 3000))));
+
+        m_rightStick.getButton(12).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 4000))));
+               
+        m_rightStick.getButton(14).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 5000))));
+
+        m_rightStick.getButton(15).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 5500))));
  
         //LEFT
 
@@ -225,7 +257,7 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1275))
+                                new CmdShootRPM(m_shooter, 1032))
         );
 
 
@@ -476,7 +508,7 @@ public class RobotContainer {
             SmartDashboard.putData("Drivetrain", m_drive);
             SmartDashboard.putData("Intake", m_intake);
             SmartDashboard.putData("Hopper", m_hopper);
-            SmartDashboard.putData("Shooter", m_shooter);
+            SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
         }
 
         NarwhalDashboard.setSelectedLimelight(m_ballLimelight);
