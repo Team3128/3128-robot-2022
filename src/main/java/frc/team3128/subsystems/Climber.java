@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.ClimberConstants;
 import frc.team3128.Constants.ConversionConstants;
-import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
-import frc.team3128.common.infrastructure.NAR_EMotor;
+import frc.team3128.hardware.motorcontroller.NAR_CANSparkMax;
+import frc.team3128.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class Climber extends SubsystemBase {

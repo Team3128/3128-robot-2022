@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.DriveConstants;
-import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
+import frc.team3128.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.infrastructure.NAR_EMotor;
 
 public class NAR_Drivetrain extends SubsystemBase {
 
