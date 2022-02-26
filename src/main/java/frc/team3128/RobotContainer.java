@@ -169,7 +169,7 @@ public class RobotContainer {
 
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
         m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
-        m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, 0));
+        m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
     }
 
@@ -533,6 +533,12 @@ public class RobotContainer {
         // m_drive.resetPose(trajectory[13].getInitialPose());
         // return auto_4BallTerm;
 
+    }
+
+    public void initPneumatics() {
+        m_climber.retractPiston();
+        m_climber.disengageBreak();
+        m_intake.retractIntake();
     }
 
 }
