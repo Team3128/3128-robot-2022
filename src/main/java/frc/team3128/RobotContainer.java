@@ -436,7 +436,7 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("3 Ball Hershey Kiss", auto_3BallHersheyKiss);
         NarwhalDashboard.addAuto("4 Ball E", auto_4BallE);
         NarwhalDashboard.addAuto("4 Ball Terminal", auto_4BallTerm);
-        NarwhalDashboard.addAuto("5 Ball ??????", auto_5Ball);
+        NarwhalDashboard.addAuto("5 Ball", auto_5Ball);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
@@ -474,6 +474,7 @@ public class RobotContainer {
             SmartDashboard.putData("Shooter", m_shooter);
         }
 
+        NarwhalDashboard.setSelectedLimelight(m_ballLimelight);
         NarwhalDashboard.startServer();       
     }
 
