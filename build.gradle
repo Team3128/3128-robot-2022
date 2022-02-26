@@ -76,8 +76,6 @@ dependencies {
 
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation 'net.thefletcher:SparkMaxSim-java:2022.1.1'
-
-    implementation project(":common")
 }
 
 // Simulation configuration (e.g. environment variables).
