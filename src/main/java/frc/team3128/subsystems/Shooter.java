@@ -94,6 +94,12 @@ public class Shooter extends NAR_PIDSubsystem {
         this.shooterState = state;
         
         m_controller.setPID(shooterState.kP, shooterState.kI, shooterState.kD);
+        Log.info("Shooter", "Set state to " + state.toString());
+        Log.info("Shooter", "Set kP to " + state.kP.toString());
+        Log.info("Shooter", "Set kI to " + state.kI.toString());
+        Log.info("Shooter", "Set kD to " + state.kD.toString());
+
+        
     }
 
     /**
