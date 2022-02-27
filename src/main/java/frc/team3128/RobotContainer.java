@@ -175,6 +175,8 @@ public class RobotContainer {
 
         m_rightStick.getButton(8).whenHeld(extendIntakeAndReverse);
 
+        m_rightStick.getButton(10).whenHeld(new InstantCommand(m_climber::bothStop, m_climber));
+
         m_rightStick.getButton(13).whenHeld(new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
@@ -235,6 +237,8 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
         m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
+
+
 
     }
 
@@ -357,7 +361,7 @@ public class RobotContainer {
         auto_3BallHersheyKiss = new SequentialCommandGroup(
             
                             //shoot preload
-                            retractHopperAndShootCmd(3000),
+                            retractHopperAndShootCmd(3500),
                             
                             //pick up two balls
                             new ParallelDeadlineGroup(
@@ -370,7 +374,7 @@ public class RobotContainer {
                             ),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3350)
+                            retractHopperAndShootCmdLL(3550)
         );
         
         auto_3BallTerminal = new SequentialCommandGroup(
@@ -539,7 +543,21 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
-            ).withTimeout(2)
+            ).withTimeout(3)
+        );
+    }
+
+    private SequentialCommandGroup retractHopperAndShootCmdLL(int RPM) {
+        return new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper).withTimeout(0.5),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new InstantCommand(m_shooterLimelight::turnLEDOn),
+            new ParallelCommandGroup(
+                new CmdAlign(m_drive, m_shooterLimelight),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, RPM)
+            ).withTimeout(3),
+            new InstantCommand(m_shooterLimelight::turnLEDOff)
         );
     }
 
@@ -577,6 +595,7 @@ public class RobotContainer {
         NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
         SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
         SmartDashboard.putNumber("ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2));
+        SmartDashboard.putNumber("adjusted ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 5) * (2/3));
 
         SmartDashboard.putBoolean("Shooter is ready", m_shooter.isReady());
         SmartDashboard.putString("Shooter state", m_shooter.getState().toString());
@@ -610,8 +629,8 @@ public class RobotContainer {
         // m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
         // return dashboardSelectedAuto;
 
-        m_drive.resetPose(trajectory[13].getInitialPose());
-        return auto_4BallTerm;
+        m_drive.resetPose(trajectory[5].getInitialPose());
+        return auto_3BallHersheyKiss;
 
     }
 
