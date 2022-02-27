@@ -52,8 +52,8 @@ public class Constants {
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
-        public static final double MAX_DRIVE_VELOCITY = 5; // m/s - Real value ~5
-        public static final double MAX_DRIVE_ACCELERATION = 3; // m/s^2 - I don't know what this number is
+        public static final double MAX_DRIVE_VELOCITY = 2; // m/s - Real value ~5
+        public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
         //Ramsete constants
@@ -97,10 +97,11 @@ public class Constants {
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.9;
+        public static final double MANUAL_POWER = 0.4;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
         public static final double CLIMB_ENC_TO_TOP = 6300; // old -7825;
-        public static final double TOLERANCE_TICKS = 50;
+        public static final double TOLERANCE_TICKS = 100;
 
     }
 

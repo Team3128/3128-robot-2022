@@ -113,6 +113,16 @@ public class Climber extends SubsystemBase {
         m_leftMotor.set(-ClimberConstants.CLIMBER_POWER);
     }
 
+    public void bothManualExtend() {
+        m_rightMotor.set(ClimberConstants.MANUAL_POWER);
+        m_leftMotor.set(ClimberConstants.MANUAL_POWER);
+    }
+
+    public void bothManualRetract() {
+        m_rightMotor.set(-ClimberConstants.MANUAL_POWER);
+        m_leftMotor.set(-ClimberConstants.MANUAL_POWER);
+    }
+
     public void bothStop() {
         m_rightMotor.set(0);
         m_leftMotor.set(0);
