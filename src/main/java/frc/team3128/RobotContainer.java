@@ -27,7 +27,6 @@ import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
 import frc.team3128.subsystems.Shooter.ShooterState;
-import frc.team3128.ConstantsInt;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -69,7 +68,7 @@ public class RobotContainer {
     private boolean driveHalfSpeed = false;
 
     public RobotContainer() {
-        ConstantsInt.initTempConstants();
+        
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
         m_intake = Intake.getInstance();
