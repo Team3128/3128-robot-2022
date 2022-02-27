@@ -17,7 +17,6 @@ public class CmdExtendIntake extends WaitCommand {
     @Override
     public void initialize() {
         super.initialize();
-
         m_intake.runIntakeBack();
 
         m_intake.ejectIntake();

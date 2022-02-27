@@ -1,5 +1,6 @@
 package frc.team3128;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -51,7 +52,33 @@ public class RobotContainer {
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
-    private String[] trajJson = Filesystem.getDeployDirectory().toPath().resolve("paths").toFile().list();
+    // private String[] trajJson = Filesystem.getDeployDirectory().toPath().resolve("paths").toFile().list();
+    // private String[] trajJson = (new File(Filesystem.getLaunchDirectory(), "src" + File.separator + "main" + File.separator + "deploy")).list();
+    private String[] trajJson = {
+        "2_BallBot_i.wpilib.json", // 0
+        "2_BallMid_i.wpilib.json",
+        "2_BallTop_i.wpilib.json", // 2
+        "3_Ball_i.wpilib.json",
+        "3_Ball_ii.wpilib.json", // 4
+        "3_BallHK_i.wpilib.json",
+        "3_BallHK_ii.wpilib.json", // 6
+        "3_BallTerm_i.wpilib.json",
+        "3_BallTerm_ii.wpilib.json", // 8
+        "4_Ball_i.wpilib.json",
+        "4_Ball_ii.wpilib.json", // 10
+        "4_BallE_i.wpilib.json",
+        "4_BallE_ii.wpilib.json", // 12
+        "4_BallTerm_i.wpilib.json",
+        "4_BallTerm_ii.wpilib.json", // 14
+        "4_BallTerm_iii.wpilib.json",
+        "4_BallTerm_iv.wpilib.json", // 16
+        "5_Ball_i.wpilib.json",
+        "5_Ball_ii.wpilib.json", // 18
+        "5_Ball_iii.wpilib.json",
+        "5_Ball_iv.wpilib.json", // 20
+        "leaveTerm_i.wpilib.json",
+        "leaveTerm_ii.wpilib.json"
+    };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
     private SequentialCommandGroup extendIntakeAndReverse;
@@ -147,6 +174,38 @@ public class RobotContainer {
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(m_climber, 0));
 
         m_rightStick.getButton(8).whenHeld(extendIntakeAndReverse);
+
+        m_rightStick.getButton(13).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 3000))));
+
+        m_rightStick.getButton(12).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 4000))));
+               
+        m_rightStick.getButton(14).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 5000))));
+
+        m_rightStick.getButton(15).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new RunCommand(m_drive::stop, m_drive),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 5500))));
  
         //LEFT
 
@@ -156,6 +215,11 @@ public class RobotContainer {
 
         m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
 
+        m_leftStick.getButton(7).whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_leftStick.getButton(8).whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
         m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
@@ -177,13 +241,14 @@ public class RobotContainer {
 
     private void initAutos() {
 
-        Arrays.sort(trajJson);
+        // Arrays.sort(trajJson);
 
         try {
             for (int i = 0; i < trajJson.length; i++) {
                 // Get a path from the string specified in trajJson, and load it into trajectory[i]
                 Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(trajJson[i]);
                 trajectory[i] = TrajectoryUtil.fromPathweaverJson(path);
+                Log.info("InitAutos", "Trajectory" + i + " = path" + path.toString());
             }
         } catch (IOException ex) {
             DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
@@ -225,7 +290,7 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1275))
+                                new CmdShootRPM(m_shooter, 1032))
         );
 
 
@@ -363,15 +428,21 @@ public class RobotContainer {
 
         auto_4BallTerm = new SequentialCommandGroup(
                             //pick up first ball
+
+                            new CmdExtendIntake(m_intake),
+
                             new ParallelDeadlineGroup(
                                 new SequentialCommandGroup(
                                     trajectoryCmd(13),
                                     new InstantCommand(m_drive::stop, m_drive)
                                 ),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                                new CmdIntakeCargo(m_intake, m_hopper)
                             ),
 
-                            retractHopperAndShootCmd(3250),
+                            new CmdRetractHopper(m_hopper),
+
+                            retractHopperAndShootCmd(3750),
+                            new CmdExtendIntake(m_intake),
 
                             new ParallelDeadlineGroup(
                                 new SequentialCommandGroup(
@@ -379,15 +450,17 @@ public class RobotContainer {
                                     new InstantCommand(m_drive::stop, m_drive),
                                     new WaitCommand(0.5)
                                 ),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                                new CmdIntakeCargo(m_intake, m_hopper)
                             ),
 
-                            trajectoryCmd(21),
-                            trajectoryCmd(22),
+                            new CmdRetractHopper(m_hopper),
+
+                            trajectoryCmd(15),
+                            trajectoryCmd(16),
                             new InstantCommand(m_drive::stop, m_drive),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3000)
+                            retractHopperAndShootCmd(3750)
         );
 
         auto_5Ball = new SequentialCommandGroup(
@@ -476,7 +549,7 @@ public class RobotContainer {
             SmartDashboard.putData("Drivetrain", m_drive);
             SmartDashboard.putData("Intake", m_intake);
             SmartDashboard.putData("Hopper", m_hopper);
-            SmartDashboard.putData("Shooter", m_shooter);
+            SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
         }
 
         NarwhalDashboard.setSelectedLimelight(m_ballLimelight);
@@ -528,17 +601,17 @@ public class RobotContainer {
         initialPoses.put(auto_4BallTerm, trajectory[13].getInitialPose());
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
 
-        Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
+        // Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        if (dashboardSelectedAuto == null) {
-            return null;
-        }
+        // if (dashboardSelectedAuto == null) {
+        //     return null;
+        // }
 
-        m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
-        return dashboardSelectedAuto;
+        // m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
+        // return dashboardSelectedAuto;
 
-        // m_drive.resetPose(trajectory[13].getInitialPose());
-        // return auto_4BallTerm;
+        m_drive.resetPose(trajectory[13].getInitialPose());
+        return auto_4BallTerm;
 
     }
 

@@ -20,20 +20,28 @@ public class Shooter extends NAR_PIDSubsystem {
     
     public enum ShooterState {
 
-        OFF(0, 0, 0, 0),
-        UPPERHUB(0, ShooterConstants.HIGH_kP, ShooterConstants.HIGH_kI, ShooterConstants.HIGH_kD),
-        LOWERHUB(1250, ShooterConstants.LOW_kP, ShooterConstants.LOW_kI, ShooterConstants.LOW_kD);
+        OFF(0, 0, 0, 0, 0, 0, 0),
+        UPPERHUB(0, ShooterConstants.HIGH_kP, ShooterConstants.HIGH_kI, ShooterConstants.HIGH_kD, ShooterConstants.HIGH_kS, ShooterConstants.HIGH_kV, ShooterConstants.HIGH_kA),
+        LOWERHUB(1250, ShooterConstants.LOW_kP, ShooterConstants.LOW_kI, ShooterConstants.LOW_kD, ShooterConstants.LOW_kS, ShooterConstants.LOW_kV, ShooterConstants.LOW_kA);
 
         public double shooterRPM;
         public double kP;
         public double kI;
         public double kD;
 
-        private ShooterState(double RPM, double kP, double kI, double kD) {
+        public double kS;
+        public double kV;
+        public double kA;
+
+        private ShooterState(double RPM, double kP, double kI, double kD, double kS, double kV, double kA) {
             this.shooterRPM = RPM;
             this.kP = kP;
             this.kI = kI;
             this.kD = kD;
+
+            this.kS = kS;
+            this.kV = kV;
+            this.kA = kA;
         }
 
     }
@@ -50,7 +58,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private FlywheelSim m_shooterSim;
 
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ShooterConstants.SHOOTER_KS, ShooterConstants.SHOOTER_KV, ShooterConstants.SHOOTER_KA);
+    private SimpleMotorFeedforward lowFF = new SimpleMotorFeedforward(ShooterConstants.LOW_kS, ShooterConstants.LOW_kV, ShooterConstants.LOW_kA);
+    private SimpleMotorFeedforward highFF = new SimpleMotorFeedforward(ShooterConstants.HIGH_kS, ShooterConstants.HIGH_kV, ShooterConstants.HIGH_kA);
 
 
     public Shooter() {
@@ -95,9 +104,9 @@ public class Shooter extends NAR_PIDSubsystem {
         
         m_controller.setPID(shooterState.kP, shooterState.kI, shooterState.kD);
         Log.info("Shooter", "Set state to " + state.toString());
-        Log.info("Shooter", "Set kP to " + state.kP.toString());
-        Log.info("Shooter", "Set kI to " + state.kI.toString());
-        Log.info("Shooter", "Set kD to " + state.kD.toString());
+        Log.info("Shooter", "Set kP to " + String.valueOf(state.kP));
+        Log.info("Shooter", "Set kI to " + String.valueOf(state.kI));
+        Log.info("Shooter", "Set kD to " + String.valueOf(state.kD));
 
         
     }
@@ -168,7 +177,12 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double voltageOutput = output + feedforward.calculate(setpoint); //0.003
+        double ff = 0;
+        if (shooterState == ShooterState.LOWERHUB)
+            ff += lowFF.calculate(setpoint);
+        else if (shooterState == ShooterState.UPPERHUB)
+            ff += highFF.calculate(setpoint);
+        double voltageOutput = output + ff;
         double voltage = RobotController.getBatteryVoltage();
         double percentOutput = voltageOutput/voltage;
 
