@@ -175,7 +175,7 @@ public class RobotContainer {
 
         m_rightStick.getButton(8).whenHeld(extendIntakeAndReverse);
 
-        m_rightStick.getButton(10).whenHeld(new InstantCommand(m_climber::bothStop, m_climber));
+        m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
 
         m_rightStick.getButton(13).whenHeld(new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper),
