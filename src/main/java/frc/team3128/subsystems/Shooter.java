@@ -63,7 +63,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
 
     public Shooter() {
-        super(new PIDController(ShooterConstants.LOW_kP, ShooterConstants.LOW_kI, ShooterConstants.LOW_kD), ShooterConstants.PLATEAU_COUNT);
+        super(new PIDController(ShooterConstants.HIGH_kP, ShooterConstants.HIGH_kI, ShooterConstants.HIGH_kD), ShooterConstants.PLATEAU_COUNT);
     
         configMotors();
 
@@ -226,12 +226,14 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public double calculateMotorVelocityFromDist(double dist) {
-        return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196;
-        // if (dist < 78) {
-        //     return 17.7 * dist + 2187;   
-        // } else {
-        //     return -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
-        // }
+        // return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196;
+        double rpm;
+        if (dist < 78) {
+            rpm = 17.7 * dist + 2187;   
+        } else {
+            rpm = -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
+        }
+        return rpm+100;
     }
 }
 

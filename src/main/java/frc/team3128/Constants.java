@@ -52,7 +52,7 @@ public class Constants {
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
-        public static final double MAX_DRIVE_VELOCITY = 2; // m/s - Real value ~5
+        public static final double MAX_DRIVE_VELOCITY = 1.75; // m/s - Real value ~5
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
@@ -82,8 +82,8 @@ public class Constants {
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 2; 
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0;
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0; //1
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7; //5
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -122,13 +122,13 @@ public class Constants {
         public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
         public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
 
-        public static final double HIGH_kS = 0.2 * 0.925; // 0.711; //Static gain in PID Feed Forward
-        public static final double HIGH_kV = 0.0017857 * 0.97; // 0.00163; //Velocity gain in PID Feed Forward
-        public static final double HIGH_kA = 0.0053359 * 0.99; // 0.0349; //Acceleration gain PID Feed Forward
+        public static final double HIGH_kS = 0.2 ;//* 0.925; // 0.711; //Static gain in PID Feed Forward
+        public static final double HIGH_kV = 0.0017857*1.0 ;//* 0.97; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double HIGH_kA = 0.0053359 ;//* 0.99; // 0.0349; //Acceleration gain PID Feed Forward
 
-        public static final int PLATEAU_COUNT = 3;
+        public static final int PLATEAU_COUNT = 1;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
-        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.1;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
         public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
