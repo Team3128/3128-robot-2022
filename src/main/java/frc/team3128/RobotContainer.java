@@ -211,9 +211,17 @@ public class RobotContainer {
  
         //LEFT
 
-        m_leftStick.getButton(1).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
+        m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new CmdAlign(m_drive, m_shooterLimelight),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootRPM(m_shooter, 3500))));        
 
-        m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
+        m_leftStick.getButton(2).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
+
+        m_leftStick.getButton(3).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
         m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
 
