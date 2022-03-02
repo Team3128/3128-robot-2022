@@ -35,7 +35,8 @@ public class CmdClimb extends SequentialCommandGroup{
             new WaitCommand(1),
 
             //elev retract
-            new CmdClimbEncoder(m_climber, -350)
+            // new CmdClimbEncoder(m_climber, -350)
+            new CmdClimbEncoder(m_climber, 3000) // Aaron number
         );
     }
 
