@@ -118,7 +118,7 @@ public class Constants {
         public static final double HIGH_kI = 0;
         public static final double HIGH_kD = 0; // 5e-4;
 
-        public static final double LOW_kS = 0.2 * 0.9; // 0.711; //Static gain in PID Feed Forward
+        public static final double LOW_kS = 0.2; // 0.711; //Static gain in PID Feed Forward
         public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
         public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
 
@@ -180,14 +180,14 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 0; // 0.001;
+        public static final double VISION_PID_kP = 2.5e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
-        public static final double VISION_PID_kF = 0.1;
+        public static final double VISION_PID_kF = 0.07;
 
         public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 5; //degrees
+        public static final double TX_THRESHOLD = 3; //degrees
         public static final double TX_THRESHOLD_MAX = 10; //degrees
         public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
