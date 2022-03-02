@@ -86,6 +86,7 @@ public class RobotContainer {
     private SequentialCommandGroup manualShoot;
     private SequentialCommandGroup lowerHubShoot;
     private CmdClimb climbCommand;
+    private CmdClimbTraversal climbTraversalCommand;
 
     private HashMap<Command, Pose2d> initialPoses;
 
@@ -167,7 +168,8 @@ public class RobotContainer {
 
         m_rightStick.getButton(4).whenHeld(lowerHubShoot);
 
-        m_rightStick.getButton(5).whenPressed(climbCommand);
+        //m_rightStick.getButton(5).whenPressed(climbCommand);
+        m_rightStick.getButton(5).whenPressed(climbTraversalCommand);
 
         m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
 
@@ -223,12 +225,12 @@ public class RobotContainer {
 
         m_leftStick.getButton(3).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
 
-        m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
+        // m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
 
-        m_leftStick.getButton(7).whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+        m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(8).whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+        m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
         m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
@@ -239,11 +241,11 @@ public class RobotContainer {
 
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
-        m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::engageBreak, m_climber));
-        m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::disengageBreak, m_climber));
+        // m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::engageBreak, m_climber));
+        // m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::disengageBreak, m_climber));
 
-        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
-        m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
+        m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
+        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
 
@@ -269,6 +271,7 @@ public class RobotContainer {
         initialPoses = new HashMap<Command, Pose2d>();
 
         climbCommand = new CmdClimb(m_climber);
+        climbTraversalCommand = new CmdClimbTraversal(m_climber);
         
         extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdReverseIntake(m_intake, m_hopper));
 
