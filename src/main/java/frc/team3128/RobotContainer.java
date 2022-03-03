@@ -253,6 +253,10 @@ public class RobotContainer {
 
     }
 
+    public void init() {
+        initPneumatics();
+        m_shooterLimelight.turnLEDOff();
+    }
 
     private void initAutos() {
 
@@ -583,7 +587,6 @@ public class RobotContainer {
         }
 
         NarwhalDashboard.setSelectedLimelight(m_ballLimelight);
-
         NarwhalDashboard.startServer();       
     }
 
@@ -652,9 +655,6 @@ public class RobotContainer {
         m_intake.retractIntake();
     }
 
-    public void init() {
-        initPneumatics();
-        m_shooterLimelight.turnLEDOff();
-    }
+    
 
 }
