@@ -14,6 +14,11 @@ import edu.wpi.first.math.numbers.N2;
 
 public class Constants {
 
+    public static class MarkConstants {
+        public static final double MARK_WINGSPAN = 1; // in mark wingspans
+        public static final int RATIO = 500;
+    }
+
     public static class ConversionConstants {
 
         public static final double FALCON_ENCODER_RESOLUTION = 2048;
@@ -122,9 +127,9 @@ public class Constants {
         public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
         public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
 
-        public static final double HIGH_kS = 0.2 ;//* 0.925; // 0.711; //Static gain in PID Feed Forward
-        public static final double HIGH_kV = 0.0017857*1.0 ;//* 0.97; // 0.00163; //Velocity gain in PID Feed Forward
-        public static final double HIGH_kA = 0.0053359 ;//* 0.99; // 0.0349; //Acceleration gain PID Feed Forward
+        public static final double HIGH_kS = 0.2;//* 0.925; // 0.711; //Static gain in PID Feed Forward
+        public static final double HIGH_kV = 0.0017857*1.0;//* 0.97; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double HIGH_kA = 0.0053359;//* 0.99; // 0.0349; //Acceleration gain PID Feed Forward
 
         public static final int PLATEAU_COUNT = 1;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;

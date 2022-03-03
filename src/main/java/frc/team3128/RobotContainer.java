@@ -219,7 +219,8 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                new CmdShootRPM(m_shooter, 3500))));        
+                new CmdShootRPM(m_shooter, 4400))))
+        .whenReleased(() -> m_shooterLimelight.turnLEDOff());
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
@@ -649,6 +650,11 @@ public class RobotContainer {
         m_climber.retractPiston();
         m_climber.disengageBreak();
         m_intake.retractIntake();
+    }
+
+    public void init() {
+        initPneumatics();
+        m_shooterLimelight.turnLEDOff();
     }
 
 }

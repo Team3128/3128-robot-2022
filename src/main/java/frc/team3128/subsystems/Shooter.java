@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Robot;
 import frc.team3128.Constants.ConversionConstants;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -225,15 +226,23 @@ public class Shooter extends NAR_PIDSubsystem {
         
     }
 
+    /**
+     * bad
+     * @param dist is bad
+     * @return bad
+     */
     public double calculateMotorVelocityFromDist(double dist) {
-        // return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196;
-        double rpm;
-        if (dist < 78) {
-            rpm = 17.7 * dist + 2187;   
-        } else {
-            rpm = -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
-        }
-        return rpm+100;
+
+        dist += (13 - Robot.voltageRollingAvg) * 7; // i hate this.
+        
+        return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196 + 600; // bad
+        // double rpm;
+        // if (dist < 78) {
+        //     rpm = 17.7 * dist + 2187;   
+        // } else {
+        //     rpm = -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
+        // }
+        // return rpm + 1000;
     }
 }
 
