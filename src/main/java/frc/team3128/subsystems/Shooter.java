@@ -179,20 +179,20 @@ public class Shooter extends NAR_PIDSubsystem {
     protected void useOutput(double output, double setpoint) {
         double ff = 0;
         if (shooterState == ShooterState.LOWERHUB)
-            ff += lowFF.calculate(setpoint);
+            ff = lowFF.calculate(setpoint);
         else if (shooterState == ShooterState.UPPERHUB)
-            ff += highFF.calculate(setpoint);
+            ff = highFF.calculate(setpoint);
         double voltageOutput = output + ff;
         double voltage = RobotController.getBatteryVoltage();
-        double percentOutput = voltageOutput/voltage;
+        double percentOutput = voltageOutput / voltage;
 
         time = RobotController.getFPGATime() / 1e6;
         if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += ((time - preTime) * ((ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT)) / ShooterConstants.TIME_TO_MAX_THRESHOLD);
+            thresholdPercent += (time - preTime) * (ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT) / ShooterConstants.TIME_TO_MAX_THRESHOLD;
             getController().setTolerance(thresholdPercent * setpoint);
         }
 
-        checkPlateau(setpoint, ShooterConstants.RPM_THRESHOLD_PERCENT);
+        checkPlateau(setpoint, thresholdPercent);
 
         percentOutput = MathUtil.clamp(percentOutput, -1, 1);
         percentOutput = (setpoint == 0) ? 0 : percentOutput;
@@ -204,7 +204,7 @@ public class Shooter extends NAR_PIDSubsystem {
         //Log.info("Shooter","RPM: " + getMeasurement());
         //Log.info("Shooter", "setpoint " + setpoint);
         //Log.info("Shooter", "shooterState " + shooterState.shooterRPM);
-        SmartDashboard.putNumber("Shooter Encoder", getMeasurement());
+        // SmartDashboard.putNumber("Shooter Encoder", getMeasurement());
 
         preTime = time;
     }
@@ -226,14 +226,17 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public double calculateMotorVelocityFromDist(double dist) {
-        // return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196;
-        double rpm;
-        if (dist < 78) {
-            rpm = 17.7 * dist + 2187;   
-        } else {
-            rpm = -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
-        }
-        return rpm+100;
+
+        // dist += (13 - Robot.voltageRollingAvg) * 7;
+
+        return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196 + 600;
+        // double rpm;
+        // if (dist < 78) {
+        //     rpm = 17.7 * dist + 2187;   
+        // } else {
+        //     rpm = -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
+        // }
+        // return rpm + 1000;
     }
 }
 

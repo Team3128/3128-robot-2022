@@ -133,6 +133,7 @@ public class NarwhalDashboard extends WebSocketServer {
     }
 
     // Called once on connection with web server
+    @SuppressWarnings("unchecked")
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         Log.info("NarwhalDashboard", conn.getRemoteSocketAddress().getHostName() + " has opened a connection.");
