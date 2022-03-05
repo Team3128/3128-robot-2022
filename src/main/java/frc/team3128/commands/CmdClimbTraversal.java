@@ -15,6 +15,8 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
             new CmdExtendIntake(m_intake),
 
             //Climber is manually fully retracted on Mid Bar
+            new InstantCommand(() -> m_climber.retractPiston()),
+
             new CmdClimbEncoder(m_climber, -350),
 
             new WaitCommand(0.5),
