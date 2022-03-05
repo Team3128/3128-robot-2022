@@ -216,7 +216,7 @@ public class RobotContainer {
         m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new CmdExtendIntake(m_intake),
+            // new CmdExtendIntake(m_intake),
             new ParallelCommandGroup(
                 // new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
@@ -287,9 +287,9 @@ public class RobotContainer {
                         new InstantCommand(m_shooterLimelight::turnLEDOn),
                         new CmdRetractHopper(m_hopper), 
                         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-                        new CmdExtendIntake(m_intake),
+                        // new CmdExtendIntake(m_intake),
                         new ParallelCommandGroup(
-                            new RunCommand(m_intake::runIntake, m_intake),
+                            // new RunCommand(m_intake::runIntake, m_intake),
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
                             new CmdShootDist(m_shooter, m_shooterLimelight)
@@ -310,9 +310,9 @@ public class RobotContainer {
         lowerHubShoot = new SequentialCommandGroup(
                             new CmdRetractHopper(m_hopper),
                             new InstantCommand(() -> m_shooter.setState(ShooterState.LOWERHUB)),
-                            new CmdExtendIntake(m_intake),
+                            // new CmdExtendIntake(m_intake),
                             new ParallelCommandGroup(
-                                new RunCommand(m_intake::runIntake, m_intake),
+                                // new RunCommand(m_intake::runIntake, m_intake),
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                                 new CmdShootRPM(m_shooter, 1200))
@@ -566,9 +566,9 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new CmdExtendIntake(m_intake),
+            // new CmdExtendIntake(m_intake),
             new ParallelCommandGroup(
-                new RunCommand(m_intake::runIntake, m_intake),
+                // new RunCommand(m_intake::runIntake, m_intake),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
             ).withTimeout(3)
@@ -580,9 +580,9 @@ public class RobotContainer {
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(m_shooterLimelight::turnLEDOn),
-            new CmdExtendIntake(m_intake),
+            // new CmdExtendIntake(m_intake),
             new ParallelCommandGroup(
-                new RunCommand(m_intake::runIntake, m_intake),
+                // new RunCommand(m_intake::runIntake, m_intake),
                 new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
