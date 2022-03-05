@@ -132,8 +132,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Buttons...
         // right:
-        // 1 (trigger): shoot upper hub
-        // 2: intake 
+        // 1 (trigger): intake 
+        // 2: shoot upper hub
         // 3: ball pursuit
         // 4: shoot lower hub
         // 5: climb from mid to high
@@ -157,7 +157,7 @@ public class RobotContainer {
 
         //RIGHT
         m_rightStick.getButton(1).whenPressed(shootCommand)
-                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
+                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)/*, new InstantCommand(m_shooterLimelight::turnLEDOff)*/));
 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun(m_intake, m_hopper));
         
@@ -217,7 +217,7 @@ public class RobotContainer {
             new CmdRetractHopper(m_hopper),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
-                // new CmdAlign(m_drive, m_shooterLimelight),
+                new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, 4400))))
         .whenReleased(() -> m_shooterLimelight.turnLEDOff());
@@ -310,7 +310,7 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1200))
+                                new CmdShootRPM(m_shooter, 1032))
         );
 
 
@@ -344,18 +344,13 @@ public class RobotContainer {
         auto_2BallTop = new SequentialCommandGroup(
 
                             //pick up 1 ball
-
-                            new CmdExtendIntake(m_intake),
-
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(2).andThen(m_drive::stop, m_drive),
-                                new CmdIntakeCargo(m_intake, m_hopper)
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
-                            new InstantCommand(() -> m_intake.retractIntake()),
-
                             //shoot first + preloaded
-                            retractHopperAndShootCmd(4000)
+                            retractHopperAndShootCmd(3250)
 
         );
 
@@ -382,7 +377,7 @@ public class RobotContainer {
         auto_3BallHersheyKiss = new SequentialCommandGroup(
             
                             //shoot preload
-                            retractHopperAndShootCmd(3750),
+                            retractHopperAndShootCmd(3500),
                             
                             //pick up two balls
                             new ParallelDeadlineGroup(
@@ -395,13 +390,13 @@ public class RobotContainer {
                             ),
 
                             //shoot two balls
-                            retractHopperAndShootCmdLL(3750)
+                            retractHopperAndShootCmdLL(3550)
         );
         
         auto_3BallTerminal = new SequentialCommandGroup(
 
                             //shoot preloaded ball
-                            retractHopperAndShootCmd(300),
+                            retractHopperAndShootCmd(3000),
 
                             trajectoryCmd(7),
                             new ParallelDeadlineGroup(
@@ -640,17 +635,17 @@ public class RobotContainer {
         initialPoses.put(auto_4BallTerm, trajectory[13].getInitialPose());
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
 
-        Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
+        // Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        if (dashboardSelectedAuto == null) {
-            return null;
-        }
+        // if (dashboardSelectedAuto == null) {
+        //     return null;
+        // }
 
-        m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
-        return dashboardSelectedAuto;
+        // m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
+        // return dashboardSelectedAuto;
 
-        // m_drive.resetPose(trajectory[5].getInitialPose());
-        // return auto_3BallHersheyKiss;
+        m_drive.resetPose(trajectory[5].getInitialPose());
+        return auto_3BallHersheyKiss;
 
     }
 
@@ -659,5 +654,7 @@ public class RobotContainer {
         m_climber.disengageBreak();
         m_intake.retractIntake();
     }
+
+    
 
 }
