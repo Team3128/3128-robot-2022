@@ -276,7 +276,7 @@ public class RobotContainer {
         initialPoses = new HashMap<Command, Pose2d>();
 
         climbCommand = new CmdClimb(m_climber);
-        climbTraversalCommand = new CmdClimbTraversal(m_climber);
+        climbTraversalCommand = new CmdClimbTraversal(m_climber, m_intake);
         
         extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdReverseIntake(m_intake, m_hopper));
 
@@ -401,7 +401,7 @@ public class RobotContainer {
         auto_3BallTerminal = new SequentialCommandGroup(
 
                             //shoot preloaded ball
-                            retractHopperAndShootCmd(300),
+                            retractHopperAndShootCmd(3000),
 
                             trajectoryCmd(7),
                             new ParallelDeadlineGroup(
