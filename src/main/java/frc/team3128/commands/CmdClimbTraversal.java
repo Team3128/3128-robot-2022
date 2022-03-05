@@ -4,15 +4,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.subsystems.Climber;
-import frc.team3128.subsystems.Intake;
 import frc.team3128.Constants.ClimberConstants;
 
 public class CmdClimbTraversal extends SequentialCommandGroup{
 
-    public CmdClimbTraversal(Climber m_climber, Intake m_intake) {
+    public CmdClimbTraversal(Climber m_climber) {
         addCommands(
             
-            new CmdExtendIntake(m_intake),
+            // new CmdExtendIntake(m_intake),
 
             //Climber is manually fully retracted on Mid Bar
             new InstantCommand(() -> m_climber.retractPiston()),
@@ -49,6 +48,8 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
             new WaitCommand(1.75),
             //elev extend a wee bit
             new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+
+            // new CmdExtendIntake(m_intake),
 
             new WaitCommand(0.5),
 
