@@ -211,6 +211,9 @@ public class RobotContainer {
                 new RunCommand(m_drive::stop, m_drive),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, 5500))));
+
+        m_rightStick.getButton(11).whenPressed(new CmdExtendIntake(m_intake));
+        m_rightStick.getButton(16).whenPressed(() -> m_intake.retractIntake());
  
         //LEFT
 
