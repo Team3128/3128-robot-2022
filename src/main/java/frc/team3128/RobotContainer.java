@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.team3128.Constants.*;
+import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
@@ -90,7 +91,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_4BallE, auto_4BallTerm, auto_5Ball;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_4BallE, auto_4BallTerm, auto_5Ball;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -320,6 +321,24 @@ public class RobotContainer {
 
 
         //AUTONOMOUS ROUTINES
+
+        auto_1Ball = new SequentialCommandGroup(
+                            retractHopperAndShootCmdLL(3750),
+
+                            new RamseteCommand(Trajectories.driveBack30In, 
+                            m_drive::getPose,
+                            new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+                            new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+                                                        Constants.DriveConstants.kV,
+                                                        Constants.DriveConstants.kA),
+                            Constants.DriveConstants.DRIVE_KINEMATICS,
+                            m_drive::getWheelSpeeds,
+                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                            m_drive::tankDriveVolts,
+                            m_drive)
+        );
+
         auto_2BallBot = new SequentialCommandGroup(
 
                             //pick up 1 ball
@@ -360,7 +379,7 @@ public class RobotContainer {
                             new InstantCommand(() -> m_intake.retractIntake()),
 
                             //shoot first + preloaded
-                            retractHopperAndShootCmd(3750)
+                            retractHopperAndShootCmdLL(3750)
 
         );
 
@@ -406,7 +425,7 @@ public class RobotContainer {
         auto_3BallTerminal = new SequentialCommandGroup(
 
                             //shoot preloaded ball
-                            retractHopperAndShootCmd(300),
+                            retractHopperAndShootCmd(3000),
 
                             trajectoryCmd(7),
                             new ParallelDeadlineGroup(
@@ -535,6 +554,7 @@ public class RobotContainer {
         );
 
         // Setup auto-selector
+        NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
         NarwhalDashboard.addAuto("2 Ball Bottom", auto_2BallBot);
         NarwhalDashboard.addAuto("2 Ball Mid", auto_2BallMid);
         NarwhalDashboard.addAuto("2 Ball Top", auto_2BallTop);
@@ -639,6 +659,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         
         // I don't understand why putting this in the constructor or initAutos doesn't work, so I put it here and it works (in sim)
+        initialPoses.put(auto_1Ball, Trajectories.driveBack30In.getInitialPose());
         initialPoses.put(auto_2BallBot, trajectory[0].getInitialPose());
         initialPoses.put(auto_2BallMid, trajectory[1].getInitialPose());
         initialPoses.put(auto_2BallTop, trajectory[2].getInitialPose());
