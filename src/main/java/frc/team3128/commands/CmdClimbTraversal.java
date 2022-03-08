@@ -8,15 +8,20 @@ import frc.team3128.Constants.ClimberConstants;
 
 public class CmdClimbTraversal extends SequentialCommandGroup{
 
-    public CmdClimbTraversal(Climber m_climber){
+    public CmdClimbTraversal(Climber m_climber) {
         addCommands(
+            
+            // new CmdExtendIntake(m_intake),
+
             //Climber is manually fully retracted on Mid Bar
+            new InstantCommand(() -> m_climber.retractPiston()),
+
             new CmdClimbEncoder(m_climber, -350),
 
             new WaitCommand(0.5),
             //elev extend a wee bit
             new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
-           
+
             new WaitCommand(0.5),
 
             //piston extend
@@ -43,6 +48,8 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
             new WaitCommand(1.75),
             //elev extend a wee bit
             new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+
+            // new CmdExtendIntake(m_intake),
 
             new WaitCommand(0.5),
 

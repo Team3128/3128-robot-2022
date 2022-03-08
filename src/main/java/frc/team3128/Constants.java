@@ -185,7 +185,7 @@ public class Constants {
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;
 
-        public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
+        public static final double TX_OFFSET = 2.0; // to offset alignment in either direction
 
         public static final double TX_THRESHOLD = 3; //degrees
         public static final double TX_THRESHOLD_MAX = 10; //degrees
