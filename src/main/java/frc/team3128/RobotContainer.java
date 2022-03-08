@@ -319,7 +319,7 @@ public class RobotContainer {
                                 // new RunCommand(m_intake::runIntake, m_intake),
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1200))
+                                new CmdShootRPM(m_shooter, 1100))
         );
 
 
@@ -409,7 +409,7 @@ public class RobotContainer {
         auto_3BallHersheyKiss = new SequentialCommandGroup(
             
                             //shoot preload
-                            retractHopperAndShootCmd(3750),
+                            retractHopperAndShootCmd(3500),
                             
                             //pick up two balls
                             new ParallelDeadlineGroup(
@@ -422,7 +422,7 @@ public class RobotContainer {
                             ),
 
                             //shoot two balls
-                            retractHopperAndShootCmdLL(3750)
+                            retractHopperAndShootCmdLL(3500)
         );
         
         auto_3BallTerminal = new SequentialCommandGroup(
