@@ -54,6 +54,8 @@ public class Climber extends SubsystemBase {
         m_rightMotor.follow(m_leftMotor, true);
         
         m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_rightMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+
     }
 
     private void configSensors() {
@@ -69,20 +71,23 @@ public class Climber extends SubsystemBase {
         m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
+
+        retractPiston();
+        disengageBreak();
     }
 
     @Override
     public void periodic() {
 
-        if (getLeftSwitch()) {
+        if (getLeftSwitch() || getRightSwitch()) {
             //if state is retracted and encoder count is closer to top encoder count
-            if (getState() == ClimberState.RETRACTED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
+            if (getState() == ClimberState.RETRACTED && getCurrentTicksLeft() > ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
                 setState(ClimberState.EXTENDED);
             }
             //if state is extended and encoder count is closer to zero
-            else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() > ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
+            else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
                 setState(ClimberState.RETRACTED);
-                resetLeftEncoder();
+                //resetLeftEncoder();
             }
         }
         
@@ -92,6 +97,9 @@ public class Climber extends SubsystemBase {
         SmartDashboard.putBoolean("Climber left limit switch", getLeftSwitch());
         SmartDashboard.putBoolean("Climber right limit switch", getRightSwitch());
         SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
+        SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
+        SmartDashboard.putString("Climber friction brake piston", m_climberBreakSolenoid.get().toString());
+
 
     }
 
@@ -103,6 +111,16 @@ public class Climber extends SubsystemBase {
     public void bothRetract() {
         m_rightMotor.set(-ClimberConstants.CLIMBER_POWER);
         m_leftMotor.set(-ClimberConstants.CLIMBER_POWER);
+    }
+
+    public void bothManualExtend() {
+        m_rightMotor.set(ClimberConstants.MANUAL_POWER);
+        m_leftMotor.set(ClimberConstants.MANUAL_POWER);
+    }
+
+    public void bothManualRetract() {
+        m_rightMotor.set(-ClimberConstants.MANUAL_POWER);
+        m_leftMotor.set(-ClimberConstants.MANUAL_POWER);
     }
 
     public void bothStop() {

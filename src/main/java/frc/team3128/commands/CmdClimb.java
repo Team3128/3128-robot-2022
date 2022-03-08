@@ -11,13 +11,13 @@ public class CmdClimb extends SequentialCommandGroup{
     public CmdClimb(Climber m_climber){
         addCommands(
             //Climber is manually fully retracted on Mid Bar
-            new CmdClimbEncoder(m_climber, 560),
+            new CmdClimbEncoder(m_climber, -350),
 
-            new WaitCommand(2),
+            new WaitCommand(1),
             //elev extend a wee bit
-            new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+            new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
            
-            new WaitCommand(2),
+            new WaitCommand(1),
 
             //piston extend
             new InstantCommand(() -> m_climber.extendPiston()),
@@ -27,15 +27,16 @@ public class CmdClimb extends SequentialCommandGroup{
             //elev extend
             new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION),
             
-            new WaitCommand(2),
+            new WaitCommand(0.5),
 
             //piston retract
             new InstantCommand(() -> m_climber.retractPiston()),
             
-            new WaitCommand(0.5),
+            new WaitCommand(1),
 
             //elev retract
-            new CmdClimbEncoder(m_climber, 0)
+            // new CmdClimbEncoder(m_climber, -350)
+            new CmdClimbEncoder(m_climber, 3000) // Aaron number
         );
     }
 
