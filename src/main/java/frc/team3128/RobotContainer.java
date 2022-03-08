@@ -44,6 +44,7 @@ public class RobotContainer {
     private Intake m_intake;   
     private Hopper m_hopper;
     private Climber m_climber;
+    private AdjustableShooter m_adjustableShooter; 
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -100,6 +101,7 @@ public class RobotContainer {
         
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
+        m_adjustableShooter = AdjustableShooter.getInstance(); 
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
@@ -119,7 +121,7 @@ public class RobotContainer {
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
-
+         
 
         initAutos();
         initDashboard();
