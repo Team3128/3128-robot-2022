@@ -48,12 +48,12 @@ public class Constants {
 
         public static final double kS = 0.73678;
         public static final double kV = 2.0983;
-        public static final double kA = 0.317; // watch out for this number - pretty high
+        public static final double kA = 0.317;
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
-        public static final double MAX_DRIVE_VELOCITY = 5; // m/s - Real value ~5
-        public static final double MAX_DRIVE_ACCELERATION = 3; // m/s^2 - I don't know what this number is
+        public static final double MAX_DRIVE_VELOCITY = 1.75; // m/s - Real value ~5
+        public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
         //Ramsete constants
@@ -82,8 +82,8 @@ public class Constants {
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 2; 
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0;
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0; //1
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7; //5
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -97,10 +97,11 @@ public class Constants {
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.9;
+        public static final double MANUAL_POWER = 0.4;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
         public static final double CLIMB_ENC_TO_TOP = 6300; // old -7825;
-        public static final double TOLERANCE_TICKS = 50;
+        public static final double TOLERANCE_TICKS = 100;
 
     }
 
@@ -109,23 +110,31 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double SHOOTER_PID_kP = 0; //1.24e-6;//0.21576; // 1.24e-3;
-        public static final double SHOOTER_PID_kI = 0;
-        public static final double SHOOTER_PID_kD = 0;
+        public static final double LOW_kP = 1.8e-3; //1.24e-6;
+        public static final double LOW_kI = 0;
+        public static final double LOW_kD = 5e-5;
 
-        public static final double SHOOTER_KS = 0.2; // 0.711; //Static gain in PID Feed Forward
-        public static final double SHOOTER_KV = 0.10714 / 60; // 0.00163; //Velocity gain in PID Feed Forward
-        public static final double SHOOTER_KA = 0.0053359; // 0.0349; //Acceleration gain PID Feed Forward
+        public static final double HIGH_kP = 0; // 3.2e-3;
+        public static final double HIGH_kI = 0;
+        public static final double HIGH_kD = 0; // 5e-4;
+
+        public static final double LOW_kS = 0.2; // 0.711; //Static gain in PID Feed Forward
+        public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
+
+        public static final double HIGH_kS = 0.2;//* 0.925; //Static gain in PID Feed Forward
+        public static final double HIGH_kV = 0.0017857;//* 0.97; //Velocity gain in PID Feed Forward
+        public static final double HIGH_kA = 0.0053359;//* 0.99; //Acceleration gain PID Feed Forward
 
         public static final int PLATEAU_COUNT = 1;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
-        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.10;
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
         public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
         LinearSystemId.identifyVelocitySystem(
-            SHOOTER_KV, 
-            SHOOTER_KA
+            LOW_kV, 
+            LOW_kA
         );
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
@@ -171,14 +180,14 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 0; // 0.001;
+        public static final double VISION_PID_kP = 2.5e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
-        public static final double VISION_PID_kF = 0.1;
+        public static final double VISION_PID_kF = 0.07;
 
-        public static final double TX_OFFSET = 0.0; // to offset alignment in either direction
+        public static final double TX_OFFSET = 2.0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 5; //degrees
+        public static final double TX_THRESHOLD = 3; //degrees
         public static final double TX_THRESHOLD_MAX = 10; //degrees
         public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second

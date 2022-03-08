@@ -44,9 +44,8 @@ public abstract class NAR_PIDSubsystem extends PIDSubsystem{
      * @param percentTolerance the percent of the setpoint used as tolerance
      */
     public void checkPlateau(double setpoint, double percentTolerance) {
-        if (Math.abs(getMeasurement()-setpoint) <= (percentTolerance*setpoint) && (setpoint != 0)) {
+        if (Math.abs(getMeasurement() - setpoint) <= (percentTolerance * setpoint) && (setpoint != 0)) {
             plateauCount++;
-            Log.info("plat", plateauCount+"");
         } else {
             plateauCount = 0;
         }
