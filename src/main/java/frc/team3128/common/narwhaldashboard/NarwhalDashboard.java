@@ -2,10 +2,8 @@ package frc.team3128.common.narwhaldashboard;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -14,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import frc.team3128.common.utility.Log;
-import frc.team3128.ConstantsInt;
 import frc.team3128.common.hardware.limelight.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -163,31 +160,6 @@ public class NarwhalDashboard extends WebSocketServer {
                 if(selectedLimelight != null) {
                     obj.put("selected_pipeline", limelights.get(selectedLimelight).getSelectedPipeline());
                 }
-
-                JSONObject constantsObj = new JSONObject();
-                for(String category : ConstantsInt.categories.keySet()) {
-                    JSONArray catArr = new JSONArray();
-                    List<Field> fields = ConstantsInt.getConstantInfo(category);
-                    for(Field field : fields) {
-                        try {
-                        // get value from Field
-                        Object value = field.get(null);
-                        JSONObject newConstant = new JSONObject();
-                        newConstant.put("key", field.getName());
-                        newConstant.put("value", value);
-    
-                        catArr.add(newConstant);
-                        //Log.info("Narwhal Dashboard", "Constant Of "+newConstant.toJSONString());
-                        }
-                        catch(IllegalAccessException e) {
-                            continue;
-                        }
-                    } 
-                    constantsObj.put(category, catArr);  
-                }
-                obj.put("constants", constantsObj);
-
-
                 if(!pushed) {
                     JSONArray autoProgramArr = new JSONArray();
                     for (String autoName : autoPrograms.keySet()) {
