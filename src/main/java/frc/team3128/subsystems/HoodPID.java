@@ -4,12 +4,9 @@ import frc.team3128.Constants.HoodConstants;
 import frc.team3128.Constants.ShooterConstants;
 
 import com.revrobotics.SparkMaxRelativeEncoder;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import net.thefletcher.revrobotics.enums.IdleMode;
@@ -20,11 +17,11 @@ public class HoodPID extends NAR_PIDSubsystem {
     private static Hood instance;
     private NAR_CANSparkMax m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
-    private double thresholdPercent = HoodConstants.THRESHOLD_PERCENT;
-    private double time;
-    private double preTime;
+    
+    private double tolerance = HoodConstants.TOLERANCE_MIN;
 
-    private double angleOffset = 0;
+    private double time;
+    private double prevTime;
 
     public static synchronized Hood getInstance() {
         if(instance == null) {
@@ -37,15 +34,20 @@ public class HoodPID extends NAR_PIDSubsystem {
         super(new PIDController(HoodConstants.kP, HoodConstants.kI, HoodConstants.kD), HoodConstants.PLATEAU_COUNT);
 
         configMotors();
+        configEncoder();
     }
 
     private void configMotors() {
         m_hoodMotor = new NAR_CANSparkMax(HoodConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
         m_hoodMotor.setSmartCurrentLimit(HoodConstants.HOOD_CURRENT_LIMIT);
+        m_hoodMotor.enableVoltageCompensation(12.0);
         m_hoodMotor.setIdleMode(IdleMode.kBrake);
-        zeroEncoder();
+    }
 
+    private void configEncoder() {
+        m_encoder = (SparkMaxRelativeEncoder) m_hoodMotor.getEncoder();
         m_encoder.setPositionConversionFactor(HoodConstants.ENC_POSITION_CONVERSION_FACTOR);
+        zeroEncoder();
     }
 
     public void setSpeed(double speed) {
@@ -56,43 +58,43 @@ public class HoodPID extends NAR_PIDSubsystem {
         m_hoodMotor.set(0);
     }
 
+    /**
+     * Encoder returns 0 deg when at min angle.
+     */
     public void zeroEncoder() {
         m_hoodMotor.setEncoderPosition(0);
     }
 
     public void startPID(double angle) {
-        thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
+        tolerance = ShooterConstants.RPM_THRESHOLD_PERCENT;
         super.setSetpoint(angle);  
         super.resetPlateauCount();
-        getController().setTolerance(ShooterConstants.RPM_THRESHOLD_PERCENT * angle);
+        getController().setTolerance(tolerance);
     }
 
+    /**
+     * Attempts to PID to minimum angle. Will likely be replaced by full homing routine once limit switch is added.
+     */
     public void zero() {
-        startPID(0);
-        m_hoodMotor.setEncoderPosition(0);
+        startPID(HoodConstants.MIN_ANGLE);
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        double ff = HoodConstants.kF * setpoint;
+        double ff = HoodConstants.kF * Math.cos(Units.degreesToRadians(setpoint));
         double voltageOutput = output + ff;
-        double voltage = RobotController.getBatteryVoltage();
-        double percentOutput = voltageOutput / voltage;
 
         time = RobotController.getFPGATime() / 1e6;
-        if (thresholdPercent < HoodConstants.THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += (time - preTime) * (ShooterConstants.RPM_THRESHOLD_PERCENT_MAX - ShooterConstants.RPM_THRESHOLD_PERCENT) / ShooterConstants.TIME_TO_MAX_THRESHOLD;
-            getController().setTolerance(thresholdPercent * setpoint);
+        if (tolerance < HoodConstants.TOLERANCE_MAX) {
+            tolerance += (time - prevTime) * (HoodConstants.TOLERANCE_MAX - HoodConstants.TOLERANCE_MIN) / HoodConstants.TIME_TO_MAX_TOLERANCE;
+            getController().setTolerance(tolerance);
         }
 
-        checkPlateau(setpoint, thresholdPercent);
+        checkPlateau(setpoint, tolerance);
 
-        percentOutput = MathUtil.clamp(percentOutput, -1, 1);
-        percentOutput = (setpoint == 0) ? 0 : percentOutput;
+        m_hoodMotor.set(voltageOutput / 12.0);
 
-        m_hoodMotor.set(percentOutput);
-
-        preTime = time;
+        prevTime = time;
     }
 
     @Override
