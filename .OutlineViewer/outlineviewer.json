@@ -3,5 +3,12 @@
     ".status": {
       "open": false
     }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "3128"
+  },
+  "limelight-cog": {
+    "open": true
   }
 }
