@@ -78,7 +78,9 @@ public class RobotContainer {
         "5_Ball_iii.wpilib.json",
         "5_Ball_iv.wpilib.json", // 20
         "leaveTerm_i.wpilib.json",
-        "leaveTerm_ii.wpilib.json"
+        "leaveTerm_ii.wpilib.json", // 22
+        "3_BallSDR_i.wpilib.json",
+        "3_BallSDR_ii.wpilib.json", // 24
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -91,7 +93,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_4BallE, auto_4BallTerm, auto_5Ball;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -448,6 +450,18 @@ public class RobotContainer {
                             retractHopperAndShootCmd(3000)
 
         );
+
+        auto_3BallBack = new SequentialCommandGroup(
+                        retractHopperAndShootCmd(3500),
+                          new ParallelDeadlineGroup(
+                              new SequentialCommandGroup(
+                                    trajectoryCmd(23),
+                                    trajectoryCmd(24)
+                              ),
+                              new CmdExtendIntakeAndRun(m_intake,m_hopper)
+                          ),
+                        retractHopperAndShootCmd(3500)
+         );
 
         auto_4BallE = new SequentialCommandGroup(
 
