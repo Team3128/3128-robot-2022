@@ -256,7 +256,7 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
-
+        m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
     }
 
@@ -460,7 +460,7 @@ public class RobotContainer {
                               ),
                               new CmdExtendIntakeAndRun(m_intake,m_hopper)
                           ),
-                        retractHopperAndShootCmd(3500)
+                        retractHopperAndShootCmdLL(3750)
          );
 
         auto_4BallE = new SequentialCommandGroup(
@@ -686,18 +686,20 @@ public class RobotContainer {
         initialPoses.put(auto_4BallE, trajectory[11].getInitialPose());
         initialPoses.put(auto_4BallTerm, trajectory[13].getInitialPose());
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
+        initialPoses.put(auto_3BallBack, trajectory[23].getInitialPose());
 
-        Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        if (dashboardSelectedAuto == null) {
-            return null;
-        }
+        // Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
-        return dashboardSelectedAuto;
+        // if (dashboardSelectedAuto == null) {
+        //     return null;
+        // }
 
-        // m_drive.resetPose(trajectory[5].getInitialPose());
-        // return auto_3BallHersheyKiss;
+        // m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
+        // return dashboardSelectedAuto;
+
+        m_drive.resetPose(trajectory[23].getInitialPose());
+        return auto_3BallBack;
 
     }
 
