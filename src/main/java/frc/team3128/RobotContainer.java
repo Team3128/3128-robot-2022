@@ -44,7 +44,7 @@ public class RobotContainer {
     private Intake m_intake;   
     private Hopper m_hopper;
     private Climber m_climber;
-    private AdjustableShooter m_adjustableShooter; 
+    private Hood m_hood; 
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -101,7 +101,7 @@ public class RobotContainer {
         
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
-        m_adjustableShooter = AdjustableShooter.getInstance(); 
+        m_hood = Hood.getInstance(); 
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
@@ -231,7 +231,7 @@ public class RobotContainer {
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
-        m_leftStick.getButton(3).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
+        // m_leftStick.getButton(3).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
 
         // m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
 
@@ -256,13 +256,22 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
+        m_leftStick.getButton(3).whenPressed(() -> m_hood.setHome());
+        m_leftStick.getButton(4).whenPressed(new CmdMoveHood(m_hood, HoodConstants.HOME_ANGLE));
 
+        m_leftStick.getPOVButton(0).whenHeld(new StartEndCommand(() -> m_hood.setSpeed(HoodConstants.HOOD_SPEED), () -> m_hood.stop(), m_hood));
+        m_leftStick.getPOVButton(4).whenHeld(new StartEndCommand(() -> m_hood.setSpeed(-HoodConstants.HOOD_SPEED), () -> m_hood.stop(), m_hood));
 
+        m_leftStick.getPOVButton(2).whenHeld(new CmdMoveHood(m_hood, HoodConstants.MAX_ANGLE));
+        m_leftStick.getPOVButton(6).whenHeld(new CmdMoveHood(m_hood, HoodConstants.MIN_ANGLE));
+        
     }
 
     public void init() {
         initPneumatics();
+
         m_shooterLimelight.turnLEDOff();
+        m_hood.setHome();
     }
 
     private void initAutos() {

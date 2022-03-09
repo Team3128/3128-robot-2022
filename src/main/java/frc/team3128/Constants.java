@@ -141,15 +141,21 @@ public class Constants {
         public static final double SHOOTER_GEARING = 1.5;
     }
   
-    public static class AdjustableShooterConstants {
+    public static class HoodConstants {
 
-        public static final int HOOD_SHOOTER_ID = 0;
-        public static final double HOOD_SHOOTER_SPEED = .5; 
-        public static final int HOOD_SENSOR_ID = 0;
-        public static final int HOOD_SHOOTER_GEAR_RATIO = 0;
-        public static final int HOOD_AXLE_DIAMETER = 0; 
-        public static final int UPPERHUB_HEIGHT = 0;
-        public static final int LOWERHUB_HEIGHT = 0;
+        public static final int HOOD_MOTOR_ID = 0;
+        public static final double HOOD_SPEED = 0.5; 
+
+        public static final int HOOD_SHOOTER_GEAR_RATIO = 101; // Bowen number
+        public static final double ENC_POSITION_CONVERSION_FACTOR = 360.0 / HOOD_SHOOTER_GEAR_RATIO;
+
+        public static final int HOOD_CURRENT_LIMIT = 10; // Amps
+
+        public static final double MIN_ANGLE = 15.0; // deg
+        public static final double MAX_ANGLE = 35.0; // deg
+        public static final double HOME_ANGLE = 22.0; // deg
+
+        public static final double kTolerance = 1.0; // deg
 
     }
 
