@@ -141,18 +141,6 @@ public class Constants {
         public static final double SHOOTER_GEARING = 1.5;
     }
   
-    public static class AdjustableShooterConstants {
-
-        public static final int HOOD_SHOOTER_ID = 0;
-        public static final double HOOD_SHOOTER_SPEED = .5; 
-        public static final int HOOD_SENSOR_ID = 0;
-        public static final int HOOD_SHOOTER_GEAR_RATIO = 0;
-        public static final int HOOD_AXLE_DIAMETER = 0; 
-        public static final int UPPERHUB_HEIGHT = 0;
-        public static final int LOWERHUB_HEIGHT = 0;
-
-    }
-
     public static class HopperConstants {
 
         public static final int HOPPER_MOTOR_ID = 6;
