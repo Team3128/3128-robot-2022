@@ -1,20 +1,20 @@
 package frc.team3128.subsystems;
 
 import frc.team3128.Constants.HoodConstants;
-import frc.team3128.Constants.ShooterConstants;
 
-import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
+import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.IdleMode;
 import net.thefletcher.revrobotics.enums.MotorType;
 
 public class HoodPID extends NAR_PIDSubsystem {
 
-    private static Hood instance;
+    private static HoodPID instance;
     private NAR_CANSparkMax m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
     
@@ -23,9 +23,9 @@ public class HoodPID extends NAR_PIDSubsystem {
     private double time;
     private double prevTime;
 
-    public static synchronized Hood getInstance() {
+    public static synchronized HoodPID getInstance() {
         if(instance == null) {
-            instance = new Hood();
+            instance = new HoodPID();
         }
         return instance;
     }
@@ -66,7 +66,7 @@ public class HoodPID extends NAR_PIDSubsystem {
     }
 
     public void startPID(double angle) {
-        tolerance = ShooterConstants.RPM_THRESHOLD_PERCENT;
+        tolerance = HoodConstants.TOLERANCE_MIN;
         super.setSetpoint(angle);  
         super.resetPlateauCount();
         getController().setTolerance(tolerance);
@@ -95,10 +95,14 @@ public class HoodPID extends NAR_PIDSubsystem {
         m_hoodMotor.set(voltageOutput / 12.0);
 
         prevTime = time;
+
+        SmartDashboard.putNumber("Hood voltage", voltageOutput);
+        SmartDashboard.putNumber("Hood percentage output", voltageOutput / 12.0);
+
     }
 
     @Override
-    protected double getMeasurement() {
+    public double getMeasurement() {
         return m_hoodMotor.getSelectedSensorPosition() + HoodConstants.MIN_ANGLE;
     }
 

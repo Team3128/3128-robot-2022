@@ -2,7 +2,7 @@ package frc.team3128.subsystems;
 
 import frc.team3128.Constants.HoodConstants;
 
-import com.revrobotics.SparkMaxRelativeEncoder;
+import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import net.thefletcher.revrobotics.enums.IdleMode;

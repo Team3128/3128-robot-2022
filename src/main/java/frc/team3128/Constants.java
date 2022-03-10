@@ -107,8 +107,8 @@ public class Constants {
 
     public static class ShooterConstants {
 
-        public static final int LEFT_SHOOTER_ID = 4; 
-        public static final int RIGHT_SHOOTER_ID = 5; 
+        public static final int LEFT_SHOOTER_ID = 0; 
+        public static final int RIGHT_SHOOTER_ID = 13; 
 
         public static final double LOW_kP = 1.8e-3; //1.24e-6;
         public static final double LOW_kI = 0;
@@ -143,17 +143,17 @@ public class Constants {
   
     public static class HoodConstants {
 
-        public static final int HOOD_MOTOR_ID = 0;
-        public static final double HOOD_SPEED = 0.5; 
+        public static final int HOOD_MOTOR_ID = 5;
+        public static final double HOOD_SPEED = 0.15; 
 
-        public static final double kP = 0;
+        public static final double kP = 0.254;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
 
         public static final int PLATEAU_COUNT = 1;
-        public static final double TOLERANCE_MIN = 1.0; // degrees
-        public static final double TOLERANCE_MAX = 3.0; // degrees
+        public static final double TOLERANCE_MIN = 0.1; // degrees
+        public static final double TOLERANCE_MAX = 0.5; // degrees
         public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
 
         public static final int HOOD_SHOOTER_GEAR_RATIO = 101; // Bowen number
