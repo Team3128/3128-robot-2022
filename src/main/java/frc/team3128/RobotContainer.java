@@ -258,6 +258,8 @@ public class RobotContainer {
 
         m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
+        m_leftStick.getButton(4).whenPressed(new CmdInPlace180Turn(m_drive));
+
     }
 
     public void init() {
@@ -321,7 +323,7 @@ public class RobotContainer {
                                 // new RunCommand(m_intake::runIntake, m_intake),
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1100))
+                                new CmdShootRPM(m_shooter, 1300))
         );
 
 

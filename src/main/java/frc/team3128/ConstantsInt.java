@@ -23,7 +23,7 @@ public class ConstantsInt extends Constants {
     public static class DriveConstants extends Constants.DriveConstants {}
     public static class ClimberConstants extends Constants.ClimberConstants {}
     public static class ShooterConstants extends Constants.ShooterConstants {
-        public static int PLATEAU_COUNT;
+        public static int PLATEAU_COUNT = 5;
         public static double RPM_THRESHOLD_PERCENT_MAX;
         public static final double LOW_kP = 1.8e-3;
         public static final double LOW_kI = 0;
