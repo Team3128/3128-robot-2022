@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.team3128.Constants.*;
+import frc.team3128.ConstantsInt.*;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.*;
 import frc.team3128.common.hardware.input.NAR_Joystick;
@@ -38,7 +38,6 @@ import frc.team3128.subsystems.Shooter.ShooterState;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
     private NAR_Drivetrain m_drive;
     private Shooter m_shooter;
     private Intake m_intake;   
@@ -100,7 +99,7 @@ public class RobotContainer {
     private boolean driveHalfSpeed = false;
 
     public RobotContainer() {
-        
+        ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
         m_intake = Intake.getInstance();
