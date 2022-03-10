@@ -3,7 +3,7 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
-import frc.team3128.ConstantsInt.ShooterConstants;
+import frc.team3128.Constants.ShooterConstants;
 // import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.ConversionConstants;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -139,8 +139,8 @@ public class Shooter extends NAR_PIDSubsystem {
      * @param state Desired Shooter State
      */
     public void beginShoot(ShooterState state) {
-        Log.info("Shooter", "beginShoot state");
-        Log.info("Shooter", "state: " + state.shooterRPM);
+        // Log.info("Shooter", "beginShoot state");
+        // Log.info("Shooter", "state: " + state.shooterRPM);
         setState(state);
         startPID();
     }
@@ -150,7 +150,7 @@ public class Shooter extends NAR_PIDSubsystem {
      * @param state Desired Shooter State
      */
     public void beginShoot(double rpm) {
-        Log.info("Shooter", "beginShoot rpm");
+        // Log.info("Shooter", "beginShoot rpm");
         startPID(rpm);
     }
 
@@ -199,7 +199,6 @@ public class Shooter extends NAR_PIDSubsystem {
             voltageOutput = 0;
             
         m_leftShooter.set(ControlMode.PercentOutput, voltageOutput / 12.0);
-        // m_leftShooter.set(ControlMode.PercentOutput, 0.75);
 
         //Log.info("Shooter","percentOutput: " + percentOutput);
         //Log.info("Shooter","RPM: " + getMeasurement());

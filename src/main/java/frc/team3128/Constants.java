@@ -56,6 +56,13 @@ public class Constants {
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
+        public static final double TURN_kP = -2e-3;
+        public static final double TURN_kI = 0;
+        public static final double TURN_kD = -2e-4;
+        public static final double TURN_kF = 0.1;
+
+        public static final double TURN_TOLERANCE = 2; // deg
+
         //Ramsete constants
         public static final double RAMSETE_B = 2; //default value - don't change unless absolutely necessary
         public static final double RAMSETE_ZETA = 0.7; //default value - don't change unless absolutely necessary
@@ -128,7 +135,7 @@ public class Constants {
 
         public static final double kF = 0.0018868;
 
-        public static final int PLATEAU_COUNT = 1;
+        public static final int PLATEAU_COUNT = 5;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
@@ -182,7 +189,7 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 2.5e-3;
+        public static final double VISION_PID_kP = 4e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;

@@ -80,6 +80,7 @@ public class RobotContainer {
         "leaveTerm_ii.wpilib.json", // 22
         "3_BallSDR_i.wpilib.json",
         "3_BallSDR_ii.wpilib.json", // 24
+        "3_Ball_good.wpilib.json"
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -92,7 +93,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -257,6 +258,8 @@ public class RobotContainer {
 
         m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
+        m_leftStick.getButton(4).whenPressed(new CmdInPlaceTurn(m_drive, 180));
+
     }
 
     public void init() {
@@ -320,7 +323,7 @@ public class RobotContainer {
                                 // new RunCommand(m_intake::runIntake, m_intake),
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1100))
+                                new CmdShootRPM(m_shooter, 1300))
         );
 
 
@@ -467,6 +470,7 @@ public class RobotContainer {
                             //pick up first ball
                             new ParallelDeadlineGroup(
                                 new SequentialCommandGroup(
+
                                     trajectoryCmd(11),
                                     new InstantCommand(m_drive::stop, m_drive)
                                 ),
@@ -569,6 +573,21 @@ public class RobotContainer {
                             retractHopperAndShootCmd(3750)
         );
 
+        auto_3Ball180 = new SequentialCommandGroup(
+                            retractHopperAndShootCmd(3500),
+
+                            new CmdInPlaceTurn(m_drive, 180),
+
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(25), 
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            new CmdInPlaceTurn(m_drive, -45),
+
+                            retractHopperAndShootCmdLL(4000)
+        );
+
         // Setup auto-selector
         NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
         NarwhalDashboard.addAuto("2 Ball Bottom", auto_2BallBot);
@@ -577,6 +596,7 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("3 Ball Hook", auto_3BallHook);
         NarwhalDashboard.addAuto("3 Ball Terminal", auto_3BallTerminal);
         NarwhalDashboard.addAuto("3 Ball Hershey Kiss", auto_3BallHersheyKiss);
+        NarwhalDashboard.addAuto("3 Ball 180", auto_3Ball180);
         NarwhalDashboard.addAuto("4 Ball E", auto_4BallE);
         NarwhalDashboard.addAuto("4 Ball Terminal", auto_4BallTerm);
         NarwhalDashboard.addAuto("5 Ball", auto_5Ball);
@@ -607,7 +627,7 @@ public class RobotContainer {
                 // new RunCommand(m_intake::runIntake, m_intake),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
-            ).withTimeout(3)
+            ).withTimeout(2)
         );
     }
 
@@ -622,7 +642,7 @@ public class RobotContainer {
                 new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
-            ).withTimeout(3),
+            ).withTimeout(2),
             new InstantCommand(m_shooterLimelight::turnLEDOff)
         );
     }
@@ -686,19 +706,18 @@ public class RobotContainer {
         initialPoses.put(auto_4BallTerm, trajectory[13].getInitialPose());
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
         initialPoses.put(auto_3BallBack, trajectory[23].getInitialPose());
+        initialPoses.put(auto_3Ball180, new Pose2d(trajectory[25].getInitialPose().getX(), trajectory[25].getInitialPose().getY(), trajectory[25].getInitialPose().getRotation().unaryMinus()));
 
 
-        // Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
+        // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
+        Command selectedAuto = auto_3Ball180;
 
-        // if (dashboardSelectedAuto == null) {
-        //     return null;
-        // }
+        if (selectedAuto == null) {
+            return null;
+        }
 
-        // m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
-        // return dashboardSelectedAuto;
-
-        m_drive.resetPose(trajectory[23].getInitialPose());
-        return auto_3BallBack;
+        m_drive.resetPose(initialPoses.get(selectedAuto));
+        return selectedAuto;
 
     }
 
