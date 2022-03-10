@@ -38,7 +38,7 @@ public class Constants {
         // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
-        public static final double TRACK_WIDTH_METERS = 0.56994;
+        public static final double TRACK_WIDTH_METERS = 0.55438;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
@@ -46,9 +46,9 @@ public class Constants {
         public static final double DRIVE_NUp100MS_TO_MPS = DRIVE_NU_TO_METER * 10; // sensor units per 100 ms to m/s of drivetrain
         public static final double MAX_DRIVE_VEL_NUp100MS = 6380 * ConversionConstants.FALCON_ENCODER_RESOLUTION / 60 / 10; // max angular velocity of drivetrain (encoder, not wheel) in sensor units per 100 ms - 6380 RPM * RESOLUTION nu/rot * 1 min/60s * 1s/(10*100ms)
 
-        public static final double kS = 0.73678;
-        public static final double kV = 2.0983;
-        public static final double kA = 0.317;
+        public static final double kS = 0.68392;
+        public static final double kV = 2.1048;
+        public static final double kA = 0.30905;
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
@@ -59,7 +59,7 @@ public class Constants {
         //Ramsete constants
         public static final double RAMSETE_B = 2; //default value - don't change unless absolutely necessary
         public static final double RAMSETE_ZETA = 0.7; //default value - don't change unless absolutely necessary
-        public static final double RAMSETE_KP = 2.9366;
+        public static final double RAMSETE_KP = 2.9127;
 
         public static final Boolean GYRO_REVERSED = false;
 
@@ -110,11 +110,11 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double LOW_kP = 1.8e-3; //1.24e-6;
+        public static final double LOW_kP = 1e-4; //1.24e-6;
         public static final double LOW_kI = 0;
-        public static final double LOW_kD = 5e-5;
+        public static final double LOW_kD = 0;
 
-        public static final double HIGH_kP = 0; // 3.2e-3;
+        public static final double HIGH_kP = 1e-5; // 3.2e-3;
         public static final double HIGH_kI = 0;
         public static final double HIGH_kD = 0; // 5e-4;
 
@@ -125,6 +125,8 @@ public class Constants {
         public static final double HIGH_kS = 0.2;//* 0.925; //Static gain in PID Feed Forward
         public static final double HIGH_kV = 0.0017857;//* 0.97; //Velocity gain in PID Feed Forward
         public static final double HIGH_kA = 0.0053359;//* 0.99; //Acceleration gain PID Feed Forward
+
+        public static final double kF = 0.0018868;
 
         public static final int PLATEAU_COUNT = 1;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;

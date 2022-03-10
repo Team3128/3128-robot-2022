@@ -78,7 +78,9 @@ public class RobotContainer {
         "5_Ball_iii.wpilib.json",
         "5_Ball_iv.wpilib.json", // 20
         "leaveTerm_i.wpilib.json",
-        "leaveTerm_ii.wpilib.json"
+        "leaveTerm_ii.wpilib.json", // 22
+        "3_BallSDR_i.wpilib.json",
+        "3_BallSDR_ii.wpilib.json", // 24
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -91,7 +93,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_4BallE, auto_4BallTerm, auto_5Ball;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -254,7 +256,7 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
-
+        m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
     }
 
@@ -448,6 +450,18 @@ public class RobotContainer {
                             retractHopperAndShootCmd(3000)
 
         );
+
+        auto_3BallBack = new SequentialCommandGroup(
+                        retractHopperAndShootCmd(3500),
+                          new ParallelDeadlineGroup(
+                              new SequentialCommandGroup(
+                                    trajectoryCmd(23),
+                                    trajectoryCmd(24)
+                              ),
+                              new CmdExtendIntakeAndRun(m_intake,m_hopper)
+                          ),
+                        retractHopperAndShootCmdLL(3750)
+         );
 
         auto_4BallE = new SequentialCommandGroup(
 
@@ -672,18 +686,20 @@ public class RobotContainer {
         initialPoses.put(auto_4BallE, trajectory[11].getInitialPose());
         initialPoses.put(auto_4BallTerm, trajectory[13].getInitialPose());
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
+        initialPoses.put(auto_3BallBack, trajectory[23].getInitialPose());
 
-        Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        if (dashboardSelectedAuto == null) {
-            return null;
-        }
+        // Command dashboardSelectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
-        return dashboardSelectedAuto;
+        // if (dashboardSelectedAuto == null) {
+        //     return null;
+        // }
 
-        // m_drive.resetPose(trajectory[5].getInitialPose());
-        // return auto_3BallHersheyKiss;
+        // m_drive.resetPose(initialPoses.get(dashboardSelectedAuto));
+        // return dashboardSelectedAuto;
+
+        m_drive.resetPose(trajectory[23].getInitialPose());
+        return auto_3BallBack;
 
     }
 

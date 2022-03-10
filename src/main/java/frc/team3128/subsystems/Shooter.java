@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import frc.team3128.ConstantsInt.ShooterConstants;
 // import frc.team3128.Constants.ShooterConstants;
@@ -94,6 +95,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
         m_rightShooter.follow((NAR_EMotor) m_leftShooter);
 
+        m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }
 
     /**
@@ -178,14 +180,12 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double ff = 0;
-        if (shooterState == ShooterState.LOWERHUB)
-            ff = lowFF.calculate(setpoint);
-        else if (shooterState == ShooterState.UPPERHUB)
-            ff = highFF.calculate(setpoint);
+        double ff = ShooterConstants.kF * setpoint;
+        // if (shooterState == ShooterState.LOWERHUB)
+        //     ff = lowFF.calculate(setpoint);
+        // else if (shooterState == ShooterState.UPPERHUB)
+        //     ff = highFF.calculate(setpoint);
         double voltageOutput = output + ff;
-        double voltage = RobotController.getBatteryVoltage();
-        double percentOutput = voltageOutput / voltage;
 
         time = RobotController.getFPGATime() / 1e6;
         if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {
@@ -195,11 +195,11 @@ public class Shooter extends NAR_PIDSubsystem {
 
         checkPlateau(setpoint, thresholdPercent);
 
-        percentOutput = MathUtil.clamp(percentOutput, -1, 1);
-        percentOutput = (setpoint == 0) ? 0 : percentOutput;
-
-        m_leftShooter.set(ControlMode.PercentOutput, percentOutput);
-        //m_rightShooter.set(ControlMode.PercentOutput, -percentOutput);
+        if (setpoint == 0)
+            voltageOutput = 0;
+            
+        m_leftShooter.set(ControlMode.PercentOutput, voltageOutput / 12.0);
+        // m_leftShooter.set(ControlMode.PercentOutput, 0.75);
 
         //Log.info("Shooter","percentOutput: " + percentOutput);
         //Log.info("Shooter","RPM: " + getMeasurement());
