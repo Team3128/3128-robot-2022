@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.ConversionConstants;
@@ -90,6 +91,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
         m_leftShooter.setInverted(false);
         m_rightShooter.setInverted(true);
+
+        m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,15,30,0.1));
 
         m_rightShooter.follow((NAR_EMotor) m_leftShooter);
 
@@ -181,10 +184,11 @@ public class Shooter extends NAR_PIDSubsystem {
         if (shooterState == ShooterState.LOWERHUB)
             ff = lowFF.calculate(setpoint);
         else if (shooterState == ShooterState.UPPERHUB)
-            ff = highFF.calculate(setpoint);
+            //ff = highFF.calculate(setpoint);
+            ff = ShooterConstants.kF*setpoint;
         double voltageOutput = output + ff;
         double voltage = RobotController.getBatteryVoltage();
-        double percentOutput = voltageOutput / voltage;
+        double percentOutput = voltageOutput / 12.0;
 
         time = RobotController.getFPGATime() / 1e6;
         if (thresholdPercent < ShooterConstants.RPM_THRESHOLD_PERCENT_MAX) {

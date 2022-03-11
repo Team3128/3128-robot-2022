@@ -230,11 +230,7 @@ public class RobotContainer {
         //         new CmdShootRPM(m_shooter, 4400))))
         // .whenReleased(() -> m_shooterLimelight.turnLEDOff());
 
-        m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new CmdShootRPM(m_shooter, 4000)
-            )
-        );
+        
 
         // m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
@@ -266,9 +262,18 @@ public class RobotContainer {
         //m_leftStick.getButton(3).whenPressed(() -> m_hood.setHome());
         //m_leftStick.getButton(4).whenPressed(new CmdMoveHood(m_hood, HoodConstants.HOME_ANGLE));
 
+        m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new CmdShootRPM(m_shooter, 3000)
+            )
+        );
+
+        m_leftStick.getButton(7).whenPressed(() -> m_hood.startPID(22.75));
+
         m_leftStick.getButton(3).whenPressed(() -> m_hood.zeroEncoder());
 
-        m_leftStick.getButton(7).whenPressed(() -> m_hood.startPID(20));
+
+        m_leftStick.getButton(8).whenPressed(() -> m_hood.zero());
 
         m_leftStick.getPOVButton(0).whileHeld(() -> m_hood.setSpeed(HoodConstants.HOOD_SPEED), m_hood)
                                     .whenReleased(() -> m_hood.stop());
