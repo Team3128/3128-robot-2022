@@ -385,8 +385,10 @@ public class RobotContainer {
 
                             new InstantCommand(() -> m_intake.retractIntake()),
 
+                            new CmdInPlaceTurn(m_drive, 75),
+
                             //shoot first + preloaded
-                            retractHopperAndShootCmdLL(3750)
+                            retractHopperAndShootCmdLL(3000) // 3750
 
         );
 
@@ -455,13 +457,18 @@ public class RobotContainer {
 
         auto_3BallBack = new SequentialCommandGroup(
                         retractHopperAndShootCmd(3500),
-                          new ParallelDeadlineGroup(
-                              new SequentialCommandGroup(
-                                    trajectoryCmd(23),
-                                    trajectoryCmd(24)
-                              ),
-                              new CmdExtendIntakeAndRun(m_intake,m_hopper)
-                          ),
+
+                        new CmdExtendIntake(m_intake),
+                        new WaitCommand(0.1), // slow but it might work
+                        new ParallelDeadlineGroup(
+                            new SequentialCommandGroup(
+                                trajectoryCmd(23),
+                                trajectoryCmd(24)
+                            ),
+                            new CmdIntakeCargo(m_intake,m_hopper)
+                        ),
+                        new InstantCommand(() -> m_intake.retractIntake()),
+
                         retractHopperAndShootCmdLL(3750)
          );
 
@@ -574,7 +581,7 @@ public class RobotContainer {
         );
 
         auto_3Ball180 = new SequentialCommandGroup(
-                            retractHopperAndShootCmd(3500),
+                            retractHopperAndShootCmd(3000),
 
                             new CmdInPlaceTurn(m_drive, 180),
 
@@ -585,7 +592,7 @@ public class RobotContainer {
 
                             new CmdInPlaceTurn(m_drive, -45),
 
-                            retractHopperAndShootCmdLL(4000)
+                            retractHopperAndShootCmdLL(3000)
         );
 
         // Setup auto-selector
@@ -710,7 +717,7 @@ public class RobotContainer {
 
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
-        Command selectedAuto = auto_3Ball180;
+        Command selectedAuto = auto_2BallTop;
 
         if (selectedAuto == null) {
             return null;
