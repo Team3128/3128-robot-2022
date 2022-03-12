@@ -266,11 +266,11 @@ public class RobotContainer {
 
         m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new CmdShootRPM(m_shooter, ConstantsInt.HoodConstants.SET_RPM)
+            new CmdShootRPM(m_shooter, 2400)
             )
         );
 
-        m_leftStick.getButton(7).whenPressed(() -> m_hood.startPID(ConstantsInt.HoodConstants.SET_ANGLE));
+        m_leftStick.getButton(7).whenPressed(() -> m_hood.startPID(20));
 
         m_leftStick.getButton(3).whenPressed(() -> m_hood.zeroEncoder());
 

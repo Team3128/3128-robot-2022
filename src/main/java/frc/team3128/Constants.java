@@ -147,23 +147,23 @@ public class Constants {
         public static final int HOOD_MOTOR_ID = 5;
         public static final double HOOD_SPEED = 0.05; 
 
-        public static final double kP = 0.3128;//0.254;
+        public static final double kP = 0.4;//0.3128;//0.254;
         public static final double kI = 0;
-        public static final double kD = 1e-4;
-        public static final double kF = 0.0517638;
+        public static final double kD = 8e-4;
+        public static final double kF = 0.6134;//0.0517638;
 
         public static final int PLATEAU_COUNT = 1;
         public static final double TOLERANCE_MIN = 0.1; // degrees
         public static final double TOLERANCE_MAX = 0.5; // degrees
         public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
 
-        public static final int HOOD_SHOOTER_GEAR_RATIO = 101; // Bowen number
+        public static final int HOOD_SHOOTER_GEAR_RATIO = 111; // Bowen number
         public static final double ENC_POSITION_CONVERSION_FACTOR = 360.0 / HOOD_SHOOTER_GEAR_RATIO; // Multiply by this to convert encoder rotations to hood degrees
 
         public static final int HOOD_CURRENT_LIMIT = 10; // Amps
 
-        public static final double MIN_ANGLE = 15.0; // deg
-        public static final double MAX_ANGLE = 35.0; // deg
+        public static final double MIN_ANGLE = 12.0; // deg
+        public static final double MAX_ANGLE = 32.0; // deg
         public static final double HOME_ANGLE = 22.0; // deg
 
         public static final double kTolerance = 1.0; // deg
