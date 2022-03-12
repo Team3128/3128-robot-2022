@@ -99,6 +99,8 @@ public class RobotContainer {
 
     public RobotContainer() {
         
+        ConstantsInt.initTempConstants();
+        
         //m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
         m_hood = HoodPID.getInstance(); 
@@ -264,11 +266,11 @@ public class RobotContainer {
 
         m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new CmdShootRPM(m_shooter, 3000)
+            new CmdShootRPM(m_shooter, ConstantsInt.HoodConstants.SET_RPM)
             )
         );
 
-        m_leftStick.getButton(7).whenPressed(() -> m_hood.startPID(22.75));
+        m_leftStick.getButton(7).whenPressed(() -> m_hood.startPID(ConstantsInt.HoodConstants.SET_ANGLE));
 
         m_leftStick.getButton(3).whenPressed(() -> m_hood.zeroEncoder());
 
