@@ -114,6 +114,9 @@ public class Constants {
 
     public static class ShooterConstants {
 
+        public static final double SET_RPM = 3000;
+        public static final double SET_ANGLE = 25;
+
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
@@ -121,7 +124,7 @@ public class Constants {
         public static final double LOW_kI = 0;
         public static final double LOW_kD = 0;
 
-        public static final double HIGH_kP = 1e-5; // 3.2e-3;
+        public static final double HIGH_kP = 2e-4; // 3.2e-3;
         public static final double HIGH_kI = 0;
         public static final double HIGH_kD = 0; // 5e-4;
 
@@ -133,7 +136,7 @@ public class Constants {
         public static final double HIGH_kV = 0.0017857;//* 0.97; //Velocity gain in PID Feed Forward
         public static final double HIGH_kA = 0.0053359;//* 0.99; //Acceleration gain PID Feed Forward
 
-        public static final double kF = 0.0018868;
+        public static final double kF = 0.00190678;
 
         public static final int PLATEAU_COUNT = 5;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
@@ -149,6 +152,31 @@ public class Constants {
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
     }
+
+    public static class HoodConstants {
+
+        public static final int HOOD_MOTOR_ID = 5;
+
+        public static final double kP = 0.3128;//0.4;//0.3128;//0.254;
+        public static final double kI = 0;
+        public static final double kD = 0;//8e-6;
+        public static final double kF = 0.49072349;//0.6134;//1.2268;//0.6134;//1.2268; //0.6134;//0.0517638;
+
+        public static final int PLATEAU_COUNT = 1;
+        public static final double TOLERANCE_MIN = 0.1; // degrees
+        public static final double TOLERANCE_MAX = 0.5; // degrees
+        public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
+
+        public static final int HOOD_SHOOTER_GEAR_RATIO = 111; // Bowen number
+        public static final double ENC_POSITION_CONVERSION_FACTOR = 360.0 / HOOD_SHOOTER_GEAR_RATIO; // Multiply by this to convert encoder rotations to hood degrees
+
+        public static final int HOOD_CURRENT_LIMIT = 10; // Amps
+
+        public static final double MIN_ANGLE = 12.0; // deg
+        public static final double MAX_ANGLE = 32.0; // deg
+        public static final double HOME_ANGLE = 22.0; // deg
+
+    }
   
     public static class HopperConstants {
 
@@ -161,7 +189,7 @@ public class Constants {
 
         public static final int HOPPER_DIO_PIN1 = 8;
         public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -22000; //set distance
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -220; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
