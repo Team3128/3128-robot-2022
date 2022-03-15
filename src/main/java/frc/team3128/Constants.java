@@ -224,8 +224,8 @@ public class Constants {
 
         public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 3; //degrees
-        public static final double TX_THRESHOLD_MAX = 10; //degrees
+        public static final double TX_THRESHOLD = 2; //degrees
+        public static final double TX_THRESHOLD_MAX = 5; //degrees
         public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 

@@ -129,7 +129,6 @@ public class Shooter extends NAR_PIDSubsystem {
      * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
      */
     public void startPID(double rpm) {
-        rpm = ConstantsInt.ShooterConstants.SET_RPM;
         thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
         super.setSetpoint(rpm);  
         // super.resetPlateauCount();
@@ -229,7 +228,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     public double calculateMotorVelocityFromDist(double dist) {
 
-        return -1.43648019e-8 + 4.42551199e-1*dist - 3.02450570e1*dist*dist + 3.16957933e3*dist*dist*dist;
+        return -1.43648019e-3*dist*dist*dist + 4.42551199e-1*dist*dist - 3.02450570e1*dist + 3.16957933e3 - 100;
     }
 }
 

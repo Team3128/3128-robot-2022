@@ -322,7 +322,7 @@ public class RobotContainer {
                             // new RunCommand(m_intake::runIntake, m_intake),
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootDist(m_shooter, m_shooterLimelight)
+                            new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
                         )
         );
 
@@ -333,10 +333,9 @@ public class RobotContainer {
                         // new CmdExtendIntake(m_intake),
                         new ParallelCommandGroup(
                             // new RunCommand(m_intake::runIntake, m_intake),
-                            new InstantCommand(() -> m_hood.startPID(m_hood.calculateAngleFromDistance(m_shooterLimelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT)))),
                             new CmdAlign(m_drive, m_shooterLimelight), 
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootDist(m_shooter, m_shooterLimelight)
+                            new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
                         )
         );
 
@@ -347,7 +346,7 @@ public class RobotContainer {
                         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                         new ParallelCommandGroup(
                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootDist(m_shooter, m_shooterLimelight)
+                            new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
                         )
         );
 
@@ -729,8 +728,8 @@ public class RobotContainer {
       
         for (Limelight ll : limelightList) {
             NarwhalDashboard.addLimelight(ll);
-            // ll.turnLEDOff();
-            ll.turnLEDOn();
+            ll.turnLEDOff();
+            //ll.turnLEDOn();
         }
     }
 
