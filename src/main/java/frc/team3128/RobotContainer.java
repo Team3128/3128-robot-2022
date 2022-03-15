@@ -773,6 +773,7 @@ public class RobotContainer {
 
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
+
         Command selectedAuto = auto_3Ball180;
 
         if (selectedAuto == null) {
