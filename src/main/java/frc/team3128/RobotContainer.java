@@ -729,7 +729,8 @@ public class RobotContainer {
       
         for (Limelight ll : limelightList) {
             NarwhalDashboard.addLimelight(ll);
-            ll.turnLEDOff();
+            // ll.turnLEDOff();
+            ll.turnLEDOn();
         }
     }
 

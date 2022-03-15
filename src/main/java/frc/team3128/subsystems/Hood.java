@@ -69,6 +69,7 @@ public class Hood extends NAR_PIDSubsystem {
     }
 
     public void startPID(double angle) {
+        angle = ConstantsInt.ShooterConstants.SET_ANGLE;
         tolerance = HoodConstants.TOLERANCE_MIN;
         super.setSetpoint(angle);  
         super.resetPlateauCount();
@@ -109,9 +110,8 @@ public class Hood extends NAR_PIDSubsystem {
         return m_hoodMotor.getSelectedSensorPosition() + HoodConstants.MIN_ANGLE;
     }
 
-    public double calculateAngleFromDistance(double distance) {
-        return 12;
+    public double calculateAngleFromDistance(double dist) {
+        return 7.62717674e-8 - 3.20341423e-5*dist + 5.01101227*dist*dist - 2.624432553e-1*dist*dist*dist + 2.20193191e1*dist*dist*dist*dist;
     }
-
 }
 

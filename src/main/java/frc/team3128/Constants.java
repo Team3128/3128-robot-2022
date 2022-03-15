@@ -157,7 +157,7 @@ public class Constants {
 
         public static final int HOOD_MOTOR_ID = 5;
 
-        public static final double kP = 0.3128;//0.4;//0.3128;//0.254;
+        public static final double kP = 0.28;//0.4;//0.3128;//0.254;
         public static final double kI = 0;
         public static final double kD = 0;//8e-6;
         public static final double kF = 0.49072349;//0.6134;//1.2268;//0.6134;//1.2268; //0.6134;//0.0517638;
@@ -189,7 +189,7 @@ public class Constants {
 
         public static final int HOPPER_DIO_PIN1 = 8;
         public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -220; //set distance
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -2200; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
@@ -213,7 +213,7 @@ public class Constants {
         public static final int SAMPLE_RATE = 3;
 
         public static final double TOP_CAMERA_ANGLE = (90 - 34.8519) * Math.PI / 180; // radians
-        public static final double TOP_CAMERA_HEIGHT = 26.5; // in 
+        public static final double TOP_CAMERA_HEIGHT = 23.5; // in 
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
@@ -222,7 +222,7 @@ public class Constants {
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;
 
-        public static final double TX_OFFSET = 2.0; // to offset alignment in either direction
+        public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
         public static final double TX_THRESHOLD = 3; //degrees
         public static final double TX_THRESHOLD_MAX = 10; //degrees
