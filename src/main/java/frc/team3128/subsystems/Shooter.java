@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.ConstantsInt;
 // import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.ConversionConstants;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -227,16 +228,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     public double calculateMotorVelocityFromDist(double dist) {
 
-        // dist += (13 - Robot.voltageRollingAvg) * 7;
-
-        return 0.00971 * Math.pow(dist, 3) - 0.289 * Math.pow(dist, 2) - 52.17 * dist + 5196 + 600;
-        // double rpm;
-        // if (dist < 78) {
-        //     rpm = 17.7 * dist + 2187;   
-        // } else {
-        //     rpm = -4.54 * Math.pow(dist, 2) + 917 * dist - 40328;
-        // }
-        // return rpm + 1000;
+        return -1.43648019e-3*dist*dist*dist + 4.42551199e-1*dist*dist - 3.02450570e1*dist + 3.16957933e3 - 100;
     }
 }
 
