@@ -45,6 +45,7 @@ public class RobotContainer {
     private Hopper m_hopper;
     private Climber m_climber;
     private Hood m_hood;
+    //private LED m_led;
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -110,6 +111,7 @@ public class RobotContainer {
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
         m_hood = Hood.getInstance();
+        //m_led = LED.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
         m_shooter.enable();
@@ -125,6 +127,7 @@ public class RobotContainer {
                                                         VisionConstants.BALL_LL_HEIGHT, 
                                                         VisionConstants.BALL_LL_FRONT_DIST, 0);
 
+        //m_commandScheduler.registerSubsystem(m_led);
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
@@ -172,12 +175,14 @@ public class RobotContainer {
 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun(m_intake, m_hopper));
         
-        m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(
-                                            new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle),
-                                            new CmdExtendIntakeAndRun(m_intake, m_hopper)).beforeStarting(new WaitCommand(0.5)) // Wait 0.5s, then extend intake so as to not block vision
-                                        );
+        // m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(
+        //                                     new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle),
+        //                                     new CmdExtendIntakeAndRun(m_intake, m_hopper)).beforeStarting(new WaitCommand(0.5)) // Wait 0.5s, then extend intake so as to not block vision
+        //                                 );
 
-        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2700), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
+        m_rightStick.getButton(3).whenHeld(lowerHubShoot);
+
+        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2650), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         //m_rightStick.getButton(4).whenHeld(lowerHubShoot);
@@ -358,7 +363,8 @@ public class RobotContainer {
                                 // new RunCommand(m_intake::runIntake, m_intake),
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1300))
+                                new InstantCommand(() -> m_hood.startPID(28)),
+                                new CmdShootRPM(m_shooter, 1200))
         );
 
 

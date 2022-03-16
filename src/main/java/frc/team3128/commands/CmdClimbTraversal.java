@@ -1,6 +1,8 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.subsystems.Climber;
@@ -37,24 +39,22 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
             //piston retract
             new InstantCommand(() -> m_climber.retractPiston()),
             
-            new WaitCommand(0.5),
-
             //elev retract
             new CmdClimbEncoder(m_climber, -350),
 
             //Climber is manually fully retracted on High Bar
 
             //wait between sequences
-            new WaitCommand(1.75),
+            //new WaitCommand(1.75),
             //elev extend a wee bit
-            new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
+            //new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
 
             // new CmdExtendIntake(m_intake),
 
-            new WaitCommand(0.5),
+            //new WaitCommand(0.5),
 
             //piston extend
-            new InstantCommand(() -> m_climber.extendPiston()),
+            // new InstantCommand(() -> m_climber.extendPiston()),
             
             new WaitCommand(0.25),
             
@@ -63,13 +63,25 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
             
             new WaitCommand(0.25),
 
-            //piston retract
-            new InstantCommand(() -> m_climber.retractPiston()),
-            
+            //piston extend
+            new InstantCommand(() -> m_climber.extendPiston()),
+
+            new CmdClimbEncoder(m_climber, 1000),
+
             new WaitCommand(0.5),
 
+            // new ParallelCommandGroup(
+            //     new CmdClimbEncoder(m_climber, 2500),
+            //     new SequentialCommandGroup(new RunCommand(() -> {}).withInterrupt(() -> m_climber.getAvgCurrent() > 20), 
+            //                                 new InstantCommand(() -> m_climber.retractPiston()))
+            // )
+
+            //piston retract
+            new InstantCommand(() -> m_climber.retractPiston())        
+            // new WaitCommand(0.5),
+
             //elev retract
-            new CmdClimbEncoder(m_climber, 3000) // Aaron number
+            // new CmdClimbEncoder(m_climber, 3000) // Aaron number
         );
     }
 
