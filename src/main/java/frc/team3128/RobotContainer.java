@@ -45,7 +45,6 @@ public class RobotContainer {
     private Hopper m_hopper;
     private Climber m_climber;
     private Hood m_hood;
-    //private LED m_led;
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -111,7 +110,6 @@ public class RobotContainer {
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
         m_hood = Hood.getInstance();
-        //m_led = LED.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
         m_shooter.enable();
@@ -127,7 +125,6 @@ public class RobotContainer {
                                                         VisionConstants.BALL_LL_HEIGHT, 
                                                         VisionConstants.BALL_LL_FRONT_DIST, 0);
 
-        //m_commandScheduler.registerSubsystem(m_led);
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 

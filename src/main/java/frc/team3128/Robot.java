@@ -7,8 +7,6 @@ package frc.team3128;
 import java.util.ArrayList;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -28,23 +26,10 @@ public class Robot extends TimedRobot {
     // private ArrayList<Double> battVoltages = new ArrayList<Double>();
     // public static double voltageRollingAvg = 0;
 
-    // AddressableLED m_led;
-    // AddressableLEDBuffer m_ledBuffer;
-    // int m_rainbowFirstPixelHue = 0;
-
     @Override
     public void robotInit(){
         LiveWindow.disableAllTelemetry();
         //CameraServer.startAutomaticCapture();
-
-        // m_led = new AddressableLED(9);
-
-        // m_ledBuffer = new AddressableLEDBuffer(60);
-        // m_led.setLength(m_ledBuffer.getLength());
-
-        // // Set the data
-        // m_led.setData(m_ledBuffer);
-        // m_led.start();
     }
 
     @Override
@@ -60,7 +45,6 @@ public class Robot extends TimedRobot {
         //     voltageRollingAvg += d;
         // }
         // voltageRollingAvg /= battVoltages.size();
-        // rainbow();
         
     }
 
@@ -104,19 +88,4 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
 
     }
-
-    // private void rainbow() {
-    //     // For every pixel
-    //     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-    //       // Calculate the hue - hue is easier for rainbows because the color
-    //       // shape is a circle so only one value needs to precess
-    //       final int hue = (m_rainbowFirstPixelHue + (i * 180 / m_ledBuffer.getLength())) % 180;
-    //       // Set the value
-    //       m_ledBuffer.setHSV(i, hue, 255, 128);
-    //     }
-    //     // Increase by to make the rainbow "move"
-    //     m_rainbowFirstPixelHue += 3;
-    //     // Check bounds
-    //     m_rainbowFirstPixelHue %= 180;
-    //   }
 }
