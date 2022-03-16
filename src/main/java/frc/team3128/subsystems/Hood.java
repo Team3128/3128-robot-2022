@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
+import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.IdleMode;
 import net.thefletcher.revrobotics.enums.MotorType;
@@ -111,9 +112,8 @@ public class Hood extends NAR_PIDSubsystem {
 
     public double calculateAngleFromDistance(double dist) {
         // double yay = 7.62717674e-8*dist*dist*dist*dist - 3.20341423e-5*dist*dist*dist + 5.01101227e-3*dist*dist - 2.624432553e-0*dist + 2.20193191e1;
-        double yay = 1.0566e-19*dist*dist*dist + 2.3476e-4*dist*dist + 3.4216e-2*dist + 1.5606e1;
 
-        return MathUtil.clamp(yay, 12, 32);
+        return MathUtil.clamp(HoodConstants.hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, 12, 32);
     }
 }
 

@@ -172,12 +172,14 @@ public class RobotContainer {
 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun(m_intake, m_hopper));
         
-        m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(
-                                            new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle),
-                                            new CmdExtendIntakeAndRun(m_intake, m_hopper)).beforeStarting(new WaitCommand(0.5)) // Wait 0.5s, then extend intake so as to not block vision
-                                        );
+        // m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(
+        //                                     new CmdBallJoystickPursuit(m_drive, m_ballLimelight, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle),
+        //                                     new CmdExtendIntakeAndRun(m_intake, m_hopper)).beforeStarting(new WaitCommand(0.5)) // Wait 0.5s, then extend intake so as to not block vision
+        //                                 );
 
-        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2700), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
+        m_rightStick.getButton(3).whenHeld(lowerHubShoot);
+
+        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2650), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         //m_rightStick.getButton(4).whenHeld(lowerHubShoot);
@@ -358,7 +360,8 @@ public class RobotContainer {
                                 // new RunCommand(m_intake::runIntake, m_intake),
                                 new RunCommand(m_drive::stop, m_drive),
                                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new CmdShootRPM(m_shooter, 1300))
+                                new InstantCommand(() -> m_hood.startPID(28)),
+                                new CmdShootRPM(m_shooter, 1200))
         );
 
 

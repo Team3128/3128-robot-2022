@@ -3,7 +3,8 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-
+import frc.team3128.common.utility.interpolation.InterpolatingDouble;
+import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 import net.thefletcher.revrobotics.enums.IdleMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -104,7 +105,7 @@ public class Constants {
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.9;
-        public static final double MANUAL_POWER = 0.4;
+        public static final double MANUAL_POWER = 0.1;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
         public static final double CLIMB_ENC_TO_TOP = 6300; // old -7825;
@@ -138,7 +139,7 @@ public class Constants {
 
         public static final double kF = 0.00190678;
 
-        public static final int PLATEAU_COUNT = 5;
+        public static final int PLATEAU_COUNT = 6;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
@@ -151,6 +152,23 @@ public class Constants {
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        static {
+            shooterSpeedsMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(3800.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(3750.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(3700.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(135.0), new InterpolatingDouble(3550.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(125.0), new InterpolatingDouble(3530.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(115.0), new InterpolatingDouble(3380.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(105.0), new InterpolatingDouble(3300.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(95.0), new InterpolatingDouble(3000.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(85.0), new InterpolatingDouble(2900.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(65.0), new InterpolatingDouble(2630.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(55.0), new InterpolatingDouble(2630.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(2580.0));
+        };
     }
 
     public static class HoodConstants {
@@ -162,7 +180,7 @@ public class Constants {
         public static final double kD = 0;//8e-6;
         public static final double kF = 0.49072349;//0.6134;//1.2268;//0.6134;//1.2268; //0.6134;//0.0517638;
 
-        public static final int PLATEAU_COUNT = 1;
+        public static final int PLATEAU_COUNT = 2;
         public static final double TOLERANCE_MIN = 0.1; // degrees
         public static final double TOLERANCE_MAX = 0.5; // degrees
         public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
@@ -176,6 +194,22 @@ public class Constants {
         public static final double MAX_ANGLE = 32.0; // deg
         public static final double HOME_ANGLE = 22.0; // deg
 
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        static {
+            hoodAngleMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(28.0));
+            hoodAngleMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(26.0));
+            hoodAngleMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(25.5));
+            hoodAngleMap.put(new InterpolatingDouble(135.0), new InterpolatingDouble(24.5));
+            hoodAngleMap.put(new InterpolatingDouble(125.0), new InterpolatingDouble(23.5));
+            hoodAngleMap.put(new InterpolatingDouble(115.0), new InterpolatingDouble(23.0));
+            hoodAngleMap.put(new InterpolatingDouble(105.0), new InterpolatingDouble(22.0));
+            hoodAngleMap.put(new InterpolatingDouble(95.0), new InterpolatingDouble(21.0));
+            hoodAngleMap.put(new InterpolatingDouble(85.0), new InterpolatingDouble(20.0));
+            hoodAngleMap.put(new InterpolatingDouble(75.0), new InterpolatingDouble(19.0));
+            hoodAngleMap.put(new InterpolatingDouble(65.0), new InterpolatingDouble(19.0));
+            hoodAngleMap.put(new InterpolatingDouble(55.0), new InterpolatingDouble(18.5));
+            hoodAngleMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(17.5));
+        };
     }
   
     public static class HopperConstants {
@@ -212,7 +246,7 @@ public class Constants {
 
         public static final int SAMPLE_RATE = 3;
 
-        public static final double TOP_CAMERA_ANGLE = (90 - 34.8519) * Math.PI / 180; // radians
+        public static final double TOP_CAMERA_ANGLE = (90 - 42.71) * Math.PI / 180; // radians
         public static final double TOP_CAMERA_HEIGHT = 23.5; // in 
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
