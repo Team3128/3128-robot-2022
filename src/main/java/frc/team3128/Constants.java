@@ -153,21 +153,21 @@ public class Constants {
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
 
-        public static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeeds = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
-            shooterSpeeds.put(new InterpolatingDouble(165.0), new InterpolatingDouble(3800.0));
-            shooterSpeeds.put(new InterpolatingDouble(155.0), new InterpolatingDouble(3750.0));
-            shooterSpeeds.put(new InterpolatingDouble(145.0), new InterpolatingDouble(3700.0));
-            shooterSpeeds.put(new InterpolatingDouble(135.0), new InterpolatingDouble(3550.0));
-            shooterSpeeds.put(new InterpolatingDouble(125.0), new InterpolatingDouble(3530.0));
-            shooterSpeeds.put(new InterpolatingDouble(115.0), new InterpolatingDouble(3380.0));
-            shooterSpeeds.put(new InterpolatingDouble(105.0), new InterpolatingDouble(3300.0));
-            shooterSpeeds.put(new InterpolatingDouble(95.0), new InterpolatingDouble(3000.0));
-            shooterSpeeds.put(new InterpolatingDouble(85.0), new InterpolatingDouble(2900.0));
-            shooterSpeeds.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
-            shooterSpeeds.put(new InterpolatingDouble(65.0), new InterpolatingDouble(2630.0));
-            shooterSpeeds.put(new InterpolatingDouble(55.0), new InterpolatingDouble(2630.0));
-            shooterSpeeds.put(new InterpolatingDouble(45.0), new InterpolatingDouble(2580.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(3800.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(3750.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(3700.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(135.0), new InterpolatingDouble(3550.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(125.0), new InterpolatingDouble(3530.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(115.0), new InterpolatingDouble(3380.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(105.0), new InterpolatingDouble(3300.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(95.0), new InterpolatingDouble(3000.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(85.0), new InterpolatingDouble(2900.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(65.0), new InterpolatingDouble(2630.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(55.0), new InterpolatingDouble(2630.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(2580.0));
         };
     }
 
@@ -194,7 +194,7 @@ public class Constants {
         public static final double MAX_ANGLE = 32.0; // deg
         public static final double HOME_ANGLE = 22.0; // deg
 
-        public static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
             hoodAngleMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(28.0));
             hoodAngleMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(26.0));

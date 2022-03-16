@@ -228,7 +228,8 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public double calculateMotorVelocityFromDist(double dist) {
-        return ShooterConstants.shooterSpeeds.getInterpolated(new InterpolatingDouble(dist)).value;
+        return ShooterConstants.shooterSpeedsMap.getInterpolated(new InterpolatingDouble(dist)).value;
+        // return -1.43648019e-3*dist*dist*dist + 4.42551199e-1*dist*dist - 3.02450570e1*dist + 3.16957933e3 - 100;
     }
 }
 

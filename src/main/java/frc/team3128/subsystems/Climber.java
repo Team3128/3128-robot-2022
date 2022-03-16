@@ -94,13 +94,13 @@ public class Climber extends SubsystemBase {
 
         // SmartDashboard.putString("Climber state", climberState.toString());
 
-        // SmartDashboard.putBoolean("Climber left limit switch", getLeftSwitch());
-        // SmartDashboard.putBoolean("Climber right limit switch", getRightSwitch());
-        // SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
-        // SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
-        // SmartDashboard.putString("Climber friction brake piston", m_climberBreakSolenoid.get().toString());
+        SmartDashboard.putBoolean("Climber left limit switch", getLeftSwitch());
+        SmartDashboard.putBoolean("Climber right limit switch", getRightSwitch());
+        SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
+        SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
+        SmartDashboard.putString("Climber friction brake piston", m_climberBreakSolenoid.get().toString());
 
-        SmartDashboard.putNumber("Climber avgCurrent", getAvgCurrent());
+        // SmartDashboard.putNumber("Climber avgCurrent", getAvgCurrent());
     }
 
     public void bothExtend() {
