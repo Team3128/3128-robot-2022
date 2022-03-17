@@ -88,7 +88,6 @@ public class RobotContainer {
     
     private SequentialCommandGroup extendIntakeAndReverse;
     private Command shootCommand;
-    private Command shootCommandHood;
 
     private SequentialCommandGroup manualShoot;
     private SequentialCommandGroup lowerHubShoot;
@@ -282,7 +281,8 @@ public class RobotContainer {
         m_leftStick.getButton(4).whenPressed(() -> m_hood.startPID(21));
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder());
 
-
+        m_rightStick.getPOVButton(0).whenPressed(() -> m_shooterLimelight.turnLEDOn());
+        m_rightStick.getPOVButton(4).whenPressed(() -> m_shooterLimelight.turnLEDOff());
     }
 
     public void init() {
@@ -328,19 +328,6 @@ public class RobotContainer {
                         )
         );
 
-        shootCommandHood = new SequentialCommandGroup(
-                        new InstantCommand(m_shooterLimelight::turnLEDOn),
-                        new CmdRetractHopper(m_hopper), 
-                        new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-                        // new CmdExtendIntake(m_intake),
-                        new ParallelCommandGroup(
-                            // new RunCommand(m_intake::runIntake, m_intake),
-                            new CmdAlign(m_drive, m_shooterLimelight), 
-                            new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
-                        )
-        );
-
         //use this shoot command for testing
         manualShoot = new SequentialCommandGroup(
                         new InstantCommand(m_shooterLimelight::turnLEDOn), 
@@ -368,7 +355,7 @@ public class RobotContainer {
         //AUTONOMOUS ROUTINES
 
         auto_1Ball = new SequentialCommandGroup(
-                            retractHopperAndShootCmdLL(),
+                            alignShootCmd(),
 
                             new RamseteCommand(Trajectories.driveBack30In, 
                             m_drive::getPose,
@@ -394,7 +381,7 @@ public class RobotContainer {
                             ),
 
                             //shoot preloaded + first
-                            retractHopperAndShootCmd(3250)
+                            shootCmd(3250)
 
         );
         
@@ -408,7 +395,7 @@ public class RobotContainer {
                             ),
 
                             //shoot first + preloaded
-                            retractHopperAndShootCmd(3250)
+                            shootCmd(3250)
 
         );
 
@@ -428,7 +415,7 @@ public class RobotContainer {
                             new CmdInPlaceTurn(m_drive, 75),
 
                             //shoot first + preloaded
-                            retractHopperAndShootCmdLL() // 3750
+                            alignShootCmd() // 3750
 
         );
 
@@ -436,7 +423,7 @@ public class RobotContainer {
         auto_3BallHook = new SequentialCommandGroup(
 
                             //shoot preloaded ball
-                            retractHopperAndShootCmd(3350),
+                            shootCmd(3350),
 
                             //pick up two balls
                             new ParallelDeadlineGroup(
@@ -449,7 +436,7 @@ public class RobotContainer {
                             ),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3250)
+                            shootCmd(3250)
 
         );
 
@@ -457,7 +444,7 @@ public class RobotContainer {
         auto_3BallHersheyKiss = new SequentialCommandGroup(
             
                             //shoot preload
-                            retractHopperAndShootCmd(3500),
+                            shootCmd(3500),
                             
                             //pick up two balls
                             new ParallelDeadlineGroup(
@@ -470,14 +457,14 @@ public class RobotContainer {
                             ),
 
                             //shoot two balls
-                            retractHopperAndShootCmdLL()
+                            alignShootCmd()
         );
         
         //no use
         auto_3BallTerminal = new SequentialCommandGroup(
 
                             //shoot preloaded ball
-                            retractHopperAndShootCmd(3000),
+                            shootCmd(3000),
 
                             trajectoryCmd(7),
                             new ParallelDeadlineGroup(
@@ -494,13 +481,13 @@ public class RobotContainer {
                             new InstantCommand(m_drive::stop, m_drive),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3000)
+                            shootCmd(3000)
 
         );
 
         //no use
         auto_3BallBack = new SequentialCommandGroup(
-                        retractHopperAndShootCmd(3500),
+                        shootCmd(3500),
 
                         new CmdExtendIntake(m_intake),
                         new WaitCommand(0.1), // slow but it might work
@@ -513,7 +500,7 @@ public class RobotContainer {
                         ),
                         new InstantCommand(() -> m_intake.retractIntake()),
 
-                        retractHopperAndShootCmdLL()
+                        alignShootCmd()
          );
 
         //no use
@@ -530,7 +517,7 @@ public class RobotContainer {
                             ),
 
                             //shoot first + preloaded
-                            retractHopperAndShootCmd(3000),
+                            shootCmd(3000),
 
                             //pick up two more balls
                             new CmdExtendIntake(m_intake).withTimeout(0.1),
@@ -543,7 +530,7 @@ public class RobotContainer {
                             ),
 
                             //shoot two more balls
-                            retractHopperAndShootCmd(3250)
+                            shootCmd(3250)
 
         );
 
@@ -563,7 +550,7 @@ public class RobotContainer {
 
                             new CmdRetractHopper(m_hopper),
 
-                            retractHopperAndShootCmd(3750),
+                            shootCmd(3750),
                             new CmdExtendIntake(m_intake),
 
                             new ParallelDeadlineGroup(
@@ -582,7 +569,7 @@ public class RobotContainer {
                             new InstantCommand(m_drive::stop, m_drive),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3750)
+                            shootCmd(3750)
         );
 
         //no use
@@ -606,7 +593,7 @@ public class RobotContainer {
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
-                            retractHopperAndShootCmd(3750),
+                            shootCmd(3750),
                             
                             trajectoryCmd(17),
 
@@ -624,11 +611,11 @@ public class RobotContainer {
                             new InstantCommand(m_drive::stop, m_drive),
 
                             //shoot two balls
-                            retractHopperAndShootCmd(3750)
+                            shootCmd(3750)
         );
 
         auto_3Ball180 = new SequentialCommandGroup(
-                            retractHopperAndShootCmd(3000),
+                            shootCmd(),
 
                             new CmdInPlaceTurn(m_drive, 180),
 
@@ -639,7 +626,7 @@ public class RobotContainer {
 
                             new CmdInPlaceTurn(m_drive, -50),
 
-                            retractHopperAndShootCmd(3400, 25)
+                            alignShootCmd()
                             //retractHopperAndShootCmdLL(3000, 16)
         );
 
@@ -673,27 +660,34 @@ public class RobotContainer {
                             m_drive);
     }
 
-    private SequentialCommandGroup retractHopperAndShootCmd(int RPM) {
+    private SequentialCommandGroup shootCmd() {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            // new CmdExtendIntake(m_intake),
             new ParallelCommandGroup(
-                // new RunCommand(m_intake::runIntake, m_intake),
-                new InstantCommand(() -> m_hood.startPID(12)),
+                new CmdHopperShooting(m_hopper, m_shooter::isReady),
+                new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
+            ).withTimeout(2)
+        );
+    }
+    
+    private SequentialCommandGroup shootCmd(int RPM) {
+        return new SequentialCommandGroup(
+            new CmdRetractHopper(m_hopper).withTimeout(0.5),
+            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> m_hood.startPID(HoodConstants.HOME_ANGLE)),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
             ).withTimeout(2)
         );
     }
 
-    private SequentialCommandGroup retractHopperAndShootCmd(int RPM, double angle) {
+    private SequentialCommandGroup shootCmd(int RPM, double angle) {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            // new CmdExtendIntake(m_intake),
             new ParallelCommandGroup(
-                // new RunCommand(m_intake::runIntake, m_intake),
                 new InstantCommand(() -> m_hood.startPID(angle)),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
@@ -701,14 +695,12 @@ public class RobotContainer {
         );
     }
 
-    private SequentialCommandGroup retractHopperAndShootCmdLL() {
+    private SequentialCommandGroup alignShootCmd() {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(m_shooterLimelight::turnLEDOn),
-            // new CmdExtendIntake(m_intake),
             new ParallelCommandGroup(
-                // new RunCommand(m_intake::runIntake, m_intake),
                 new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
@@ -750,7 +742,7 @@ public class RobotContainer {
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
-        SmartDashboard.putNumber("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        SmartDashboard.putNumber("distance to the limelight", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
         SmartDashboard.putNumber("ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2));
         SmartDashboard.putNumber("adjusted ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 5) * (2/3));
 

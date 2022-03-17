@@ -36,7 +36,6 @@ public class Constants {
         public static final double ARCADE_DRIVE_TURN_MULT = 0.70;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
-        // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.55438;
@@ -108,7 +107,7 @@ public class Constants {
         public static final double MANUAL_POWER = 0.1;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
-        public static final double CLIMB_ENC_TO_TOP = 6300; // old -7825;
+        public static final double CLIMB_ENC_TO_TOP = 6600; // old -7825;
         public static final double TOLERANCE_TICKS = 100;
 
     }
@@ -155,6 +154,7 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
+            shooterSpeedsMap.put(new InterpolatingDouble(172.0), new InterpolatingDouble(3900.0));
             shooterSpeedsMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(3800.0));
             shooterSpeedsMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(3750.0));
             shooterSpeedsMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(3700.0));
@@ -196,6 +196,7 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
+            hoodAngleMap.put(new InterpolatingDouble(172.0), new InterpolatingDouble(29.0));
             hoodAngleMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(28.0));
             hoodAngleMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(26.0));
             hoodAngleMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(25.5));
@@ -251,7 +252,7 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 4e-3;
+        public static final double VISION_PID_kP = 2e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;
