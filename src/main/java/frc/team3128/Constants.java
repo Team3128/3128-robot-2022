@@ -36,7 +36,6 @@ public class Constants {
         public static final double ARCADE_DRIVE_TURN_MULT = 0.70;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
-        // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.55438;
@@ -253,7 +252,7 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 4e-3; // 2e-3;
+        public static final double VISION_PID_kP = 2e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;
