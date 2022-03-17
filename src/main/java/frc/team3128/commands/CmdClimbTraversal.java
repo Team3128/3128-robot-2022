@@ -61,7 +61,7 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
             //elev extend
             new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION),
             
-            new WaitCommand(0.25),
+            new WaitCommand(0.5),
 
             //piston extend
             new InstantCommand(() -> m_climber.extendPiston()),
