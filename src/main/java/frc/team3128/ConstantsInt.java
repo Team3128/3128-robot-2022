@@ -19,6 +19,7 @@ public class ConstantsInt extends Constants {
     //How To Use: Redefine any constants you want to change through NarwhalDashboard in this class.
     //The Constants will be overridden and NarwhalDashboard will be able to change it
     //IMPORTANT: Omit "final" when temporarily adding constants to this class
+    
     public static class ConversionConstants extends Constants.ConversionConstants {}
     public static class DriveConstants extends Constants.DriveConstants {}
     public static class ClimberConstants extends Constants.ClimberConstants {}

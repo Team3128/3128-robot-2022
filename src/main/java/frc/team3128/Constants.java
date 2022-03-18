@@ -138,7 +138,7 @@ public class Constants {
 
         public static final double kF = 0.00190678;
 
-        public static final int PLATEAU_COUNT = 6;
+        public static final int PLATEAU_COUNT = 7;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
@@ -152,7 +152,7 @@ public class Constants {
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
 
-        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        public static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
             shooterSpeedsMap.put(new InterpolatingDouble(172.0), new InterpolatingDouble(3900.0));
             shooterSpeedsMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(3800.0));
@@ -180,7 +180,7 @@ public class Constants {
         public static final double kD = 0;//8e-6;
         public static final double kF = 0.49072349;//0.6134;//1.2268;//0.6134;//1.2268; //0.6134;//0.0517638;
 
-        public static final int PLATEAU_COUNT = 2;
+        public static final int PLATEAU_COUNT = 3;
         public static final double TOLERANCE_MIN = 0.1; // degrees
         public static final double TOLERANCE_MAX = 0.5; // degrees
         public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
@@ -252,7 +252,7 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 2e-3;
+        public static final double VISION_PID_kP = 3e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;

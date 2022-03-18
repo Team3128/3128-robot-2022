@@ -26,6 +26,13 @@ public class InterpolatingTreeMap<K extends InverseInterpolable<K> & Comparable<
         this(0);
     }
 
+    public InterpolatingTreeMap (Map.Entry<K, V>... entries) {
+        this(0);
+        for (Map.Entry<K, V> entry : entries) {
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
     /**
      * Inserts a key value pair, and trims the tree if a max size is specified
      *
