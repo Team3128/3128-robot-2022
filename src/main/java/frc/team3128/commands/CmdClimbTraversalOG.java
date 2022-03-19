@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.Constants.ClimberConstants;
 
-public class CmdClimbTraversal extends SequentialCommandGroup{
+public class CmdClimbTraversalOG extends SequentialCommandGroup{
 
-    public CmdClimbTraversal(Climber m_climber) {
+    public CmdClimbTraversalOG(Climber m_climber) {
         addCommands(
             
             // new CmdExtendIntake(m_intake),
@@ -44,34 +44,22 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
 
             //Climber is manually fully retracted on High Bar
             
-            new WaitCommand(0.25),
+            new WaitCommand(0.5),
+
+            //piston extend
+            new InstantCommand(() -> m_climber.extendPiston()),
             
             //elev extend
             new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION),
             
-            new WaitCommand(0.75),
+            new WaitCommand(0.25),
 
-            //piston extend
-            new InstantCommand(() -> m_climber.extendPiston()),
+            new InstantCommand(() -> m_climber.retractPiston()),
 
-            new WaitCommand(0.5),
+            new WaitCommand(0.25),
 
-            new CmdClimbEncoder(m_climber, 1000),
+            new CmdClimbEncoder(m_climber, 1000)
 
-            new WaitCommand(0.5),
-
-            // new ParallelCommandGroup(
-            //     new CmdClimbEncoder(m_climber, 2500),
-            //     new SequentialCommandGroup(new RunCommand(() -> {}).withInterrupt(() -> m_climber.getAvgCurrent() > 20), 
-            //                                 new InstantCommand(() -> m_climber.retractPiston()))
-            // )
-
-            //piston retract
-            new InstantCommand(() -> m_climber.retractPiston())        
-            // new WaitCommand(0.5),
-
-            //elev retract
-            // new CmdClimbEncoder(m_climber, 3000) // Aaron number
         );
     }
 
