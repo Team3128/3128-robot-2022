@@ -39,26 +39,30 @@ public class CmdClimbTraversalOG extends SequentialCommandGroup{
             //piston retract
             new InstantCommand(() -> m_climber.retractPiston()),
             
+            new WaitCommand(0.5),
+
             //elev retract
             new CmdClimbEncoder(m_climber, -350),
 
             //Climber is manually fully retracted on High Bar
             
-            new WaitCommand(0.5),
+            new WaitCommand(0.5), // 1 weird timing, 
+
+            new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
 
             //piston extend
             new InstantCommand(() -> m_climber.extendPiston()),
             
             //elev extend
-            new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION),
+            new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION)
             
-            new WaitCommand(0.25),
+            // new WaitCommand(0.25),
 
-            new InstantCommand(() -> m_climber.retractPiston()),
+            // new InstantCommand(() -> m_climber.retractPiston()),
 
-            new WaitCommand(0.25),
+            // new WaitCommand(0.25),
 
-            new CmdClimbEncoder(m_climber, 1000)
+            // new CmdClimbEncoder(m_climber, 1000)
 
         );
     }

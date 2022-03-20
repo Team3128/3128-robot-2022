@@ -56,6 +56,7 @@ public class CmdClimbTraversal extends SequentialCommandGroup{
 
             new WaitCommand(0.5),
 
+            //maybe comment this and everything under it and have mak kenna manual the rest
             new CmdClimbEncoder(m_climber, 1000),
 
             new WaitCommand(0.5),

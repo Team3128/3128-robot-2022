@@ -104,7 +104,7 @@ public class Constants {
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.9;
-        public static final double MANUAL_POWER = 0.1;
+        public static final double MANUAL_POWER = 0.3;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
         public static final double CLIMB_ENC_TO_TOP = 6600; // old -7825;
@@ -138,7 +138,7 @@ public class Constants {
 
         public static final double kF = 0.00190678;
 
-        public static final int PLATEAU_COUNT = 7;
+        public static final int PLATEAU_COUNT = 5;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
@@ -252,7 +252,7 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 3e-3;
+        public static final double VISION_PID_kP = 1.8e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;

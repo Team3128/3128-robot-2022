@@ -24,8 +24,8 @@ public class ConstantsInt extends Constants {
     public static class DriveConstants extends Constants.DriveConstants {}
     public static class ClimberConstants extends Constants.ClimberConstants {}
     public static class ShooterConstants extends Constants.ShooterConstants {
-        public static double SET_RPM = 3000;
-        public static double SET_ANGLE = 25;
+        // public static double SET_RPM = 3000;
+        // public static double SET_ANGLE = 25;
 
     }
     public static class HopperConstants extends Constants.HopperConstants {}

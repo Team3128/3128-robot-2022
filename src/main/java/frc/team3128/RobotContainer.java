@@ -92,7 +92,7 @@ public class RobotContainer {
     private SequentialCommandGroup manualShoot;
     private SequentialCommandGroup lowerHubShoot;
     private CmdClimb climbCommand;
-    private CmdClimbTraversal climbTraversalCommand;
+    private CmdClimbTraversalOG climbTraversalCommand;
 
     private HashMap<Command, Pose2d> initialPoses;
 
@@ -309,7 +309,7 @@ public class RobotContainer {
         initialPoses = new HashMap<Command, Pose2d>();
 
         climbCommand = new CmdClimb(m_climber);
-        climbTraversalCommand = new CmdClimbTraversal(m_climber);
+        climbTraversalCommand = new CmdClimbTraversalOG(m_climber);
         
         extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdReverseIntake(m_intake, m_hopper));
 
@@ -715,6 +715,7 @@ public class RobotContainer {
             SmartDashboard.putData("Drivetrain", m_drive);
             SmartDashboard.putData("Intake", m_intake);
             SmartDashboard.putData("Hopper", m_hopper);
+            SmartDashboard.putData("Climber", m_climber);
             SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
             SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
         }
