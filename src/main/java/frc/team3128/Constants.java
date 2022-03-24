@@ -3,7 +3,8 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-
+import frc.team3128.common.utility.interpolation.InterpolatingDouble;
+import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 import net.thefletcher.revrobotics.enums.IdleMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -33,12 +34,11 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
         public static final double ARCADE_DRIVE_TURN_MULT = 0.70;
-        public static final double ARCADE_DRIVE_RATE_LIMIT = 0.5; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
+        public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
-        // Drive characterization - taken from Speedy Gonzales
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
-        public static final double TRACK_WIDTH_METERS = 0.56994;
+        public static final double TRACK_WIDTH_METERS = 0.55438;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
@@ -46,9 +46,9 @@ public class Constants {
         public static final double DRIVE_NUp100MS_TO_MPS = DRIVE_NU_TO_METER * 10; // sensor units per 100 ms to m/s of drivetrain
         public static final double MAX_DRIVE_VEL_NUp100MS = 6380 * ConversionConstants.FALCON_ENCODER_RESOLUTION / 60 / 10; // max angular velocity of drivetrain (encoder, not wheel) in sensor units per 100 ms - 6380 RPM * RESOLUTION nu/rot * 1 min/60s * 1s/(10*100ms)
 
-        public static final double kS = 0.73678;
-        public static final double kV = 2.0983;
-        public static final double kA = 0.317;
+        public static final double kS = 0.68392;
+        public static final double kV = 2.1048;
+        public static final double kA = 0.30905;
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
@@ -56,10 +56,17 @@ public class Constants {
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
+        public static final double TURN_kP = -2e-3;
+        public static final double TURN_kI = 0;
+        public static final double TURN_kD = -2e-4;
+        public static final double TURN_kF = 0.1;
+
+        public static final double TURN_TOLERANCE = 2; // deg
+
         //Ramsete constants
         public static final double RAMSETE_B = 2; //default value - don't change unless absolutely necessary
         public static final double RAMSETE_ZETA = 0.7; //default value - don't change unless absolutely necessary
-        public static final double RAMSETE_KP = 2.9366;
+        public static final double RAMSETE_KP = 2.9127;
 
         public static final Boolean GYRO_REVERSED = false;
 
@@ -97,24 +104,27 @@ public class Constants {
     
         public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
         public static final double CLIMBER_POWER = 0.9;
-        public static final double MANUAL_POWER = 0.4;
+        public static final double MANUAL_POWER = 0.3;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
-        public static final double CLIMB_ENC_TO_TOP = 6300; // old -7825;
+        public static final double CLIMB_ENC_TO_TOP = 6600; // old -7825;
         public static final double TOLERANCE_TICKS = 100;
 
     }
 
     public static class ShooterConstants {
 
+        public static final double SET_RPM = 3000;
+        public static final double SET_ANGLE = 25;
+
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double LOW_kP = 1.8e-3; //1.24e-6;
+        public static final double LOW_kP = 1e-4; //1.24e-6;
         public static final double LOW_kI = 0;
-        public static final double LOW_kD = 5e-5;
+        public static final double LOW_kD = 0;
 
-        public static final double HIGH_kP = 0; // 3.2e-3;
+        public static final double HIGH_kP = 2e-4; // 3.2e-3;
         public static final double HIGH_kI = 0;
         public static final double HIGH_kD = 0; // 5e-4;
 
@@ -126,7 +136,9 @@ public class Constants {
         public static final double HIGH_kV = 0.0017857;//* 0.97; //Velocity gain in PID Feed Forward
         public static final double HIGH_kA = 0.0053359;//* 0.99; //Acceleration gain PID Feed Forward
 
-        public static final int PLATEAU_COUNT = 1;
+        public static final double kF = 0.00190678;
+
+        public static final int PLATEAU_COUNT = 5;
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
@@ -139,6 +151,66 @@ public class Constants {
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
+
+        public static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        static {
+            shooterSpeedsMap.put(new InterpolatingDouble(172.0), new InterpolatingDouble(3900.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(3800.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(3750.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(3700.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(135.0), new InterpolatingDouble(3550.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(125.0), new InterpolatingDouble(3530.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(115.0), new InterpolatingDouble(3380.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(105.0), new InterpolatingDouble(3300.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(95.0), new InterpolatingDouble(3000.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(85.0), new InterpolatingDouble(2900.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(75.0), new InterpolatingDouble(2800.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(65.0), new InterpolatingDouble(2630.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(55.0), new InterpolatingDouble(2630.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(2580.0));
+        };
+    }
+
+    public static class HoodConstants {
+
+        public static final int HOOD_MOTOR_ID = 5;
+
+        public static final double kP = 0.28;//0.4;//0.3128;//0.254;
+        public static final double kI = 0;
+        public static final double kD = 0;//8e-6;
+        public static final double kF = 0.49072349;//0.6134;//1.2268;//0.6134;//1.2268; //0.6134;//0.0517638;
+
+        public static final int PLATEAU_COUNT = 3;
+        public static final double TOLERANCE_MIN = 0.1; // degrees
+        public static final double TOLERANCE_MAX = 0.5; // degrees
+        public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
+
+        public static final int HOOD_SHOOTER_GEAR_RATIO = 111; // Bowen number
+        public static final double ENC_POSITION_CONVERSION_FACTOR = 360.0 / HOOD_SHOOTER_GEAR_RATIO; // Multiply by this to convert encoder rotations to hood degrees
+
+        public static final int HOOD_CURRENT_LIMIT = 10; // Amps
+
+        public static final double MIN_ANGLE = 12.0; // deg
+        public static final double MAX_ANGLE = 32.0; // deg
+        public static final double HOME_ANGLE = 22.0; // deg
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
+        static {
+            hoodAngleMap.put(new InterpolatingDouble(172.0), new InterpolatingDouble(29.0));
+            hoodAngleMap.put(new InterpolatingDouble(165.0), new InterpolatingDouble(28.0));
+            hoodAngleMap.put(new InterpolatingDouble(155.0), new InterpolatingDouble(26.0));
+            hoodAngleMap.put(new InterpolatingDouble(145.0), new InterpolatingDouble(25.5));
+            hoodAngleMap.put(new InterpolatingDouble(135.0), new InterpolatingDouble(24.5));
+            hoodAngleMap.put(new InterpolatingDouble(125.0), new InterpolatingDouble(23.5));
+            hoodAngleMap.put(new InterpolatingDouble(115.0), new InterpolatingDouble(23.0));
+            hoodAngleMap.put(new InterpolatingDouble(105.0), new InterpolatingDouble(22.0));
+            hoodAngleMap.put(new InterpolatingDouble(95.0), new InterpolatingDouble(21.0));
+            hoodAngleMap.put(new InterpolatingDouble(85.0), new InterpolatingDouble(20.0));
+            hoodAngleMap.put(new InterpolatingDouble(75.0), new InterpolatingDouble(19.0));
+            hoodAngleMap.put(new InterpolatingDouble(65.0), new InterpolatingDouble(19.0));
+            hoodAngleMap.put(new InterpolatingDouble(55.0), new InterpolatingDouble(18.5));
+            hoodAngleMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(17.5));
+        };
     }
   
     public static class HopperConstants {
@@ -152,7 +224,7 @@ public class Constants {
 
         public static final int HOPPER_DIO_PIN1 = 8;
         public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -22000; //set distance
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -2200; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
@@ -175,20 +247,20 @@ public class Constants {
 
         public static final int SAMPLE_RATE = 3;
 
-        public static final double TOP_CAMERA_ANGLE = (90 - 34.8519) * Math.PI / 180; // radians
-        public static final double TOP_CAMERA_HEIGHT = 26.5; // in 
+        public static final double TOP_CAMERA_ANGLE = (90 - 42.71) * Math.PI / 180; // radians
+        public static final double TOP_CAMERA_HEIGHT = 23.5; // in 
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 2.5e-3;
+        public static final double VISION_PID_kP = 1.8e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.07;
 
-        public static final double TX_OFFSET = 2.0; // to offset alignment in either direction
+        public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 3; //degrees
-        public static final double TX_THRESHOLD_MAX = 10; //degrees
+        public static final double TX_THRESHOLD = 2; //degrees
+        public static final double TX_THRESHOLD_MAX = 5; //degrees
         public static final double TIME_TO_MAX_THRESHOLD = 5; //seconds
         public static final double TX_THRESHOLD_INCREMENT = (TX_THRESHOLD_MAX - TX_THRESHOLD) / TIME_TO_MAX_THRESHOLD; //degrees per second
 
