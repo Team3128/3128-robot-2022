@@ -8,31 +8,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.HopperConstants;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
+import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class Hopper extends SubsystemBase {
 
     private static Hopper instance;
 
-    private NAR_TalonSRX m_hopper;
+    private NAR_TalonSRX m_hopper1, m_hopper2;
     //private DoubleSolenoid m_hopperSolenoid;
     private Encoder m_encoder;
 
-    private boolean isEjected;
-
-    //Photoelectric Sensors (Not Used As Of Now)
-    private DigitalInput m_sensorIn, m_sensorOut;
-    private boolean wasIn, wasOut;
-    //Sets Ball Count at Beginning of Match
-    private int ballCount = 0;
-
     public Hopper() {
         configMotors();
-        configPneumatics();
-        configSensors();
         configEncoders();
         // resetEncoder();
-      
-        isEjected = true;
     }
 
     public static synchronized Hopper getInstance() {
@@ -42,12 +31,9 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configMotors() {
-        m_hopper = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_ID);
+        m_hopper1 = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_ID);
+        m_hopper2 = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_2_ID);
     }
-
-    private void configPneumatics() {
-    //     m_hopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, HopperConstants.HOPPER_SOLENOID_FORWARD_CHANNEL_ID, HopperConstants.HOPPER_SOLENOID_BACKWARD_CHANNEL_ID);
-     }
 
     private void configEncoders() {
         m_encoder = new Encoder(HopperConstants.HOPPER_DIO_PIN1, HopperConstants.HOPPER_DIO_PIN2);
@@ -55,37 +41,9 @@ public class Hopper extends SubsystemBase {
         m_encoder.setReverseDirection(true);
     }
 
-    private void configSensors() {
-        m_sensorIn = new DigitalInput(HopperConstants.BOTTOM_SENSOR_ID);
-        m_sensorOut = new DigitalInput(HopperConstants.TOP_SENSOR_ID);
-    }
-
     @Override
     public void periodic() {
-        if(wasIn && !m_sensorIn.get()) ballCount++;
-        if(wasOut && !m_sensorOut.get()) ballCount--;
-
-        wasIn = m_sensorIn.get();
-        wasOut = m_sensorOut.get();
-
         SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
-    }
-
-    // public boolean getTop() {
-    //     return !m_top.get(); // .get() is inverted
-    // }
-
-    // public boolean getBottom() {
-    //     return !m_bottom.get(); // .get() is inverted
-    // }
-
-    /**
-     * Tracks gate ejected state
-     * @return true if gate ejected, false if retracted
-     */
-
-    public boolean getEjected() {
-        return isEjected;
     }
 
     /**
@@ -96,53 +54,33 @@ public class Hopper extends SubsystemBase {
     }
 
     /**
-     * Ejects the piston gate
-     */
-    public void ejectPistonGate(){
-    //     m_hopperSolenoid.set(kForward);
-    //     isEjected = true;
-    }
-
-    /**
-     * Retracts the piston gate
-     */
-    // public void retractPistonGate(){
-    //     m_hopperSolenoid.set(kReverse);
-    //     isEjected = false;
-    // }
-
-    /**
-     * Stops the piston gate - emergency stop/power off
-     */
-    // public void turnPistonOff() {
-    //   m_hopperSolenoid.set(kOff); 
-    // }
-
-    /**
      * Runs the hopper using the HOPPER_MOTOR_POWER constant
      */
     public void runHopper() {
-        m_hopper.set(HopperConstants.HOPPER_MOTOR_POWER);
+        m_hopper1.set(HopperConstants.HOPPER_MOTOR_POWER);
+        m_hopper2.set(HopperConstants.HOPPER_MOTOR_POWER);
 
     }
 
     public void reverseHopper() {
         m_encoder.reset();
-        m_hopper.set(HopperConstants.REVERSE_HOPPER_MOTOR_POWER); //change later
+        m_hopper1.set(HopperConstants.REVERSE_HOPPER_MOTOR_POWER); //change later
     }
 
     /**
      * Stops the hopper - sets power to 0
      */
     public void stopHopper() {
-        m_hopper.set(0);
+        m_hopper1.set(0);
+        m_hopper2.set(0);
     }
 
     public void resetMotorEncoder(){
-        m_hopper.setSelectedSensorPosition(0);
+        m_hopper1.setSelectedSensorPosition(0);
     }
 
     public void setNeutralMode(NeutralMode mode) {
-        m_hopper.setNeutralMode(mode);
+        m_hopper1.setNeutralMode(mode);
+        m_hopper2.setNeutralMode(mode);
     }
 }

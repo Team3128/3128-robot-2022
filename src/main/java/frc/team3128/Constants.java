@@ -5,7 +5,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
-import net.thefletcher.revrobotics.enums.IdleMode;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
@@ -80,38 +81,6 @@ public class Constants {
         );
     }
 
-    public static class ClimberConstants {
-
-        public static final int CLIMBER_SENSOR_LEFT_ID = 7;
-        public static final int CLIMBER_SENSOR_RIGHT_ID = 6;
-        public static final int CLIMBER_MOTOR_LEFT_ID = 6;
-        public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
-
-        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 2; 
-        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0; //1
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7; //5
-
-        public static final double CLIMBER_GEAR_RATIO = 18.9;
-        public static final double AXLE_DIAMETER = 0.7;
-        public static final double CLIMBER_ERROR_RATE = .5; //in inches
-
-        public static final double CLIMBER_HEIGHT = 20; // inches
-
-        public static final double VERTICAL_DISTANCE = 23.875;  // TODO: change to actual distance
-        public static final double SMALL_VERTICAL_DISTANCE = 5; // TODO: change to actual distance
-        public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
-    
-        public static final IdleMode CLIMBER_NEUTRAL_MODE = IdleMode.kBrake;
-        public static final double CLIMBER_POWER = 0.9;
-        public static final double MANUAL_POWER = 0.3;
-
-        public static final double CLIMB_ENC_DIAG_EXTENSION = 6600;//same as diag extension rn // old-7850; //-7379
-        public static final double CLIMB_ENC_TO_TOP = 6600; // old -7825;
-        public static final double TOLERANCE_TICKS = 100;
-
-    }
-
     public static class ShooterConstants {
 
         public static final double SET_RPM = 3000;
@@ -171,6 +140,68 @@ public class Constants {
         };
     }
 
+    public static class HopperConstants {
+
+        public static final int HOPPER_MOTOR_ID = 6;
+        public static final int HOPPER_MOTOR_2_ID = 9;
+        public static final int BOTTOM_SENSOR_ID = 12;
+        public static final int TOP_SENSOR_ID = 13;
+
+        //public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
+        //public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+
+        public static final int HOPPER_DIO_PIN1 = 8;
+        public static final int HOPPER_DIO_PIN2 = 9;
+        public static final double HOPPER_MAX_REVERSE_DISTANCE = -2200; //set distance
+
+        public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
+
+    }
+
+    public static class IntakeConstants {
+
+        public static final int INTAKE_MOTOR_ID = 7; 
+        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 4;
+        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
+
+        public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
+
+    }
+
+    public static class ClimberConstants {
+
+        public static final int CLIMBER_MOTOR_LEFT_ID = 12;
+        public static final int CLIMBER_MOTOR_RIGHT_ID = 13;
+
+        public static final int CLIMBER_SENSOR_LEFT_ID = 7;
+        public static final int CLIMBER_SENSOR_RIGHT_ID = 6;
+
+        public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 2; 
+        public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
+        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0; //1
+        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7; //5
+
+        public static final double CLIMBER_GEAR_RATIO = 18.9;
+        public static final double AXLE_DIAMETER = 0.7;
+        public static final double CLIMBER_ERROR_RATE = .5; //in inches
+
+        public static final double CLIMBER_HEIGHT = 20; // inches
+
+        public static final double VERTICAL_DISTANCE = 23.875;  // TODO: change to actual distance
+        public static final double SMALL_VERTICAL_DISTANCE = 5; // TODO: change to actual distance
+        public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
+    
+        public static final NeutralMode CLIMBER_NEUTRAL_MODE = NeutralMode.Brake;
+        public static final double CLIMBER_POWER = 0.9;
+        public static final double MANUAL_POWER = 0.3;
+
+        public static final double CLIMB_ENC_DIAG_EXTENSION = 322000; // 6600;//same as diag extension rn // old-7850; //-7379
+        public static final double CLIMB_ENC_TO_TOP = 322000; // 6600 //  old -7825;
+        public static final double TOLERANCE_TICKS = 1000; // 100
+
+    }
+
     public static class HoodConstants {
 
         public static final int HOOD_MOTOR_ID = 5;
@@ -213,34 +244,6 @@ public class Constants {
         };
     }
   
-    public static class HopperConstants {
-
-        public static final int HOPPER_MOTOR_ID = 6;
-        public static final int BOTTOM_SENSOR_ID = 12;
-        public static final int TOP_SENSOR_ID = 13;
-
-        //public static final int HOPPER_SOLENOID_FORWARD_CHANNEL_ID = 5;
-        //public static final int HOPPER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-
-        public static final int HOPPER_DIO_PIN1 = 8;
-        public static final int HOPPER_DIO_PIN2 = 9;
-        public static final double HOPPER_MAX_REVERSE_DISTANCE = -2200; //set distance
-
-        public static final double HOPPER_MOTOR_POWER = 0.5;
-        public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
-
-    }
-
-    public static class IntakeConstants {
-
-        public static final int INTAKE_MOTOR_ID = 7; 
-        public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 4;
-        public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
-
-        public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
-
-    }
-
     public static class VisionConstants {
 
         public static final String TOP_HOSTNAME = "limelight-cog";
