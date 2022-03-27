@@ -800,7 +800,6 @@ public class RobotContainer {
 
     public void initPneumatics() {
         m_climber.retractPiston();
-        m_climber.disengageBreak();
         m_intake.retractIntake();
     }
 
