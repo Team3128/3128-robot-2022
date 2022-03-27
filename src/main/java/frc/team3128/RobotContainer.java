@@ -82,7 +82,11 @@ public class RobotContainer {
         "leaveTerm_ii.wpilib.json", // 22
         "3_BallSDR_i.wpilib.json",
         "3_BallSDR_ii.wpilib.json", // 24
-        "3_Ball_good.wpilib.json"
+        "3_Ball_good.wpilib.json",
+        "S2H2_i.wpilib.json", //26
+        "S2H2_ii.wpilib.json",
+        "S2H2_ii.wpilib.json", //28
+        "S2H2_ii.wpilib.json"
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -96,7 +100,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H2;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -634,6 +638,54 @@ public class RobotContainer {
                             //retractHopperAndShootCmdLL(3000, 16)
         );
 
+        auto_S2H2 = new SequentialCommandGroup(
+
+                            //drive and intake ball
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(26),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            //turn and shoot
+                            new CmdInPlaceTurn(m_drive, 180),
+                            alignShootCmd(),
+
+                            //turn and hoard first ball
+                            new CmdInPlaceTurn(m_drive, 90),
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(27),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            // turn and hoard second ball
+                            new CmdInPlaceTurn(m_drive, 180),
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(28), 
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+                            
+                            //hide ball behinde hub
+                            trajectoryCmd(29),
+                            new CmdExtendIntake(m_intake),
+                            new CmdReverseIntake(m_intake, m_hopper)
+
+        );
+
+        auto_3Ball180 = new SequentialCommandGroup(
+                            shootCmd(), // shootCmd(2800, 19)
+
+                            new CmdInPlaceTurn(m_drive, 180),
+
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(25), 
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            new CmdInPlaceTurn(m_drive, -50),
+
+                            alignShootCmd() // shootCmd(3340, 2.5)
+                            //retractHopperAndShootCmdLL(3000, 16)
+        );
+
         // Setup auto-selector
         NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
         NarwhalDashboard.addAuto("2 Ball Bottom", auto_2BallBot);
@@ -646,6 +698,7 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("4 Ball E", auto_4BallE);
         NarwhalDashboard.addAuto("4 Ball Terminal", auto_4BallTerm);
         NarwhalDashboard.addAuto("5 Ball", auto_5Ball);
+        NarwhalDashboard.addAuto("S2H2", auto_S2H2);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params

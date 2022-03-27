@@ -24,9 +24,9 @@ public class CmdReverseIntake extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        m_intake.retractIntake();
         m_intake.stopIntake();
         m_hopper.stopHopper();
+        m_intake.retractIntake();
     }
 
     public boolean isFinished(){
