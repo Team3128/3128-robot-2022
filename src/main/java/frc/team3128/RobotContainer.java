@@ -90,7 +90,9 @@ public class RobotContainer {
         "Tarmac2Terminal.wpilib.json", //30
         "Terminal2Tarmac.wpilib.json",
         "4Ball_Terminal180_i.wpilib.json", //32
-        "4Ball_Terminal180_ii.wpilib.json" 
+        "4Ball_Terminal180_ii.wpilib.json",
+        "Billiards_i.wpilib.json", //34
+        "Billiards_ii.wpilib.json"
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -104,7 +106,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H2, auto_4Ball180, auto_5Ball180;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H2, auto_Billiards, auto_4Ball180, auto_5Ball180;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -729,6 +731,34 @@ public class RobotContainer {
                             alignShootCmd()
 
         );
+
+        auto_Billiards = new SequentialCommandGroup (
+                            // initial position: (6.8, 6.272, 40 deg - should be approx. pointing straight at the ball to knock)
+                            new SequentialCommandGroup(
+                                new CmdExtendIntake(m_intake),
+                                new CmdReverseIntake(m_intake, m_hopper)
+                            ).withTimeout(2),
+
+                            new CmdInPlaceTurn(m_drive, 85),
+
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(34),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            new CmdInPlaceTurn(m_drive, 55),
+
+                            shootCmd(1000, 28),
+
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(35),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            new CmdInPlaceTurn(m_drive, 96),
+
+                            alignShootCmd()
+        ); 
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
