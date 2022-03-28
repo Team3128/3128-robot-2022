@@ -86,7 +86,11 @@ public class RobotContainer {
         "S2H2_i.wpilib.json", //26
         "S2H2_ii.wpilib.json",
         "S2H2_ii.wpilib.json", //28
-        "S2H2_ii.wpilib.json"
+        "S2H2_ii.wpilib.json",
+        "Tarmac2Terminal.wpilib.json", //30
+        "Terminal2Tarmac.wpilib.json",
+        "4Ball_Terminal180_i.wpilib.json", //32
+        "4Ball_Terminal180_ii.wpilib.json" 
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -100,7 +104,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H2;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H2, auto_4Ball180, auto_5Ball180;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -638,6 +642,7 @@ public class RobotContainer {
                             //retractHopperAndShootCmdLL(3000, 16)
         );
 
+        //Didn't add intial pose for this yet
         auto_S2H2 = new SequentialCommandGroup(
 
                             //drive and intake ball
@@ -670,20 +675,59 @@ public class RobotContainer {
 
         );
 
-        auto_3Ball180 = new SequentialCommandGroup(
+        //Didn't add intial pose for this yet
+        auto_4Ball180 = new SequentialCommandGroup(
+                            //drive and intake 1 ball
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(32),  
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+
+                            //turn and shoot 2 balls
+                            new CmdInPlaceTurn(m_drive, 180),
+                            shootCmd(),
+
+                            //drive to ball and terminal and intake
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(33), 
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+                            new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(1),
+
+                            //drive to tarmac and shoot
+                            trajectoryCmd(31),
+                            new CmdInPlaceTurn(m_drive, 180),
+                            alignShootCmd()
+
+        );
+
+        //Didn't add intial pose for this yet
+        auto_5Ball180 = new SequentialCommandGroup(
+                            
+                            //shoot preloaded
                             shootCmd(), // shootCmd(2800, 19)
 
+                            //turn and intake next 2 balls
                             new CmdInPlaceTurn(m_drive, 180),
-
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(25), 
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
+                            //shoot 2 balls
                             new CmdInPlaceTurn(m_drive, -50),
+                            shootCmd(),
 
-                            alignShootCmd() // shootCmd(3340, 2.5)
-                            //retractHopperAndShootCmdLL(3000, 16)
+                            //turn and go to terminal
+                            new CmdInPlaceTurn(m_drive, 180),
+                            trajectoryCmd(30),
+
+                            //intake 2 balls
+                            new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(2),
+
+                            //return to tarmac and shoot
+                            trajectoryCmd(31),
+                            new CmdInPlaceTurn(m_drive, 180),
+                            alignShootCmd()
+
         );
 
         // Setup auto-selector
@@ -699,6 +743,7 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("4 Ball Terminal", auto_4BallTerm);
         NarwhalDashboard.addAuto("5 Ball", auto_5Ball);
         NarwhalDashboard.addAuto("S2H2", auto_S2H2);
+        NarwhalDashboard.addAuto("5 Ball 180 Terminal", auto_5Ball180);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
