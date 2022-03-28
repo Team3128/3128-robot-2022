@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -91,8 +92,9 @@ public class RobotContainer {
         "Terminal2Tarmac.wpilib.json",
         "4Ball_Terminal180_i.wpilib.json", //32
         "4Ball_Terminal180_ii.wpilib.json",
-        "Billiards_i.wpilib.json", //34
-        "Billiards_ii.wpilib.json"
+        "S2H1.wpilib.json", //34
+        "Billiards_i.wpilib.json", 
+        "Billiards_ii.wpilib.json" // 36
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -106,7 +108,7 @@ public class RobotContainer {
 
     private HashMap<Command, Pose2d> initialPoses;
 
-    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H2, auto_Billiards, auto_4Ball180, auto_5Ball180;
+    private Command auto_1Ball, auto_2BallTop, auto_2BallMid, auto_2BallBot, auto_3BallTerminal, auto_3BallHook, auto_3BallHersheyKiss, auto_3BallBack, auto_4BallE, auto_4BallTerm, auto_5Ball, auto_3Ball180, auto_S2H1, auto_S2H2, auto_4Ball180, auto_5Ball180, auto_Billiards;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -644,6 +646,37 @@ public class RobotContainer {
                             //retractHopperAndShootCmdLL(3000, 16)
         );
 
+        //Didn't add intial pose yet
+        auto_S2H1 = new SequentialCommandGroup(
+
+                            //drive and intake ball
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(26),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            //turn and shoot
+                            new CmdInPlaceTurn(m_drive, 180),
+                            shootCmd(),
+
+                            //turn and hoard first ball
+                            new CmdInPlaceTurn(m_drive, 90),
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(27),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            //drive behind hub
+                            new CmdInPlaceTurn(m_drive, -90),
+                            trajectoryCmd(34),
+
+                            //outtake balls behind hub
+                            new CmdExtendIntake(m_intake),
+                            new CmdReverseIntake(m_intake, m_hopper)
+
+
+        );   
+
         //Didn't add intial pose for this yet
         auto_S2H2 = new SequentialCommandGroup(
 
@@ -655,7 +688,7 @@ public class RobotContainer {
 
                             //turn and shoot
                             new CmdInPlaceTurn(m_drive, 180),
-                            alignShootCmd(),
+                            shootCmd(),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
@@ -758,7 +791,8 @@ public class RobotContainer {
                             new CmdInPlaceTurn(m_drive, 96),
 
                             alignShootCmd()
-        ); 
+);
+
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
@@ -773,7 +807,10 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("4 Ball Terminal", auto_4BallTerm);
         NarwhalDashboard.addAuto("5 Ball", auto_5Ball);
         NarwhalDashboard.addAuto("S2H2", auto_S2H2);
+        NarwhalDashboard.addAuto("S2H1", auto_S2H1);
+        NarwhalDashboard.addAuto("4 Ball 180 Terminal", auto_4Ball180);
         NarwhalDashboard.addAuto("5 Ball 180 Terminal", auto_5Ball180);
+        NarwhalDashboard.addAuto("Auto Billiards", auto_Billiards);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
@@ -911,6 +948,11 @@ public class RobotContainer {
         initialPoses.put(auto_5Ball, trajectory[15].getInitialPose());
         initialPoses.put(auto_3BallBack, trajectory[23].getInitialPose());
         initialPoses.put(auto_3Ball180, new Pose2d(trajectory[25].getInitialPose().getX(), trajectory[25].getInitialPose().getY(), trajectory[25].getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_4Ball180, new Pose2d(trajectory[32].getInitialPose().getX(), trajectory[32].getInitialPose().getY(), trajectory[32].getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_5Ball180, new Pose2d(trajectory[25].getInitialPose().getX(), trajectory[25].getInitialPose().getY(), trajectory[25].getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_S2H1, new Pose2d(trajectory[26].getInitialPose().getX(), trajectory[26].getInitialPose().getY(), trajectory[26].getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_S2H2, new Pose2d(trajectory[26].getInitialPose().getX(), trajectory[26].getInitialPose().getY(), trajectory[26].getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(40)));
 
 
         Command selectedAuto = NarwhalDashboard.getSelectedAuto();
