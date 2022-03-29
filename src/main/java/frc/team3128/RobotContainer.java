@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -769,7 +770,7 @@ public class RobotContainer {
         NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
         NarwhalDashboard.put("x", m_drive.getPose().getX());
         NarwhalDashboard.put("y", m_drive.getPose().getY());
-        NarwhalDashboard.put("theta", m_drive.getPose().getRotation().getRadians());
+        NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
 
         // Post miscellaneous other debug data to Smartdash
 
