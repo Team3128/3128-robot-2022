@@ -771,6 +771,7 @@ public class RobotContainer {
         NarwhalDashboard.put("x", m_drive.getPose().getX());
         NarwhalDashboard.put("y", m_drive.getPose().getY());
         NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
+        NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicksLeft());
 
         // Post miscellaneous other debug data to Smartdash
 
