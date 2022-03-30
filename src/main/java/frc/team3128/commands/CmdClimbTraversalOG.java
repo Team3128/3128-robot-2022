@@ -18,7 +18,7 @@ public class CmdClimbTraversalOG extends SequentialCommandGroup{
             //Climber is manually fully retracted on Mid Bar
             new InstantCommand(() -> m_climber.retractPiston()),
 
-            new CmdClimbEncoder(m_climber, -350),
+            new CmdClimbEncoder(m_climber, -10000),
 
             new WaitCommand(0.5),
             //elev extend a wee bit
@@ -42,7 +42,7 @@ public class CmdClimbTraversalOG extends SequentialCommandGroup{
             new WaitCommand(0.5),
 
             //elev retract
-            new CmdClimbEncoder(m_climber, -350),
+            new CmdClimbEncoder(m_climber, -10000),
 
             //Climber is manually fully retracted on High Bar
             

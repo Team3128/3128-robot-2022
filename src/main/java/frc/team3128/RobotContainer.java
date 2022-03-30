@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -149,29 +150,42 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Buttons...
+        // as of 3/27/22
+        //
         // right:
+        // POV 0: reset drive odometry
         // 1 (trigger): shoot upper hub
         // 2: intake 
-        // 3: ball pursuit
-        // 4: shoot lower hub
-        // 5: climb from mid to high
+        // 3: shoot lower hub
+        // 4: ram shot at 2350 rpm ??? 
+        // 5: automatically set-up traversal climb
         // 6: extend climber elev to height for mid to high climb
         // 7: retract climber elev to 0
         // 8: reverse intake
+        // 10: stop climber
+        // 11: increase shooter rpm offest
+        // 12: shoot at 4k rpm
+        // 13: pid shooter hood to bottom
+        // 14: shoot at 5k rpm
+        // 15: shoot at 5.5k rpm
+        // 16: decrease shooter rpm offset
         //
         // left:
+        // POV 0: turn on shooter limelight
+        // POV 4: turn off shooter limelight
+        // 1: ram shot at 2700 rpm ???
         // 2: reset climber encoder
-        //
-        // 5: extend climber slightly (for hooking stationary hooks while climbing)
+        // 3: toggle slow driving
+        // 5: zero shooter hood encoder
         // 8: extend climber to diagonal extension
         // 9: extend climber to top
-        // 10: retract climber to 0
-        // 11: engage friction break
+        // 10: retract climber to bottom ???
+        // 11: climber go up slowly while held
         // 12: extend climber piston
         // 13: climber go up while held
         // 14: climber go down while held 
         // 15: retract climber piston
-        // 16: disengage friction break
+        // 16: climber go down slowly while held
 
         //RIGHT
         m_rightStick.getButton(1).whenPressed(shootCommand)
@@ -287,6 +301,7 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
+        // should probably remove this
         m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
         // m_leftStick.getButton(4).whenPressed(() -> m_hood.startPID(21));
@@ -910,10 +925,20 @@ public class RobotContainer {
     }
 
     public void updateDashboard() {
+
+        // Update necessary Nardash debug data
+
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
         NarwhalDashboard.put("range", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
+        NarwhalDashboard.put("x", m_drive.getPose().getX());
+        NarwhalDashboard.put("y", m_drive.getPose().getY());
+        NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
+        NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicksLeft());
+
+        // Post miscellaneous other debug data to Smartdash
+
         SmartDashboard.putNumber("distance to the limelight", m_shooterLimelight.calculateDistToTopTarget(Constants.VisionConstants.TARGET_HEIGHT));
         SmartDashboard.putNumber("ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 2));
         SmartDashboard.putNumber("adjusted ty", m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, 5) * (2/3));
@@ -970,7 +995,6 @@ public class RobotContainer {
 
     public void initPneumatics() {
         m_climber.retractPiston();
-        m_climber.disengageBreak();
         m_intake.retractIntake();
     }
 
