@@ -655,7 +655,7 @@ public class RobotContainer {
 
                             //turn and shoot
                             new CmdInPlaceTurn(m_drive, 180),
-                            shootCmd(),
+                            // shootCmd(),
                             //alignShootCmd(),
 
                             //turn and hoard first ball
@@ -681,7 +681,7 @@ public class RobotContainer {
 
                             //drive and intake ball
                             new ParallelDeadlineGroup(
-                                trajectoryCmd(26),
+                                trajectoryCmd(0), //change back you fool - 26
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
@@ -956,7 +956,7 @@ public class RobotContainer {
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        Command selectedAuto = auto_3BallHersheyKiss;
+        Command selectedAuto = auto_S2H2;
 
         if (selectedAuto == null) {
             return null;
