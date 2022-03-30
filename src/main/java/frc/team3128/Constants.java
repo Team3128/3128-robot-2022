@@ -168,6 +168,7 @@ public class Constants {
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
         public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
+        public static final double OUTTAKE_MOTOR_POWER = 0.8;
 
     }
 
