@@ -86,15 +86,13 @@ public class RobotContainer {
         "3_Ball_good.wpilib.json",
         "S2H2_i.wpilib.json", //26
         "S2H2_ii.wpilib.json",
-        "S2H2_ii.wpilib.json", //28
-        "S2H2_ii.wpilib.json",
-        "Tarmac2Terminal.wpilib.json", //30
+        "Tarmac2Terminal.wpilib.json", //28
         "Terminal2Tarmac.wpilib.json",
-        "4Ball_Terminal180_i.wpilib.json", //32
+        "4Ball_Terminal180_i.wpilib.json", //30
         "4Ball_Terminal180_ii.wpilib.json",
-        "S2H1.wpilib.json", //34
+        "S2H1.wpilib.json", //32
         "Billiards_i.wpilib.json", 
-        "Billiards_ii.wpilib.json" // 36
+        "Billiards_ii.wpilib.json" // 34
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -139,7 +137,7 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
-
+        SmartDashboard.putString("Auto",trajJson[26]);
         initAutos();
         initDashboard();
         initLimelights(m_shooterLimelight, m_ballLimelight); 
@@ -658,6 +656,7 @@ public class RobotContainer {
                             //turn and shoot
                             new CmdInPlaceTurn(m_drive, 180),
                             shootCmd(),
+                            //alignShootCmd(),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
@@ -668,7 +667,7 @@ public class RobotContainer {
 
                             //drive behind hub
                             new CmdInPlaceTurn(m_drive, -90),
-                            trajectoryCmd(34),
+                            trajectoryCmd(32),
 
                             //outtake balls behind hub
                             new CmdExtendIntake(m_intake),
@@ -714,7 +713,7 @@ public class RobotContainer {
         auto_4Ball180 = new SequentialCommandGroup(
                             //drive and intake 1 ball
                             new ParallelDeadlineGroup(
-                                trajectoryCmd(32),  
+                                trajectoryCmd(30),  
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)),
 
                             //turn and shoot 2 balls
@@ -723,12 +722,12 @@ public class RobotContainer {
 
                             //drive to ball and terminal and intake
                             new ParallelDeadlineGroup(
-                                trajectoryCmd(33), 
+                                trajectoryCmd(31), 
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)),
                             new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(1),
 
                             //drive to tarmac and shoot
-                            trajectoryCmd(31),
+                            trajectoryCmd(29),
                             new CmdInPlaceTurn(m_drive, 180),
                             alignShootCmd()
 
@@ -753,13 +752,13 @@ public class RobotContainer {
 
                             //turn and go to terminal
                             new CmdInPlaceTurn(m_drive, 180),
-                            trajectoryCmd(30),
+                            trajectoryCmd(28),
 
                             //intake 2 balls
                             new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(2),
 
                             //return to tarmac and shoot
-                            trajectoryCmd(31),
+                            trajectoryCmd(29),
                             new CmdInPlaceTurn(m_drive, 180),
                             alignShootCmd()
 
@@ -775,7 +774,7 @@ public class RobotContainer {
                             new CmdInPlaceTurn(m_drive, 85),
 
                             new ParallelDeadlineGroup(
-                                trajectoryCmd(34),
+                                trajectoryCmd(33),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
@@ -784,7 +783,7 @@ public class RobotContainer {
                             shootCmd(1000, 28),
 
                             new ParallelDeadlineGroup(
-                                trajectoryCmd(35),
+                                trajectoryCmd(34),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
@@ -955,15 +954,16 @@ public class RobotContainer {
         initialPoses.put(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(40)));
 
 
-        Command selectedAuto = NarwhalDashboard.getSelectedAuto();
+        // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        // Command selectedAuto = auto_3Ball180;
+        Command selectedAuto = auto_3BallHersheyKiss;
 
         if (selectedAuto == null) {
             return null;
         }
 
         m_drive.resetPose(initialPoses.get(selectedAuto));
+        SmartDashboard.putString("Auto", selectedAuto.toString());
         return selectedAuto;
 
     }
