@@ -3,6 +3,7 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 
@@ -38,7 +39,8 @@ public class Constants {
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
-        public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
+        // public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches 
+        public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(5.875 / 2);
         public static final double TRACK_WIDTH_METERS = 0.55438;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
@@ -243,7 +245,7 @@ public class Constants {
             hoodAngleMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(17.5));
         };
     }
-  
+
     public static class VisionConstants {
 
         public static final String TOP_HOSTNAME = "limelight-cog";
