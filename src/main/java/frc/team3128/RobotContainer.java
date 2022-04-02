@@ -200,7 +200,7 @@ public class RobotContainer {
 
         m_rightStick.getButton(3).whenHeld(lowerHubShoot);
 
-        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2530), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
+        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(10)), new CmdShootRPM(m_shooter, 2530), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         //m_rightStick.getButton(4).whenHeld(lowerHubShoot);
@@ -519,20 +519,20 @@ public class RobotContainer {
 
                             //turn and go to terminal
                             new CmdInPlaceTurn(m_drive, 180),
-                            trajectoryCmd(8),
+                            trajectoryCmd(9),
 
                             //intake 2 balls
                             new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(2),
 
                             //return to tarmac and shoot
-                            trajectoryCmd(9),
+                            trajectoryCmd(8),
                             new CmdInPlaceTurn(m_drive, 180),
                             alignShootCmd()
 
         );
 
         auto_Billiards = new SequentialCommandGroup (
-                            // initial position: (6.8, 6.272, 40 deg - should be approx. pointing straight at the ball to knock)
+                            // initial position: (6.8, 6.272, 45 deg - should be approx. pointing straight at the ball to knock)
                             new SequentialCommandGroup(
                                 new CmdExtendIntake(m_intake),
                                 new CmdReverseIntake(m_intake, m_hopper)
@@ -732,15 +732,13 @@ public class RobotContainer {
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        Command selectedAuto = auto_S2H2;
+        Command selectedAuto = auto_Billiards;
 
         if (selectedAuto == null) {
             return null;
         }
 
         m_drive.resetPose(initialPoses.get(selectedAuto));
-        SmartDashboard.putString("Auto", selectedAuto.toString());
-        Log.info("RobotContainer", "Initial position: " + initialPoses.get(selectedAuto));
         return selectedAuto;
 
     }

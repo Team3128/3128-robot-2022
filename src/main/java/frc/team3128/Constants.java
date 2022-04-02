@@ -24,8 +24,6 @@ public class Constants {
         public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // RPM to nu/s
         public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
         public static final double FALCON_NUpS_TO_RPM = 60 / FALCON_ENCODER_RESOLUTION; // sensor units per second to rpm
-
-        public static final double INCHES_TO_METERS = 0.0254;
     }
 
     public static class DriveConstants {
@@ -39,8 +37,7 @@ public class Constants {
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
-        // public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches 
-        public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(5.875 / 2);
+        public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(2.9505);
         public static final double TRACK_WIDTH_METERS = 0.55438;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
@@ -224,8 +221,8 @@ public class Constants {
 
         public static final int HOOD_CURRENT_LIMIT = 10; // Amps
 
-        public static final double MIN_ANGLE = 12.0; // deg
-        public static final double MAX_ANGLE = 32.0; // deg
+        public static final double MIN_ANGLE = 10.0; // deg
+        public static final double MAX_ANGLE = 30.0; // deg
         public static final double HOME_ANGLE = 22.0; // deg
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();

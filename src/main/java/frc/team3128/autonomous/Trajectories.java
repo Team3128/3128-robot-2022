@@ -60,4 +60,10 @@ public class Trajectories {
         List.of(),
         new Pose2d(Units.inchesToMeters(40), 0, new Rotation2d(0)),
         forwardTrajConfig);
+
+    public static Trajectory driveForwards500In = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(),
+        new Pose2d(Units.inchesToMeters(250), 0, new Rotation2d(0)),
+        forwardTrajConfig);
 }
