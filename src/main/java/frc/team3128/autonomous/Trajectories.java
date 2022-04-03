@@ -54,4 +54,11 @@ public class Trajectories {
         List.of(),
         new Pose2d(Units.inchesToMeters(-30), 0, new Rotation2d(0)),
         backwardsTrajConfig);
+
+    public static Trajectory twoBallTraj = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(),
+        new Pose2d(Units.inchesToMeters(40), 0, new Rotation2d(0)),
+        forwardTrajConfig
+        );
 }

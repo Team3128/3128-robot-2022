@@ -72,6 +72,7 @@ public class Hood extends NAR_PIDSubsystem {
     public void startPID(double angle) {
         tolerance = HoodConstants.TOLERANCE_MIN;
         super.setSetpoint(angle);  
+        // super.setSetpoint(ConstantsInt.ShooterConstants.SET_ANGLE);
         super.resetPlateauCount();
         getController().setTolerance(tolerance);
     }
