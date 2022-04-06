@@ -155,6 +155,7 @@ public class Constants {
         public static final double HOPPER_MAX_REVERSE_DISTANCE = -2200; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.5;
+        public static final double HOPPER_MOTOR_2_POWER = 0.7;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1; //change this
 
     }
@@ -206,7 +207,7 @@ public class Constants {
 
         public static final int HOOD_MOTOR_ID = 5;
 
-        public static final double kP = 0.28;//0.4;//0.3128;//0.254;
+        public static final double kP = 0.3;//0.4;//0.3128;//0.254;
         public static final double kI = 0;
         public static final double kD = 0;//8e-6;
         public static final double kF = 0.49072349;//0.6134;//1.2268;//0.6134;//1.2268; //0.6134;//0.0517638;
@@ -221,8 +222,8 @@ public class Constants {
 
         public static final int HOOD_CURRENT_LIMIT = 10; // Amps
 
-        public static final double MIN_ANGLE = 12.0; // deg
-        public static final double MAX_ANGLE = 32.0; // deg
+        public static final double MIN_ANGLE = 10.0; // deg
+        public static final double MAX_ANGLE = 30.0; // deg
         public static final double HOME_ANGLE = 22.0; // deg
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
