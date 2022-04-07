@@ -422,8 +422,7 @@ public class RobotContainer {
 
                             //turn and shoot
                             new CmdInPlaceTurn(m_drive, 180),
-                            // shootCmd(),
-                            //alignShootCmd(),
+                            shootCmd(),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
@@ -438,7 +437,7 @@ public class RobotContainer {
 
                             //outtake balls behind hub
                             new CmdExtendIntake(m_intake),
-                            new CmdReverseIntake(m_intake, m_hopper)
+                            new CmdReverseIntake(m_intake, m_hopper).withTimeout(2)
 
 
         );   
@@ -732,7 +731,7 @@ public class RobotContainer {
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        Command selectedAuto = auto_S2H2;
+        Command selectedAuto = auto_S2H1;
 
         if (selectedAuto == null) {
             return null;
