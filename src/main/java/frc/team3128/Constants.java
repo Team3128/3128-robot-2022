@@ -3,6 +3,7 @@ package frc.team3128;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 
@@ -23,8 +24,6 @@ public class Constants {
         public static final double SPARK_VELOCITY_FACTOR = SPARK_ENCODER_RESOLUTION / 60; // RPM to nu/s
         public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
         public static final double FALCON_NUpS_TO_RPM = 60 / FALCON_ENCODER_RESOLUTION; // sensor units per second to rpm
-
-        public static final double INCHES_TO_METERS = 0.0254;
     }
 
     public static class DriveConstants {
@@ -38,7 +37,7 @@ public class Constants {
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
-        public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
+        public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(2.9505);
         public static final double TRACK_WIDTH_METERS = 0.55438;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
@@ -167,6 +166,7 @@ public class Constants {
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
         public static final double INTAKE_MOTOR_POWER = -1; //negative is forward 
+        public static final double OUTTAKE_MOTOR_POWER = 0.8;
 
     }
 
@@ -244,7 +244,7 @@ public class Constants {
             hoodAngleMap.put(new InterpolatingDouble(45.0), new InterpolatingDouble(17.5));
         };
     }
-  
+
     public static class VisionConstants {
 
         public static final String TOP_HOSTNAME = "limelight-cog";
