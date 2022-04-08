@@ -58,7 +58,7 @@ public class Hopper extends SubsystemBase {
      */
     public void runHopper() {
         m_hopper1.set(HopperConstants.HOPPER_MOTOR_POWER);
-        m_hopper2.set(HopperConstants.HOPPER_MOTOR_POWER);
+        m_hopper2.set(HopperConstants.HOPPER_MOTOR_2_POWER);
 
     }
 
