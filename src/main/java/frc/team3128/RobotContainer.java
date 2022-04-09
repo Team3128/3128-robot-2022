@@ -335,7 +335,7 @@ public class RobotContainer {
         climbCommand = new CmdClimb(m_climber);
         climbTraversalCommand = new CmdClimbTraversalOG(m_climber);
         
-        extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdReverseIntake(m_intake, m_hopper));
+        extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdOuttake(m_intake, m_hopper));
 
 
         //this shoot command is the ideal one with all capabilities
@@ -411,7 +411,7 @@ public class RobotContainer {
                             //retractHopperAndShootCmdLL(3000, 16)
         );
 
-        //Didn't add intial pose yet
+        //Didn't add intial pose yet - don't know what this comment means but the auto seems to work (mika)
         auto_S2H1 = new SequentialCommandGroup(
 
                             //drive and intake ball
@@ -421,9 +421,8 @@ public class RobotContainer {
                             ),
 
                             //turn and shoot
-                            new CmdInPlaceTurn(m_drive, 180),
-                            // shootCmd(),
-                            //alignShootCmd(),
+                            new CmdInPlaceTurn(m_drive, -165),
+                            shootCmd(),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
@@ -438,7 +437,7 @@ public class RobotContainer {
 
                             //outtake balls behind hub
                             new CmdExtendIntake(m_intake),
-                            new CmdReverseIntake(m_intake, m_hopper)
+                            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(1)
 
 
         );   
@@ -472,7 +471,7 @@ public class RobotContainer {
                             //hide ball behinde hub
                             trajectoryCmd(5),
                             new CmdExtendIntake(m_intake),
-                            new CmdReverseIntake(m_intake, m_hopper)
+                            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(1)
 
         );
 
@@ -535,7 +534,7 @@ public class RobotContainer {
                             // initial position: (6.8, 6.272, 45 deg - should be approx. pointing straight at the ball to knock)
                             new SequentialCommandGroup(
                                 new CmdExtendIntake(m_intake),
-                                new CmdReverseIntake(m_intake, m_hopper)
+                                new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(2)
                             ).withTimeout(2),
 
                             new CmdInPlaceTurn(m_drive, 70),
@@ -547,7 +546,7 @@ public class RobotContainer {
 
                             new CmdInPlaceTurn(m_drive, 55),
 
-                            shootCmd(1000, 28),
+                            shootCmd(2000, 28).withTimeout(1.5),
 
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(11),
@@ -629,7 +628,6 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
             new ParallelCommandGroup(
                 new InstantCommand(() -> m_hood.startPID(angle)),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
@@ -732,7 +730,7 @@ public class RobotContainer {
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        Command selectedAuto = auto_Billiards;
+        Command selectedAuto = auto_S2H1;
 
         if (selectedAuto == null) {
             return null;
