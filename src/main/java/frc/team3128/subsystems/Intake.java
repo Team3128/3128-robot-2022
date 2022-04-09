@@ -41,10 +41,6 @@ public class Intake extends SubsystemBase {
         m_intake.set(ControlMode.PercentOutput, IntakeConstants.INTAKE_MOTOR_POWER);
     }
 
-    public void runIntakeBack(){
-        m_intake.set(ControlMode.PercentOutput, IntakeConstants.OUTTAKE_MOTOR_POWER);
-    }
-
     public void runIntakeBack(double power){
         m_intake.set(ControlMode.PercentOutput, power);
     }
