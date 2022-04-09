@@ -421,9 +421,8 @@ public class RobotContainer {
                             ),
 
                             //turn and shoot
-                            new CmdInPlaceTurn(m_drive, 180),
-                            // shootCmd(),
-                            //alignShootCmd(),
+                            new CmdInPlaceTurn(m_drive, -165),
+                            shootCmd(),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
@@ -438,7 +437,7 @@ public class RobotContainer {
 
                             //outtake balls behind hub
                             new CmdExtendIntake(m_intake),
-                            new CmdReverseIntake(m_intake, m_hopper)
+                            new CmdBilliardsIntake(m_intake, m_hopper, 0.5).withTimeout(2)
 
 
         );   
@@ -547,7 +546,7 @@ public class RobotContainer {
 
                             new CmdInPlaceTurn(m_drive, 55),
 
-                            shootCmd(1000, 28),
+                            shootCmd(2000, 28).withTimeout(1.5),
 
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(11),
@@ -629,7 +628,6 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
             new ParallelCommandGroup(
                 new InstantCommand(() -> m_hood.startPID(angle)),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
@@ -732,7 +730,7 @@ public class RobotContainer {
 
         // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
-        Command selectedAuto = auto_Billiards;
+        Command selectedAuto = auto_S2H1;
 
         if (selectedAuto == null) {
             return null;
