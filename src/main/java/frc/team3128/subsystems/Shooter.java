@@ -132,6 +132,7 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     public void startPID(double rpm) {
         thresholdPercent = ShooterConstants.RPM_THRESHOLD_PERCENT;
+        // rpm = ConstantsInt.ShooterConstants.SET_RPM;
         super.setSetpoint(rpm);  
         // super.resetPlateauCount();
         getController().setTolerance(ShooterConstants.RPM_THRESHOLD_PERCENT * rpm);
