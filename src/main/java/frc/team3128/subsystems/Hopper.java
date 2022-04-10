@@ -64,7 +64,7 @@ public class Hopper extends SubsystemBase {
 
     public void reverseHopper(double power) {
         m_encoder.reset();
-        m_hopper1.set(-1*power);
+        m_hopper1.set(power);
     }
 
     /**
