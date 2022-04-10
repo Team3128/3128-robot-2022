@@ -422,7 +422,7 @@ public class RobotContainer {
                             ),
 
                             //turn and shoot
-                            new CmdInPlaceTurn(m_drive, -165),
+                            new CmdInPlaceTurn(m_drive, 180),
                             shootCmd(),
 
                             //turn and hoard first ball
@@ -438,8 +438,7 @@ public class RobotContainer {
 
                             //outtake balls behind hub
                             new CmdExtendIntake(m_intake),
-                            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(1)
-
+                            new CmdReverseIntake(m_intake, m_hopper).withTimeout(2)
 
         );   
 
