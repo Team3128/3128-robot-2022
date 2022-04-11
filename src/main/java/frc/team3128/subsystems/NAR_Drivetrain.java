@@ -61,12 +61,10 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setInverted(false);
         rightFollower.setInverted(false);
 
-        // TEMP FOR DRIVE PRACTICE:
-        // leftLeader.setNeutralMode(NeutralMode.Brake);
-        // rightLeader.setNeutralMode(NeutralMode.Brake);
-        // leftFollower.setNeutralMode(NeutralMode.Brake);
-        // rightFollower.setNeutralMode(NeutralMode.Brake);
-
+        leftLeader.setSafetyEnabled(false);
+        leftFollower.setSafetyEnabled(false);
+        rightLeader.setSafetyEnabled(false);
+        rightFollower.setSafetyEnabled(false);
 
         robotDrive = new DifferentialDrive(
             new MotorControllerGroup(leftLeader, leftFollower),

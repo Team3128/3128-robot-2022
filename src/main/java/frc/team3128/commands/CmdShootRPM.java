@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team3128.ConstantsInt;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Shooter;
 
@@ -17,6 +18,7 @@ public class CmdShootRPM extends CommandBase {
     
     @Override
     public void initialize() {
+        // rpm = ConstantsInt.ShooterConstants.SET_RPM;
         shooter.beginShoot(rpm);
     }
     

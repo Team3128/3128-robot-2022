@@ -26,7 +26,6 @@ public class ConstantsInt extends Constants {
     public static class ShooterConstants extends Constants.ShooterConstants {
         // public static double SET_RPM = 3000;
         // public static double SET_ANGLE = 25;
-
     }
     public static class HopperConstants extends Constants.HopperConstants {}
     public static class IntakeConstants extends Constants.IntakeConstants {}

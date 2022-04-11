@@ -22,7 +22,7 @@ public class CmdShootDist extends CommandBase {
     
     @Override
     public void execute() {
-        double dist = limelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT) - 11; // (dist to LL) - (dist from LL to front)
+        double dist = limelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT) + 5;
         shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
         hood.startPID(hood.calculateAngleFromDistance(dist));
     }

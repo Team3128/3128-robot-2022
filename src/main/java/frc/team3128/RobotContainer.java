@@ -59,33 +59,45 @@ public class RobotContainer {
     // private String[] trajJson = Filesystem.getDeployDirectory().toPath().resolve("paths").toFile().list();
     // private String[] trajJson = (new File(Filesystem.getLaunchDirectory(), "src" + File.separator + "main" + File.separator + "deploy")).list();
     private String[] trajJson = {
-        // 3 Ball 180
+        // 3 Ball 180 - 0
         "3_Ball_good.wpilib.json",
 
-        // Shoot 2, hoard 1
+        // Shoot 2, hoard 1 - 1,2,3
         "S2H2_i.wpilib.json",
         "S2H2_ii.wpilib.json",
         "S2H1.wpilib.json",
 
-        // Shoot 2, hoard 2
+        // Shoot 2, hoard 2 - 4,5
         // "S2H2_i.wpilib.json",
         // "S2H2_ii.wpilib.json",
         "S2H2_iii.wpilib.json",
         "S2H2_iv.wpilib.json",
 
-        // 4 Ball 180
+        // 4 Ball 180 - 6,7,8
         "4Ball_Terminal180_i.wpilib.json",
         "4Ball_Terminal180_ii.wpilib.json",
         "Terminal2Tarmac.wpilib.json",
 
-        // 5 Ball 180
+        // 5 Ball 180 - 9
         // "3_Ball_good.wpilib.json",
         // "Terminal2Tarmac.wpilib.json",
         "Tarmac2Terminal.wpilib.json",
 
-        // Billiards
+        // Billiards - 10,11
         "Billiards_i.wpilib.json",
         "Billiards_ii.wpilib.json",
+
+        //12, 13
+        "S2H2_back_i.wpilib.json",
+        "S2H2_back_ii.wpilib.json",
+
+        // 3 Ball v2 - 14, 15
+        "3Ballv2_i.wpilib.json",
+        "3Ballv2_ii.wpilib.json",
+
+        // 5 Ball v2 - 16, 17
+        "5Ballv2_i.wpilib.json",
+        "5Ballv2_ii.wpilib.json"
     };
     private Trajectory[] trajectory = new Trajectory[trajJson.length];
     
@@ -187,7 +199,9 @@ public class RobotContainer {
 
         //RIGHT
         m_rightStick.getButton(1).whenPressed(shootCommand)
-                                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter), new InstantCommand(m_shooterLimelight::turnLEDOff)));
+                                .whenReleased(new ParallelCommandGroup(
+                                    new InstantCommand(m_shooter::stopShoot, m_shooter),
+                                    new InstantCommand(m_shooterLimelight::turnLEDOff)));
         // m_rightStick.getButton(1).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2700), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
         //                             .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
@@ -200,7 +214,12 @@ public class RobotContainer {
 
         m_rightStick.getButton(3).whenHeld(lowerHubShoot);
 
-        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(10)), new CmdShootRPM(m_shooter, 2530), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
+        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(
+                                                new CmdRetractHopper(m_hopper), 
+                                                new ParallelCommandGroup(
+                                                        new InstantCommand(() -> m_hood.startPID(3)),
+                                                        new CmdShootRPM(m_shooter, 2800), 
+                                                        new CmdHopperShooting(m_hopper, m_shooter::isReady))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         //m_rightStick.getButton(4).whenHeld(lowerHubShoot);
@@ -217,6 +236,7 @@ public class RobotContainer {
         m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
 
         m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(HoodConstants.MIN_ANGLE));
+        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(HoodConstants.MAX_ANGLE));
 
 
         // m_rightStick.getButton(13).whenHeld(new SequentialCommandGroup(
@@ -235,13 +255,13 @@ public class RobotContainer {
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, 4000))));
                
-        m_rightStick.getButton(14).whenHeld(new SequentialCommandGroup(
-            new CmdRetractHopper(m_hopper),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new ParallelCommandGroup(
-                new RunCommand(m_drive::stop, m_drive),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                new CmdShootRPM(m_shooter, 5000))));
+        // m_rightStick.getButton(14).whenHeld(new SequentialCommandGroup(
+        //     new CmdRetractHopper(m_hopper),
+        //     new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+        //     new ParallelCommandGroup(
+        //         new RunCommand(m_drive::stop, m_drive),
+        //         new CmdHopperShooting(m_hopper, m_shooter::isReady),
+        //         new CmdShootRPM(m_shooter, 5000))));
 
         m_rightStick.getButton(15).whenHeld(new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper),
@@ -259,18 +279,16 @@ public class RobotContainer {
  
         //LEFT
 
-        // m_leftStick.getButton(1).whenHeld(new SequentialCommandGroup(
-        //     new CmdRetractHopper(m_hopper),
-        //     new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-        //     // new CmdExtendIntake(m_intake),
-        //     new ParallelCommandGroup(
-        //         // new CmdAlign(m_drive, m_shooterLimelight),
-        //         new CmdHopperShooting(m_hopper, m_shooter::isReady),
-        //         new CmdShootRPM(m_shooter, 4400))))
-        // .whenReleased(() -> m_shooterLimelight.turnLEDOff());
+        m_leftStick.getButton(1).whenPressed(new SequentialCommandGroup(
+                            new CmdRetractHopper(m_hopper), 
+                            new ParallelCommandGroup(
+                                    new InstantCommand(() -> m_hood.startPID(ConstantsInt.ShooterConstants.SET_ANGLE)),
+                                    new CmdShootRPM(m_shooter, 2800), 
+                                    new CmdHopperShooting(m_hopper, m_shooter::isReady))))
+                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
-        m_leftStick.getButton(1).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2700), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
-                                    .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
+        // m_leftStick.getButton(1).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(3)), new CmdShootRPM(m_shooter, 2800), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
+        //                             .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
@@ -335,7 +353,7 @@ public class RobotContainer {
         climbCommand = new CmdClimb(m_climber);
         climbTraversalCommand = new CmdClimbTraversalOG(m_climber);
         
-        extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdReverseIntake(m_intake, m_hopper));
+        extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdOuttake(m_intake, m_hopper));
 
 
         //this shoot command is the ideal one with all capabilities
@@ -395,56 +413,44 @@ public class RobotContainer {
                             alignShootCmd()
         );
 
+        // auto_3Ball180 = new SequentialCommandGroup(
+        //                     shootCmd(), // shootCmd(2800, 19)
+
+        //                     new CmdInPlaceTurn(m_drive, 180),
+
+        //                     new ParallelDeadlineGroup(
+        //                         trajectoryCmd(0), 
+        //                         new CmdExtendIntakeAndRun(m_intake, m_hopper)
+        //                     ),
+
+        //                     new CmdInPlaceTurn(m_drive, -50),
+
+        //                     alignShootCmd() // shootCmd(3340, 2.5)
+        //                     //retractHopperAndShootCmdLL(3000, 16)
+        // );
+
         auto_3Ball180 = new SequentialCommandGroup(
-                            shootCmd(), // shootCmd(2800, 19)
+            new ParallelDeadlineGroup(
+                trajectoryCmd(14), 
+                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+            ),
 
-                            new CmdInPlaceTurn(m_drive, 180),
+            new CmdInPlaceTurn(m_drive, 180),
+            alignShootCmd().withTimeout(1.6),
 
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd(0), 
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+            new ParallelDeadlineGroup(
+                trajectoryCmd(15), 
+                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+            ),
 
-                            new CmdInPlaceTurn(m_drive, -50),
-
-                            alignShootCmd() // shootCmd(3340, 2.5)
-                            //retractHopperAndShootCmdLL(3000, 16)
+            new ParallelCommandGroup(
+                turnRightToAligned(),
+                shootCmd().withTimeout(1.65)
+            )
         );
 
-        //Didn't add intial pose yet
+        //Didn't add intial pose yet - don't know what this comment means but the auto seems to work (mika)
         auto_S2H1 = new SequentialCommandGroup(
-
-                            //drive and intake ball
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd(1),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
-
-                            //turn and shoot
-                            new CmdInPlaceTurn(m_drive, 180),
-                            // shootCmd(),
-                            //alignShootCmd(),
-
-                            //turn and hoard first ball
-                            new CmdInPlaceTurn(m_drive, 90),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd(2),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
-
-                            //drive behind hub
-                            new CmdInPlaceTurn(m_drive, -90),
-                            trajectoryCmd(3),
-
-                            //outtake balls behind hub
-                            new CmdExtendIntake(m_intake),
-                            new CmdReverseIntake(m_intake, m_hopper)
-
-
-        );   
-
-        //Didn't add intial pose for this yet
-        auto_S2H2 = new SequentialCommandGroup(
 
                             //drive and intake ball
                             new ParallelDeadlineGroup(
@@ -463,20 +469,56 @@ public class RobotContainer {
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
 
+                            //drive behind hub
+                            new CmdInPlaceTurn(m_drive, -90),
+                            trajectoryCmd(3),
+
+                            //outtake balls behind hub
+                            new CmdExtendIntake(m_intake),
+                            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
+
+        );   
+
+        auto_S2H2 = new SequentialCommandGroup(
+
+                            //drive and intake ball
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(1),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            //turn and shoot
+                            new CmdInPlaceTurn(m_drive, 180),
+                            alignShootCmd(),
+
+                            //turn and hoard first ball
+                            new CmdInPlaceTurn(m_drive, 90),
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd(2),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
                             // turn and hoard second ball
                             new CmdInPlaceTurn(m_drive, 180),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(4), 
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+
+                            // trajectoryCmd(12),
+                            // new ParallelDeadlineGroup(
+                            //     trajectoryCmd(13),
+                            //     new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            // ),
                             
                             //hide ball behinde hub
                             trajectoryCmd(5),
+
+                            // new CmdInPlaceTurn(m_drive, 130),
                             new CmdExtendIntake(m_intake),
-                            new CmdReverseIntake(m_intake, m_hopper)
+                            new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(1)
 
         );
 
-        //Didn't add intial pose for this yet
         auto_4Ball180 = new SequentialCommandGroup(
                             //drive and intake 1 ball
                             new ParallelDeadlineGroup(
@@ -500,42 +542,60 @@ public class RobotContainer {
 
         );
 
-        //Didn't add intial pose for this yet
-        auto_5Ball180 = new SequentialCommandGroup(
+        // auto_5Ball180 = new SequentialCommandGroup(
                             
-                            //shoot preloaded
-                            shootCmd(), // shootCmd(2800, 19)
+        //                     //shoot preloaded
+        //                     shootCmd(), // shootCmd(2800, 19)
 
-                            //turn and intake next 2 balls
-                            new CmdInPlaceTurn(m_drive, 180),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd(0), 
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+        //                     //turn and intake next 2 balls
+        //                     new CmdInPlaceTurn(m_drive, 180),
+        //                     new ParallelDeadlineGroup(
+        //                         trajectoryCmd(0), 
+        //                         new CmdExtendIntakeAndRun(m_intake, m_hopper)
+        //                     ),
 
-                            //shoot 2 balls
-                            new CmdInPlaceTurn(m_drive, -50),
-                            shootCmd(),
+        //                     //shoot 2 balls
+        //                     new CmdInPlaceTurn(m_drive, -50),
+        //                     shootCmd(),
 
-                            //turn and go to terminal
-                            new CmdInPlaceTurn(m_drive, 180),
-                            trajectoryCmd(9),
+        //                     //turn and go to terminal
+        //                     new CmdInPlaceTurn(m_drive, 180),
+        //                     trajectoryCmd(9),
 
-                            //intake 2 balls
-                            new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(2),
+        //                     //intake 2 balls
+        //                     new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(2),
 
-                            //return to tarmac and shoot
-                            trajectoryCmd(8),
-                            new CmdInPlaceTurn(m_drive, 180),
-                            alignShootCmd()
+        //                     //return to tarmac and shoot
+        //                     trajectoryCmd(8),
+        //                     new CmdInPlaceTurn(m_drive, 180),
+        //                     alignShootCmd()
 
+        // );
+
+        auto_5Ball180 = new SequentialCommandGroup(
+            auto_3Ball180,
+
+            new ParallelDeadlineGroup(
+                new SequentialCommandGroup(
+                    trajectoryCmd(16),
+                    new InstantCommand(() -> m_drive.stop())),
+                    // new WaitCommand(0.5)),
+                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+            ),
+
+            trajectoryCmd(17),
+
+            new ParallelCommandGroup(
+                turnRightToAligned(),
+                shootCmd()
+            )
         );
 
         auto_Billiards = new SequentialCommandGroup (
                             // initial position: (6.8, 6.272, 45 deg - should be approx. pointing straight at the ball to knock)
                             new SequentialCommandGroup(
                                 new CmdExtendIntake(m_intake),
-                                new CmdReverseIntake(m_intake, m_hopper)
+                                new CmdOuttake(m_intake, m_hopper, 0.85).withTimeout(1.5)
                             ).withTimeout(2),
 
                             new CmdInPlaceTurn(m_drive, 70),
@@ -547,7 +607,8 @@ public class RobotContainer {
 
                             new CmdInPlaceTurn(m_drive, 55),
 
-                            shootCmd(1000, 28),
+                            new CmdExtendIntake(m_intake),
+                            new CmdOuttake(m_intake, m_hopper, 0.6).withTimeout(1.5),
 
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(11),
@@ -564,9 +625,10 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
         NarwhalDashboard.addAuto("S2H2", auto_S2H2);
         NarwhalDashboard.addAuto("S2H1", auto_S2H1);
+        NarwhalDashboard.addAuto("3 Ball", auto_3Ball180);
         NarwhalDashboard.addAuto("4 Ball 180 Terminal", auto_4Ball180);
         NarwhalDashboard.addAuto("5 Ball 180 Terminal", auto_5Ball180);
-        NarwhalDashboard.addAuto("Auto Billiards", auto_Billiards);
+        NarwhalDashboard.addAuto("Billiards", auto_Billiards);
     }
 
     // Helper for initAutos so we don't clog it up with all of these params
@@ -629,7 +691,6 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
             new ParallelCommandGroup(
                 new InstantCommand(() -> m_hood.startPID(angle)),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
@@ -647,13 +708,29 @@ public class RobotContainer {
                 new CmdAlign(m_drive, m_shooterLimelight),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
-            ).withTimeout(5),
+            ).withTimeout(2),
             new InstantCommand(m_shooterLimelight::turnLEDOff)
         );
     }
 
     private Pose2d reversedPose(Pose2d pose) {
         return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
+    }
+
+    private Command turnLeftToAligned() {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
+            new CmdInPlaceTurn(m_drive, 170).until(m_shooterLimelight::hasValidTarget),
+            new CmdAlign(m_drive, m_shooterLimelight)
+        );
+    }
+
+    private Command turnRightToAligned() {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
+            new CmdInPlaceTurn(m_drive, -170).until(m_shooterLimelight::hasValidTarget),
+            new CmdAlign(m_drive, m_shooterLimelight)
+        );
     }
 
     private void initDashboard() {
@@ -722,17 +799,15 @@ public class RobotContainer {
         
         // I don't understand why putting this in the constructor or initAutos doesn't work, so I put it here and it works (in sim)
         initialPoses.put(auto_1Ball, Trajectories.driveBack30In.getInitialPose());
-        initialPoses.put(auto_3Ball180, reversedPose(trajectory[0].getInitialPose()));
+        initialPoses.put(auto_3Ball180, trajectory[14].getInitialPose());
         initialPoses.put(auto_S2H1, trajectory[1].getInitialPose());
         initialPoses.put(auto_S2H2, trajectory[1].getInitialPose());
         initialPoses.put(auto_4Ball180, trajectory[6].getInitialPose());
-        initialPoses.put(auto_5Ball180, reversedPose(trajectory[0].getInitialPose()));
+        initialPoses.put(auto_5Ball180, trajectory[14].getInitialPose());
         initialPoses.put(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(45)));
 
 
-        // Command selectedAuto = NarwhalDashboard.getSelectedAuto();
-
-        Command selectedAuto = auto_Billiards;
+        Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
         if (selectedAuto == null) {
             return null;

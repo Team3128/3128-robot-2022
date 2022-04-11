@@ -40,7 +40,7 @@ public class CmdArcadeDrive extends CommandBase {
         double xSpeed = m_xSpeed.getAsDouble();
         double turn = DriveConstants.ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble();
 
-        m_drivetrain.arcadeDrive(filter.calculate(xSpeed * throttle), turn * 0.35);
+        m_drivetrain.arcadeDrive(filter.calculate(xSpeed * throttle), turn);
     }
     
     @Override
