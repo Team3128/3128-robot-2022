@@ -24,7 +24,7 @@ public class CmdOuttake extends CommandBase{
         m_intake = intake;
         m_hopper = hopper;
         intakePower = power;
-        hopperPower = -1*power;
+        hopperPower = -1.0;
 
         addRequirements(m_intake, m_hopper);
     }
