@@ -325,6 +325,11 @@ public class RobotContainer {
 
         m_rightStick.getPOVButton(0).whenPressed(() -> m_shooterLimelight.turnLEDOn());
         m_rightStick.getPOVButton(4).whenPressed(() -> m_shooterLimelight.turnLEDOff());
+
+        // Falcon Orchestra
+        m_rightStick.getPOVButton(2).whenPressed(() -> m_drive.loadMusicSelection(+1));
+        m_rightStick.getPOVButton(6).whenPressed(() -> m_drive.loadMusicSelection(-1));
+        m_rightStick.getButton(9).whenPressed(() -> m_drive.orchestraToggle());
     }
 
     public void init() {

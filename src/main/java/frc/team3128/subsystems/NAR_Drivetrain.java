@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
@@ -21,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.DriveConstants;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
+import java.util.ArrayList;
+import com.ctre.phoenix.music.Orchestra;
 
 public class NAR_Drivetrain extends SubsystemBase {
 
@@ -47,9 +50,20 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDrivetrainSim robotDriveSim;
     private DifferentialDriveOdometry odometry;
 
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
+
+    // Falcon Orchestra 
+    private Orchestra orchestra;
+    private NAR_TalonFX[] fxes = {leftLeader, rightLeader, leftFollower, rightFollower};
+    private String[] songs = new String[] {
+        "megalovania.chrp"
+    };
+
+    private int currentSong = 0;
+    private int timeToStart = 0;
+
     
     public NAR_Drivetrain(){
 
@@ -86,6 +100,13 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Field", field);
 
         resetEncoders();
+
+        ArrayList<TalonFX> instruments = new ArrayList<TalonFX>();
+        for (int i = 0; i < fxes.length; i++) {
+            instruments.add(fxes[i]);
+        }
+        orchestra = new Orchestra(instruments);
+        loadMusicSelection(0);
     }
 
     public static synchronized NAR_Drivetrain getInstance() {
@@ -106,6 +127,16 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
         SmartDashboard.putString("getPose()", getPose().toString());
         SmartDashboard.putNumber("Gyro", getHeading());
+
+        // Falcon Orchestra
+
+        if (timeToStart > 0) {
+            timeToStart --;
+            if (timeToStart == 0) {
+                orchestra.play();
+            }
+        }
+
     }
 
     public void simulationPeriodic() {
@@ -235,6 +266,38 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         gyro.reset();
+    }
+
+    /**
+     * Loads falcon orchestra song in song array based off of index offset
+     * @param offset + or - index offset position from last song index
+     */
+    public void loadMusicSelection(int offset)
+    {
+        /* increment song selection */
+        currentSong += offset;
+        /* wrap song index in case it exceeds boundary */
+        if (currentSong >= songs.length) {
+            currentSong = 0;
+        }
+        if (currentSong < 0) {
+            currentSong = songs.length - 1;
+        }
+        /* load the chirp file */
+        orchestra.loadMusic("songs/"+songs[currentSong]); 
+    
+        timeToStart = 10;
+    }
+
+    /**
+     * Toggles orchestra to pause/play
+     */
+    public void orchestraToggle() {
+        if (orchestra.isPlaying()) {
+            orchestra.pause();
+        } else {
+            orchestra.play();
+        }
     }
 
 }
