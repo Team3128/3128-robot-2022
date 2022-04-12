@@ -58,7 +58,14 @@ public class NAR_Drivetrain extends SubsystemBase {
     private Orchestra orchestra;
     private NAR_TalonFX[] fxes = {leftLeader, rightLeader, leftFollower, rightFollower};
     private String[] songs = new String[] {
-        "megalovania.chrp"
+        "megalovania",
+        "never_gonna_give_you_up",
+        "octopath",
+        "all_star",
+        "cotton_eye_joe",
+        "imperial_march", 
+        "last_christmas", 
+        "eple"
     };
 
     private int currentSong = 0;
@@ -284,7 +291,7 @@ public class NAR_Drivetrain extends SubsystemBase {
             currentSong = songs.length - 1;
         }
         /* load the chirp file */
-        orchestra.loadMusic("songs/"+songs[currentSong]); 
+        orchestra.loadMusic("songs/"+songs[currentSong]+".chrp"); 
     
         timeToStart = 10;
     }
