@@ -596,6 +596,7 @@ public class RobotContainer {
                                 trajectoryCmd("S1H1.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
+                            new InstantCommand(() -> m_drive.stop()),
 
                             new CmdExtendIntake(m_intake),
                             new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(2)
@@ -609,6 +610,7 @@ public class RobotContainer {
                                 trajectoryCmd("S1H2.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
                             ),
+                            new InstantCommand(() -> m_drive.stop()),
 
                             new CmdExtendIntake(m_intake),
                             new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(2)
