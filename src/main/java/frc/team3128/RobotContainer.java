@@ -121,6 +121,7 @@ public class RobotContainer {
     private Command auto_5Ball180;
     private Command auto_Billiards;
     private Command auto_S1H1;
+    private Command auto_S1H2;
 
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
@@ -600,6 +601,19 @@ public class RobotContainer {
                             new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(2)
         );
 
+        auto_S1H2 = new SequentialCommandGroup(
+                            alignShootCmd(),
+
+                            new CmdInPlaceTurn(m_drive, 180),
+                            new ParallelDeadlineGroup(
+                                trajectoryCmd("S1H2.wpilib.json"),
+                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
+                            ),
+
+                            new CmdExtendIntake(m_intake),
+                            new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(2)
+        );
+
 
         // Setup auto-selector
         NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
@@ -611,6 +625,7 @@ public class RobotContainer {
         NarwhalDashboard.addAuto("5 Ball 180 Terminal", auto_5Ball180);
         NarwhalDashboard.addAuto("Billiards", auto_Billiards);
         NarwhalDashboard.addAuto("S1H1", auto_S1H1);
+        NarwhalDashboard.addAuto("S1H2", auto_S1H2);
     }
 
     private RamseteCommand trajectoryCmd(String fileName) {
@@ -772,10 +787,11 @@ public class RobotContainer {
         initialPoses.put(auto_4Ball180, trajectoryMap.get("4Ball_Terminal180_i.wpilib.json").getInitialPose());
         initialPoses.put(auto_5Ball180, trajectoryMap.get("3Ballv2_i.wpilib.json").getInitialPose());
         initialPoses.put(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(45)));
-        initialPoses.put(auto_S2H1, new Pose2d(trajectoryMap.get("S2H1.wpilib.json").getInitialPose().getTranslation(), trajectoryMap.get("S2H1.wpilib.json").getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_S1H1, new Pose2d(trajectoryMap.get("S1H1.wpilib.json").getInitialPose().getTranslation(), trajectoryMap.get("S1H1.wpilib.json").getInitialPose().getRotation().unaryMinus()));
+        initialPoses.put(auto_S1H2, new Pose2d(trajectoryMap.get("S1H2.wpilib.json").getInitialPose().getTranslation(), trajectoryMap.get("S1H2.wpilib.json").getInitialPose().getRotation().unaryMinus()));
 
 
-        Command selectedAuto = auto_3Ball180;
+        Command selectedAuto = NarwhalDashboard.getSelectedAuto();
 
         if (selectedAuto == null) {
             return null;
