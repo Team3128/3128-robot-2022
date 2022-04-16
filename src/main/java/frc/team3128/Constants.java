@@ -37,8 +37,8 @@ public class Constants {
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
-        public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(2.9505);
-        public static final double TRACK_WIDTH_METERS = 0.55438;
+        public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.029);
+        public static final double TRACK_WIDTH_METERS = 0.56147;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
@@ -46,9 +46,9 @@ public class Constants {
         public static final double DRIVE_NUp100MS_TO_MPS = DRIVE_NU_TO_METER * 10; // sensor units per 100 ms to m/s of drivetrain
         public static final double MAX_DRIVE_VEL_NUp100MS = 6380 * ConversionConstants.FALCON_ENCODER_RESOLUTION / 60 / 10; // max angular velocity of drivetrain (encoder, not wheel) in sensor units per 100 ms - 6380 RPM * RESOLUTION nu/rot * 1 min/60s * 1s/(10*100ms)
 
-        public static final double kS = 0.68392;
-        public static final double kV = 2.1048;
-        public static final double kA = 0.30905;
+        public static final double kS = 0.73226;
+        public static final double kV = 2.0859;
+        public static final double kA = 0.37853;
         public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
         public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
 
@@ -66,7 +66,7 @@ public class Constants {
         //Ramsete constants
         public static final double RAMSETE_B = 2; //default value - don't change unless absolutely necessary
         public static final double RAMSETE_ZETA = 0.7; //default value - don't change unless absolutely necessary
-        public static final double RAMSETE_KP = 2.9127;
+        public static final double RAMSETE_KP = 3.0101;
 
         public static final Boolean GYRO_REVERSED = false;
 
@@ -126,6 +126,11 @@ public class Constants {
             // shooterSpeedsMap.put(new InterpolatingDouble(178.0), new InterpolatingDouble(3725.0));
             // shooterSpeedsMap.put(new InterpolatingDouble(168.0), new InterpolatingDouble(3650.0));
             // shooterSpeedsMap.put(new InterpolatingDouble(158.0), new InterpolatingDouble(3550.0));
+            // shooterSpeedsMap.put(new InterpolatingDouble(148.0), new InterpolatingDouble(3000.0));
+            // shooterSpeedsMap.put(new InterpolatingDouble(138.0), new InterpolatingDouble(3280.0));
+            // shooterSpeedsMap.put(new InterpolatingDouble(128.0), new InterpolatingDouble(3100.0));
+            // shooterSpeedsMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(3000.0));
+            // shooterSpeedsMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(2870.0));
 
             shooterSpeedsMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(3360.0));
             shooterSpeedsMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3300.0));
@@ -136,13 +141,8 @@ public class Constants {
             shooterSpeedsMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(2800.0));
             shooterSpeedsMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(2750.0));
 
-            // shooterSpeedsMap.put(new InterpolatingDouble(148.0), new InterpolatingDouble(3000.0));
-            // shooterSpeedsMap.put(new InterpolatingDouble(138.0), new InterpolatingDouble(3280.0));
-            // shooterSpeedsMap.put(new InterpolatingDouble(128.0), new InterpolatingDouble(3100.0));
-            // shooterSpeedsMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(3000.0));
-            // shooterSpeedsMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(2870.0));
             shooterSpeedsMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(2750.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(2670.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(2700.0));
             shooterSpeedsMap.put(new InterpolatingDouble(78.0), new InterpolatingDouble(2650.0));
             shooterSpeedsMap.put(new InterpolatingDouble(68.0), new InterpolatingDouble(2625.0));
             shooterSpeedsMap.put(new InterpolatingDouble(58.0), new InterpolatingDouble(2600.0));
@@ -208,7 +208,7 @@ public class Constants {
         public static final double ANGLED_DISTANCE = 12; // TODO: change to actual distance
     
         public static final NeutralMode CLIMBER_NEUTRAL_MODE = NeutralMode.Brake;
-        public static final double CLIMBER_POWER = 0.9;
+        public static final double CLIMBER_POWER = 0.8; // 0.9
         public static final double MANUAL_POWER = 0.3;
 
         public static final double CLIMB_ENC_DIAG_EXTENSION = 322000; // 6600;//same as diag extension rn // old-7850; //-7379
@@ -245,6 +245,11 @@ public class Constants {
             // hoodAngleMap.put(new InterpolatingDouble(178.0), new InterpolatingDouble(30.0));
             // hoodAngleMap.put(new InterpolatingDouble(168.0), new InterpolatingDouble(29.0));
             // hoodAngleMap.put(new InterpolatingDouble(158.0), new InterpolatingDouble(28.5));
+            // hoodAngleMap.put(new InterpolatingDouble(148.0), new InterpolatingDouble(28.0));
+            // hoodAngleMap.put(new InterpolatingDouble(138.0), new InterpolatingDouble(26.5));
+            // hoodAngleMap.put(new InterpolatingDouble(128.0), new InterpolatingDouble(25.5));
+            // hoodAngleMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(24.5));
+            // hoodAngleMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(23.0));
 
             hoodAngleMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(31.0));
             hoodAngleMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(31.0));
@@ -254,11 +259,7 @@ public class Constants {
             hoodAngleMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(25.0));
             hoodAngleMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(24.0));
             hoodAngleMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(23.0));
-            // hoodAngleMap.put(new InterpolatingDouble(148.0), new InterpolatingDouble(28.0));
-            // hoodAngleMap.put(new InterpolatingDouble(138.0), new InterpolatingDouble(26.5));
-            // hoodAngleMap.put(new InterpolatingDouble(128.0), new InterpolatingDouble(25.5));
-            // hoodAngleMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(24.5));
-            // hoodAngleMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(23.0));
+
             hoodAngleMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(22.0));
             hoodAngleMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(19.0));
             hoodAngleMap.put(new InterpolatingDouble(78.0), new InterpolatingDouble(16.0));

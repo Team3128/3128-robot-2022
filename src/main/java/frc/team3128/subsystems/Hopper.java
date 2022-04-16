@@ -59,7 +59,11 @@ public class Hopper extends SubsystemBase {
     public void runHopper() {
         m_hopper1.set(HopperConstants.HOPPER_MOTOR_POWER);
         m_hopper2.set(HopperConstants.HOPPER_MOTOR_2_POWER);
+    }
 
+    public void runHopper(double power) {
+        m_hopper1.set(power);
+        m_hopper2.set(power + 0.1);
     }
 
     public void reverseHopper(double power) {
