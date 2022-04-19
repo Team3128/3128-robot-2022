@@ -83,8 +83,6 @@ public class NAR_Drivetrain extends SubsystemBase {
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
 
-        SmartDashboard.putData("Field", field);
-
         resetEncoders();
     }
 
@@ -106,6 +104,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
         SmartDashboard.putString("getPose()", getPose().toString());
         SmartDashboard.putNumber("Gyro", getHeading());
+
+        SmartDashboard.putData("Field", field);
     }
 
     public void simulationPeriodic() {
