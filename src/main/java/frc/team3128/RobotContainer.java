@@ -434,7 +434,6 @@ public class RobotContainer {
             shootCmd()
         );
 
-        //Didn't add intial pose yet - don't know what this comment means but the auto seems to work (mika)
         auto_S2H1 = new SequentialCommandGroup(
 
                             //drive and intake ball
@@ -534,7 +533,7 @@ public class RobotContainer {
             ),
 
             new CmdInPlaceTurn(m_drive, 180),
-            alignShootCmd().withTimeout(1.6),
+            alignShootCmd(),
 
             new ParallelDeadlineGroup(
                 trajectoryCmd("3Ballv2_ii.wpilib.json"),
@@ -543,7 +542,7 @@ public class RobotContainer {
 
             new ParallelCommandGroup(
                 turnRightToAligned(),
-                shootCmd().withTimeout(1.65)
+                shootCmd()
             ),
 
             new ParallelDeadlineGroup(
