@@ -1,4 +1,5 @@
 package frc.team3128.commands;
+import frc.team3128.Constants.HopperConstants;
 import frc.team3128.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,7 +15,7 @@ public class CmdRetractHopper extends CommandBase {
     @Override
     public void initialize() {
         // m_hopper.resetEncoder();
-        m_hopper.reverseHopper();
+        m_hopper.reverseHopper(HopperConstants.REVERSE_HOPPER_MOTOR_POWER);
     }
 
     @Override

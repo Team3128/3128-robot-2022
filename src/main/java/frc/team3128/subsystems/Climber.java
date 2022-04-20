@@ -3,16 +3,16 @@ package frc.team3128.subsystems;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import com.ctre.phoenix.motorcontrol.InvertType;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.ClimberConstants;
 import frc.team3128.Constants.ConversionConstants;
-import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
+import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
-import net.thefletcher.revrobotics.enums.MotorType;
 
 public class Climber extends SubsystemBase {
     
@@ -25,15 +25,13 @@ public class Climber extends SubsystemBase {
 
     private ClimberState climberState;
 
-    private DoubleSolenoid m_climberSolenoid, m_climberBreakSolenoid;
-    private NAR_CANSparkMax m_leftMotor, m_rightMotor;
-    private DigitalInput m_leftLimitSwitch, m_rightLimitSwitch;
+    private DoubleSolenoid m_climberSolenoid;
+    private NAR_TalonFX m_leftMotor, m_rightMotor;
 
     public Climber() {
         climberState = ClimberState.RETRACTED;
 
         configMotors();
-        configSensors();
         configPneumatics();
 
         resetLeftEncoder();
@@ -47,58 +45,31 @@ public class Climber extends SubsystemBase {
     }
 
     private void configMotors() {
-        m_leftMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_LEFT_ID, MotorType.kBrushless);
-        m_rightMotor = new NAR_CANSparkMax(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID, MotorType.kBrushless);
+        m_leftMotor = new NAR_TalonFX(ClimberConstants.CLIMBER_MOTOR_LEFT_ID);
+        m_rightMotor = new NAR_TalonFX(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID);
 
         m_leftMotor.setInverted(true);
-        m_rightMotor.follow(m_leftMotor, true);
+        m_rightMotor.follow((NAR_EMotor)m_leftMotor);
+        m_rightMotor.setInverted(InvertType.OpposeMaster);
         
-        m_leftMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
-        m_rightMotor.setIdleMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_leftMotor.setNeutralMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_rightMotor.setNeutralMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
 
-    }
-
-    private void configSensors() {
-
-        m_leftLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_LEFT_ID);
-        m_rightLimitSwitch = new DigitalInput(ClimberConstants.CLIMBER_SENSOR_RIGHT_ID);
     }
     
     private void configPneumatics() {
         m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
                                                 ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, 
                                                 ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
-        m_climberBreakSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
-                                                ClimberConstants.CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID, 
-                                                ClimberConstants.CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID);
 
         retractPiston();
-        disengageBreak();
     }
 
     @Override
     public void periodic() {
 
-        if (getLeftSwitch() || getRightSwitch()) {
-            //if state is retracted and encoder count is closer to top encoder count
-            if (getState() == ClimberState.RETRACTED && getCurrentTicksLeft() > ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) > Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)) {
-                setState(ClimberState.EXTENDED);
-            }
-            //if state is extended and encoder count is closer to zero
-            else if (getState() == ClimberState.EXTENDED && getCurrentTicksLeft() < ClimberConstants.CLIMB_ENC_TO_TOP/2) {//Math.abs(getCurrentTicksLeft()) < Math.abs(ClimberConstants.CLIMB_ENC_TO_TOP)){
-                setState(ClimberState.RETRACTED);
-                //resetLeftEncoder();
-            }
-        }
-        
-
-        // SmartDashboard.putString("Climber state", climberState.toString());
-
-        SmartDashboard.putBoolean("Climber left limit switch", getLeftSwitch());
-        SmartDashboard.putBoolean("Climber right limit switch", getRightSwitch());
         SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
         SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
-        SmartDashboard.putString("Climber friction brake piston", m_climberBreakSolenoid.get().toString());
 
         // SmartDashboard.putNumber("Climber avgCurrent", getAvgCurrent());
     }
@@ -136,28 +107,16 @@ public class Climber extends SubsystemBase {
         m_climberSolenoid.set(kReverse);
     }
 
-    public void engageBreak() {
-        m_climberBreakSolenoid.set(kForward);
-    }
-
-    public void disengageBreak() {
-        m_climberBreakSolenoid.set(kReverse);
-    }
-
     public void setState(ClimberState state) {
         climberState = state;
     }
-
-    public boolean getLeftSwitch() {
-        return !m_leftLimitSwitch.get();
-    }
-
-    public boolean getRightSwitch() {
-        return !m_rightLimitSwitch.get();
-    }
     
+    /**
+     * @param distance Distance to extend/retract in inches
+     * @return Corresponding encoder counts
+     */
     public double getDesiredTicks(double distance) {
-        double desiredTicks = distance * (ConversionConstants.SPARK_ENCODER_RESOLUTION * ClimberConstants.CLIMBER_GEAR_RATIO) / (ClimberConstants.AXLE_DIAMETER * Math.PI);
+        double desiredTicks = distance * (ConversionConstants.FALCON_ENCODER_RESOLUTION * ClimberConstants.CLIMBER_GEAR_RATIO) / (ClimberConstants.AXLE_DIAMETER * Math.PI);
         return desiredTicks;
     }
 
@@ -174,6 +133,6 @@ public class Climber extends SubsystemBase {
     }
 
     public double getAvgCurrent() {
-        return (m_leftMotor.getOutputCurrent() + m_rightMotor.getOutputCurrent()) / 2;
+        return (m_leftMotor.getSupplyCurrent() + m_rightMotor.getSupplyCurrent()) / 2;
     }
 }

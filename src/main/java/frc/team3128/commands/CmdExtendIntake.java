@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.subsystems.Intake;
 
 public class CmdExtendIntake extends WaitCommand {
@@ -17,7 +18,7 @@ public class CmdExtendIntake extends WaitCommand {
     @Override
     public void initialize() {
         super.initialize();
-        m_intake.runIntakeBack();
+        m_intake.runIntakeBack(IntakeConstants.OUTTAKE_MOTOR_POWER);
 
         m_intake.ejectIntake();
     }
