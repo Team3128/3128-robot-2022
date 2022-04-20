@@ -24,7 +24,7 @@ public class CmdShootSingleBall extends CommandBase {
     
     @Override
     public void execute() {
-        double dist = limelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT) + 5;
+        double dist = limelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT);
         shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
         hood.startPID(hood.calculateAngleFromDistance(dist));
 
