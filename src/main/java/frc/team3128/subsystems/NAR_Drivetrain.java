@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
@@ -65,6 +66,12 @@ public class NAR_Drivetrain extends SubsystemBase {
         leftFollower.setSafetyEnabled(false);
         rightLeader.setSafetyEnabled(false);
         rightFollower.setSafetyEnabled(false);
+
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+
 
         robotDrive = new DifferentialDrive(
             new MotorControllerGroup(leftLeader, leftFollower),

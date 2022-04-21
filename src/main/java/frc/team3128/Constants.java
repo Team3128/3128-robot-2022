@@ -132,14 +132,14 @@ public class Constants {
             // shooterSpeedsMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(3000.0));
             // shooterSpeedsMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(2870.0));
 
-            shooterSpeedsMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(3360.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3300.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(3150.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3050.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(2950.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(2900.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(2800.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(2750.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(3360.0 + 100));
+            shooterSpeedsMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3300.0 + 100));
+            shooterSpeedsMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(3150.0 + 100));
+            shooterSpeedsMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3050.0 + 50));
+            shooterSpeedsMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(2950.0 + 50));
+            shooterSpeedsMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(2900.0 + 50));
+            shooterSpeedsMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(2800.0 + 50));
+            shooterSpeedsMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(2750.0 + 50));
 
             shooterSpeedsMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(2750.0));
             shooterSpeedsMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(2700.0));
