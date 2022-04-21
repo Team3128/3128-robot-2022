@@ -67,10 +67,18 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setSafetyEnabled(false);
         rightFollower.setSafetyEnabled(false);
 
+        // set CAN status frame periods
         leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
         leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+
         rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
         rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 13);
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 43);
+        
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 11);
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 41);
 
 
         robotDrive = new DifferentialDrive(
