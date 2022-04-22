@@ -75,8 +75,8 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
 
-        SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
-        SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
+        // SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
+        // SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
 
         // SmartDashboard.putNumber("Climber avgCurrent", getAvgCurrent());
     }
