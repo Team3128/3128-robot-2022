@@ -67,10 +67,18 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setSafetyEnabled(false);
         rightFollower.setSafetyEnabled(false);
 
+        // set CAN status frame periods
         leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
         leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+
         rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
         rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 13);
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 23);
+        
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 11);
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 29);
 
 
         robotDrive = new DifferentialDrive(
@@ -105,14 +113,14 @@ public class NAR_Drivetrain extends SubsystemBase {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
         field.setRobotPose(getPose());   
         
-        SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
-        SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
-        SmartDashboard.putNumber("Left Encoder Speed (m per s)", getLeftEncoderSpeed());
-        SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
-        SmartDashboard.putString("getPose()", getPose().toString());
-        SmartDashboard.putNumber("Gyro", getHeading());
+        // SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
+        // SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
+        // SmartDashboard.putNumber("Left Encoder Speed (m per s)", getLeftEncoderSpeed());
+        // SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
+        // SmartDashboard.putString("getPose()", getPose().toString());
+        // SmartDashboard.putNumber("Gyro", getHeading());
 
-        SmartDashboard.putData("Field", field);
+        // SmartDashboard.putData("Field", field);
     }
 
     public void simulationPeriodic() {
