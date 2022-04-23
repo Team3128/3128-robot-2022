@@ -11,8 +11,8 @@ public class CmdShootSingleBall extends CommandBase {
     private Limelight limelight;
     private Hood hood;
 
-    private double pastSpeed = 0;
-    private double currSpeed;
+    private boolean prevIsReady = false;
+    private boolean currIsReady;
     
     public CmdShootSingleBall(Shooter shooter, Hood hood, Limelight limelight) {
         this.shooter = shooter;
@@ -28,8 +28,8 @@ public class CmdShootSingleBall extends CommandBase {
         shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
         hood.startPID(hood.calculateAngleFromDistance(dist));
 
-        pastSpeed = currSpeed;
-        currSpeed = shooter.getMeasurement();
+        prevIsReady = currIsReady;
+        currIsReady = shooter.isReady();
     }
     
     @Override
@@ -40,6 +40,6 @@ public class CmdShootSingleBall extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return pastSpeed - currSpeed > 250;
+        return prevIsReady && !currIsReady;
     }
 }
