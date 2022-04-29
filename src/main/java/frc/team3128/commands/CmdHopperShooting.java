@@ -30,7 +30,7 @@ public class CmdHopperShooting extends CommandBase {
             // m_hopper.runHopper();
             m_hopper.runHopper(power);
         } else {
-            m_hopper.stopHopper();
+            m_hopper.runHopper(-0.1);
         }
     }
 

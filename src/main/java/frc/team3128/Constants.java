@@ -132,14 +132,16 @@ public class Constants {
             // shooterSpeedsMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(3000.0));
             // shooterSpeedsMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(2870.0));
 
-            shooterSpeedsMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(3360.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3300.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(3150.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3050.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(2950.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(2900.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(2800.0));
-            shooterSpeedsMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(2750.0));
+            shooterSpeedsMap.put(new InterpolatingDouble(210.0), new InterpolatingDouble(3675.0)); // fake inches :)
+            shooterSpeedsMap.put(new InterpolatingDouble(190.0), new InterpolatingDouble(3460.0 + 125));
+            shooterSpeedsMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(3360.0 + 125));
+            shooterSpeedsMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(3300.0 + 125));
+            shooterSpeedsMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(3150.0 + 150));
+            shooterSpeedsMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(3050.0 + 100));
+            shooterSpeedsMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(2950.0 + 200));
+            shooterSpeedsMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(2900.0 + 200));
+            shooterSpeedsMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(2800.0 + 100));
+            shooterSpeedsMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(2750.0 + 100));
 
             shooterSpeedsMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(2750.0));
             shooterSpeedsMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(2700.0));
@@ -237,7 +239,7 @@ public class Constants {
         public static final int HOOD_CURRENT_LIMIT = 10; // Amps
 
         public static final double MIN_ANGLE = 3.0; // deg
-        public static final double MAX_ANGLE = 30.0; // deg
+        public static final double MAX_ANGLE = 34.0; // deg
         public static final double HOME_ANGLE = 22.0; // deg
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
@@ -251,14 +253,15 @@ public class Constants {
             // hoodAngleMap.put(new InterpolatingDouble(118.0), new InterpolatingDouble(24.5));
             // hoodAngleMap.put(new InterpolatingDouble(108.0), new InterpolatingDouble(23.0));
 
-            hoodAngleMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(31.0));
-            hoodAngleMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(31.0));
-            hoodAngleMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(31.0));
+            hoodAngleMap.put(new InterpolatingDouble(190.0), new InterpolatingDouble(32.5));
+            hoodAngleMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(32.5));
+            hoodAngleMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(32.5));
+            hoodAngleMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(31.5));
             hoodAngleMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(27.0));
-            hoodAngleMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(26.0));
-            hoodAngleMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(25.0));
+            hoodAngleMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(27.5));
+            hoodAngleMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(26.5));
             hoodAngleMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(24.0));
-            hoodAngleMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(23.0));
+            hoodAngleMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(23.5));
 
             hoodAngleMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(22.0));
             hoodAngleMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(19.0));
@@ -283,7 +286,7 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 1.8e-3;
+        public static final double VISION_PID_kP = 2.2e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 0; // 0.00006;
         public static final double VISION_PID_kF = 0.06;

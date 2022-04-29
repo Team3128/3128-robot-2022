@@ -4,6 +4,7 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -55,6 +56,12 @@ public class Climber extends SubsystemBase {
         m_leftMotor.setNeutralMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
         m_rightMotor.setNeutralMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
 
+        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 23);
+        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 59);
+
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+
     }
     
     private void configPneumatics() {
@@ -68,8 +75,8 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
 
-        SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
-        SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
+        // SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
+        // SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
 
         // SmartDashboard.putNumber("Climber avgCurrent", getAvgCurrent());
     }

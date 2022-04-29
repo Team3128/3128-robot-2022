@@ -139,7 +139,7 @@ public class Limelight {
         double tx = getValue(LimelightKey.HORIZONTAL_OFFSET, 5) * Math.PI / 180;
         double dist = (targetHeight - cameraHeight) / (Math.tan(ty + cameraAngle)*Math.cos(tx)) - frontDistance;
 
-        double transformedDist = -2.97 + 0.749 * dist + 3.3e-3 * dist * dist;
+        double transformedDist = 19.4 + 0.243 * dist + 6.26e-3 * dist * dist;
 
         return transformedDist;
     }

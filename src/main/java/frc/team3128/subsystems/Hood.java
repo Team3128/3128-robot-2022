@@ -15,6 +15,7 @@ import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.IdleMode;
 import net.thefletcher.revrobotics.enums.MotorType;
+import net.thefletcher.revrobotics.enums.PeriodicFrame;
 
 public class Hood extends NAR_PIDSubsystem {
 
@@ -47,6 +48,10 @@ public class Hood extends NAR_PIDSubsystem {
         m_hoodMotor.setSmartCurrentLimit(HoodConstants.HOOD_CURRENT_LIMIT);
         m_hoodMotor.enableVoltageCompensation(12.0);
         m_hoodMotor.setIdleMode(IdleMode.kBrake);
+
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 19);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 53);
     }
 
     private void configEncoder() {
@@ -101,8 +106,8 @@ public class Hood extends NAR_PIDSubsystem {
 
         prevTime = time;
 
-        SmartDashboard.putNumber("Hood voltage", voltageOutput);
-        SmartDashboard.putNumber("Hood percentage output", voltageOutput / 12.0);
+        // SmartDashboard.putNumber("Hood voltage", voltageOutput);
+        // SmartDashboard.putNumber("Hood percentage output", voltageOutput / 12.0);
 
     }
 
