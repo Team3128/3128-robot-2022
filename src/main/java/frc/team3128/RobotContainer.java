@@ -408,6 +408,8 @@ public class RobotContainer {
         );
 
         auto_2Ball = new SequentialCommandGroup(
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+
                             new ParallelDeadlineGroup(
                                 trajectoryCmd(Trajectories.twoBallTraj), 
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -419,6 +421,8 @@ public class RobotContainer {
         );
 
         auto_3Ball180 = new SequentialCommandGroup(
+
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 trajectoryCmd("3Ballv2_i.wpilib.json"), 
                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -427,6 +431,7 @@ public class RobotContainer {
             new CmdInPlaceTurn(m_drive, 180),
             alignShootCmd(),
 
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 trajectoryCmd("3Ballv2_ii.wpilib.json"),
                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -439,6 +444,7 @@ public class RobotContainer {
         auto_S2H1 = new SequentialCommandGroup(
 
                             //drive and intake ball
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("S2H2_i.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -450,6 +456,7 @@ public class RobotContainer {
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("S2H2_ii.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -468,6 +475,7 @@ public class RobotContainer {
         auto_S2H2 = new SequentialCommandGroup(
 
                             //drive and intake ball
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("S2H2_i.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -479,6 +487,7 @@ public class RobotContainer {
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(m_drive, 90),
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("S2H2_ii.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -486,6 +495,7 @@ public class RobotContainer {
 
                             // turn and hoard second ball
                             new CmdInPlaceTurn(m_drive, 180),
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("S2H2_iii.wpilib.json"), 
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)),
@@ -507,6 +517,7 @@ public class RobotContainer {
 
         auto_4Ball180 = new SequentialCommandGroup(
                             //drive and intake 1 ball
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("4Ball_Terminal180_i.wpilib.json"),  
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)),
@@ -516,6 +527,7 @@ public class RobotContainer {
                             shootCmd(),
 
                             //drive to ball and terminal and intake
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("4Ball_Terminal180_ii.wpilib.json"), 
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)),
@@ -529,6 +541,7 @@ public class RobotContainer {
         );
 
         auto_5Ball180 = new SequentialCommandGroup(
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 trajectoryCmd("3Ballv2_i.wpilib.json"), 
                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -537,6 +550,7 @@ public class RobotContainer {
             new CmdInPlaceTurn(m_drive, 180),
             alignShootCmd(),
 
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 trajectoryCmd("3Ballv2_ii.wpilib.json"),
                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -547,6 +561,7 @@ public class RobotContainer {
                 shootCmd()
             ),
 
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
                     trajectoryCmd("5Ballv2_i.wpilib.json"),
@@ -571,7 +586,8 @@ public class RobotContainer {
                             ).withTimeout(2),
 
                             new CmdInPlaceTurn(m_drive, 70),
-
+                            
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("Billiards_i.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -582,6 +598,7 @@ public class RobotContainer {
                             new CmdExtendIntake(m_intake),
                             new CmdOuttake(m_intake, m_hopper, 0.6).withTimeout(1.5),
 
+                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("Billiards_ii.wpilib.json"),
                                 new CmdExtendIntakeAndRun(m_intake, m_hopper)
@@ -673,6 +690,7 @@ public class RobotContainer {
         // );
 
         auto_S1H2 = new SequentialCommandGroup(
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 trajectoryCmd("S1H1_i.wpilib.json"), 
                 new CmdExtendIntakeAndRun(m_intake, m_hopper)  
@@ -691,6 +709,7 @@ public class RobotContainer {
             ).withTimeout(2),
             new InstantCommand(m_shooterLimelight::turnLEDOff),
 
+            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
                 trajectoryCmd("S1H2_ii.wpilib.json"), 
                 new CmdExtendIntakeAndRun(m_intake, m_hopper)  
