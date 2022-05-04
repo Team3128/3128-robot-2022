@@ -36,11 +36,11 @@ public class Hopper extends SubsystemBase {
         m_hopper2 = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_2_ID);
 
         // set CAN status frame periods
-        m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 29);
-        m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 61);
+        m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
-        m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 31);
-        m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 67);
+        m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
     }
 
     private void configEncoders() {

@@ -68,17 +68,17 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightFollower.setSafetyEnabled(false);
 
         // set CAN status frame periods
-        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
-        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
-        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 13);
-        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 23);
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
         
-        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 11);
-        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 29);
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
 
 
         robotDrive = new DifferentialDrive(

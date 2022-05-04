@@ -100,11 +100,11 @@ public class Shooter extends NAR_PIDSubsystem {
         m_rightShooter.follow((NAR_EMotor) m_leftShooter);
 
         // set CAN status frame periods
-        m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-        m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
         
-        m_leftShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 17);
-        m_leftShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 47);
+        m_leftShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
+        m_leftShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
 
         m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }

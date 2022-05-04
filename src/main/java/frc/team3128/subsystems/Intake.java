@@ -36,8 +36,8 @@ public class Intake extends SubsystemBase {
         m_intake = new NAR_TalonSRX(IntakeConstants.INTAKE_MOTOR_ID);
 
         // set CAN status frame periods
-        m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 37);
-        m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 71);
+        m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
     }
     private void configPneumatics() {
         m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.INTAKE_SOLENOID_FORWARD_CHANNEL_ID, IntakeConstants.INTAKE_SOLENOID_BACKWARD_CHANNEL_ID);
