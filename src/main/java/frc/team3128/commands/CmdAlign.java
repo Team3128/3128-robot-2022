@@ -8,11 +8,13 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.Constants.VisionConstants;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.subsystems.NAR_Drivetrain;
+import frc.team3128.subsystems.SwerveTrain;
 
 
 public class CmdAlign extends CommandBase {
@@ -21,7 +23,7 @@ public class CmdAlign extends CommandBase {
         SEARCHING, FEEDBACK;
     }
 
-    private NAR_Drivetrain m_drive;
+    private SwerveTrain m_drive;
     private Limelight m_limelight;
     private Set<Subsystem> requirements;
 
@@ -36,7 +38,7 @@ public class CmdAlign extends CommandBase {
     private HorizontalOffsetFeedBackDriveState aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
 
 
-    public CmdAlign(NAR_Drivetrain drive, Limelight limelight) {
+    public CmdAlign(SwerveTrain drive, Limelight limelight) {
         m_drive = drive;
         m_limelight = limelight;
         goalHorizontalOffset = VisionConstants.TX_OFFSET;
@@ -88,7 +90,7 @@ public class CmdAlign extends CommandBase {
                 
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
-                m_drive.tankDrive(-feedbackPower, feedbackPower);
+                m_drive.drive(0,0,feedbackPower * SwerveConstants.kMaxSpeed, true);
                 
                 if (Math.abs(currError) < txThreshold) {
                     plateauCount++;
