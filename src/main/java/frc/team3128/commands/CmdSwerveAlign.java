@@ -17,7 +17,7 @@ import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.SwerveTrain;
 
 
-public class CmdAlign extends CommandBase {
+public class CmdSwerveAlign extends CommandBase {
 
     private enum HorizontalOffsetFeedBackDriveState {
         SEARCHING, FEEDBACK;
@@ -38,7 +38,7 @@ public class CmdAlign extends CommandBase {
     private HorizontalOffsetFeedBackDriveState aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
 
 
-    public CmdAlign(SwerveTrain drive, Limelight limelight) {
+    public CmdSwerveAlign(SwerveTrain drive, Limelight limelight) {
         m_drive = drive;
         m_limelight = limelight;
         goalHorizontalOffset = VisionConstants.TX_OFFSET;

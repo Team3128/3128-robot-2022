@@ -8,12 +8,12 @@ import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.SwerveTrain;
 
-public class CmdInPlaceTurn extends PIDCommand {
+public class CmdSwerveInPlaceTurn extends PIDCommand {
 
     private SwerveTrain drivetrain;
     private double turnDeg;
 
-    public CmdInPlaceTurn(SwerveTrain drivetrain, double turnDeg) {
+    public CmdSwerveInPlaceTurn(SwerveTrain drivetrain, double turnDeg) {
 
         super(
             new PIDController(DriveConstants.TURN_kP, DriveConstants.TURN_kI, DriveConstants.TURN_kD),
