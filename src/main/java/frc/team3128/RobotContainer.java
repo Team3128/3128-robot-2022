@@ -5,12 +5,14 @@ import java.nio.file.Path;
 import java.util.HashMap;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -27,7 +29,9 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.team3128.Constants.HoodConstants;
+import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.ConstantsInt.ClimberConstants;
 import frc.team3128.ConstantsInt.VisionConstants;
 import frc.team3128.autonomous.Trajectories;
@@ -46,6 +50,7 @@ import frc.team3128.commands.CmdRetractHopper;
 import frc.team3128.commands.CmdShootDist;
 import frc.team3128.commands.CmdShootRPM;
 import frc.team3128.commands.CmdShootSingleBall;
+import frc.team3128.commands.CmdSwerveDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
@@ -57,6 +62,7 @@ import frc.team3128.subsystems.Hopper;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.Shooter;
+import frc.team3128.subsystems.SwerveTrain;
 import frc.team3128.subsystems.Shooter.ShooterState;
 
 /**
@@ -67,7 +73,8 @@ import frc.team3128.subsystems.Shooter.ShooterState;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private NAR_Drivetrain m_drive;
+    //private NAR_Drivetrain m_drive;
+    private SwerveTrain m_drive;
     private Shooter m_shooter;
     private Intake m_intake;   
     private Hopper m_hopper;
@@ -133,40 +140,39 @@ public class RobotContainer {
     private boolean driveHalfSpeed = false;
 
     public RobotContainer() {
-        ConstantsInt.initTempConstants();
-        m_drive = NAR_Drivetrain.getInstance();
-        m_shooter = Shooter.getInstance();
-        m_intake = Intake.getInstance();
-        m_hopper = Hopper.getInstance();
-        m_climber = Climber.getInstance();
-        m_hood = Hood.getInstance();
+        // ConstantsInt.initTempConstants();
+        m_drive = SwerveTrain.getInstance();
+        // m_shooter = Shooter.getInstance();
+        // m_intake = Intake.getInstance();
+        // m_hopper = Hopper.getInstance();
+        // m_climber = Climber.getInstance();
+        // m_hood = Hood.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
-        m_shooter.enable();
-        m_hood.enable();
+        // m_shooter.enable();
+        // m_hood.enable();
 
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        m_shooterLimelight = new Limelight("limelight-cog", VisionConstants.TOP_CAMERA_ANGLE, 
-                                                             VisionConstants.TOP_CAMERA_HEIGHT, 
-                                                            VisionConstants.TOP_FRONT_DIST, 0); 
-        m_ballLimelight = new Limelight("limelight-sog", VisionConstants.BALL_LL_ANGLE, 
-                                                        VisionConstants.BALL_LL_HEIGHT, 
-                                                        VisionConstants.BALL_LL_FRONT_DIST, 0);
+        // m_shooterLimelight = new Limelight("limelight-cog", VisionConstants.TOP_CAMERA_ANGLE, 
+        //                                                      VisionConstants.TOP_CAMERA_HEIGHT, 
+        //                                                     VisionConstants.TOP_FRONT_DIST, 0); 
+        // m_ballLimelight = new Limelight("limelight-sog", VisionConstants.BALL_LL_ANGLE, 
+        //                                                 VisionConstants.BALL_LL_HEIGHT, 
+        //                                                 VisionConstants.BALL_LL_FRONT_DIST, 0);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdSwerveDrive(m_drive, m_rightStick::getY, m_rightStick::getTwist, m_leftStick::getTwist,true));
         //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
-        initAutos();
-        initDashboard();
-        initLimelights(m_shooterLimelight, m_ballLimelight); 
-        configureButtonBindings();
-        
+        //initAutos();
+        //initDashboard();
+        //initLimelights(m_shooterLimelight, m_ballLimelight); 
+        //configureButtonBindings();
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
     }   
-
+    
     private void configureButtonBindings() {
         // Buttons...
         // as of 3/27/22
@@ -257,13 +263,13 @@ public class RobotContainer {
         //         new CmdHopperShooting(m_hopper, m_shooter::isReady),
         //         new CmdShootRPM(m_shooter, 3000))));
 
-        m_rightStick.getButton(12).whenHeld(new SequentialCommandGroup(
-            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new ParallelCommandGroup(
-                new RunCommand(m_drive::stop, m_drive),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                new CmdShootRPM(m_shooter, 4000))));
+        // m_rightStick.getButton(12).whenHeld(new SequentialCommandGroup(
+        //     new CmdRetractHopper(m_hopper).withTimeout(0.5),
+        //     new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+        //     new ParallelCommandGroup(
+        //         new RunCommand(m_drive::stop, m_drive),
+        //         new CmdHopperShooting(m_hopper, m_shooter::isReady),
+        //         new CmdShootRPM(m_shooter, 4000))));
                
         // m_rightStick.getButton(14).whenHeld(new SequentialCommandGroup(
         //     new CmdRetractHopper(m_hopper).withTimeout(0.5),
@@ -273,13 +279,13 @@ public class RobotContainer {
         //         new CmdHopperShooting(m_hopper, m_shooter::isReady),
         //         new CmdShootRPM(m_shooter, 5000))));
 
-        m_rightStick.getButton(15).whenHeld(new SequentialCommandGroup(
-            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new ParallelCommandGroup(
-                new RunCommand(m_drive::stop, m_drive),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                new CmdShootRPM(m_shooter, 5500))));
+        // m_rightStick.getButton(15).whenHeld(new SequentialCommandGroup(
+        //     new CmdRetractHopper(m_hopper).withTimeout(0.5),
+        //     new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+        //     new ParallelCommandGroup(
+        //         new RunCommand(m_drive::stop, m_drive),
+        //         new CmdHopperShooting(m_hopper, m_shooter::isReady),
+        //         new CmdShootRPM(m_shooter, 5500))));
 
         // m_rightStick.getButton(11).whenPressed(new CmdExtendIntake(m_intake));
         // m_rightStick.getButton(16).whenPressed(() -> m_intake.retractIntake());
@@ -328,7 +334,7 @@ public class RobotContainer {
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
 
         // should probably remove this
-        m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
+        //m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
         // m_leftStick.getButton(4).whenPressed(() -> m_hood.startPID(31));
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder());
@@ -343,442 +349,456 @@ public class RobotContainer {
         // m_shooterLimelight.turnLEDOff();
     }
 
-    private void initAutos() {
+    // private void initAutos() {
 
-        try {
-            for (String pathName : pathsToLoad) {
-                // Get a path from the string specified in trajJson, and load it into trajectory[i]
-                Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(pathName);
-                trajectoryMap.put(pathName, TrajectoryUtil.fromPathweaverJson(path));
-            }
-        } catch (IOException ex) {
-            DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
-        }
-        initialPoses = new HashMap<Command, Pose2d>();
+    //     try {
+    //         for (String pathName : pathsToLoad) {
+    //             // Get a path from the string specified in trajJson, and load it into trajectory[i]
+    //             Path path = Filesystem.getDeployDirectory().toPath().resolve("paths").resolve(pathName);
+    //             trajectoryMap.put(pathName, TrajectoryUtil.fromPathweaverJson(path));
+    //         }
+    //     } catch (IOException ex) {
+    //         DriverStation.reportError("IOException opening trajectory:", ex.getStackTrace());
+    //     }
+    //     initialPoses = new HashMap<Command, Pose2d>();
 
-        climbCommand = new CmdClimb(m_climber);
-        climbTraversalCommand = new CmdClimbTraversalOG(m_climber);
+    //     climbCommand = new CmdClimb(m_climber);
+    //     climbTraversalCommand = new CmdClimbTraversalOG(m_climber);
         
-        extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdOuttake(m_intake, m_hopper));
+    //     extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdOuttake(m_intake, m_hopper));
 
-        //this shoot command is the ideal one with all capabilities
-        shootCommand = new SequentialCommandGroup(
-                        new InstantCommand(m_shooterLimelight::turnLEDOn),
-                        new CmdRetractHopper(m_hopper).withTimeout(0.5), 
-                        new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-                        // new CmdExtendIntake(m_intake),
-                        new ParallelCommandGroup(
-                            // new RunCommand(m_intake::runIntake, m_intake),
-                            new CmdAlign(m_drive, m_shooterLimelight), 
-                            new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
-                        )
-        );
+    //     //this shoot command is the ideal one with all capabilities
+    //     shootCommand = new SequentialCommandGroup(
+    //                     new InstantCommand(m_shooterLimelight::turnLEDOn),
+    //                     new CmdRetractHopper(m_hopper).withTimeout(0.5), 
+    //                     new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+    //                     // new CmdExtendIntake(m_intake),
+    //                     new ParallelCommandGroup(
+    //                         // new RunCommand(m_intake::runIntake, m_intake),
+    //                         new CmdAlign(m_drive, m_shooterLimelight), 
+    //                         new CmdHopperShooting(m_hopper, m_shooter::isReady),
+    //                         new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
+    //                     )
+    //     );
 
-        //use this shoot command for testing
-        manualShoot = new SequentialCommandGroup(
-                        new InstantCommand(m_shooterLimelight::turnLEDOn), 
-                        new CmdRetractHopper(m_hopper).withTimeout(0.5),
-                        new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-                        new ParallelCommandGroup(
-                            new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                            new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
-                        )
-        );
+    //     //use this shoot command for testing
+    //     manualShoot = new SequentialCommandGroup(
+    //                     new InstantCommand(m_shooterLimelight::turnLEDOn), 
+    //                     new CmdRetractHopper(m_hopper).withTimeout(0.5),
+    //                     new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+    //                     new ParallelCommandGroup(
+    //                         new CmdHopperShooting(m_hopper, m_shooter::isReady),
+    //                         new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
+    //                     )
+    //     );
 
-        lowerHubShoot = new SequentialCommandGroup(
-                            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-                            new InstantCommand(() -> m_shooter.setState(ShooterState.LOWERHUB)),
-                            // new CmdExtendIntake(m_intake),
-                            new ParallelCommandGroup(
-                                // new RunCommand(m_intake::runIntake, m_intake),
-                                new RunCommand(m_drive::stop, m_drive),
-                                new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                                new InstantCommand(() -> m_hood.startPID(28)),
-                                new CmdShootRPM(m_shooter, 1200))
-        );
+    //     lowerHubShoot = new SequentialCommandGroup(
+    //                         new CmdRetractHopper(m_hopper).withTimeout(0.5),
+    //                         new InstantCommand(() -> m_shooter.setState(ShooterState.LOWERHUB)),
+    //                         // new CmdExtendIntake(m_intake),
+    //                         new ParallelCommandGroup(
+    //                             // new RunCommand(m_intake::runIntake, m_intake),
+    //                             new RunCommand(m_drive::stop, m_drive),
+    //                             new CmdHopperShooting(m_hopper, m_shooter::isReady),
+    //                             new InstantCommand(() -> m_hood.startPID(28)),
+    //                             new CmdShootRPM(m_shooter, 1200))
+    //     );
 
 
-        //AUTONOMOUS ROUTINES
+    //     //AUTONOMOUS ROUTINES
 
-        auto_1Ball = new SequentialCommandGroup(
-                            alignShootCmd(),
+    //     auto_1Ball = new SequentialCommandGroup(
+    //                         alignShootCmd(),
 
-                            trajectoryCmd(Trajectories.driveBack30In)
-        );
+    //                         trajectoryCmd(Trajectories.driveBack30In)
+    //     );
 
-        auto_2Ball = new SequentialCommandGroup(
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //     auto_2Ball = new SequentialCommandGroup(
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
 
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd(Trajectories.twoBallTraj), 
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd(Trajectories.twoBallTraj), 
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            new CmdInPlaceTurn(m_drive, 180),
+    //                         new CmdInPlaceTurn(m_drive, 180),
 
-                            alignShootCmd()
-        );
+    //                         alignShootCmd()
+    //     );
 
-        auto_3Ball180 = new SequentialCommandGroup(
+    //     auto_3Ball180 = new SequentialCommandGroup(
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_i.wpilib.json"), 
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-            ),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("3Ballv2_i.wpilib.json"), 
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //         ),
 
-            new CmdInPlaceTurn(m_drive, 180),
-            alignShootCmd(),
+    //         new CmdInPlaceTurn(m_drive, 180),
+    //         alignShootCmd(),
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_ii.wpilib.json"),
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-            ),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("3Ballv2_ii.wpilib.json"),
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //         ),
 
-            turnRightToAligned(),
-            alignShootCmd()
-        );
+    //         turnRightToAligned(),
+    //         alignShootCmd()
+    //     );
 
-        auto_S2H1 = new SequentialCommandGroup(
+    //     auto_S2H1 = new SequentialCommandGroup(
 
-                            //drive and intake ball
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_i.wpilib.json"),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         //drive and intake ball
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("S2H2_i.wpilib.json"),
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            //turn and shoot
-                            new CmdInPlaceTurn(m_drive, 180),
-                            alignShootCmd(),
+    //                         //turn and shoot
+    //                         new CmdInPlaceTurn(m_drive, 180),
+    //                         alignShootCmd(),
 
-                            //turn and hoard first ball
-                            new CmdInPlaceTurn(m_drive, 90),
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_ii.wpilib.json"),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         //turn and hoard first ball
+    //                         new CmdInPlaceTurn(m_drive, 90),
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("S2H2_ii.wpilib.json"),
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            //drive behind hub
-                            new CmdInPlaceTurn(m_drive, -90),
-                            trajectoryCmd("S2H1.wpilib.json"),
+    //                         //drive behind hub
+    //                         new CmdInPlaceTurn(m_drive, -90),
+    //                         trajectoryCmd("S2H1.wpilib.json"),
 
-                            //outtake balls behind hub
-                            new CmdExtendIntake(m_intake),
-                            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
+    //                         //outtake balls behind hub
+    //                         new CmdExtendIntake(m_intake),
+    //                         new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
 
-        );   
+    //     );   
 
-        auto_S2H2 = new SequentialCommandGroup(
+    //     auto_S2H2 = new SequentialCommandGroup(
 
-                            //drive and intake ball
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_i.wpilib.json"),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         //drive and intake ball
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("S2H2_i.wpilib.json"),
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            //turn and shoot
-                            new CmdInPlaceTurn(m_drive, 180),
-                            alignShootCmd(),
+    //                         //turn and shoot
+    //                         new CmdInPlaceTurn(m_drive, 180),
+    //                         alignShootCmd(),
 
-                            //turn and hoard first ball
-                            new CmdInPlaceTurn(m_drive, 90),
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_ii.wpilib.json"),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         //turn and hoard first ball
+    //                         new CmdInPlaceTurn(m_drive, 90),
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("S2H2_ii.wpilib.json"),
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            // turn and hoard second ball
-                            new CmdInPlaceTurn(m_drive, 180),
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_iii.wpilib.json"), 
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+    //                         // turn and hoard second ball
+    //                         new CmdInPlaceTurn(m_drive, 180),
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("S2H2_iii.wpilib.json"), 
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)),
 
-                            // trajectoryCmd(12),
-                            // new ParallelDeadlineGroup(
-                            //     trajectoryCmd(13),
-                            //     new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            // ),
+    //                         // trajectoryCmd(12),
+    //                         // new ParallelDeadlineGroup(
+    //                         //     trajectoryCmd(13),
+    //                         //     new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         // ),
                             
-                            //hide ball behinde hub
-                            trajectoryCmd("S2H2_iv.wpilib.json"),
+    //                         //hide ball behinde hub
+    //                         trajectoryCmd("S2H2_iv.wpilib.json"),
 
-                            // new CmdInPlaceTurn(m_drive, 130),
-                            new CmdExtendIntake(m_intake),
-                            new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(1)
+    //                         // new CmdInPlaceTurn(m_drive, 130),
+    //                         new CmdExtendIntake(m_intake),
+    //                         new CmdOuttake(m_intake, m_hopper, 0.4).withTimeout(1)
 
-        );
+    //     );
 
-        auto_4Ball180 = new SequentialCommandGroup(
-                            //drive and intake 1 ball
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("4Ball_Terminal180_i.wpilib.json"),  
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+    //     auto_4Ball180 = new SequentialCommandGroup(
+    //                         //drive and intake 1 ball
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("4Ball_Terminal180_i.wpilib.json"),  
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)),
 
-                            //turn and shoot 2 balls
-                            new CmdInPlaceTurn(m_drive, 180),
-                            shootCmd(),
+    //                         //turn and shoot 2 balls
+    //                         new CmdInPlaceTurn(m_drive, 180),
+    //                         shootCmd(),
 
-                            //drive to ball and terminal and intake
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("4Ball_Terminal180_ii.wpilib.json"), 
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)),
-                            new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(1),
+    //                         //drive to ball and terminal and intake
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("4Ball_Terminal180_ii.wpilib.json"), 
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)),
+    //                         new CmdExtendIntakeAndRun(m_intake, m_hopper).withTimeout(1),
 
-                            //drive to tarmac and shoot
-                            trajectoryCmd("Terminal2Tarmac.wpilib.json"),
-                            new CmdInPlaceTurn(m_drive, 180),
-                            alignShootCmd()
+    //                         //drive to tarmac and shoot
+    //                         trajectoryCmd("Terminal2Tarmac.wpilib.json"),
+    //                         new CmdInPlaceTurn(m_drive, 180),
+    //                         alignShootCmd()
 
-        );
+    //     );
 
-        auto_5Ball180 = new SequentialCommandGroup(
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_i.wpilib.json"), 
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-            ),
+    //     auto_5Ball180 = new SequentialCommandGroup(
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("3Ballv2_i.wpilib.json"), 
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //         ),
 
-            new CmdInPlaceTurn(m_drive, 180),
-            alignShootCmd(),
+    //         new CmdInPlaceTurn(m_drive, 180),
+    //         alignShootCmd(),
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_ii.wpilib.json"),
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-            ),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("3Ballv2_ii.wpilib.json"),
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //         ),
 
-            new ParallelCommandGroup(
-                turnRightToAligned(),
-                shootCmd()
-            ),
+    //         new ParallelCommandGroup(
+    //             turnRightToAligned(),
+    //             shootCmd()
+    //         ),
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                new SequentialCommandGroup(
-                    trajectoryCmd("5Ballv2_i.wpilib.json"),
-                    new InstantCommand(() -> m_drive.stop())),
-                    // new WaitCommand(0.5)),
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-            ),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             new SequentialCommandGroup(
+    //                 trajectoryCmd("5Ballv2_i.wpilib.json"),
+    //                 new InstantCommand(() -> m_drive.stop())),
+    //                 // new WaitCommand(0.5)),
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //         ),
 
-            trajectoryCmd("5Ballv2_ii.wpilib.json"),
+    //         trajectoryCmd("5Ballv2_ii.wpilib.json"),
 
-            new ParallelCommandGroup(
-                turnRightToAligned(),
-                shootCmd()
-            )
-        );
+    //         new ParallelCommandGroup(
+    //             turnRightToAligned(),
+    //             shootCmd()
+    //         )
+    //     );
 
-        auto_Billiards = new SequentialCommandGroup (
-                            // initial position: (6.8, 6.272, 45 deg - should be approx. pointing straight at the ball to knock)
-                            new SequentialCommandGroup(
-                                new CmdExtendIntake(m_intake),
-                                new CmdOuttake(m_intake, m_hopper, 0.85).withTimeout(1.5)
-                            ).withTimeout(2),
+    //     auto_Billiards = new SequentialCommandGroup (
+    //                         // initial position: (6.8, 6.272, 45 deg - should be approx. pointing straight at the ball to knock)
+    //                         new SequentialCommandGroup(
+    //                             new CmdExtendIntake(m_intake),
+    //                             new CmdOuttake(m_intake, m_hopper, 0.85).withTimeout(1.5)
+    //                         ).withTimeout(2),
 
-                            new CmdInPlaceTurn(m_drive, 70),
+    //                         new CmdInPlaceTurn(m_drive, 70),
                             
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("Billiards_i.wpilib.json"),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("Billiards_i.wpilib.json"),
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            new CmdInPlaceTurn(m_drive, 55),
+    //                         new CmdInPlaceTurn(m_drive, 55),
 
-                            new CmdExtendIntake(m_intake),
-                            new CmdOuttake(m_intake, m_hopper, 0.6).withTimeout(1.5),
+    //                         new CmdExtendIntake(m_intake),
+    //                         new CmdOuttake(m_intake, m_hopper, 0.6).withTimeout(1.5),
 
-                            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-                            new ParallelDeadlineGroup(
-                                trajectoryCmd("Billiards_ii.wpilib.json"),
-                                new CmdExtendIntakeAndRun(m_intake, m_hopper)
-                            ),
+    //                         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //                         new ParallelDeadlineGroup(
+    //                             trajectoryCmd("Billiards_ii.wpilib.json"),
+    //                             new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //                         ),
 
-                            new CmdInPlaceTurn(m_drive, 96),
+    //                         new CmdInPlaceTurn(m_drive, 96),
 
-                            alignShootCmd()
-        );
+    //                         alignShootCmd()
+    //     );
 
-        auto_S1H1 = new SequentialCommandGroup(
+    //     auto_S1H1 = new SequentialCommandGroup(
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("S1H1_i.wpilib.json"), 
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)  
-            ),
-            new InstantCommand(() -> m_drive.stop()),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("S1H1_i.wpilib.json"), 
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)  
+    //         ),
+    //         new InstantCommand(() -> m_drive.stop()),
 
-            new CmdInPlaceTurn(m_drive, 180),
+    //         new CmdInPlaceTurn(m_drive, 180),
             
-            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_shooterLimelight::turnLEDOn),
-            new ParallelCommandGroup(
-                new CmdAlign(m_drive, m_shooterLimelight),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
-                new CmdShootSingleBall(m_shooter, m_hood, m_shooterLimelight)
-            ).withTimeout(2),
-            new InstantCommand(m_shooterLimelight::turnLEDOff),
+    //         new CmdRetractHopper(m_hopper).withTimeout(0.5),
+    //         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOn),
+    //         new ParallelCommandGroup(
+    //             new CmdAlign(m_drive, m_shooterLimelight),
+    //             new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
+    //             new CmdShootSingleBall(m_shooter, m_hood, m_shooterLimelight)
+    //         ).withTimeout(2),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOff),
             
-            trajectoryCmd("S1H1_ii.wpilib.json"),
-            new CmdExtendIntake(m_intake),
-            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(1)
-        );
+    //         trajectoryCmd("S1H1_ii.wpilib.json"),
+    //         new CmdExtendIntake(m_intake),
+    //         new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(1)
+    //     );
 
-        // auto_S1H1 = new SequentialCommandGroup(
-        //     alignShootCmd(),
+    //     // auto_S1H1 = new SequentialCommandGroup(
+    //     //     alignShootCmd(),
 
-        //     new CmdInPlaceTurn(m_drive, 180),
+    //     //     new CmdInPlaceTurn(m_drive, 180),
 
-        //     new ParallelDeadlineGroup(
-        //         trajectoryCmd("S1H1_i.wpilib.json"), 
-        //         new CmdExtendIntakeAndRun(m_intake, m_hopper)
-        //     ),
+    //     //     new ParallelDeadlineGroup(
+    //     //         trajectoryCmd("S1H1_i.wpilib.json"), 
+    //     //         new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //     //     ),
 
-        //     new InstantCommand(() -> m_drive.stop()),
+    //     //     new InstantCommand(() -> m_drive.stop()),
 
-        //     new CmdInPlaceTurn(m_drive, 180),
+    //     //     new CmdInPlaceTurn(m_drive, 180),
 
-        //     trajectoryCmd("S1H1_ii.wpilib.json"),
-        //     new InstantCommand(() -> m_drive.stop()),
+    //     //     trajectoryCmd("S1H1_ii.wpilib.json"),
+    //     //     new InstantCommand(() -> m_drive.stop()),
 
-        //     new CmdExtendIntake(m_intake),
-        //     new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
-        // );
+    //     //     new CmdExtendIntake(m_intake),
+    //     //     new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
+    //     // );
 
-        auto_S1I1 = new SequentialCommandGroup(
+    //     auto_S1I1 = new SequentialCommandGroup(
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("S1H1_i.wpilib.json"), 
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)  
-            ),
-            new InstantCommand(() -> m_drive.stop()),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("S1H1_i.wpilib.json"), 
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)  
+    //         ),
+    //         new InstantCommand(() -> m_drive.stop()),
 
-            new CmdInPlaceTurn(m_drive, 180),
+    //         new CmdInPlaceTurn(m_drive, 180),
             
-            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_shooterLimelight::turnLEDOn),
-            new ParallelCommandGroup(
-                new CmdAlign(m_drive, m_shooterLimelight),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
-                new CmdShootSingleBall(m_shooter, m_hood, m_shooterLimelight)
-            ).withTimeout(2),
-            new InstantCommand(m_shooterLimelight::turnLEDOff)
-        );
+    //         new CmdRetractHopper(m_hopper).withTimeout(0.5),
+    //         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOn),
+    //         new ParallelCommandGroup(
+    //             new CmdAlign(m_drive, m_shooterLimelight),
+    //             new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
+    //             new CmdShootSingleBall(m_shooter, m_hood, m_shooterLimelight)
+    //         ).withTimeout(2),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOff)
+    //     );
 
-        // auto_S1I1 = new SequentialCommandGroup(
-        //     alignShootCmd(),
+    //     // auto_S1I1 = new SequentialCommandGroup(
+    //     //     alignShootCmd(),
             
-        //     new CmdInPlaceTurn(m_drive, 180),
+    //     //     new CmdInPlaceTurn(m_drive, 180),
 
-        //     new ParallelDeadlineGroup(
-        //         trajectoryCmd("S1H1_i.wpilib.json"),
-        //         new CmdExtendIntakeAndRun(m_intake, m_hopper)
-        //     )
-        // );
+    //     //     new ParallelDeadlineGroup(
+    //     //         trajectoryCmd("S1H1_i.wpilib.json"),
+    //     //         new CmdExtendIntakeAndRun(m_intake, m_hopper)
+    //     //     )
+    //     // );
 
-        auto_S1H2 = new SequentialCommandGroup(
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("S1H1_i.wpilib.json"), 
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)  
-            ),
-            new InstantCommand(() -> m_drive.stop()),
+    //     auto_S1H2 = new SequentialCommandGroup(
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("S1H1_i.wpilib.json"), 
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)  
+    //         ),
+    //         new InstantCommand(() -> m_drive.stop()),
 
-            new CmdInPlaceTurn(m_drive, 180),
+    //         new CmdInPlaceTurn(m_drive, 180),
             
-            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_shooterLimelight::turnLEDOn),
-            new ParallelCommandGroup(
-                new CmdAlign(m_drive, m_shooterLimelight),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
-                new CmdShootSingleBall(m_shooter, m_hood, m_shooterLimelight)
-            ).withTimeout(2),
-            new InstantCommand(m_shooterLimelight::turnLEDOff),
+    //         new CmdRetractHopper(m_hopper).withTimeout(0.5),
+    //         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOn),
+    //         new ParallelCommandGroup(
+    //             new CmdAlign(m_drive, m_shooterLimelight),
+    //             new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
+    //             new CmdShootSingleBall(m_shooter, m_hood, m_shooterLimelight)
+    //         ).withTimeout(2),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOff),
 
-            new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
-            new ParallelDeadlineGroup(
-                trajectoryCmd("S1H2_ii.wpilib.json"), 
-                new CmdExtendIntakeAndRun(m_intake, m_hopper)  
-            ),
+    //         new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
+    //         new ParallelDeadlineGroup(
+    //             trajectoryCmd("S1H2_ii.wpilib.json"), 
+    //             new CmdExtendIntakeAndRun(m_intake, m_hopper)  
+    //         ),
 
-            new CmdInPlaceTurn(m_drive, 180),
+    //         new CmdInPlaceTurn(m_drive, 180),
 
-            trajectoryCmd("S1H2_iii.wpilib.json"), 
+    //         trajectoryCmd("S1H2_iii.wpilib.json"), 
             
-            new CmdExtendIntake(m_intake),
-            new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
-        );
+    //         new CmdExtendIntake(m_intake),
+    //         new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
+    //     );
 
-        // auto_S1H2 = new SequentialCommandGroup(
-        //     alignShootCmd(),
+    //     // auto_S1H2 = new SequentialCommandGroup(
+    //     //     alignShootCmd(),
             
-        //     new CmdInPlaceTurn(m_drive, 180),
+    //     //     new CmdInPlaceTurn(m_drive, 180),
 
-        //     new ParallelDeadlineGroup(
-        //         trajectoryCmd("S1H1_i.wpilib.json"), 
-        //         new CmdExtendIntakeAndRun(m_intake, m_hopper)  
-        //     ),
+    //     //     new ParallelDeadlineGroup(
+    //     //         trajectoryCmd("S1H1_i.wpilib.json"), 
+    //     //         new CmdExtendIntakeAndRun(m_intake, m_hopper)  
+    //     //     ),
 
-        //     new CmdInPlaceTurn(m_drive, 180),
+    //     //     new CmdInPlaceTurn(m_drive, 180),
 
-        //     new ParallelDeadlineGroup(
-        //         trajectoryCmd("S1H2_ii.wpilib.json"), 
-        //         new CmdExtendIntakeAndRun(m_intake, m_hopper)  
-        //     ),
+    //     //     new ParallelDeadlineGroup(
+    //     //         trajectoryCmd("S1H2_ii.wpilib.json"), 
+    //     //         new CmdExtendIntakeAndRun(m_intake, m_hopper)  
+    //     //     ),
 
-        //     new CmdInPlaceTurn(m_drive, 180),
-        //     trajectoryCmd("S1H2_iii.wpilib.json"),
-        //     new InstantCommand(() -> m_drive.stop()),
+    //     //     new CmdInPlaceTurn(m_drive, 180),
+    //     //     trajectoryCmd("S1H2_iii.wpilib.json"),
+    //     //     new InstantCommand(() -> m_drive.stop()),
             
-        //     new CmdExtendIntake(m_intake),
-        //     new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
-        // );
+    //     //     new CmdExtendIntake(m_intake),
+    //     //     new CmdOuttake(m_intake, m_hopper, 0.5).withTimeout(2)
+    //     // );
 
-        // Setup auto-selector
-        NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
-        NarwhalDashboard.addAuto("2 Ball", auto_2Ball);
-        NarwhalDashboard.addAuto("S2H2", auto_S2H2);
-        NarwhalDashboard.addAuto("S2H1", auto_S2H1);
-        NarwhalDashboard.addAuto("3 Ball", auto_3Ball180);
-        NarwhalDashboard.addAuto("4 Ball 180 Terminal", auto_4Ball180);
-        NarwhalDashboard.addAuto("5 Ball 180 Terminal", auto_5Ball180);
-        NarwhalDashboard.addAuto("Billiards", auto_Billiards);
-        NarwhalDashboard.addAuto("S1H1", auto_S1H1);
-        NarwhalDashboard.addAuto("S1, intake 1 enemy", auto_S1I1);
-        NarwhalDashboard.addAuto("S1H2", auto_S1H2);
-    }
+    //     // Setup auto-selector
+    //     NarwhalDashboard.addAuto("1 Ball", auto_1Ball);
+    //     NarwhalDashboard.addAuto("2 Ball", auto_2Ball);
+    //     NarwhalDashboard.addAuto("S2H2", auto_S2H2);
+    //     NarwhalDashboard.addAuto("S2H1", auto_S2H1);
+    //     NarwhalDashboard.addAuto("3 Ball", auto_3Ball180);
+    //     NarwhalDashboard.addAuto("4 Ball 180 Terminal", auto_4Ball180);
+    //     NarwhalDashboard.addAuto("5 Ball 180 Terminal", auto_5Ball180);
+    //     NarwhalDashboard.addAuto("Billiards", auto_Billiards);
+    //     NarwhalDashboard.addAuto("S1H1", auto_S1H1);
+    //     NarwhalDashboard.addAuto("S1, intake 1 enemy", auto_S1I1);
+    //     NarwhalDashboard.addAuto("S1H2", auto_S1H2);
+    // }
 
-    private RamseteCommand trajectoryCmd(String fileName) {
-        return trajectoryCmd(trajectoryMap.get(fileName));
-    }
+    // private RamseteCommand trajectoryCmd(String fileName) {
+    //     return trajectoryCmd(trajectoryMap.get(fileName));
+    // }
 
-    private RamseteCommand trajectoryCmd(Trajectory traj) {
-        return new RamseteCommand(traj, 
-                            m_drive::getPose,
-                            new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
-                            new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-                                                        Constants.DriveConstants.kV,
-                                                        Constants.DriveConstants.kA),
-                            Constants.DriveConstants.DRIVE_KINEMATICS,
-                            m_drive::getWheelSpeeds,
-                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                            m_drive::tankDriveVolts,
-                            m_drive);
+    // private RamseteCommand trajectoryCmd(Trajectory traj) {
+    //     return new RamseteCommand(traj, 
+    //                         m_drive::getPose,
+    //                         new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+    //                         new SimpleMotorFeedforward(Constants.DriveConstants.kS,
+    //                                                     Constants.DriveConstants.kV,
+    //                                                     Constants.DriveConstants.kA),
+    //                         Constants.DriveConstants.DRIVE_KINEMATICS,
+    //                         m_drive::getWheelSpeeds,
+    //                         new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+    //                         new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+    //                         m_drive::tankDriveVolts,
+    //                         m_drive);
+    // }
+    
+    private SwerveControllerCommand swerveControllerCommand(Trajectory traj){
+        ProfiledPIDController thetaController = new ProfiledPIDController(SwerveConstants.AUTO_KP,0,0,
+        new TrapezoidProfile.Constraints(SwerveConstants.kMaxAngularSpeed, SwerveConstants.kModuleMaxAngularAcceleration));
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        return new SwerveControllerCommand(traj,
+                                            m_drive::getPose,
+                                            SwerveConstants.kDriveKinematics,
+                                            new PIDController(SwerveConstants.AUTO_KP,0,0),
+                                            new PIDController(SwerveConstants.AUTO_KP,0,0),
+                                            thetaController,
+                                            m_drive::setModuleStates,
+                                            m_drive);
     }
 
     private SequentialCommandGroup shootCmd() {
@@ -818,35 +838,35 @@ public class RobotContainer {
         );
     }
 
-    private SequentialCommandGroup alignShootCmd() {
-        return new SequentialCommandGroup(
-            new CmdRetractHopper(m_hopper).withTimeout(0.5),
-            new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_shooterLimelight::turnLEDOn),
-            new ParallelCommandGroup(
-                new CmdAlign(m_drive, m_shooterLimelight),
-                new CmdHopperShooting(m_hopper, m_shooter::isReady),
-                new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
-            ).withTimeout(2),
-            new InstantCommand(m_shooterLimelight::turnLEDOff)
-        );
-    }
+    // private SequentialCommandGroup alignShootCmd() {
+    //     return new SequentialCommandGroup(
+    //         new CmdRetractHopper(m_hopper).withTimeout(0.5),
+    //         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOn),
+    //         new ParallelCommandGroup(
+    //             new CmdAlign(m_drive, m_shooterLimelight),
+    //             new CmdHopperShooting(m_hopper, m_shooter::isReady),
+    //             new CmdShootDist(m_shooter, m_hood, m_shooterLimelight)
+    //         ).withTimeout(2),
+    //         new InstantCommand(m_shooterLimelight::turnLEDOff)
+    //     );
+    // }
 
-    private Command turnLeftToAligned() {
-        return new SequentialCommandGroup(
-            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
-            new CmdInPlaceTurn(m_drive, 170).until(m_shooterLimelight::hasValidTarget),
-            new CmdAlign(m_drive, m_shooterLimelight)
-        );
-    }
+    // private Command turnLeftToAligned() {
+    //     return new SequentialCommandGroup(
+    //         new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
+    //         new CmdInPlaceTurn(m_drive, 170).until(m_shooterLimelight::hasValidTarget),
+    //         new CmdAlign(m_drive, m_shooterLimelight)
+    //     );
+    // }
 
-    private Command turnRightToAligned() {
-        return new SequentialCommandGroup(
-            new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
-            new CmdInPlaceTurn(m_drive, -170).until(m_shooterLimelight::hasValidTarget),
-            new CmdAlign(m_drive, m_shooterLimelight)
-        ).withTimeout(3);
-    }
+    // private Command turnRightToAligned() {
+    //     return new SequentialCommandGroup(
+    //         new InstantCommand(() -> m_shooterLimelight.turnLEDOn()),
+    //         new CmdInPlaceTurn(m_drive, -170).until(m_shooterLimelight::hasValidTarget),
+    //         new CmdAlign(m_drive, m_shooterLimelight)
+    //     ).withTimeout(3);
+    // }
 
     /**
      * @return a Pose2d with the same rotation and reversed (unary minus) rotation
@@ -923,19 +943,20 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         
         // I don't understand why putting this in the constructor or initAutos doesn't work, so I put it here and it works (in sim)
-        initialPoses.put(auto_1Ball, Trajectories.driveBack30In.getInitialPose());
-        initialPoses.put(auto_2Ball, Trajectories.twoBallTraj.getInitialPose());
-        initialPoses.put(auto_3Ball180, trajectoryMap.get("3Ballv2_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_S2H1, trajectoryMap.get("S2H2_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_S2H2, trajectoryMap.get("S2H2_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_4Ball180, trajectoryMap.get("4Ball_Terminal180_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_5Ball180, trajectoryMap.get("3Ballv2_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(45)));
-        initialPoses.put(auto_S1H1, trajectoryMap.get("S1H1_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_S1I1, trajectoryMap.get("S1H1_i.wpilib.json").getInitialPose());
-        initialPoses.put(auto_S1H2, trajectoryMap.get("S1H1_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_1Ball, Trajectories.driveBack30In.getInitialPose());
+        // initialPoses.put(auto_2Ball, Trajectories.twoBallTraj.getInitialPose());
+        // initialPoses.put(auto_3Ball180, trajectoryMap.get("3Ballv2_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_S2H1, trajectoryMap.get("S2H2_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_S2H2, trajectoryMap.get("S2H2_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_4Ball180, trajectoryMap.get("4Ball_Terminal180_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_5Ball180, trajectoryMap.get("3Ballv2_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(45)));
+        // initialPoses.put(auto_S1H1, trajectoryMap.get("S1H1_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_S1I1, trajectoryMap.get("S1H1_i.wpilib.json").getInitialPose());
+        // initialPoses.put(auto_S1H2, trajectoryMap.get("S1H1_i.wpilib.json").getInitialPose());
 
-        Command selectedAuto = NarwhalDashboard.getSelectedAuto();
+        //Command selectedAuto = NarwhalDashboard.getSelectedAuto();
+        Command selectedAuto = new InstantCommand(m_drive::stop, m_drive);
 
         if (selectedAuto == null) {
             return null;
