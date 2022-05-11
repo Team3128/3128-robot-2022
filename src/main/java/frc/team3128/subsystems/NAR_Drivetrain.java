@@ -154,6 +154,14 @@ public class NAR_Drivetrain extends SubsystemBase {
         return -gyro.getYaw(); // (Math.IEEEremainder(gyro.getAngle(), 360) + 360) % 360;
     }
 
+    public double getPitch() {
+        return gyro.getRoll();
+    }
+   
+    public double getPitchRate() {
+        return gyro.getRawGyroY();
+    }
+
     public Pose2d getPose() {
         return odometry.getPoseMeters();
     }
