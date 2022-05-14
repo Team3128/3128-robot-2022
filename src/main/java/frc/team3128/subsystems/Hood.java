@@ -1,8 +1,7 @@
 package frc.team3128.subsystems;
 
-import frc.team3128.Constants;
 import frc.team3128.ConstantsInt;
-import frc.team3128.Constants.HoodConstants;
+import static frc.team3128.Constants.HoodConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
@@ -24,7 +23,7 @@ public class Hood extends NAR_PIDSubsystem {
     //private NAR_TalonFX m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
     
-    private double tolerance = HoodConstants.TOLERANCE_MIN;
+    private double tolerance = TOLERANCE_MIN;
 
     private double time;
     private double prevTime;
@@ -37,15 +36,15 @@ public class Hood extends NAR_PIDSubsystem {
     }
 
     public Hood() {
-        super(new PIDController(HoodConstants.kP, HoodConstants.kI, HoodConstants.kD), HoodConstants.PLATEAU_COUNT);
+        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
 
         configMotors();
         configEncoder();
     }
 
     private void configMotors() {
-        m_hoodMotor = new NAR_CANSparkMax(HoodConstants.HOOD_MOTOR_ID, MotorType.kBrushless);
-        m_hoodMotor.setSmartCurrentLimit(HoodConstants.HOOD_CURRENT_LIMIT);
+        m_hoodMotor = new NAR_CANSparkMax(HOOD_MOTOR_ID, MotorType.kBrushless);
+        m_hoodMotor.setSmartCurrentLimit(HOOD_CURRENT_LIMIT);
         m_hoodMotor.enableVoltageCompensation(12.0);
         m_hoodMotor.setIdleMode(IdleMode.kBrake);
 
@@ -56,7 +55,7 @@ public class Hood extends NAR_PIDSubsystem {
 
     private void configEncoder() {
         m_encoder = (SparkMaxRelativeEncoder) m_hoodMotor.getEncoder();
-        m_encoder.setPositionConversionFactor(HoodConstants.ENC_POSITION_CONVERSION_FACTOR);
+        m_encoder.setPositionConversionFactor(ENC_POSITION_CONVERSION_FACTOR);
     }
 
     public void setSpeed(double speed) {
@@ -75,8 +74,8 @@ public class Hood extends NAR_PIDSubsystem {
     }
 
     public void startPID(double angle) {
-        tolerance = HoodConstants.TOLERANCE_MIN;
-        // super.setSetpoint(angle);  
+        tolerance = TOLERANCE_MIN;
+        // angle = ConstantsInt.ShooterConstants.SET_ANGLE;
         super.setSetpoint(angle);
         super.resetPlateauCount();
         getController().setTolerance(tolerance);
@@ -86,17 +85,17 @@ public class Hood extends NAR_PIDSubsystem {
      * Attempts to PID to minimum angle. Will likely be replaced by full homing routine once limit switch is added.
      */
     public void zero() {
-        startPID(HoodConstants.MIN_ANGLE);
+        startPID(MIN_ANGLE);
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        double ff = HoodConstants.kF * Math.cos(Units.degreesToRadians(setpoint));
+        double ff = kF * Math.cos(Units.degreesToRadians(setpoint));
         double voltageOutput = output + ff;
 
         time = RobotController.getFPGATime() / 1e6;
-        if (tolerance < HoodConstants.TOLERANCE_MAX) {
-            tolerance += (time - prevTime) * (HoodConstants.TOLERANCE_MAX - HoodConstants.TOLERANCE_MIN) / HoodConstants.TIME_TO_MAX_TOLERANCE;
+        if (tolerance < TOLERANCE_MAX) {
+            tolerance += (time - prevTime) * (TOLERANCE_MAX - TOLERANCE_MIN) / TIME_TO_MAX_TOLERANCE;
             getController().setTolerance(tolerance);
         }
 
@@ -113,13 +112,13 @@ public class Hood extends NAR_PIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return m_hoodMotor.getSelectedSensorPosition() + HoodConstants.MIN_ANGLE;
+        return m_hoodMotor.getSelectedSensorPosition() + MIN_ANGLE;
     }
 
     public double calculateAngleFromDistance(double dist) {
         // double yay = 7.62717674e-8*dist*dist*dist*dist - 3.20341423e-5*dist*dist*dist + 5.01101227e-3*dist*dist - 2.624432553e-0*dist + 2.20193191e1;
 
-        return MathUtil.clamp(HoodConstants.hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, Constants.HoodConstants.MIN_ANGLE, Constants.HoodConstants.MAX_ANGLE);
+        return MathUtil.clamp(hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, MIN_ANGLE, MAX_ANGLE);
     }
 }
 
