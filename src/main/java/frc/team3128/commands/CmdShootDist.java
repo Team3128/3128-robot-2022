@@ -18,7 +18,12 @@ public class CmdShootDist extends CommandBase {
         this.limelights = limelights;
         this.hood = hood;
 
-        addRequirements(shooter, hood);
+        addRequirements(shooter, hood, limelights);
+    }
+
+    @Override
+    public void initialize() {
+        limelights.turnShooterLEDOn();
     }
     
     @Override

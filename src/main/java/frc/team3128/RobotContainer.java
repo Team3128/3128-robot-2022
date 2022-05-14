@@ -688,7 +688,8 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
             new CmdInPlaceTurnVision(m_drive, m_ll, 170),
-            new CmdAlign(m_drive, m_ll)
+            new CmdAlign(m_drive, m_ll),
+            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)
         );
     }
 
@@ -696,7 +697,8 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
             new CmdInPlaceTurnVision(m_drive, m_ll, -170),
-            new CmdAlign(m_drive, m_ll)
+            new CmdAlign(m_drive, m_ll),
+            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)
         ).withTimeout(3);
     }
 
