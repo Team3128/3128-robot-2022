@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team3128.Constants.HopperConstants;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
+import static frc.team3128.Constants.HopperConstants.*;
 
 public class Hopper extends SubsystemBase {
 
@@ -32,8 +32,8 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configMotors() {
-        m_hopper1 = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_ID);
-        m_hopper2 = new NAR_TalonSRX(HopperConstants.HOPPER_MOTOR_2_ID);
+        m_hopper1 = new NAR_TalonSRX(HOPPER_MOTOR_ID);
+        m_hopper2 = new NAR_TalonSRX(HOPPER_MOTOR_2_ID);
 
         // set CAN status frame periods
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
@@ -44,7 +44,7 @@ public class Hopper extends SubsystemBase {
     }
 
     private void configEncoders() {
-        m_encoder = new Encoder(HopperConstants.HOPPER_DIO_PIN1, HopperConstants.HOPPER_DIO_PIN2);
+        m_encoder = new Encoder(HOPPER_DIO_PIN1, HOPPER_DIO_PIN2);
         // m_encoder.setDistancePerPulse(2.5*Math.PI);
         m_encoder.setReverseDirection(true);
     }
@@ -58,15 +58,15 @@ public class Hopper extends SubsystemBase {
      * @return true if hopper has reversed to desired distance, false if retracted
      */
     public boolean isReversed() {
-        return m_encoder.getDistance() <= HopperConstants.HOPPER_MAX_REVERSE_DISTANCE;
+        return m_encoder.getDistance() <= HOPPER_MAX_REVERSE_DISTANCE;
     }
 
     /**
      * Runs the hopper using the HOPPER_MOTOR_POWER constant
      */
     public void runHopper() {
-        m_hopper1.set(HopperConstants.HOPPER_MOTOR_POWER);
-        m_hopper2.set(HopperConstants.HOPPER_MOTOR_2_POWER);
+        m_hopper1.set(HOPPER_MOTOR_POWER);
+        m_hopper2.set(HOPPER_MOTOR_2_POWER);
     }
 
     public void runHopper(double power) {

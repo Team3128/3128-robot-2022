@@ -27,9 +27,9 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team3128.Constants.HoodConstants;
-import frc.team3128.ConstantsInt.ClimberConstants;
-import frc.team3128.ConstantsInt.VisionConstants;
+import static frc.team3128.Constants.HoodConstants.*;
+import static frc.team3128.Constants.DriveConstants.*;
+import static frc.team3128.Constants.ClimberConstants.*;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdArcadeDrive;
@@ -191,7 +191,7 @@ public class RobotContainer {
 
         m_rightStick.getButton(5).whenPressed(climbTraversalCommand);
 
-        m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
+        m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, CLIMB_ENC_TO_TOP));
 
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(m_climber, 0));
 
@@ -201,9 +201,9 @@ public class RobotContainer {
 
         m_rightStick.getButton(11).whenPressed(new CmdExtendIntake(m_intake));
 
-        m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(HoodConstants.MIN_ANGLE));
+        m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
 
-        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(HoodConstants.MAX_ANGLE));
+        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
 
         m_rightStick.getButton(16).whenPressed(() -> m_intake.retractIntake());
 
@@ -224,7 +224,7 @@ public class RobotContainer {
 
         m_leftStick.getButton(3).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
 
-        // m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)));
+        // m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(SMALL_VERTICAL_DISTANCE)));
 
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
 
@@ -243,8 +243,8 @@ public class RobotContainer {
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
 
-        m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_DIAG_EXTENSION));
-        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
+        m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(m_climber, CLIMB_ENC_DIAG_EXTENSION));
+        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(m_climber, CLIMB_ENC_TO_TOP));
         m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(m_climber, -120));
     }
 
@@ -622,14 +622,12 @@ public class RobotContainer {
     private RamseteCommand trajectoryCmd(Trajectory traj) {
         return new RamseteCommand(traj, 
                             m_drive::getPose,
-                            new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
-                            new SimpleMotorFeedforward(Constants.DriveConstants.kS,
-                                                        Constants.DriveConstants.kV,
-                                                        Constants.DriveConstants.kA),
-                            Constants.DriveConstants.DRIVE_KINEMATICS,
+                            new RamseteController(RAMSETE_B, RAMSETE_ZETA),
+                            new SimpleMotorFeedforward(kS, kV, kA),
+                            DRIVE_KINEMATICS,
                             m_drive::getWheelSpeeds,
-                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
-                            new PIDController(Constants.DriveConstants.RAMSETE_KP, 0, 0),
+                            new PIDController(RAMSETE_KP, 0, 0),
+                            new PIDController(RAMSETE_KP, 0, 0),
                             m_drive::tankDriveVolts,
                             m_drive);
     }
@@ -651,7 +649,7 @@ public class RobotContainer {
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
-                new InstantCommand(() -> m_hood.startPID(HoodConstants.HOME_ANGLE)),
+                new InstantCommand(() -> m_hood.startPID(HOME_ANGLE)),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootRPM(m_shooter, RPM)
             ).withTimeout(2)
