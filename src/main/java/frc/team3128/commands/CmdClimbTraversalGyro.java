@@ -21,8 +21,6 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
 
             new CmdClimbEncoder(m_climber, m_climber.getDesiredTicks(ClimberConstants.SMALL_VERTICAL_DISTANCE)),
 
-            new WaitCommand(0.5),
-
             //piston extend
             new InstantCommand(() -> m_climber.extendPiston()),
             
@@ -45,8 +43,6 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             
             new InstantCommand(() -> m_climber.extendPiston()),
             
-            new WaitCommand(0.5),
-            
             new CmdIsTraversalAngle(m_gyro),
             
             //elev extend
@@ -54,8 +50,6 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             
             //piston extend
             new InstantCommand(() -> m_climber.retractPiston()),
-
-            new WaitCommand(0.5),
 
             //elev retract
             new CmdClimbEncoder(m_climber, 300000)
