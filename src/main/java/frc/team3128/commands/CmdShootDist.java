@@ -5,16 +5,17 @@ import frc.team3128.Constants.VisionConstants;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Hood;
+import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.Shooter;
 
 public class CmdShootDist extends CommandBase {
     private Shooter shooter;
-    private Limelight limelight;
+    private LimelightSubsystem limelights;
     private Hood hood;
     
-    public CmdShootDist(Shooter shooter, Hood hood, Limelight limelight) {
+    public CmdShootDist(Shooter shooter, Hood hood, LimelightSubsystem limelights) {
         this.shooter = shooter;
-        this.limelight = limelight;
+        this.limelights = limelights;
         this.hood = hood;
 
         addRequirements(shooter, hood);
@@ -22,7 +23,7 @@ public class CmdShootDist extends CommandBase {
     
     @Override
     public void execute() {
-        double dist = limelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT) + 5;
+        double dist = limelights.calculateDistance("shooter");
         shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
         hood.startPID(hood.calculateAngleFromDistance(dist));
     }
@@ -30,8 +31,8 @@ public class CmdShootDist extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         shooter.stopShoot();
-        Log.info("command shoot", "im cancelling");
-        limelight.turnLEDOff();
+        limelights.turnShooterLEDOff();
+        Log.info("CmdShootDist", "Cancelling shooting");
     }
     
     @Override

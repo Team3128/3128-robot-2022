@@ -66,8 +66,6 @@ public class Shooter extends NAR_PIDSubsystem {
     private SimpleMotorFeedforward lowFF = new SimpleMotorFeedforward(ShooterConstants.LOW_kS, ShooterConstants.LOW_kV, ShooterConstants.LOW_kA);
     private SimpleMotorFeedforward highFF = new SimpleMotorFeedforward(ShooterConstants.HIGH_kS, ShooterConstants.HIGH_kV, ShooterConstants.HIGH_kA);
 
-    public double ratio = 0.0;
-
     public Shooter() {
         super(new PIDController(ShooterConstants.HIGH_kP, ShooterConstants.HIGH_kI, ShooterConstants.HIGH_kD), ShooterConstants.PLATEAU_COUNT);
     
@@ -163,7 +161,7 @@ public class Shooter extends NAR_PIDSubsystem {
      */
     public void beginShoot(double rpm) {
         // Log.info("Shooter", "beginShoot rpm");
-        startPID(rpm + ratio);
+        startPID(rpm);
     }
 
     public void stopShoot() {
@@ -238,7 +236,7 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public double calculateMotorVelocityFromDist(double dist) {
-        return ShooterConstants.shooterSpeedsMap.getInterpolated(new InterpolatingDouble(dist)).value + ratio;
+        return ShooterConstants.shooterSpeedsMap.getInterpolated(new InterpolatingDouble(dist)).value;
         // return -1.43648019e-3*dist*dist*dist + 4.42551199e-1*dist*dist - 3.02450570e1*dist + 3.16957933e3 - 100;
     }
 }
