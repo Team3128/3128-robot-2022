@@ -96,6 +96,9 @@ public class Constants {
         public static final double HIGH_kI = 0;
         public static final double HIGH_kD = 0; // 5e-4;
 
+        public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
+
         public static final double kF = 0.00190678;
 
         public static final int PLATEAU_COUNT = 6;
@@ -103,11 +106,11 @@ public class Constants {
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
-        // public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
-        // LinearSystemId.identifyVelocitySystem(
-        //     LOW_kV, 
-        //     LOW_kA
-        // );
+        public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
+        LinearSystemId.identifyVelocitySystem(
+            LOW_kV, 
+            LOW_kA
+        );
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;

@@ -63,11 +63,11 @@ public class Shooter extends NAR_PIDSubsystem {
         configMotors();
 
         //Robot is a simulation
-        // if(RobotBase.isSimulation()){
-        //     m_shooterSim = new FlywheelSim(
-        //         SHOOTER_CHAR, SHOOTER_GEARBOX, SHOOTER_GEARING 
-        //     );
-        // }
+        if(RobotBase.isSimulation()){
+            m_shooterSim = new FlywheelSim(
+                SHOOTER_CHAR, SHOOTER_GEARBOX, SHOOTER_GEARING 
+            );
+        }
         // commented out because it was using kV and kA (for ff calcs/charactization)
         // and we only use PID+FF now 
     }

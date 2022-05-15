@@ -93,25 +93,25 @@ public class AutoPrograms {
         trajectories = new HashMap<String, Trajectory>();
 
         final String[] trajectoryNames = {
-            "S2H2_i.wpilib.json",
-            "S2H2_ii.wpilib.json",
-            "S2H1.wpilib.json",
-            "S2H2_iii.wpilib.json",
-            "S2H2_iv.wpilib.json",
-            "4Ball_Terminal180_i.wpilib.json",
-            "4Ball_Terminal180_ii.wpilib.json",
-            "Terminal2Tarmac.wpilib.json",
-            "Tarmac2Terminal.wpilib.json",
-            "Billiards_i.wpilib.json",
-            "Billiards_ii.wpilib.json",
-            "3Ballv2_i.wpilib.json",
-            "3Ballv2_ii.wpilib.json",
-            "5Ballv2_i.wpilib.json",
-            "5Ballv2_ii.wpilib.json",
-            "S1H1_i.wpilib.json",
-            "S1H1_ii.wpilib.json",
-            "S1H2_ii.wpilib.json",
-            "S1H2_iii.wpilib.json"
+            "S2H2_i",
+            "S2H2_ii",
+            "S2H1",
+            "S2H2_iii",
+            "S2H2_iv",
+            "4Ball_Terminal180_i",
+            "4Ball_Terminal180_ii",
+            "Terminal2Tarmac",
+            "Tarmac2Terminal",
+            "Billiards_i",
+            "Billiards_ii",
+            "3Ballv2_i",
+            "3Ballv2_ii",
+            "5Ballv2_i",
+            "5Ballv2_ii",
+            "S1H1_i",
+            "S1H1_ii",
+            "S1H2_ii",
+            "S1H2_iii"
         };
 
         for (String trajectoryName : trajectoryNames) {
