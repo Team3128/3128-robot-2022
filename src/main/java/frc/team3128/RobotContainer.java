@@ -167,7 +167,7 @@ public class RobotContainer {
         m_rightStick.getButton(1).whenPressed(shootCommand)
                                 .whenReleased(new ParallelCommandGroup(
                                     new InstantCommand(m_shooter::stopShoot, m_shooter),
-                                    new InstantCommand(m_ll::turnShooterLEDOff, m_ll)));
+                                    new InstantCommand(() -> m_ll.turnShooterLEDOff())));
         // m_rightStick.getButton(1).whenPressed(new SequentialCommandGroup(new CmdRetractHopper(m_hopper).withTimeout(0.5), new ParallelCommandGroup(new InstantCommand(() -> m_hood.startPID(12)), new CmdShootRPM(m_shooter, 2700), new CmdHopperShooting(m_hopper, m_shooter::isReady))))
         //                             .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
@@ -273,7 +273,7 @@ public class RobotContainer {
 
         //this shoot command is the ideal one with all capabilities
         shootCommand = new SequentialCommandGroup(
-                        new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+                        new InstantCommand(() -> m_ll.turnShooterLEDOn()),
                         new CmdRetractHopper(m_hopper).withTimeout(0.5), 
                         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                         // new CmdExtendIntake(m_intake),
@@ -287,7 +287,7 @@ public class RobotContainer {
 
         //use this shoot command for testing
         manualShoot = new SequentialCommandGroup(
-                        new InstantCommand(m_ll::turnShooterLEDOn, m_ll), 
+                        new InstantCommand(() -> m_ll.turnShooterLEDOn()), 
                         new CmdRetractHopper(m_hopper).withTimeout(0.5),
                         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                         new ParallelCommandGroup(
@@ -532,13 +532,13 @@ public class RobotContainer {
             
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(m_drive, m_ll),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
                 new CmdShootSingleBall(m_shooter, m_hood, m_ll)
             ).withTimeout(2),
-            new InstantCommand(m_ll::turnShooterLEDOff, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOff()),
             
             trajectoryCmd("S1H1_ii.wpilib.json"),
             new CmdExtendIntake(m_intake),
@@ -558,13 +558,13 @@ public class RobotContainer {
             
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(m_drive, m_ll),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
                 new CmdShootSingleBall(m_shooter, m_hood, m_ll)
             ).withTimeout(2),
-            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)
+            new InstantCommand(() -> m_ll.turnShooterLEDOff())
         );
 
         auto_S1H2 = new SequentialCommandGroup(
@@ -579,13 +579,13 @@ public class RobotContainer {
             
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(m_drive, m_ll),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady, 0.6),
                 new CmdShootSingleBall(m_shooter, m_hood, m_ll)
             ).withTimeout(2),
-            new InstantCommand(m_ll::turnShooterLEDOff, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOff()),
 
             new InstantCommand(() -> m_intake.ejectIntake(), m_intake),
             new ParallelDeadlineGroup(
@@ -636,7 +636,7 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootDist(m_shooter, m_hood, m_ll)
@@ -672,31 +672,31 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             new CmdRetractHopper(m_hopper).withTimeout(0.5),
             new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(m_drive, m_ll),
                 new CmdHopperShooting(m_hopper, m_shooter::isReady),
                 new CmdShootDist(m_shooter, m_hood, m_ll)
             ).withTimeout(2),
-            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)
+            new InstantCommand(() -> m_ll.turnShooterLEDOff())
         );
     }
 
     private Command turnLeftToAligned() {
         return new SequentialCommandGroup(
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new CmdInPlaceTurnVision(m_drive, m_ll, 170),
             new CmdAlign(m_drive, m_ll),
-            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)
+            new InstantCommand(() -> m_ll.turnShooterLEDOff())
         );
     }
 
     private Command turnRightToAligned() {
         return new SequentialCommandGroup(
-            new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+            new InstantCommand(() -> m_ll.turnShooterLEDOn()),
             new CmdInPlaceTurnVision(m_drive, m_ll, -170),
             new CmdAlign(m_drive, m_ll),
-            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)
+            new InstantCommand(() -> m_ll.turnShooterLEDOff())
         ).withTimeout(3);
     }
 
