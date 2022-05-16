@@ -13,8 +13,8 @@
   "Window": {
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "367,62",
-      "Size": "776,405"
+      "Pos": "249,40",
+      "Size": "1525,840"
     },
     "###FMS": {
       "Collapsed": "0",
@@ -23,7 +23,7 @@
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "45,745",
+      "Pos": "250,465",
       "Size": "976,179"
     },
     "###Keyboard 0 Settings": {
