@@ -114,6 +114,10 @@ public class NarwhalDashboard extends WebSocketServer {
         return autoPrograms.get(selectedAuto);
     }
 
+    public static String getSelectedAutoName() {
+        return selectedAuto;
+    }
+
     public static void setSelectedLimelight(Limelight ll){
         selectedLimelight = ll.hostname;
     }

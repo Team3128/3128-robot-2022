@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team3128.Constants.ClimberConstants;
-import frc.team3128.Constants.ConversionConstants;
+import static frc.team3128.Constants.ClimberConstants.*;
+import static frc.team3128.Constants.ConversionConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
@@ -46,28 +46,28 @@ public class Climber extends SubsystemBase {
     }
 
     private void configMotors() {
-        m_leftMotor = new NAR_TalonFX(ClimberConstants.CLIMBER_MOTOR_LEFT_ID);
-        m_rightMotor = new NAR_TalonFX(ClimberConstants.CLIMBER_MOTOR_RIGHT_ID);
+        m_leftMotor = new NAR_TalonFX(CLIMBER_MOTOR_LEFT_ID);
+        m_rightMotor = new NAR_TalonFX(CLIMBER_MOTOR_RIGHT_ID);
 
         m_leftMotor.setInverted(true);
         m_rightMotor.follow((NAR_EMotor)m_leftMotor);
         m_rightMotor.setInverted(InvertType.OpposeMaster);
         
-        m_leftMotor.setNeutralMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
-        m_rightMotor.setNeutralMode(ClimberConstants.CLIMBER_NEUTRAL_MODE);
+        m_leftMotor.setNeutralMode(CLIMBER_NEUTRAL_MODE);
+        m_rightMotor.setNeutralMode(CLIMBER_NEUTRAL_MODE);
 
-        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 23);
-        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 59);
+        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
-        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
     }
     
     private void configPneumatics() {
         m_climberSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
-                                                ClimberConstants.CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, 
-                                                ClimberConstants.CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
+                                                CLIMBER_SOLENOID_FORWARD_CHANNEL_ID, 
+                                                CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID);
 
         retractPiston();
     }
@@ -82,23 +82,23 @@ public class Climber extends SubsystemBase {
     }
 
     public void bothExtend() {
-        m_rightMotor.set(ClimberConstants.CLIMBER_POWER);
-        m_leftMotor.set(ClimberConstants.CLIMBER_POWER);
+        m_rightMotor.set(CLIMBER_POWER);
+        m_leftMotor.set(CLIMBER_POWER);
     }
 
     public void bothRetract() {
-        m_rightMotor.set(-ClimberConstants.CLIMBER_POWER);
-        m_leftMotor.set(-ClimberConstants.CLIMBER_POWER);
+        m_rightMotor.set(-CLIMBER_POWER);
+        m_leftMotor.set(-CLIMBER_POWER);
     }
 
     public void bothManualExtend() {
-        m_rightMotor.set(ClimberConstants.MANUAL_POWER);
-        m_leftMotor.set(ClimberConstants.MANUAL_POWER);
+        m_rightMotor.set(MANUAL_POWER);
+        m_leftMotor.set(MANUAL_POWER);
     }
 
     public void bothManualRetract() {
-        m_rightMotor.set(-ClimberConstants.MANUAL_POWER);
-        m_leftMotor.set(-ClimberConstants.MANUAL_POWER);
+        m_rightMotor.set(-MANUAL_POWER);
+        m_leftMotor.set(-MANUAL_POWER);
     }
 
     public void bothStop() {
@@ -123,7 +123,7 @@ public class Climber extends SubsystemBase {
      * @return Corresponding encoder counts
      */
     public double getDesiredTicks(double distance) {
-        double desiredTicks = distance * (ConversionConstants.FALCON_ENCODER_RESOLUTION * ClimberConstants.CLIMBER_GEAR_RATIO) / (ClimberConstants.AXLE_DIAMETER * Math.PI);
+        double desiredTicks = distance * (FALCON_ENCODER_RESOLUTION * CLIMBER_GEAR_RATIO) / (AXLE_DIAMETER * Math.PI);
         return desiredTicks;
     }
 

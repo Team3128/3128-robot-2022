@@ -1,8 +1,10 @@
 package frc.team3128.common.hardware.limelight;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import java.util.Collections;
 
 /**
  * Software wrapper to obtain data from and send data to the physical Limelight.
@@ -33,8 +35,7 @@ public class Limelight {
      *                      Limelight
      * @param targetWidth   - The width of the target
      */
-    public Limelight(String hostname, double cameraAngle, double cameraHeight, double frontDistance,
-            double targetWidth) {
+    public Limelight(String hostname, double cameraAngle, double cameraHeight, double frontDistance) {
         this.hostname = hostname;
 
         this.cameraAngle = cameraAngle;
@@ -42,20 +43,36 @@ public class Limelight {
 
         this.frontDistance = frontDistance;
 
-        this.targetWidth = targetWidth;
-
         limelightTable = NetworkTableInstance.getDefault().getTable(hostname);
     }
 
     /**
-     * Gets the average value of the data value in a certain key output by the
+     * Gets the median value of the data value in a certain key output by the
      * Limelight.
+     * Switched from average to median to attempt to mitigate outliers
      * 
      * @param key        - the LimelightKey corresponding to the desired value.
      * @param numSamples - how many samples of the value to average out.
      * @return
      */
     public double getValue(LimelightKey key, int numSamples) {
+        ArrayList<Double> values = new ArrayList<Double>();
+        // this is probably bad actually since to get median it has to be sorted, but numSamples should always be relatively small and this will cancel out weird outliers
+
+        for (int i = 0; i < numSamples; i++) {
+            values.add(limelightTable.getEntry(key.getKey()).getDouble(0.0));
+        }
+
+        Collections.sort(values);
+
+        if (numSamples % 2 == 0) { // if even
+            return (values.get(numSamples / 2) + values.get(numSamples / 2 - 1)) / 2;
+        } else { // if odd
+            return values.get((numSamples - 1) / 2);
+        }
+    }
+
+    public double getValueAverage(LimelightKey key, int numSamples) {
         double runningTotal = 0;
         int count = 0;
 
@@ -71,26 +88,59 @@ public class Limelight {
      * Checks to see if the Limelight has a valid target
      */
     public boolean hasValidTarget() {
-        return getValue(LimelightKey.VALID_TARGET, 1) > 0.99;
+        return getValueAverage(LimelightKey.VALID_TARGET, 1) > 0.99;
+    }
+
+    public double calculateDistToTopTarget(double targetHeight) {
+        if (!hasValidTarget())
+            return -1;
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180 * 2/3;
+        double tx = getValue(LimelightKey.HORIZONTAL_OFFSET, 5) * Math.PI / 180;
+        double dist = (targetHeight - cameraHeight) / (Math.tan(ty + cameraAngle) * Math.cos(tx)) - frontDistance;
+
+        double transformedDist = 19.4 + 0.243 * dist + 6.26e-3 * dist * dist;
+
+        return transformedDist;
+    }
+
+    public double calculateDistToGroundTarget(double targetHeight) {
+        if (!hasValidTarget())
+            return -1;
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180;
+        return (-targetHeight + cameraHeight) * Math.tan(ty + cameraAngle) - frontDistance;
+    }
+
+    public void setLEDMode(LEDMode mode) {
+        limelightTable.getEntry("ledMode").setNumber(mode.getLEDMode());
+    }
+
+    public void setStreamMode(StreamMode mode) {
+        limelightTable.getEntry("stream").setNumber(mode.getStream());
+    }
+
+    public void setPipeline(Pipeline pipeline) {
+        limelightTable.getEntry("pipeline").setNumber(pipeline.getPipeline());
+    }
+
+      /**
+     * Set the limelight on the dashboard
+     */
+    public double getSelectedPipeline() {
+        return limelightTable.getEntry("pipeline").getDouble(0);
     }
 
     public LimelightData getValues(int numSamples) {
         LimelightData data = new LimelightData();
-        // double runningTotal;
         double[] runningTotal;
         double[] camtranArray;
         int idx;
         int index = 0;
-        // runningTotal = 0;
         runningTotal = new double[9];
 
         for (int a = 0; a < numSamples; a++) {
 
             Arrays.fill(runningTotal, 0.0);
             idx = 0;
-            // for (String valueKey : LimelightConstants.valueKeys) {
-
-            // }
 
             for (String valueKey : LimelightConstants.VALUE_KEYS) {
                 runningTotal[idx] += limelightTable.getEntry(valueKey).getDouble(0.0);
@@ -119,63 +169,5 @@ public class Limelight {
         }
 
         return data;
-    }
-
-    public double getYPrime(double targetHeight, int n) {
-        if (!hasValidTarget())
-            return -1;
-
-        return calculateYPrimeFromTY(getValue(LimelightKey.VERTICAL_OFFSET, n), targetHeight);
-    }
-
-    public double calculateYPrimeFromTY(double ty, double targetHeight) {
-        return (targetHeight - cameraHeight) / Math.tan(ty + cameraAngle) - frontDistance;
-    }
-
-    public double calculateDistToTopTarget(double targetHeight) {
-        if (!hasValidTarget())
-            return -1;
-        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180 * 2/3;
-        double tx = getValue(LimelightKey.HORIZONTAL_OFFSET, 5) * Math.PI / 180;
-        double dist = (targetHeight - cameraHeight) / (Math.tan(ty + cameraAngle)*Math.cos(tx)) - frontDistance;
-
-        double transformedDist = 19.4 + 0.243 * dist + 6.26e-3 * dist * dist;
-
-        return transformedDist;
-    }
-
-    public double calculateDistToGroundTarget(double targetHeight) {
-        if (!hasValidTarget())
-            return -1;
-        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180;
-        return (-targetHeight + cameraHeight) * Math.tan(ty + cameraAngle) - frontDistance;
-    }
-
-    public void setLEDMode(LEDMode mode) {
-        limelightTable.getEntry("ledMode").setNumber(mode.getLEDMode());
-    }
-
-    public void turnLEDOn() {
-        setLEDMode(LEDMode.ON);
-    }
-
-    public void turnLEDOff() {
-        setLEDMode(LEDMode.OFF);
-    }
-    
-
-    public void setStreamMode(StreamMode mode) {
-        limelightTable.getEntry("stream").setNumber(mode.getStream());
-    }
-
-    public void setPipeline(Pipeline pipeline) {
-        limelightTable.getEntry("pipeline").setNumber(pipeline.getPipeline());
-    }
-
-      /**
-     * Set the limelight on the dashboard
-     */
-    public double getSelectedPipeline() {
-        return limelightTable.getEntry("pipeline").getDouble(0);
     }
 }
