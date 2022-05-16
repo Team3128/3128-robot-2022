@@ -23,7 +23,7 @@ import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdClimb;
 import frc.team3128.commands.CmdClimbEncoder;
-import frc.team3128.commands.CmdClimbTraversalOG;
+import frc.team3128.commands.CmdClimbTraversalGyro;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdHopperShooting;
@@ -69,7 +69,7 @@ public class RobotContainer {
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
 
     private AutoPrograms autos;
-
+  
     private boolean DEBUG = true;
     private boolean driveHalfSpeed = false;
 
@@ -160,8 +160,8 @@ public class RobotContainer {
                                                         new CmdHopperShooting(m_hopper, m_shooter::isReady))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
-        m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalOG(m_climber));
-
+        m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro(m_climber, m_drive));
+      
         m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, CLIMB_ENC_TO_TOP));
 
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(m_climber, 0));
