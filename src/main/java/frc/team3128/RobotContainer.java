@@ -36,7 +36,6 @@ import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdClimb;
 import frc.team3128.commands.CmdClimbEncoder;
 import frc.team3128.commands.CmdClimbTraversalGyro;
-import frc.team3128.commands.CmdClimbTraversalOG;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdHopperShooting;
