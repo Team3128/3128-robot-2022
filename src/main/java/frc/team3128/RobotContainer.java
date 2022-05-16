@@ -160,7 +160,7 @@ public class RobotContainer {
                                                         new CmdHopperShooting(m_hopper, m_shooter::isReady))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
-        m_rightStick.getButton(5).whenPressed(climbTraversalGyroCommand);
+        m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro(m_climber, m_drive));
       
         m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, CLIMB_ENC_TO_TOP));
 
