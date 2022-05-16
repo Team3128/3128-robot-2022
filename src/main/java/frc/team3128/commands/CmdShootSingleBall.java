@@ -4,19 +4,20 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.Constants.VisionConstants;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.subsystems.Hood;
+import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.Shooter;
 
 public class CmdShootSingleBall extends CommandBase {
     private Shooter shooter;
-    private Limelight limelight;
+    private LimelightSubsystem limelights;
     private Hood hood;
 
     private boolean prevIsReady = false;
     private boolean currIsReady;
     
-    public CmdShootSingleBall(Shooter shooter, Hood hood, Limelight limelight) {
+    public CmdShootSingleBall(Shooter shooter, Hood hood, LimelightSubsystem limelights) {
         this.shooter = shooter;
-        this.limelight = limelight;
+        this.limelights = limelights;
         this.hood = hood;
 
         addRequirements(shooter, hood);
@@ -24,7 +25,7 @@ public class CmdShootSingleBall extends CommandBase {
     
     @Override
     public void execute() {
-        double dist = limelight.calculateDistToTopTarget(VisionConstants.TARGET_HEIGHT) + 5;
+        double dist = limelights.calculateDistance("shooter");
         shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
         hood.startPID(hood.calculateAngleFromDistance(dist));
 
@@ -35,7 +36,7 @@ public class CmdShootSingleBall extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         shooter.stopShoot();
-        limelight.turnLEDOff();
+        limelights.turnShooterLEDOff();
     }
     
     @Override

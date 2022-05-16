@@ -12,6 +12,7 @@ import frc.team3128.Constants.VisionConstants;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
+import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 
@@ -21,8 +22,9 @@ public class CmdAlign extends CommandBase {
         SEARCHING, FEEDBACK;
     }
 
-    private NAR_Drivetrain m_drive;
-    private Limelight m_limelight;
+    private NAR_Drivetrain drive;
+    private LimelightSubsystem limelights;
+    private Limelight shooterLimelight;
     private Set<Subsystem> requirements;
 
     private double txThreshold = VisionConstants.TX_THRESHOLD;
@@ -36,19 +38,21 @@ public class CmdAlign extends CommandBase {
     private HorizontalOffsetFeedBackDriveState aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
 
 
-    public CmdAlign(NAR_Drivetrain drive, Limelight limelight) {
-        m_drive = drive;
-        m_limelight = limelight;
+    public CmdAlign(NAR_Drivetrain drive, LimelightSubsystem limelights) {
+        this.drive = drive;
+        this.limelights = limelights;
+        shooterLimelight = limelights.getShooterLimelight();
+
         goalHorizontalOffset = VisionConstants.TX_OFFSET;
         isAligned = false;
         requirements = new HashSet<Subsystem>();
 
-        requirements.add(m_drive);
+        requirements.add(drive);
     }
 
     @Override
     public void initialize() {
-        m_limelight.setLEDMode(LEDMode.ON);
+        limelights.turnShooterLEDOn();
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
     }
@@ -58,26 +62,26 @@ public class CmdAlign extends CommandBase {
         currTime = RobotController.getFPGATime() / 1e6;
         switch(aimState) {
             case SEARCHING:
-                if(m_limelight.hasValidTarget())
+                if(shooterLimelight.hasValidTarget())
                     targetFoundCount++;
                 else
                     targetFoundCount = 0;
                 if(targetFoundCount > 5) {
-                    currHorizontalOffset = m_limelight.getValue(LimelightKey.HORIZONTAL_OFFSET, VisionConstants.SAMPLE_RATE);
+                    currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, VisionConstants.SAMPLE_RATE);
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = HorizontalOffsetFeedBackDriveState.FEEDBACK;
                 }
                 break;
             
             case FEEDBACK:
-                if(!m_limelight.hasValidTarget()) {
+                if(!shooterLimelight.hasValidTarget()) {
                     aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
                     isAligned = false;
                     plateauCount = 0;
                     break;
                 }
 
-                currHorizontalOffset = m_limelight.getValue(LimelightKey.HORIZONTAL_OFFSET, VisionConstants.SAMPLE_RATE);
+                currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, VisionConstants.SAMPLE_RATE);
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
                 if (txThreshold < VisionConstants.TX_THRESHOLD_MAX) {
                     txThreshold += (currTime - prevTime) * (VisionConstants.TX_THRESHOLD_INCREMENT);
@@ -88,13 +92,12 @@ public class CmdAlign extends CommandBase {
                 
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
-                m_drive.tankDrive(-feedbackPower, feedbackPower);
+                drive.tankDrive(-feedbackPower, feedbackPower);
                 
                 if (Math.abs(currError) < txThreshold) {
                     plateauCount++;
                     if (plateauCount > VisionConstants.ALIGN_PLATEAU_COUNT) {
                         isAligned = true;
-                        // m_limelight.setLEDMode(LEDMode.OFF);
                     }
                 }
                 else {
@@ -113,7 +116,8 @@ public class CmdAlign extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_drive.stop();
+        drive.stop();
+        limelights.turnShooterLEDOff();
     }
     
     @Override
