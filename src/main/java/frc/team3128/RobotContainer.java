@@ -35,6 +35,7 @@ import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdClimb;
 import frc.team3128.commands.CmdClimbEncoder;
+import frc.team3128.commands.CmdClimbTraversalGyro;
 import frc.team3128.commands.CmdClimbTraversalOG;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
@@ -113,7 +114,7 @@ public class RobotContainer {
     private SequentialCommandGroup manualShoot;
     private SequentialCommandGroup lowerHubShoot;
     private CmdClimb climbCommand;
-    private CmdClimbTraversalOG climbTraversalCommand;
+    private CmdClimbTraversalGyro climbTraversalGyroCommand;
 
     private HashMap<Command, Pose2d> initialPoses;
 
@@ -177,7 +178,7 @@ public class RobotContainer {
         // 2: intake 
         // 3: shoot lower hub
         // 4: ram shot at 2350 rpm ??? 
-        // 5: automatically set-up traversal climb
+        // 5: auto traversal climb (gyro)
         // 6: extend climber elev to height for mid to high climb
         // 7: retract climber elev to 0
         // 8: reverse intake
@@ -235,7 +236,7 @@ public class RobotContainer {
         //m_rightStick.getButton(4).whenHeld(lowerHubShoot);
 
         //m_rightStick.getButton(5).whenPressed(climbCommand);
-        m_rightStick.getButton(5).whenPressed(climbTraversalCommand);
+        m_rightStick.getButton(5).whenPressed(climbTraversalGyroCommand);
 
         m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(m_climber, ClimberConstants.CLIMB_ENC_TO_TOP));
 
@@ -357,7 +358,7 @@ public class RobotContainer {
         initialPoses = new HashMap<Command, Pose2d>();
 
         climbCommand = new CmdClimb(m_climber);
-        climbTraversalCommand = new CmdClimbTraversalOG(m_climber);
+        climbTraversalGyroCommand = new CmdClimbTraversalGyro(m_climber,m_drive);
         
         extendIntakeAndReverse = new SequentialCommandGroup(new CmdExtendIntake(m_intake).withTimeout(0.1), new CmdOuttake(m_intake, m_hopper));
 
