@@ -110,7 +110,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         // SmartDashboard.putString("getPose()", getPose().toString());
         // SmartDashboard.putNumber("Gyro", getHeading());
 
-        // SmartDashboard.putData("Field", field);
+        SmartDashboard.putData("Field", field);
     }
 
     public void simulationPeriodic() {

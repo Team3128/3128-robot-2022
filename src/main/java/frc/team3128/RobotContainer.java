@@ -107,7 +107,7 @@ public class RobotContainer {
         //RIGHT
         m_rightStick.getButton(1).whenPressed(
                     new SequentialCommandGroup(
-                        new InstantCommand(m_ll::turnShooterLEDOn, m_ll),
+                        new InstantCommand(() -> m_ll.turnShooterLEDOn()),
                         new CmdRetractHopper(m_hopper).withTimeout(0.5), 
                         new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                         // new CmdExtendIntake(m_intake),
@@ -118,7 +118,7 @@ public class RobotContainer {
                             new CmdShootDist(m_shooter, m_hood, m_ll))))
                         .whenReleased(new ParallelCommandGroup(
                             new InstantCommand(m_shooter::stopShoot, m_shooter),
-                            new InstantCommand(m_ll::turnShooterLEDOff, m_ll)));
+                            new InstantCommand(() -> m_ll.turnShooterLEDOff())));
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_rightStick.getButton(1).whenPressed(
@@ -150,7 +150,7 @@ public class RobotContainer {
                         new CmdShootRPM(m_shooter, 1200))))
                     .whenReleased(new ParallelCommandGroup(
                         new InstantCommand(m_shooter::stopShoot, m_shooter),
-                        new InstantCommand(m_ll::turnShooterLEDOff, m_ll)));
+                        new InstantCommand(() -> m_ll.turnShooterLEDOff())));
 
         m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(
                                                 new CmdRetractHopper(m_hopper).withTimeout(0.5), 

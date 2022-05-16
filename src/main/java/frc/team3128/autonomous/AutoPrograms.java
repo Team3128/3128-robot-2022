@@ -149,7 +149,7 @@ public class AutoPrograms {
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_i.wpilib.json"), 
+                trajectoryCmd("3Ballv2_i"), 
                 new CmdExtendIntakeAndRun(intake, hopper)
             ),
 
@@ -158,7 +158,7 @@ public class AutoPrograms {
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_ii.wpilib.json"),
+                trajectoryCmd("3Ballv2_ii"),
                 new CmdExtendIntakeAndRun(intake, hopper)
             ),
 
@@ -171,7 +171,7 @@ public class AutoPrograms {
                             //drive and intake ball
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_i.wpilib.json"),
+                                trajectoryCmd("S2H2_i"),
                                 new CmdExtendIntakeAndRun(intake, hopper)
                             ),
 
@@ -183,13 +183,13 @@ public class AutoPrograms {
                             new CmdInPlaceTurn(drive, 90),
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_ii.wpilib.json"),
+                                trajectoryCmd("S2H2_ii"),
                                 new CmdExtendIntakeAndRun(intake, hopper)
                             ),
 
                             //drive behind hub
                             new CmdInPlaceTurn(drive, -90),
-                            trajectoryCmd("S2H1.wpilib.json"),
+                            trajectoryCmd("S2H1"),
 
                             //outtake balls behind hub
                             new CmdExtendIntake(intake),
@@ -202,7 +202,7 @@ public class AutoPrograms {
                             //drive and intake ball
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_i.wpilib.json"),
+                                trajectoryCmd("S2H2_i"),
                                 new CmdExtendIntakeAndRun(intake, hopper)
                             ),
 
@@ -214,7 +214,7 @@ public class AutoPrograms {
                             new CmdInPlaceTurn(drive, 90),
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_ii.wpilib.json"),
+                                trajectoryCmd("S2H2_ii"),
                                 new CmdExtendIntakeAndRun(intake, hopper)
                             ),
 
@@ -222,7 +222,7 @@ public class AutoPrograms {
                             new CmdInPlaceTurn(drive, 180),
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("S2H2_iii.wpilib.json"), 
+                                trajectoryCmd("S2H2_iii"), 
                                 new CmdExtendIntakeAndRun(intake, hopper)),
 
                             // trajectoryCmd(12),
@@ -232,7 +232,7 @@ public class AutoPrograms {
                             // ),
                             
                             //hide ball behinde hub
-                            trajectoryCmd("S2H2_iv.wpilib.json"),
+                            trajectoryCmd("S2H2_iv"),
 
                             // new CmdInPlaceTurn(drive, 130),
                             new CmdExtendIntake(intake),
@@ -244,7 +244,7 @@ public class AutoPrograms {
                             //drive and intake 1 ball
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("4Ball_Terminal180_i.wpilib.json"),  
+                                trajectoryCmd("4Ball_Terminal180_i"),  
                                 new CmdExtendIntakeAndRun(intake, hopper)),
 
                             //turn and shoot 2 balls
@@ -254,12 +254,12 @@ public class AutoPrograms {
                             //drive to ball and terminal and intake
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("4Ball_Terminal180_ii.wpilib.json"), 
+                                trajectoryCmd("4Ball_Terminal180_ii"), 
                                 new CmdExtendIntakeAndRun(intake, hopper)),
                             new CmdExtendIntakeAndRun(intake, hopper).withTimeout(1),
 
                             //drive to tarmac and shoot
-                            trajectoryCmd("Terminal2Tarmac.wpilib.json"),
+                            trajectoryCmd("Terminal2Tarmac"),
                             new CmdInPlaceTurn(drive, 180),
                             alignShootCmd()
 
@@ -268,7 +268,7 @@ public class AutoPrograms {
         auto_5Ball180 = new SequentialCommandGroup(
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_i.wpilib.json"), 
+                trajectoryCmd("3Ballv2_i"), 
                 new CmdExtendIntakeAndRun(intake, hopper)
             ),
 
@@ -277,7 +277,7 @@ public class AutoPrograms {
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("3Ballv2_ii.wpilib.json"),
+                trajectoryCmd("3Ballv2_ii"),
                 new CmdExtendIntakeAndRun(intake, hopper)
             ),
 
@@ -289,13 +289,13 @@ public class AutoPrograms {
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
                 new SequentialCommandGroup(
-                    trajectoryCmd("5Ballv2_i.wpilib.json"),
+                    trajectoryCmd("5Ballv2_i"),
                     new InstantCommand(() -> drive.stop())),
                     // new WaitCommand(0.5)),
                 new CmdExtendIntakeAndRun(intake, hopper)
             ),
 
-            trajectoryCmd("5Ballv2_ii.wpilib.json"),
+            trajectoryCmd("5Ballv2_ii"),
 
             new ParallelCommandGroup(
                 turnRightToAligned(),
@@ -314,7 +314,7 @@ public class AutoPrograms {
                             
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("Billiards_i.wpilib.json"),
+                                trajectoryCmd("Billiards_i"),
                                 new CmdExtendIntakeAndRun(intake, hopper)
                             ),
 
@@ -325,7 +325,7 @@ public class AutoPrograms {
 
                             new InstantCommand(() -> intake.ejectIntake(), intake),
                             new ParallelDeadlineGroup(
-                                trajectoryCmd("Billiards_ii.wpilib.json"),
+                                trajectoryCmd("Billiards_ii"),
                                 new CmdExtendIntakeAndRun(intake, hopper)
                             ),
 
@@ -338,7 +338,7 @@ public class AutoPrograms {
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("S1H1_i.wpilib.json"), 
+                trajectoryCmd("S1H1_i"), 
                 new CmdExtendIntakeAndRun(intake, hopper)  
             ),
             new InstantCommand(() -> drive.stop()),
@@ -347,15 +347,15 @@ public class AutoPrograms {
             
             new CmdRetractHopper(hopper).withTimeout(0.5),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(drive, limelights),
                 new CmdHopperShooting(hopper, shooter::isReady, 0.6),
                 new CmdShootSingleBall(shooter, hood, limelights)
             ).withTimeout(2),
-            new InstantCommand(limelights::turnShooterLEDOff, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOff()),
             
-            trajectoryCmd("S1H1_ii.wpilib.json"),
+            trajectoryCmd("S1H1_ii"),
             new CmdExtendIntake(intake),
             new CmdOuttake(intake, hopper, 0.5).withTimeout(1)
         );
@@ -364,7 +364,7 @@ public class AutoPrograms {
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("S1H1_i.wpilib.json"), 
+                trajectoryCmd("S1H1_i"), 
                 new CmdExtendIntakeAndRun(intake, hopper)  
             ),
             new InstantCommand(() -> drive.stop()),
@@ -373,19 +373,19 @@ public class AutoPrograms {
             
             new CmdRetractHopper(hopper).withTimeout(0.5),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(drive, limelights),
                 new CmdHopperShooting(hopper, shooter::isReady, 0.6),
                 new CmdShootSingleBall(shooter, hood, limelights)
             ).withTimeout(2),
-            new InstantCommand(limelights::turnShooterLEDOff, limelights)
+            new InstantCommand(() -> limelights.turnShooterLEDOff())
         );
 
         auto_S1H2 = new SequentialCommandGroup(
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("S1H1_i.wpilib.json"), 
+                trajectoryCmd("S1H1_i"), 
                 new CmdExtendIntakeAndRun(intake, hopper)  
             ),
             new InstantCommand(() -> drive.stop()),
@@ -394,23 +394,23 @@ public class AutoPrograms {
             
             new CmdRetractHopper(hopper).withTimeout(0.5),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(drive, limelights),
                 new CmdHopperShooting(hopper, shooter::isReady, 0.6),
                 new CmdShootSingleBall(shooter, hood, limelights)
             ).withTimeout(2),
-            new InstantCommand(limelights::turnShooterLEDOff, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOff()),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
-                trajectoryCmd("S1H2_ii.wpilib.json"), 
+                trajectoryCmd("S1H2_ii"), 
                 new CmdExtendIntakeAndRun(intake, hopper)  
             ),
 
             new CmdInPlaceTurn(drive, 180),
 
-            trajectoryCmd("S1H2_iii.wpilib.json"), 
+            trajectoryCmd("S1H2_iii"), 
             
             new CmdExtendIntake(intake),
             new CmdOuttake(intake, hopper, 0.5).withTimeout(2)
@@ -418,15 +418,15 @@ public class AutoPrograms {
         
         autoMap.put("1 Ball", new AutoInfo(auto_1Ball, Trajectories.driveBack30In.getInitialPose()));
         autoMap.put("2 Ball", new AutoInfo(auto_2Ball, Trajectories.twoBallTraj.getInitialPose()));
-        autoMap.put("3 Ball", new AutoInfo(auto_3Ball180, trajectories.get("3Ballv2_i.wpilib.json").getInitialPose()));
-        autoMap.put("S2H1", new AutoInfo(auto_S2H1, trajectories.get("S2H2_i.wpilib.json").getInitialPose()));
-        autoMap.put("S2H2", new AutoInfo(auto_S2H2, trajectories.get("S2H2_i.wpilib.json").getInitialPose()));
-        autoMap.put("4 Ball", new AutoInfo(auto_4Ball180, trajectories.get("4Ball_Terminal180_i.wpilib.json").getInitialPose()));
-        autoMap.put("5 Ball", new AutoInfo(auto_5Ball180, trajectories.get("3Ballv2_i.wpilib.json").getInitialPose()));
+        autoMap.put("3 Ball", new AutoInfo(auto_3Ball180, trajectories.get("3Ballv2_i").getInitialPose()));
+        autoMap.put("S2H1", new AutoInfo(auto_S2H1, trajectories.get("S2H2_i").getInitialPose()));
+        autoMap.put("S2H2", new AutoInfo(auto_S2H2, trajectories.get("S2H2_i").getInitialPose()));
+        autoMap.put("4 Ball", new AutoInfo(auto_4Ball180, trajectories.get("4Ball_Terminal180_i").getInitialPose()));
+        autoMap.put("5 Ball", new AutoInfo(auto_5Ball180, trajectories.get("3Ballv2_i").getInitialPose()));
         autoMap.put("Billiards", new AutoInfo(auto_Billiards, new Pose2d(6.8, 6.272, Rotation2d.fromDegrees(45))));
-        autoMap.put("S1H1", new AutoInfo(auto_S1H1, trajectories.get("S1H1_i.wpilib.json").getInitialPose()));
-        autoMap.put("S1I1", new AutoInfo(auto_S1I1, trajectories.get("S1H1_i.wpilib.json").getInitialPose()));
-        autoMap.put("S1H2", new AutoInfo(auto_S1H2, trajectories.get("S1H1_i.wpilib.json").getInitialPose()));
+        autoMap.put("S1H1", new AutoInfo(auto_S1H1, trajectories.get("S1H1_i").getInitialPose()));
+        autoMap.put("S1I1", new AutoInfo(auto_S1I1, trajectories.get("S1H1_i").getInitialPose()));
+        autoMap.put("S1H2", new AutoInfo(auto_S1H2, trajectories.get("S1H1_i").getInitialPose()));
     }
 
     private void initAutoSelector() {
@@ -472,7 +472,7 @@ public class AutoPrograms {
         return new SequentialCommandGroup(
             new CmdRetractHopper(hopper).withTimeout(0.5),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdHopperShooting(hopper, shooter::isReady),
                 new CmdShootDist(shooter, hood, limelights)
@@ -508,31 +508,31 @@ public class AutoPrograms {
         return new SequentialCommandGroup(
             new CmdRetractHopper(hopper).withTimeout(0.5),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(drive, limelights),
                 new CmdHopperShooting(hopper, shooter::isReady),
                 new CmdShootDist(shooter, hood, limelights)
             ).withTimeout(2),
-            new InstantCommand(limelights::turnShooterLEDOff, limelights)
+            new InstantCommand(() -> limelights.turnShooterLEDOff())
         );
     }
 
     private Command turnLeftToAligned() {
         return new SequentialCommandGroup(
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new CmdInPlaceTurnVision(drive, limelights, 170),
             new CmdAlign(drive, limelights),
-            new InstantCommand(limelights::turnShooterLEDOff, limelights)
+            new InstantCommand(() -> limelights.turnShooterLEDOff())
         );
     }
 
     private Command turnRightToAligned() {
         return new SequentialCommandGroup(
-            new InstantCommand(limelights::turnShooterLEDOn, limelights),
+            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new CmdInPlaceTurnVision(drive, limelights, -170),
             new CmdAlign(drive, limelights),
-            new InstantCommand(limelights::turnShooterLEDOff, limelights)
+            new InstantCommand(() -> limelights.turnShooterLEDOff())
         ).withTimeout(3);
     }
 
