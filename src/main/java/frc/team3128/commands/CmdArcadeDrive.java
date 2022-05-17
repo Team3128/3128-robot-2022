@@ -18,8 +18,8 @@ public class CmdArcadeDrive extends CommandBase {
 
     private SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.ARCADE_DRIVE_RATE_LIMIT);
 
-    public CmdArcadeDrive(NAR_Drivetrain drivetrain, DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle, BooleanSupplier halfSpeed) {
-        m_drivetrain = drivetrain;
+    public CmdArcadeDrive(DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle, BooleanSupplier halfSpeed) {
+        m_drivetrain = NAR_Drivetrain.getInstance();
         
         m_xSpeed = xSpeed;
         m_turn = turn;

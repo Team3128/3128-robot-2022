@@ -3,7 +3,7 @@ package frc.team3128.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.team3128.Constants.DriveConstants;
+import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
@@ -13,22 +13,22 @@ public class CmdInPlaceTurnVision extends PIDCommand {
     private LimelightSubsystem limelights;
     private double turnDeg;
 
-    public CmdInPlaceTurnVision(NAR_Drivetrain drivetrain, LimelightSubsystem limelights, double turnDeg) {
+    public CmdInPlaceTurnVision(double turnDeg) {
 
         super(
-            new PIDController(DriveConstants.TURN_kP, DriveConstants.TURN_kI, DriveConstants.TURN_kD),
-            drivetrain::getHeading,
-            MathUtil.inputModulus(drivetrain.getHeading() + turnDeg, -180, 180),
-            output -> drivetrain.tankDrive(output + Math.copySign(DriveConstants.TURN_kF, output), -output - Math.copySign(DriveConstants.TURN_kF, output)),
-            drivetrain
+            new PIDController(TURN_kP, TURN_kI, TURN_kD),
+            NAR_Drivetrain.getInstance()::getHeading,
+            MathUtil.inputModulus(NAR_Drivetrain.getInstance().getHeading() + turnDeg, -180, 180),
+            output -> NAR_Drivetrain.getInstance().tankDrive(output + Math.copySign(TURN_kF, output), -output - Math.copySign(TURN_kF, output)),
+            NAR_Drivetrain.getInstance()
         );
 
-        this.drivetrain = drivetrain;
-        this.limelights = limelights;
+        this.drivetrain = NAR_Drivetrain.getInstance();
+        this.limelights = LimelightSubsystem.getInstance();
         this.turnDeg = turnDeg;
 
         getController().enableContinuousInput(-180, 180);
-        getController().setTolerance(DriveConstants.TURN_TOLERANCE);
+        getController().setTolerance(TURN_TOLERANCE);
     }
 
     @Override
