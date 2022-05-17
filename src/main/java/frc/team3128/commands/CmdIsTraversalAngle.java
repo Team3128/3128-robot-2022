@@ -4,12 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 public class CmdIsTraversalAngle extends CommandBase{
-    private final NAR_Drivetrain m_gyro;
+    private final NAR_Drivetrain m_drive;
 
-    public CmdIsTraversalAngle(NAR_Drivetrain gyro) {
-        m_gyro = gyro;
-
-        addRequirements(gyro);
+    public CmdIsTraversalAngle() {
+        m_drive = NAR_Drivetrain.getInstance();
+        // don't require the drivetrain because we are only pulling data from the gyro
     }
 
     @Override
@@ -30,6 +29,7 @@ public class CmdIsTraversalAngle extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return m_gyro.getPitch() >= 10 && m_gyro.getPitchRate() <= -20;
+        // note that pitch is only used because the gyro is mounted on wrong rn
+        return m_drive.getPitch() >= 10 && m_drive.getPitchRate() <= -20;
     }
 }

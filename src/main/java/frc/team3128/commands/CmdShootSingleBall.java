@@ -15,10 +15,10 @@ public class CmdShootSingleBall extends CommandBase {
     private boolean prevIsReady = false;
     private boolean currIsReady;
     
-    public CmdShootSingleBall(Shooter shooter, Hood hood, LimelightSubsystem limelights) {
-        this.shooter = shooter;
-        this.limelights = limelights;
-        this.hood = hood;
+    public CmdShootSingleBall() {
+        this.shooter = Shooter.getInstance();
+        this.limelights = LimelightSubsystem.getInstance();
+        this.hood = Hood.getInstance();
 
         addRequirements(shooter, hood);
     }

@@ -1,24 +1,24 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.team3128.Constants.IntakeConstants;
+import static frc.team3128.Constants.IntakeConstants.*;
 import frc.team3128.subsystems.Intake;
 
 public class CmdExtendIntake extends WaitCommand {
     
     private Intake m_intake;
 
-    public CmdExtendIntake(Intake intake) {
+    public CmdExtendIntake() {
         super(0.125);
-        m_intake = intake;
+        m_intake = Intake.getInstance();
 
-        addRequirements(intake);
+        addRequirements(m_intake);
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        m_intake.runIntakeBack(IntakeConstants.OUTTAKE_MOTOR_POWER);
+        m_intake.runIntakeBack(OUTTAKE_MOTOR_POWER);
 
         m_intake.ejectIntake();
     }

@@ -13,10 +13,10 @@ public class CmdShootDist extends CommandBase {
     private LimelightSubsystem limelights;
     private Hood hood;
     
-    public CmdShootDist(Shooter shooter, Hood hood, LimelightSubsystem limelights) {
-        this.shooter = shooter;
-        this.limelights = limelights;
-        this.hood = hood;
+    public CmdShootDist() {
+        this.shooter = Shooter.getInstance();
+        this.limelights = LimelightSubsystem.getInstance();
+        this.hood = Hood.getInstance();
 
         addRequirements(shooter, hood, limelights);
     }

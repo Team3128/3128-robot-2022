@@ -38,9 +38,9 @@ public class CmdAlign extends CommandBase {
     private HorizontalOffsetFeedBackDriveState aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
 
 
-    public CmdAlign(NAR_Drivetrain drive, LimelightSubsystem limelights) {
-        this.drive = drive;
-        this.limelights = limelights;
+    public CmdAlign() {
+        this.drive = NAR_Drivetrain.getInstance();
+        this.limelights = LimelightSubsystem.getInstance();
         shooterLimelight = limelights.getShooterLimelight();
 
         goalHorizontalOffset = VisionConstants.TX_OFFSET;

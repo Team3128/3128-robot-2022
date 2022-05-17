@@ -10,6 +10,7 @@ import frc.team3128.Constants.VisionConstants;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.utility.Log;
+import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 public class CmdBallJoystickPursuit extends CommandBase {
@@ -18,7 +19,8 @@ public class CmdBallJoystickPursuit extends CommandBase {
         SEARCHING, FEEDBACK, BLIND;
     }
 
-    private NAR_Drivetrain m_drivetrain;
+    private NAR_Drivetrain drive;
+    private LimelightSubsystem limelights;
     private Limelight ballLimelight;
 
     private double powerMult = 0.5;
@@ -36,16 +38,17 @@ public class CmdBallJoystickPursuit extends CommandBase {
     private BallPursuitState aimState = BallPursuitState.SEARCHING;
 
     
-    public CmdBallJoystickPursuit(NAR_Drivetrain drive, Limelight ballLimelight, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier throttleSupplier) {
+    public CmdBallJoystickPursuit(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier throttleSupplier) {
         
-        m_drivetrain = drive;
-        this.ballLimelight = ballLimelight;
+        drive = NAR_Drivetrain.getInstance();
+        limelights = LimelightSubsystem.getInstance();
+        ballLimelight = limelights.getBallLimelight();
         
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.throttleSupplier = throttleSupplier;
 
-        addRequirements(m_drivetrain);
+        addRequirements(drive);
     }
 
     @Override
@@ -113,7 +116,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     //             Constants.VisionContants.BALL_DECELERATE_END_DISTANCE), 0.0), 1.0);
                     double multiplier = powerMult * 1.0;
 
-                    m_drivetrain.arcadeDrive(forwardPower * multiplier, powerMult * feedbackPower);
+                    drive.arcadeDrive(forwardPower * multiplier, powerMult * feedbackPower);
 
                     previousTime = currentTime;
                     previousError = currentError;
@@ -125,7 +128,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 double x = xSupplier.getAsDouble();
                 double y = DriveConstants.ARCADE_DRIVE_TURN_MULT * ySupplier.getAsDouble();
 
-                m_drivetrain.arcadeDrive(x * throttle, y * throttle);
+                drive.arcadeDrive(x * throttle, y * throttle);
 
 
                 if (ballLimelight.hasValidTarget()) {
@@ -144,7 +147,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_drivetrain.stop();
+        drive.stop();
 
         Log.info("CmdBallJoystickPursuit", "Command Ended.");
     }

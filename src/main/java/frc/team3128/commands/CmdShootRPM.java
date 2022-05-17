@@ -9,8 +9,8 @@ public class CmdShootRPM extends CommandBase {
     private Shooter shooter;
     private double rpm;
     
-    public CmdShootRPM(Shooter shooter, double rpm) {
-        this.shooter = shooter;
+    public CmdShootRPM(double rpm) {
+        this.shooter = Shooter.getInstance();
         this.rpm = rpm;
 
         addRequirements(shooter);

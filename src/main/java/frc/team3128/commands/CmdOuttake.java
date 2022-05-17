@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 import frc.team3128.subsystems.Intake;
-import frc.team3128.Constants;
+import static frc.team3128.Constants.IntakeConstants.*;
+import static frc.team3128.Constants.HopperConstants.*;
 import frc.team3128.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,29 +12,19 @@ public class CmdOuttake extends CommandBase{
     private double intakePower;
     private double hopperPower;
 
-    public CmdOuttake(Intake intake, Hopper hopper){
-        m_intake = intake;
-        m_hopper = hopper;
-        intakePower = Constants.IntakeConstants.OUTTAKE_MOTOR_POWER;
-        hopperPower = Constants.HopperConstants.REVERSE_HOPPER_MOTOR_POWER;
-
-        addRequirements(m_intake, m_hopper);
+    public CmdOuttake(){
+        this(OUTTAKE_MOTOR_POWER, REVERSE_HOPPER_MOTOR_POWER);
     }
 
-    public CmdOuttake(Intake intake, Hopper hopper, double power){
-        m_intake = intake;
-        m_hopper = hopper;
-        intakePower = power;
-        hopperPower = -1.0;
-
-        addRequirements(m_intake, m_hopper);
+    public CmdOuttake(double power){
+        this(power, -1.0);
     }
 
-    public CmdOuttake(Intake intake, Hopper hopper, double intakePower, double hopperPower){
-        m_intake = intake;
-        m_hopper = hopper;
+    public CmdOuttake(double intakePower, double hopperPower){
+        m_intake = Intake.getInstance();
+        m_hopper = Hopper.getInstance();
         this.intakePower = intakePower;
-        this.hopperPower = -1*hopperPower;
+        this.hopperPower = hopperPower;
 
         addRequirements(m_intake, m_hopper);
     }
