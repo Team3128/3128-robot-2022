@@ -3,7 +3,7 @@ package frc.team3128.commands;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team3128.Constants;
+import static frc.team3128.Constants.HopperConstants.*;
 import frc.team3128.subsystems.Hopper;
 
 public class CmdHopperShooting extends CommandBase {
@@ -12,11 +12,11 @@ public class CmdHopperShooting extends CommandBase {
     private BooleanSupplier isShooting;
     private double power;
 
-    public CmdHopperShooting(Hopper hopper, BooleanSupplier isShooting) {
-        this(hopper, isShooting, Constants.HopperConstants.HOPPER_MOTOR_POWER);
+    public CmdHopperShooting(BooleanSupplier isShooting) {
+        this(isShooting, HOPPER_MOTOR_POWER);
     }
-    public CmdHopperShooting(Hopper hopper, BooleanSupplier isShooting, double power) {
-        m_hopper = hopper;
+    public CmdHopperShooting(BooleanSupplier isShooting, double power) {
+        m_hopper = Hopper.getInstance();
         this.isShooting = isShooting;
         this.power = power;
 

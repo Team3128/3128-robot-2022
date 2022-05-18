@@ -10,8 +10,8 @@ public class CmdHopperDefault extends CommandBase {
     private Hopper m_hopper;
     private BooleanSupplier isShooting;
 
-    public CmdHopperDefault(Hopper hopper, BooleanSupplier isShooting) {
-        m_hopper = hopper;
+    public CmdHopperDefault(BooleanSupplier isShooting) {
+        m_hopper = Hopper.getInstance();
         this.isShooting = isShooting;
 
         addRequirements(m_hopper);

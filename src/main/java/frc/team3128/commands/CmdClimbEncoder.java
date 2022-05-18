@@ -12,8 +12,8 @@ public class CmdClimbEncoder extends CommandBase{
 
     // Bottom = 0
     // Top ~~ -7700
-    public CmdClimbEncoder(Climber climber, double distance) {
-        m_climber = climber;
+    public CmdClimbEncoder(double distance) {
+        m_climber = Climber.getInstance();
         m_distance = distance;
         addRequirements(m_climber);
     }
