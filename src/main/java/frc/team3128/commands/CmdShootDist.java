@@ -18,7 +18,7 @@ public class CmdShootDist extends CommandBase {
         this.limelights = LimelightSubsystem.getInstance();
         this.hood = Hood.getInstance();
 
-        addRequirements(shooter, hood, limelights);
+        addRequirements(shooter, hood);
     }
 
     @Override
