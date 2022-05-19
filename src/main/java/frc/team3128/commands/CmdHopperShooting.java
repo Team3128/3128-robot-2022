@@ -25,7 +25,6 @@ public class CmdHopperShooting extends CommandBase {
 
     @Override
     public void execute() {
-        // if shooting, retract gate if ejected and run the hopper
         if (isShooting.getAsBoolean()) { 
             // m_hopper.runHopper();
             m_hopper.runHopper(power);
