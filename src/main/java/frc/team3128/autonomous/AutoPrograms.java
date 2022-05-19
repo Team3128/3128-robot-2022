@@ -21,7 +21,6 @@ import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
-import frc.team3128.commands.CmdHopperShooting;
 import frc.team3128.commands.CmdInPlaceTurn;
 import frc.team3128.commands.CmdInPlaceTurnVision;
 import frc.team3128.commands.CmdRetractHopper;
@@ -350,7 +349,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new CmdHopperShooting(shooter::isReady, 0.6),
+                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
                 new CmdShootSingleBall()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff()),
@@ -376,7 +375,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new CmdHopperShooting(shooter::isReady, 0.6),
+                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
                 new CmdShootSingleBall()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff())
@@ -397,7 +396,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new CmdHopperShooting(shooter::isReady, 0.6),
+                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
                 new CmdShootSingleBall()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff()),
@@ -474,7 +473,7 @@ public class AutoPrograms {
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
-                new CmdHopperShooting(shooter::isReady),
+                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
                 new CmdShootDist()
             ).withTimeout(2)
         );
@@ -490,7 +489,7 @@ public class AutoPrograms {
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new InstantCommand(() -> hood.startPID(angle)),
-                new CmdHopperShooting(shooter::isReady),
+                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
                 new CmdShootRPM(RPM)
             ).withTimeout(2)
         );
@@ -503,7 +502,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new CmdHopperShooting(shooter::isReady),
+                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
                 new CmdShootDist()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff())

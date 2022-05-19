@@ -95,7 +95,6 @@ public class RobotContainer {
         isShooting = new Trigger(m_shooter::isReady);
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
-        //m_commandScheduler.setDefaultCommand(m_hopper, new CmdHopperDefault(m_hopper, m_shooter::isReady)); //TODO: make input into this good method ???
 
         autos = new AutoPrograms();
         initDashboard();
