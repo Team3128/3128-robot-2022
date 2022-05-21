@@ -4,9 +4,9 @@
       "visible": true
     }
   },
-  "System Joysticks": {
+  "Keyboard 1 Settings": {
     "window": {
-      "visible": false
+      "visible": true
     }
   },
   "keyboardJoysticks": [
@@ -67,7 +67,7 @@
         46,
         47
       ],
-      "povCount": 0
+      "povCount": 1
     },
     {
       "axisConfig": [
@@ -99,7 +99,9 @@
     }
   ],
   "robotJoysticks": [
-    {},
+    {
+      "guid": "Keyboard1"
+    },
     {
       "guid": "Keyboard0"
     }

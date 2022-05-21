@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
@@ -92,7 +94,7 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        isShooting = new Trigger(m_shooter::isReady);
+        isShooting = new Trigger(m_shooter::isReady).and(new Trigger(() -> m_shooter.getSetpoint() != 0));
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
 
@@ -117,7 +119,7 @@ public class RobotContainer {
                         new ParallelCommandGroup(
                             // new RunCommand(m_intake::runIntake, m_intake),
                             new CmdAlign(), 
-                            new InstantCommand(() -> m_hopper.runHopper(-0.1), m_hopper),
+                            new InstantCommand(() -> m_hopper.runHopper(-0.1)),
                             new CmdShootDist())))
                         .whenReleased(new ParallelCommandGroup(
                             new InstantCommand(m_shooter::stopShoot, m_shooter),
@@ -130,7 +132,7 @@ public class RobotContainer {
         //                 new ParallelCommandGroup(
         //                     new InstantCommand(() -> m_hood.startPID(12)), 
         //                     new CmdShootRPM(2700), 
-        //                     new InstantCommand(() -> m_hopper.runHopper(-0.1), m_hopper)
+        //                     new InstantCommand(() -> m_hopper.runHopper(-0.1))
         //                 .whenReleased(new ParallelCommandGroup(
         //                     new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
@@ -148,7 +150,7 @@ public class RobotContainer {
                     new InstantCommand(() -> m_shooter.setState(ShooterState.LOWERHUB)),
                     new ParallelCommandGroup(
                         new RunCommand(m_drive::stop, m_drive),
-                        new InstantCommand(() -> m_hopper.runHopper(-0.1), m_hopper),
+                        new InstantCommand(() -> m_hopper.runHopper(-0.1)),
                         new InstantCommand(() -> m_hood.startPID(28)),
                         new CmdShootRPM(1200))))
                     .whenReleased(new ParallelCommandGroup(
@@ -160,7 +162,7 @@ public class RobotContainer {
                                                 new ParallelCommandGroup(
                                                         new InstantCommand(() -> m_hood.startPID(7)),
                                                         new CmdShootRPM(2800), 
-                                                        new InstantCommand(() -> m_hopper.runHopper(-0.1), m_hopper))))
+                                                        new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
                                     .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
@@ -194,7 +196,7 @@ public class RobotContainer {
                             new ParallelCommandGroup(
                                     new InstantCommand(() -> m_hood.startPID(ConstantsInt.ShooterConstants.SET_ANGLE)),
                                     new CmdShootRPM(2800), 
-                                    new InstantCommand(() -> m_hopper.runHopper(-0.1), m_hopper))))
+                                    new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
                 .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        

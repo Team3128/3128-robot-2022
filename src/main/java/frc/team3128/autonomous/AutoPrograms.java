@@ -349,7 +349,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
+                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff()),
@@ -375,7 +375,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
+                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff())
@@ -396,7 +396,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
+                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff()),
@@ -473,7 +473,7 @@ public class AutoPrograms {
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
-                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
+                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
             ).withTimeout(2)
         );
@@ -489,7 +489,7 @@ public class AutoPrograms {
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new InstantCommand(() -> hood.startPID(angle)),
-                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
+                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootRPM(RPM)
             ).withTimeout(2)
         );
@@ -502,7 +502,7 @@ public class AutoPrograms {
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1), hopper),
+                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
             ).withTimeout(2),
             new InstantCommand(() -> limelights.turnShooterLEDOff())

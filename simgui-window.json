@@ -13,8 +13,18 @@
   "Window": {
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "249,40",
-      "Size": "1525,840"
+      "Pos": "532,45",
+      "Size": "941,571"
+    },
+    "###/SmartDashboard/Hopper": {
+      "Collapsed": "0",
+      "Pos": "255,86",
+      "Size": "178,98"
+    },
+    "###/SmartDashboard/Shooter": {
+      "Collapsed": "0",
+      "Pos": "253,195",
+      "Size": "178,98"
     },
     "###FMS": {
       "Collapsed": "0",
@@ -23,33 +33,33 @@
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "242,869",
+      "Pos": "119,729",
       "Size": "976,179"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
-      "Pos": "1652,66",
+      "Pos": "1533,86",
       "Size": "300,560"
     },
     "###Keyboard 1 Settings": {
       "Collapsed": "0",
-      "Pos": "320,50",
+      "Pos": "1210,90",
       "Size": "300,560"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "1254,929",
+      "Pos": "1140,696",
       "Size": "750,185"
     },
     "###Other Devices": {
       "Collapsed": "0",
-      "Pos": "1551,42",
+      "Pos": "1497,31",
       "Size": "250,695"
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "590,436",
-      "Size": "192,218"
+      "Pos": "93,294",
+      "Size": "232,254"
     },
     "###Timing": {
       "Collapsed": "0",
