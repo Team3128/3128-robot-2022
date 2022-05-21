@@ -489,7 +489,7 @@ public class AutoPrograms {
             new CmdRetractHopper().withTimeout(0.5),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
-                new InstantCommand(() -> hood.startPID(angle)),
+                new InstantCommand(() -> hood.startPID(angle), hood),
                 new CmdHopperShooting(shooter::isReady),
                 new CmdShootRPM(RPM)
             ).withTimeout(2)
