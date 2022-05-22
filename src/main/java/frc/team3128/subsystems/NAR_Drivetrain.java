@@ -1,6 +1,5 @@
 package frc.team3128.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.kauailabs.navx.frc.AHRS;
@@ -59,21 +58,17 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightFollower.setSafetyEnabled(false);
 
         // set CAN status frame periods
-        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
-        leftFollower.setControlFramePeriod(ControlFrame.Control_3_General, 45);
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
-        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
-        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
-        rightFollower.setControlFramePeriod(ControlFrame.Control_3_General, 45);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
 
         leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
         leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
-        leftLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
         
         rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
         rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
-        rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
 
 
         robotDrive = new DifferentialDrive(

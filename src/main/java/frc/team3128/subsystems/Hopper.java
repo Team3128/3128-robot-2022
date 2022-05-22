@@ -1,6 +1,5 @@
 package frc.team3128.subsystems; 
 
-import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
@@ -39,11 +38,9 @@ public class Hopper extends SubsystemBase {
         // set CAN status frame periods
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
-        m_hopper1.setControlFramePeriod(ControlFrame.Control_3_General, 20);
 
         m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
-        m_hopper2.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
 
     private void configEncoders() {

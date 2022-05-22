@@ -1,5 +1,4 @@
 package frc.team3128.subsystems;
-import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -37,7 +36,6 @@ public class Intake extends SubsystemBase {
         // set CAN status frame periods
         m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
-        m_intake.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
     private void configPneumatics() {
         m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_SOLENOID_FORWARD_CHANNEL_ID, INTAKE_SOLENOID_BACKWARD_CHANNEL_ID);
