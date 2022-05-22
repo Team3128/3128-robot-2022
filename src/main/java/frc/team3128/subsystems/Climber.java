@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
+import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
@@ -58,9 +59,11 @@ public class Climber extends SubsystemBase {
 
         m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
+        m_leftMotor.setControlFramePeriod(ControlFrame.Control_3_General, 20);
 
-        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
-        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+        m_rightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        m_rightMotor.setControlFramePeriod(ControlFrame.Control_3_General, 45);
 
     }
     
