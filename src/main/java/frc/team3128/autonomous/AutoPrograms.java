@@ -351,7 +351,7 @@ public class AutoPrograms {
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2),
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
             new InstantCommand(() -> limelights.turnShooterLEDOff()),
             
             trajectoryCmd("S1H1_ii"),
@@ -377,7 +377,7 @@ public class AutoPrograms {
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2),
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
             new InstantCommand(() -> limelights.turnShooterLEDOff())
         );
 
@@ -398,7 +398,7 @@ public class AutoPrograms {
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2),
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
             new InstantCommand(() -> limelights.turnShooterLEDOff()),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
@@ -475,7 +475,7 @@ public class AutoPrograms {
             new ParallelCommandGroup(
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
-            ).withTimeout(2)
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
         );
     }
     
@@ -491,7 +491,7 @@ public class AutoPrograms {
                 new InstantCommand(() -> hood.startPID(angle)),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootRPM(RPM)
-            ).withTimeout(2)
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
         );
     }
 
@@ -504,7 +504,7 @@ public class AutoPrograms {
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
-            ).withTimeout(2),
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
             new InstantCommand(() -> limelights.turnShooterLEDOff())
         );
     }

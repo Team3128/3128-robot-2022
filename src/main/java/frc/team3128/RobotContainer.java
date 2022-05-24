@@ -123,6 +123,7 @@ public class RobotContainer {
                             new CmdShootDist())))
                         .whenReleased(new ParallelCommandGroup(
                             new InstantCommand(m_shooter::stopShoot, m_shooter),
+                            new InstantCommand(m_hopper::stopHopper, m_hopper),
                             new InstantCommand(() -> m_ll.turnShooterLEDOff())));
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
@@ -155,6 +156,7 @@ public class RobotContainer {
                         new CmdShootRPM(1200))))
                     .whenReleased(new ParallelCommandGroup(
                         new InstantCommand(m_shooter::stopShoot, m_shooter),
+                        new InstantCommand(m_hopper::stopHopper, m_hopper),
                         new InstantCommand(() -> m_ll.turnShooterLEDOff())));
 
         m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(
@@ -163,7 +165,9 @@ public class RobotContainer {
                                                         new InstantCommand(() -> m_hood.startPID(7)),
                                                         new CmdShootRPM(2800), 
                                                         new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
-                                    .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
+                                    .whenReleased(new ParallelCommandGroup(
+                                        new InstantCommand(m_shooter::stopShoot, m_shooter), 
+                                        new InstantCommand(m_hopper::stopHopper, m_hopper)));
 
         m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
       
@@ -197,7 +201,9 @@ public class RobotContainer {
                                     new InstantCommand(() -> m_hood.startPID(ConstantsInt.ShooterConstants.SET_ANGLE)),
                                     new CmdShootRPM(2800), 
                                     new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
-                .whenReleased(new ParallelCommandGroup(new InstantCommand(m_shooter::stopShoot, m_shooter)));
+                .whenReleased(new ParallelCommandGroup(
+                    new InstantCommand(m_shooter::stopShoot, m_shooter), 
+                    new InstantCommand(m_hopper::stopHopper, m_hopper)));
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
@@ -295,6 +301,8 @@ public class RobotContainer {
         SmartDashboard.putNumber("Hood angle", m_hood.getMeasurement());
 
         SmartDashboard.putString("Intake state:", m_intake.getSolenoid());
+        SmartDashboard.putBoolean("isReady", m_shooter.isReady());
+        SmartDashboard.putBoolean("isShooting Trigger", isShooting.getAsBoolean());
     }
 
     public void initPneumatics() {

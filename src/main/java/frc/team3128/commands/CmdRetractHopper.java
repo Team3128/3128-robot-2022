@@ -9,7 +9,7 @@ public class CmdRetractHopper extends CommandBase {
 
     public CmdRetractHopper() {
         m_hopper = Hopper.getInstance();
-        addRequirements(m_hopper); 
+        // addRequirements(m_hopper); 
     }
 
     @Override
