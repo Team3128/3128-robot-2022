@@ -32,6 +32,7 @@ public class Intake extends SubsystemBase {
 
     private void configMotors () {
         m_intake = new NAR_TalonSRX(INTAKE_MOTOR_ID);
+        m_intake.setInverted(true);
 
         // set CAN status frame periods
         m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
@@ -46,7 +47,7 @@ public class Intake extends SubsystemBase {
         m_intake.set(ControlMode.PercentOutput, INTAKE_MOTOR_POWER);
     }
 
-    public void runIntakeBack(double power){
+    public void runIntake(double power) {
         m_intake.set(ControlMode.PercentOutput, power);
     }
 
