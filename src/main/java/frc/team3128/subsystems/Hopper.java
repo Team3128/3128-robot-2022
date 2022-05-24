@@ -3,12 +3,10 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
 import static frc.team3128.Constants.HopperConstants.*;
 
 public class Hopper extends SubsystemBase {
@@ -16,13 +14,12 @@ public class Hopper extends SubsystemBase {
     private static Hopper instance;
 
     private NAR_TalonSRX m_hopper1, m_hopper2;
-    //private DoubleSolenoid m_hopperSolenoid;
+
     private Encoder m_encoder;
 
     public Hopper() {
         configMotors();
         configEncoders();
-        // resetEncoder();
     }
 
     public static synchronized Hopper getInstance() {
@@ -45,20 +42,12 @@ public class Hopper extends SubsystemBase {
 
     private void configEncoders() {
         m_encoder = new Encoder(HOPPER_DIO_PIN1, HOPPER_DIO_PIN2);
-        // m_encoder.setDistancePerPulse(2.5*Math.PI);
         m_encoder.setReverseDirection(true);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
-    }
-
-    /**
-     * @return true if hopper has reversed to desired distance, false if retracted
-     */
-    public boolean isReversed() {
-        return m_encoder.getDistance() <= HOPPER_MAX_REVERSE_DISTANCE;
     }
 
     /**
@@ -75,7 +64,6 @@ public class Hopper extends SubsystemBase {
     }
 
     public void reverseHopper(double power) {
-        m_encoder.reset();
         m_hopper1.set(power);
     }
 
@@ -87,8 +75,12 @@ public class Hopper extends SubsystemBase {
         m_hopper2.set(0);
     }
 
-    public void resetMotorEncoder(){
-        m_hopper1.setSelectedSensorPosition(0);
+    public void resetEncoder(){
+        m_encoder.reset();
+    }
+    
+    public double getHopperDistance() {
+        return m_encoder.getDistance();
     }
 
     public void setNeutralMode(NeutralMode mode) {

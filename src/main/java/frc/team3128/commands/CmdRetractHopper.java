@@ -14,7 +14,7 @@ public class CmdRetractHopper extends CommandBase {
 
     @Override
     public void initialize() {
-        // m_hopper.resetEncoder();
+        m_hopper.resetEncoder();
         m_hopper.reverseHopper(REVERSE_HOPPER_MOTOR_POWER);
     }
 
@@ -29,6 +29,6 @@ public class CmdRetractHopper extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_hopper.isReversed();
+        return m_hopper.getHopperDistance() <= HOPPER_MAX_REVERSE_DISTANCE;
     }
 }
