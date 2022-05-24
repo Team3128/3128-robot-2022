@@ -162,7 +162,7 @@ public class RobotContainer {
         m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(
                                                 new CmdRetractHopper().withTimeout(0.5), 
                                                 new ParallelCommandGroup(
-                                                        new InstantCommand(() -> m_hood.startPID(7)),
+                                                        new InstantCommand(() -> m_hood.startPID(7), m_hood),
                                                         new CmdShootRPM(2800), 
                                                         new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
                                     .whenReleased(new ParallelCommandGroup(
