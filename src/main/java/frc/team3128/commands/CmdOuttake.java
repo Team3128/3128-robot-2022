@@ -17,7 +17,7 @@ public class CmdOuttake extends CommandBase{
     }
 
     public CmdOuttake(double power){
-        this(power, -1.0);
+        this(-power, -1.0);
     }
 
     public CmdOuttake(double intakePower, double hopperPower){
@@ -31,7 +31,7 @@ public class CmdOuttake extends CommandBase{
 
     @Override
     public void initialize() {
-        m_intake.runIntakeBack(intakePower);
+        m_intake.runIntake(intakePower);
         m_hopper.reverseHopper(hopperPower);
     }
 
