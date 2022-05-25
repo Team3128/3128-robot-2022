@@ -38,10 +38,17 @@ public class CmdInPlaceTurnVision extends PIDCommand {
         // Hack to make sure the robot turns 180 degrees from current heading and not 180 degrees from 0
         double setpoint = MathUtil.inputModulus(drivetrain.getHeading() + turnDeg, -180, 180);
         m_setpoint = () ->  setpoint;
+        limelights.turnShooterLEDOn();
     }
 
+    @Override
     public boolean isFinished() {
         return getController().atSetpoint() || limelights.getShooterLimelight().hasValidTarget();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        limelights.turnShooterLEDOff();
     }
 
 }

@@ -253,8 +253,6 @@ public class Constants {
 
         public static final String TOP_HOSTNAME = "limelight-cog";
 
-        public static final int SAMPLE_RATE = 5;
-
         public static final double TOP_CAMERA_ANGLE = (90 - 42.71) * Math.PI / 180; // radians
         public static final double TOP_CAMERA_HEIGHT = 23.5; // in 
         public static final double TOP_FRONT_DIST = 0;

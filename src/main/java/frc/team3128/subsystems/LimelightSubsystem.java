@@ -45,14 +45,14 @@ public class LimelightSubsystem extends SubsystemBase{
      * Wrapper function to get shooter horizontal offset (tx) to target
      */
     public double getShooterTX() {
-        return m_shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
+        return m_shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET);
     }
 
     /**
      * Wrapper function to get shooter vertical offset (ty) to target
      */
     public double getShooterTY() {
-        return m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, SAMPLE_RATE);
+        return m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET);
     }
 
     /**
@@ -66,14 +66,14 @@ public class LimelightSubsystem extends SubsystemBase{
      * Wrapper function to get ball horizontal offset (tx) to target
      */
     public double getBallTX() {
-        return m_ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
+        return m_ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET);
     }
 
     /**
      * Wrapper function to get ball vertical offset (ty) to target
      */
     public double getBallTY() {
-        return m_ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, SAMPLE_RATE);
+        return m_ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET);
     }
 
     /**

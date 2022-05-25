@@ -286,7 +286,8 @@ public class RobotContainer {
         // Post miscellaneous other debug data to Smartdash
 
         SmartDashboard.putNumber("range", m_ll.calculateShooterDistance());
-        SmartDashboard.putNumber("ty", m_ll.getShooterLimelight().getValue(LimelightKey.VERTICAL_OFFSET, 3));
+        SmartDashboard.putNumber("ty", m_ll.getShooterLimelight().getValue(LimelightKey.VERTICAL_OFFSET));
+        SmartDashboard.putNumber("tx", m_ll.getShooterLimelight().getValue(LimelightKey.HORIZONTAL_OFFSET));
 
         SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());

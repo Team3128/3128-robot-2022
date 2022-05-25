@@ -15,6 +15,7 @@ import frc.team3128.Constants;
 
 /**
  * Store trajectories for autonomous. Edit points here. 
+ * @author Daniel Wang
  */
 public class Trajectories {
     private static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(

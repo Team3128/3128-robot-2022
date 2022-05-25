@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team3128.Constants.*;
 import static frc.team3128.Constants.HoodConstants.*;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.commands.CmdAlign;
@@ -40,6 +39,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+/**
+ * Class to store information about autonomous routines.
+ * @author Daniel Wang
+ */
 
 public class AutoPrograms {
 
@@ -346,13 +350,11 @@ public class AutoPrograms {
             
             new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
             ).withTimeout(2).andThen(hopper::stopHopper, hopper),
-            new InstantCommand(() -> limelights.turnShooterLEDOff()),
             
             trajectoryCmd("S1H1_ii"),
             new CmdExtendIntake(),
@@ -372,13 +374,11 @@ public class AutoPrograms {
             
             new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
-            new InstantCommand(() -> limelights.turnShooterLEDOff())
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
         );
 
         auto_S1H2 = new SequentialCommandGroup(
@@ -393,13 +393,11 @@ public class AutoPrograms {
             
             new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
             ).withTimeout(2).andThen(hopper::stopHopper, hopper),
-            new InstantCommand(() -> limelights.turnShooterLEDOff()),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
@@ -471,7 +469,6 @@ public class AutoPrograms {
         return new SequentialCommandGroup(
             new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
@@ -499,34 +496,29 @@ public class AutoPrograms {
         return new SequentialCommandGroup(
             new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
-            new InstantCommand(() -> limelights.turnShooterLEDOff())
+            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
         );
     }
 
     private Command turnLeftToAligned() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new CmdInPlaceTurnVision(170),
-            new CmdAlign(),
-            new InstantCommand(() -> limelights.turnShooterLEDOff())
-        );
+            new CmdAlign());
     }
 
     private Command turnRightToAligned() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new CmdInPlaceTurnVision(-170),
-            new CmdAlign(),
-            new InstantCommand(() -> limelights.turnShooterLEDOff())
-        ).withTimeout(3);
+            new CmdAlign()).withTimeout(3);
     }
 
+    /**
+     * pose is the same translation but flipped 180 rotation
+     */
     private Pose2d inverseRotation(Pose2d pose) {
         return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
     }
