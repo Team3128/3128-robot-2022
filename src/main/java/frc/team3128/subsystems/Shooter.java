@@ -16,7 +16,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
 import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import frc.team3128.common.utility.Log;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
@@ -85,7 +84,7 @@ public class Shooter extends NAR_PIDSubsystem {
         m_leftShooter.setInverted(false);
         m_rightShooter.setInverted(true);
 
-        m_rightShooter.follow((NAR_EMotor) m_leftShooter);
+        m_rightShooter.follow(m_leftShooter);
 
         // set CAN status frame periods
         m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);

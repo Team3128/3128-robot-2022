@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.ClimberConstants.*;
 import static frc.team3128.Constants.ConversionConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class Climber extends SubsystemBase {
     
@@ -52,7 +51,7 @@ public class Climber extends SubsystemBase {
 
         m_leftMotor.setInverted(true);
         // right follows left - left is the one we use for encoder/distance calculations
-        m_rightMotor.follow((NAR_EMotor)m_leftMotor); 
+        m_rightMotor.follow(m_leftMotor); 
         m_rightMotor.setInverted(InvertType.OpposeMaster);
         
         m_leftMotor.setNeutralMode(CLIMBER_NEUTRAL_MODE);
