@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.ClimberConstants.*;
 import static frc.team3128.Constants.ConversionConstants.*;
+import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 
 public class Climber extends SubsystemBase {
