@@ -25,7 +25,7 @@ public class CmdShootRPM extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         shooter.stopShoot();
-        Log.info("command shoot", "im cancelling");
+        Log.info("CmdShootRPM", "Cancelling shooting");
     }
     
     @Override

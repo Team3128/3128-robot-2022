@@ -3,6 +3,8 @@ package frc.team3128.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
+import frc.team3128.common.hardware.limelight.LimelightKey;
+
 import static frc.team3128.Constants.VisionConstants.*;
 
 public class LimelightSubsystem extends SubsystemBase{
@@ -24,18 +26,61 @@ public class LimelightSubsystem extends SubsystemBase{
     }
 
     /**
-     * Wrapper function to uniformly calculate distance to a target using a limelight
-     * @param limelight - name of limelight, "shooter" or "ball"
+     * Wrapper function to uniformly calculate distance to a elevated target using a limelight
+     * For use: extra calculations outside of the base one should happen
+     * in this function (eg: interpolation to get accurate distance)
      */
-    public double calculateDistance(String limelight) {
-        if (limelight.equalsIgnoreCase("shooter")) {
-            return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT);
-        }
-        else if (limelight.equalsIgnoreCase("ball")) {
-            // target height is for center of ball
-            return m_ballLimelight.calculateDistToGroundTarget(BALL_TARGET_HEIGHT / 2);
-        }
-        return -1;
+    public double calculateShooterDistance() {
+        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT);
+    }
+
+    /**
+     * Wrapper function to uniformly calculate distance to a ground target using a limelight
+     */
+    public double calculateBallDistance() {
+        return m_ballLimelight.calculateDistToGroundTarget(BALL_TARGET_HEIGHT / 2);
+    }
+
+    /**
+     * Wrapper function to get shooter horizontal offset (tx) to target
+     */
+    public double getShooterTX() {
+        return m_shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
+    }
+
+    /**
+     * Wrapper function to get shooter vertical offset (ty) to target
+     */
+    public double getShooterTY() {
+        return m_shooterLimelight.getValue(LimelightKey.VERTICAL_OFFSET, SAMPLE_RATE);
+    }
+
+    /**
+     * Wrapper function to get if the shooter has a valid target
+     */
+    public boolean getShooterHasValidTarget() {
+        return m_shooterLimelight.hasValidTarget();
+    }
+
+    /**
+     * Wrapper function to get ball horizontal offset (tx) to target
+     */
+    public double getBallTX() {
+        return m_ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
+    }
+
+    /**
+     * Wrapper function to get ball vertical offset (ty) to target
+     */
+    public double getBallTY() {
+        return m_ballLimelight.getValue(LimelightKey.VERTICAL_OFFSET, SAMPLE_RATE);
+    }
+
+    /**
+     * Wrapper function to get if the ball has a valid target
+     */
+    public boolean getBallHasValidTarget() {
+        return m_ballLimelight.hasValidTarget();
     }
 
     public Limelight getShooterLimelight() {

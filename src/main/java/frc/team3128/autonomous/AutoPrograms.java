@@ -344,7 +344,7 @@ public class AutoPrograms {
 
             new CmdInPlaceTurn(180),
             
-            new CmdRetractHopper().withTimeout(0.5),
+            new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
@@ -370,7 +370,7 @@ public class AutoPrograms {
 
             new CmdInPlaceTurn(180),
             
-            new CmdRetractHopper().withTimeout(0.5),
+            new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
@@ -391,7 +391,7 @@ public class AutoPrograms {
 
             new CmdInPlaceTurn(180),
             
-            new CmdRetractHopper().withTimeout(0.5),
+            new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
@@ -469,7 +469,7 @@ public class AutoPrograms {
 
     private SequentialCommandGroup shootCmd() {
         return new SequentialCommandGroup(
-            new CmdRetractHopper().withTimeout(0.5),
+            new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(
@@ -485,7 +485,7 @@ public class AutoPrograms {
 
     private SequentialCommandGroup shootCmd(int RPM, double angle) {
         return new SequentialCommandGroup(
-            new CmdRetractHopper().withTimeout(0.5),
+            new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new InstantCommand(() -> hood.startPID(angle)),
@@ -497,7 +497,7 @@ public class AutoPrograms {
 
     private SequentialCommandGroup alignShootCmd() {
         return new SequentialCommandGroup(
-            new CmdRetractHopper().withTimeout(0.5),
+            new CmdRetractHopper(),
             new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new InstantCommand(() -> limelights.turnShooterLEDOn()),
             new ParallelCommandGroup(

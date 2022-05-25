@@ -2,7 +2,6 @@ package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.team3128.Constants.ClimberConstants.*;
-import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Climber;
 
 public class CmdClimbEncoder extends CommandBase{

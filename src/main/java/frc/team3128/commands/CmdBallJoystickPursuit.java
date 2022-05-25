@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.Constants.DriveConstants;
 import static frc.team3128.Constants.VisionConstants.*;
-import frc.team3128.common.hardware.limelight.Limelight;
-import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
@@ -21,13 +19,13 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
     private NAR_Drivetrain drive;
     private LimelightSubsystem limelights;
-    private Limelight ballLimelight;
 
     private double previousVerticalAngle;
     private double approxDistance;
 
     private double currentError, previousError;
     private double currentTime, previousTime;
+    private double currentHorizontalOffset;
 
     private DoubleSupplier xSupplier, ySupplier, throttleSupplier;
 
@@ -40,7 +38,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
         
         drive = NAR_Drivetrain.getInstance();
         limelights = LimelightSubsystem.getInstance();
-        ballLimelight = limelights.getBallLimelight();
         
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
@@ -58,7 +55,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
     public void execute() {
         switch (aimState) {
             case SEARCHING:
-                if (ballLimelight.hasValidTarget()) {
+                if (limelights.getBallHasValidTarget()) {
                     targetCount++;
                 } else {
                     targetCount = 0;
@@ -69,7 +66,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 if (targetCount > BALL_THRESHOLD) {
                     Log.info("CmdBallJoystickPursuit", "Target found, switching to FEEDBACK.");
                     
-                    double currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
+                    currentHorizontalOffset = limelights.getBallTX();
 
                     previousTime = RobotController.getFPGATime() / 1e6; 
                     previousError = GOAL_HORIZONTAL_OFFSET - currentHorizontalOffset;
@@ -80,12 +77,12 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 break;
             
             case FEEDBACK:
-                if (!ballLimelight.hasValidTarget()) {
+                if (!limelights.getBallHasValidTarget()) {
                     Log.info("CmdBallJoystickPursuit", "No valid target anymore.");
                     aimState = BallPursuitState.SEARCHING;
                 } 
                 else {
-                    double currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
+                    currentHorizontalOffset = limelights.getBallTX();
 
                     currentTime = RobotController.getFPGATime() / 1e6; 
                     currentError = currentHorizontalOffset;
@@ -105,7 +102,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     
                     // calculations to decelerate as the robot nears the target
 
-                    // approxDistance = ballLimelight.calculateDistToGroundTarget(BALL_TARGET_HEIGHT / 2);
+                    // approxDistance = limelights.calculateBallDistance();
                     // multiplier = 1.0 - Math.min(Math.max((BALL_DECELERATE_START_DISTANCE - approxDistance)
                     //         / (BALL_DECELERATE_START_DISTANCE - 
                     //             BALL_DECELERATE_END_DISTANCE), 0.0), 1.0);
@@ -126,7 +123,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
                 drive.arcadeDrive(x * throttle, y * throttle);
 
-                if (ballLimelight.hasValidTarget()) {
+                if (limelights.getBallHasValidTarget()) {
                     Log.info("CmdBallJoystickPursuit", "Target found - Switching to SEARCHING");
                     aimState = BallPursuitState.SEARCHING;
                 }

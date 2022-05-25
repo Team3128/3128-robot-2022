@@ -1,8 +1,6 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team3128.Constants.VisionConstants;
-import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.LimelightSubsystem;
@@ -28,9 +26,9 @@ public class CmdShootDist extends CommandBase {
     
     @Override
     public void execute() {
-        double dist = limelights.calculateDistance("shooter");
+        double dist = limelights.calculateShooterDistance();
         shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
-        hood.startPID(hood.calculateAngleFromDistance(dist));
+        hood.startPID(hood.calculateAngleFromDist(dist));
     }
     
     @Override

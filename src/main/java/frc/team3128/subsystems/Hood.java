@@ -116,10 +116,10 @@ public class Hood extends NAR_PIDSubsystem {
         return m_hoodMotor.getSelectedSensorPosition() + MIN_ANGLE;
     }
 
-    public double calculateAngleFromDistance(double dist) {
-        // double yay = 7.62717674e-8*dist*dist*dist*dist - 3.20341423e-5*dist*dist*dist + 5.01101227e-3*dist*dist - 2.624432553e-0*dist + 2.20193191e1;
-
-        return MathUtil.clamp(hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, MIN_ANGLE, MAX_ANGLE);
+    public double calculateAngleFromDist(double dist) {
+        return MathUtil.clamp(
+            hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, 
+            MIN_ANGLE, MAX_ANGLE);
     }
 }
 

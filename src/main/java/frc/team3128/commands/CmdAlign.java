@@ -1,17 +1,10 @@
 package frc.team3128.commands;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import static frc.team3128.Constants.VisionConstants.*;
-import frc.team3128.common.hardware.limelight.LEDMode;
-import frc.team3128.common.hardware.limelight.Limelight;
-import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
@@ -24,8 +17,6 @@ public class CmdAlign extends CommandBase {
 
     private NAR_Drivetrain drive;
     private LimelightSubsystem limelights;
-    private Limelight shooterLimelight;
-    private Set<Subsystem> requirements;
 
     private double txThreshold = TX_THRESHOLD;
     private double goalHorizontalOffset, currHorizontalOffset;
@@ -41,7 +32,6 @@ public class CmdAlign extends CommandBase {
     public CmdAlign() {
         this.drive = NAR_Drivetrain.getInstance();
         this.limelights = LimelightSubsystem.getInstance();
-        shooterLimelight = limelights.getShooterLimelight();
 
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
@@ -61,25 +51,25 @@ public class CmdAlign extends CommandBase {
         currTime = RobotController.getFPGATime() / 1e6;
         switch (aimState) {
             case SEARCHING:
-                if(shooterLimelight.hasValidTarget())
+                if(limelights.getShooterHasValidTarget())
                     targetFoundCount++;
                 else
                     targetFoundCount = 0;
                 if(targetFoundCount > 5) {
-                    currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
+                    currHorizontalOffset = limelights.getShooterTX();
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
                 }
                 break;
             
             case FEEDBACK:
-                if(!shooterLimelight.hasValidTarget()) {
+                if(!limelights.getShooterHasValidTarget()) {
                     aimState = VisionState.SEARCHING;
                     plateauCount = 0;
                     break;
                 }
 
-                currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
+                currHorizontalOffset = limelights.getShooterTX();
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
 
                 double ff = Math.signum(currError) * VISION_PID_kF;
