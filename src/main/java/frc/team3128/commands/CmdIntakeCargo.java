@@ -23,6 +23,11 @@ public class CmdIntakeCargo extends CommandBase{
     }
 
     @Override
+    public void execute() {
+        // nothing in execute because runIntake() and runHopper() just set speeds - nothing is updated in command
+    }
+
+    @Override
     public void end(boolean interrupted){
         m_intake.retractIntake();
         m_intake.stopIntake();

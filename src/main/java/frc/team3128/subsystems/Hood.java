@@ -27,19 +27,19 @@ public class Hood extends NAR_PIDSubsystem {
 
     private double time;
     private double prevTime;
+    
+    public Hood() {
+        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
+
+        configMotors();
+        configEncoder();
+    }
 
     public static synchronized Hood getInstance() {
         if(instance == null) {
             instance = new Hood();
         }
         return instance;
-    }
-
-    public Hood() {
-        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
-
-        configMotors();
-        configEncoder();
     }
 
     private void configMotors() {

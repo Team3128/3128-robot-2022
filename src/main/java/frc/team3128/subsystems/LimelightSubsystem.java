@@ -29,8 +29,7 @@ public class LimelightSubsystem extends SubsystemBase{
      */
     public double calculateDistance(String limelight) {
         if (limelight.equalsIgnoreCase("shooter")) {
-            // for now, 5 is offset from front of hub to retroreflective tape - will fix later
-            return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT) + 5;
+            return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT);
         }
         else if (limelight.equalsIgnoreCase("ball")) {
             // target height is for center of ball

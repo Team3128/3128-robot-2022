@@ -6,7 +6,7 @@ public class CmdExtendIntakeAndRun extends SequentialCommandGroup{
 
     public CmdExtendIntakeAndRun(){
         addCommands(
-            new CmdExtendIntake().withTimeout(0.125),
+            new CmdExtendIntake(),
             new CmdIntakeCargo()
         );
     }

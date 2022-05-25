@@ -39,12 +39,42 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDrivetrainSim robotDriveSim;
     private DifferentialDriveOdometry odometry;
 
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
     
     public NAR_Drivetrain(){
+        
+        configMotors();
 
+        robotDrive = new DifferentialDrive(
+            new MotorControllerGroup(leftLeader, leftFollower),
+            new MotorControllerGroup(rightLeader, rightFollower));
+
+        if(RobotBase.isSimulation()){
+            robotDriveSim = new DifferentialDrivetrainSim(
+                DRIVE_CHAR,
+                GEARBOX,
+                DRIVE_GEARING,
+                TRACK_WIDTH_METERS,
+                WHEEL_RADIUS_METERS, 
+                null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
+        }
+
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        field = new Field2d();
+
+        resetEncoders();
+    }
+
+    public static synchronized NAR_Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new NAR_Drivetrain();
+        }
+        return instance;
+    }
+
+    public void configMotors() {
         leftFollower.follow((NAR_EMotor)leftLeader);
         rightFollower.follow((NAR_EMotor)rightLeader);
         
@@ -74,33 +104,6 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
         rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
         rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
-
-
-        robotDrive = new DifferentialDrive(
-            new MotorControllerGroup(leftLeader, leftFollower),
-            new MotorControllerGroup(rightLeader, rightFollower));
-
-        if(RobotBase.isSimulation()){
-            robotDriveSim = new DifferentialDrivetrainSim(
-                DRIVE_CHAR,
-                GEARBOX,
-                DRIVE_GEARING,
-                TRACK_WIDTH_METERS,
-                WHEEL_RADIUS_METERS, 
-                null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
-        }
-
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-        field = new Field2d();
-
-        resetEncoders();
-    }
-
-    public static synchronized NAR_Drivetrain getInstance() {
-        if (instance == null) {
-            instance = new NAR_Drivetrain();
-        }
-        return instance;
     }
 
     @Override
@@ -146,7 +149,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         
     public double getHeading() {
         //gyro.getYaw uses CW as positive
-        return -gyro.getYaw(); // (Math.IEEEremainder(gyro.getAngle(), 360) + 360) % 360;
+        return -gyro.getYaw(); 
     }
 
     public double getPitch() {

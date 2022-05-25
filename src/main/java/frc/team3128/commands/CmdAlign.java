@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.team3128.Constants.VisionConstants;
+import static frc.team3128.Constants.VisionConstants.*;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
@@ -18,7 +18,7 @@ import frc.team3128.subsystems.NAR_Drivetrain;
 
 public class CmdAlign extends CommandBase {
 
-    private enum HorizontalOffsetFeedBackDriveState {
+    private enum VisionState {
         SEARCHING, FEEDBACK;
     }
 
@@ -27,7 +27,7 @@ public class CmdAlign extends CommandBase {
     private Limelight shooterLimelight;
     private Set<Subsystem> requirements;
 
-    private double txThreshold = VisionConstants.TX_THRESHOLD;
+    private double txThreshold = TX_THRESHOLD;
     private double goalHorizontalOffset, currHorizontalOffset;
     private double prevError, currError;
     
@@ -35,7 +35,7 @@ public class CmdAlign extends CommandBase {
     private int plateauCount, targetFoundCount;
     private boolean isAligned;
 
-    private HorizontalOffsetFeedBackDriveState aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
+    private VisionState aimState = VisionState.SEARCHING;
 
 
     public CmdAlign() {
@@ -43,11 +43,10 @@ public class CmdAlign extends CommandBase {
         this.limelights = LimelightSubsystem.getInstance();
         shooterLimelight = limelights.getShooterLimelight();
 
-        goalHorizontalOffset = VisionConstants.TX_OFFSET;
+        goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
-        requirements = new HashSet<Subsystem>();
 
-        requirements.add(drive);
+        addRequirements(drive);
     }
 
     @Override
@@ -60,35 +59,31 @@ public class CmdAlign extends CommandBase {
     @Override
     public void execute() {
         currTime = RobotController.getFPGATime() / 1e6;
-        switch(aimState) {
+        switch (aimState) {
             case SEARCHING:
                 if(shooterLimelight.hasValidTarget())
                     targetFoundCount++;
                 else
                     targetFoundCount = 0;
                 if(targetFoundCount > 5) {
-                    currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, VisionConstants.SAMPLE_RATE);
+                    currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
                     prevError = goalHorizontalOffset - currHorizontalOffset;
-                    aimState = HorizontalOffsetFeedBackDriveState.FEEDBACK;
+                    aimState = VisionState.FEEDBACK;
                 }
                 break;
             
             case FEEDBACK:
                 if(!shooterLimelight.hasValidTarget()) {
-                    aimState = HorizontalOffsetFeedBackDriveState.SEARCHING;
-                    isAligned = false;
+                    aimState = VisionState.SEARCHING;
                     plateauCount = 0;
                     break;
                 }
 
-                currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, VisionConstants.SAMPLE_RATE);
+                currHorizontalOffset = shooterLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, SAMPLE_RATE);
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
-                if (txThreshold < VisionConstants.TX_THRESHOLD_MAX) {
-                    txThreshold += (currTime - prevTime) * (VisionConstants.TX_THRESHOLD_INCREMENT);
-                }
 
-                double ff = Math.signum(currError) * VisionConstants.VISION_PID_kF;
-                double feedbackPower = VisionConstants.VISION_PID_kP * currError + VisionConstants.VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
+                double ff = Math.signum(currError) * VISION_PID_kF;
+                double feedbackPower = VISION_PID_kP * currError + VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
                 
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
@@ -96,7 +91,7 @@ public class CmdAlign extends CommandBase {
                 
                 if (Math.abs(currError) < txThreshold) {
                     plateauCount++;
-                    if (plateauCount > VisionConstants.ALIGN_PLATEAU_COUNT) {
+                    if (plateauCount > ALIGN_PLATEAU_COUNT) {
                         isAligned = true;
                     }
                 }

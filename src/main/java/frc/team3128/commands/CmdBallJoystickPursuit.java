@@ -6,7 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team3128.Constants.DriveConstants;
-import frc.team3128.Constants.VisionConstants;
+import static frc.team3128.Constants.VisionConstants.*;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.utility.Log;
@@ -22,8 +22,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
     private NAR_Drivetrain drive;
     private LimelightSubsystem limelights;
     private Limelight ballLimelight;
-
-    private double powerMult = 0.5;
 
     private double previousVerticalAngle;
     private double approxDistance;
@@ -58,7 +56,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
     @Override
     public void execute() {
-        Log.info("CmdBallJoystickPursuit State", aimState.toString());
         switch (aimState) {
             case SEARCHING:
                 if (ballLimelight.hasValidTarget()) {
@@ -69,14 +66,13 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     aimState = BallPursuitState.BLIND;
                 }
 
-                if (targetCount > VisionConstants.BALL_THRESHOLD) {
-                    Log.info("CmdBallJoystickPursuit", "Target found.");
-                    Log.info("CmdBallJoystickPursuit", "Switching to FEEDBACK...");
+                if (targetCount > BALL_THRESHOLD) {
+                    Log.info("CmdBallJoystickPursuit", "Target found, switching to FEEDBACK.");
                     
                     double currentHorizontalOffset = ballLimelight.getValue(LimelightKey.HORIZONTAL_OFFSET, 5);
 
                     previousTime = RobotController.getFPGATime() / 1e6; 
-                    previousError = VisionConstants.GOAL_HORIZONTAL_OFFSET - currentHorizontalOffset;
+                    previousError = GOAL_HORIZONTAL_OFFSET - currentHorizontalOffset;
 
                     aimState = BallPursuitState.FEEDBACK;
                 }
@@ -95,28 +91,28 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     currentError = currentHorizontalOffset;
 
                     // PID feedback loop for left+right powers based on horizontal offset errors
-                    double feedbackPower = 0;
+                    double turnPower = 0;
                     
-                    feedbackPower += VisionConstants.BALL_VISION_kP * currentError;
-                    feedbackPower += VisionConstants.BALL_VISION_kD * (currentError - previousError) / (currentTime - previousTime);
+                    turnPower += BALL_VISION_kP * currentError;
+                    turnPower += BALL_VISION_kD * (currentError - previousError) / (currentTime - previousTime);
 
-                    feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
-                    
-                    // joystick adding power back/forth
-                    double throttle = throttleSupplier.getAsDouble();
-                    double x = xSupplier.getAsDouble();
+                    turnPower = MathUtil.clamp(turnPower, -1, 1);
 
-                    double forwardPower = MathUtil.clamp(VisionConstants.BALL_AUTO_PURSUIT_kF + x * throttle, -1, 1);
+                    double xPower = MathUtil.clamp(
+                        BALL_AUTO_PURSUIT_kF + 
+                        xSupplier.getAsDouble() * throttleSupplier.getAsDouble()
+                        , -1, 1);
                     
                     // calculations to decelerate as the robot nears the target
-                    approxDistance = ballLimelight.calculateDistToGroundTarget(VisionConstants.BALL_TARGET_HEIGHT / 2);
 
-                    // multiplier = 1.0 - Math.min(Math.max((Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - approxDistance)
-                    //         / (Constants.VisionContants.BALL_DECELERATE_START_DISTANCE - 
-                    //             Constants.VisionContants.BALL_DECELERATE_END_DISTANCE), 0.0), 1.0);
-                    double multiplier = powerMult * 1.0;
+                    // approxDistance = ballLimelight.calculateDistToGroundTarget(BALL_TARGET_HEIGHT / 2);
+                    // multiplier = 1.0 - Math.min(Math.max((BALL_DECELERATE_START_DISTANCE - approxDistance)
+                    //         / (BALL_DECELERATE_START_DISTANCE - 
+                    //             BALL_DECELERATE_END_DISTANCE), 0.0), 1.0);
 
-                    drive.arcadeDrive(forwardPower * multiplier, powerMult * feedbackPower);
+                    double multiplier = POWER_MULTIPLIER * 1.0;
+
+                    drive.arcadeDrive(xPower * multiplier, turnPower * POWER_MULTIPLIER);
 
                     previousTime = currentTime;
                     previousError = currentError;
@@ -129,7 +125,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 double y = DriveConstants.ARCADE_DRIVE_TURN_MULT * ySupplier.getAsDouble();
 
                 drive.arcadeDrive(x * throttle, y * throttle);
-
 
                 if (ballLimelight.hasValidTarget()) {
                     Log.info("CmdBallJoystickPursuit", "Target found - Switching to SEARCHING");

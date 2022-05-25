@@ -69,12 +69,10 @@ public class Shooter extends NAR_PIDSubsystem {
                 SHOOTER_CHAR, SHOOTER_GEARBOX, SHOOTER_GEARING 
             );
         }
-        // commented out because it was using kV and kA (for ff calcs/charactization)
-        // and we only use PID+FF now 
     }
 
     public static synchronized Shooter getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new Shooter();
         }
         return instance;

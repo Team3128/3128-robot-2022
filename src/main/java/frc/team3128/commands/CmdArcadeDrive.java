@@ -14,17 +14,15 @@ public class CmdArcadeDrive extends CommandBase {
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_turn;
     private final DoubleSupplier m_throttle;
-    private final BooleanSupplier m_halfSpeed;
 
     private SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.ARCADE_DRIVE_RATE_LIMIT);
 
-    public CmdArcadeDrive(DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle, BooleanSupplier halfSpeed) {
+    public CmdArcadeDrive(DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle) {
         m_drivetrain = NAR_Drivetrain.getInstance();
         
         m_xSpeed = xSpeed;
         m_turn = turn;
         m_throttle = throttle;
-        m_halfSpeed = halfSpeed;
 
         addRequirements(m_drivetrain);
     }
@@ -32,11 +30,6 @@ public class CmdArcadeDrive extends CommandBase {
     @Override
     public void execute() {
         double throttle = m_throttle.getAsDouble();
-
-        if (m_halfSpeed.getAsBoolean()) {
-            throttle *= 0.5;
-        }
-
         double xSpeed = m_xSpeed.getAsDouble();
         double turn = DriveConstants.ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble();
 

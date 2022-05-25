@@ -73,7 +73,6 @@ public class RobotContainer {
     private AutoPrograms autos;
   
     private boolean DEBUG = true;
-    private boolean driveHalfSpeed = false;
 
     private Trigger isShooting;
 
@@ -96,7 +95,7 @@ public class RobotContainer {
 
         isShooting = new Trigger(m_shooter::isReady).and(new Trigger(() -> m_shooter.getSetpoint() != 0));
 
-        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle, () -> driveHalfSpeed));
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         autos = new AutoPrograms();
         initDashboard();
@@ -207,8 +206,6 @@ public class RobotContainer {
 
         m_leftStick.getButton(2).whenPressed(new InstantCommand(m_climber::resetLeftEncoder, m_climber));        
 
-        m_leftStick.getButton(3).whenPressed(() -> driveHalfSpeed = !driveHalfSpeed);
-
         // m_leftStick.getButton(5).whenPressed(new CmdClimbEncoder(m_climber, -m_climber.getDesiredTicks(SMALL_VERTICAL_DISTANCE)));
 
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
@@ -284,13 +281,12 @@ public class RobotContainer {
         NarwhalDashboard.put("x", m_drive.getPose().getX());
         NarwhalDashboard.put("y", m_drive.getPose().getY());
         NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
-        NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicksLeft());
+        NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicks());
 
         // Post miscellaneous other debug data to Smartdash
 
         SmartDashboard.putNumber("range", m_ll.calculateDistance("shooter"));
         SmartDashboard.putNumber("ty", m_ll.getShooterLimelight().getValue(LimelightKey.VERTICAL_OFFSET, 3));
-        SmartDashboard.putNumber("adjusted ty", m_ll.getShooterLimelight().getValue(LimelightKey.VERTICAL_OFFSET, 5) * (2/3));
 
         // SmartDashboard.putBoolean("Shooter is ready", m_shooter.isReady());
         SmartDashboard.putString("Shooter state", m_shooter.getState().toString());

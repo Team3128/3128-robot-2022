@@ -51,7 +51,8 @@ public class Climber extends SubsystemBase {
         m_rightMotor = new NAR_TalonFX(CLIMBER_MOTOR_RIGHT_ID);
 
         m_leftMotor.setInverted(true);
-        m_rightMotor.follow((NAR_EMotor)m_leftMotor);
+        // right follows left - left is the one we use for encoder/distance calculations
+        m_rightMotor.follow((NAR_EMotor)m_leftMotor); 
         m_rightMotor.setInverted(InvertType.OpposeMaster);
         
         m_leftMotor.setNeutralMode(CLIMBER_NEUTRAL_MODE);
@@ -78,10 +79,6 @@ public class Climber extends SubsystemBase {
     @Override
     public void periodic() {
 
-        // SmartDashboard.putNumber("Climber left encoder", getCurrentTicksLeft());
-        // SmartDashboard.putString("Climber pistons", m_climberSolenoid.get().toString());
-
-        // SmartDashboard.putNumber("Climber avgCurrent", getAvgCurrent());
     }
 
     public void bothExtend() {
@@ -126,11 +123,10 @@ public class Climber extends SubsystemBase {
      * @return Corresponding encoder counts
      */
     public double getDesiredTicks(double distance) {
-        double desiredTicks = distance * (FALCON_ENCODER_RESOLUTION * CLIMBER_GEAR_RATIO) / (AXLE_DIAMETER * Math.PI);
-        return desiredTicks;
+        return distance * (FALCON_ENCODER_RESOLUTION * CLIMBER_GEAR_RATIO) / (AXLE_DIAMETER * Math.PI);
     }
 
-    public double getCurrentTicksLeft() {
+    public double getCurrentTicks() {
         return m_leftMotor.getSelectedSensorPosition();
     }
 
@@ -140,9 +136,5 @@ public class Climber extends SubsystemBase {
 
     public void resetLeftEncoder() {
         m_leftMotor.setEncoderPosition(0);
-    }
-
-    public double getAvgCurrent() {
-        return (m_leftMotor.getSupplyCurrent() + m_rightMotor.getSupplyCurrent()) / 2;
     }
 }

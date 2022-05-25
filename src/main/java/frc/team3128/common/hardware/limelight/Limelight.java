@@ -94,15 +94,15 @@ public class Limelight {
     public double calculateDistToTopTarget(double targetHeight) {
         if (!hasValidTarget())
             return -1;
-        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180 * 2/3;
+        double ty = getValue(LimelightKey.VERTICAL_OFFSET, 5) * Math.PI / 180;
         double tx = getValue(LimelightKey.HORIZONTAL_OFFSET, 5) * Math.PI / 180;
         double dist = (targetHeight - cameraHeight) / (Math.tan(ty + cameraAngle) * Math.cos(tx)) - frontDistance;
 
-        double transformedDist = 19.4 + 0.243 * dist + 6.26e-3 * dist * dist;
+        // double transformedDist = 19.4 + 0.243 * dist + 6.26e-3 * dist * dist;
 
-        return transformedDist;
+        return dist;
     }
-
+    
     public double calculateDistToGroundTarget(double targetHeight) {
         if (!hasValidTarget())
             return -1;
