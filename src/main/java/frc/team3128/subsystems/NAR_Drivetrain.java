@@ -110,12 +110,12 @@ public class NAR_Drivetrain extends SubsystemBase {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
         field.setRobotPose(getPose());   
         
-        // SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
-        // SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
-        // SmartDashboard.putNumber("Left Encoder Speed (m per s)", getLeftEncoderSpeed());
-        // SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
-        // SmartDashboard.putString("getPose()", getPose().toString());
-        // SmartDashboard.putNumber("Gyro", getHeading());
+        SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
+        SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
+        SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
+        SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
+        SmartDashboard.putString("getPose()", getPose().toString());
+        SmartDashboard.putNumber("Gyro", getHeading());
 
         SmartDashboard.putData("Field", field);
     }

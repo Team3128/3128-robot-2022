@@ -173,8 +173,6 @@ public class Constants {
 
         public static final int CLIMBER_SOLENOID_FORWARD_CHANNEL_ID = 2; 
         public static final int CLIMBER_SOLENOID_BACKWARD_CHANNEL_ID = 6;
-        public static final int CLIMBER_SOLENOID_BREAK_FORWARD_CHANNEL_ID = 0; //1
-        public static final int CLIMBER_SOLENOID_BREAK_BACKWARD_CHANNEL_ID = 7; //5
 
         public static final double CLIMBER_GEAR_RATIO = 18.9;
         public static final double AXLE_DIAMETER = 0.7;
@@ -190,9 +188,9 @@ public class Constants {
         public static final double CLIMBER_POWER = 0.8; // 0.9
         public static final double MANUAL_POWER = 0.3;
 
-        public static final double CLIMB_ENC_DIAG_EXTENSION = 322000; // 6600;//same as diag extension rn // old-7850; //-7379
-        public static final double CLIMB_ENC_TO_TOP = 322000; // 6600 //  old -7825;
-        public static final double TOLERANCE_TICKS = 1000; // 100
+        public static final double CLIMB_ENC_DIAG_EXTENSION = 322000; 
+        public static final double CLIMB_ENC_TO_TOP = 322000; 
+        public static final double TOLERANCE_TICKS = 1000;
 
     }
 
@@ -200,6 +198,7 @@ public class Constants {
 
         public static final int HOOD_MOTOR_ID = 5;
 
+        // need to retune hood pid to be actually good
         public static final double kP = 0.3; 
         public static final double kI = 0;
         public static final double kD = 0; //8e-6;

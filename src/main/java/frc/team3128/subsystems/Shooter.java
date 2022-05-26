@@ -74,6 +74,14 @@ public class Shooter extends PIDSubsystem {
         m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }
 
+    @Override
+    public void periodic() {
+        super.periodic();
+        SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
+        SmartDashboard.putNumber("Shooter RPM", getMeasurement());
+        SmartDashboard.putBoolean("Shooter isReady", isReady());
+    }
+
     /**
      * Begins the PID loop to achieve the desired RPM to shoot
      */

@@ -277,22 +277,7 @@ public class RobotContainer {
         NarwhalDashboard.put("y", m_drive.getPose().getY());
         NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
         NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicks());
-
-        // Post miscellaneous other debug data to Smartdash
-
-        SmartDashboard.putNumber("range", m_ll.calculateShooterDistance());
-        SmartDashboard.putNumber("ty", m_ll.getShooterLimelight().getValue(LimelightKey.VERTICAL_OFFSET));
-        SmartDashboard.putNumber("tx", m_ll.getShooterLimelight().getValue(LimelightKey.HORIZONTAL_OFFSET));
-
-        SmartDashboard.putNumber("Shooter Setpoint", m_shooter.getSetpoint());
-        SmartDashboard.putNumber("Shooter RPM", m_shooter.getMeasurement());
-
-        SmartDashboard.putNumber("Hood Setpoint", m_hood.getSetpoint());
-        SmartDashboard.putNumber("Hood angle", m_hood.getMeasurement());
-
-        SmartDashboard.putString("Intake state:", m_intake.getSolenoid());
-        SmartDashboard.putBoolean("isReady", m_shooter.isReady());
-        SmartDashboard.putBoolean("isShooting Trigger", isShooting.getAsBoolean());
+        
     }
 
     public void initPneumatics() {

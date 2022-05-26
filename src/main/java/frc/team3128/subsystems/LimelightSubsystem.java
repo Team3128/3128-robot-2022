@@ -1,5 +1,6 @@
 package frc.team3128.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
@@ -23,6 +24,14 @@ public class LimelightSubsystem extends SubsystemBase{
             instance = new LimelightSubsystem();
         }
         return instance;
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("range", calculateShooterDistance());
+        SmartDashboard.putNumber("ty", getShooterTY());
+        SmartDashboard.putNumber("tx", getShooterTX());
+        SmartDashboard.putBoolean("hasValidTarget", getShooterHasValidTarget());
     }
 
     /**

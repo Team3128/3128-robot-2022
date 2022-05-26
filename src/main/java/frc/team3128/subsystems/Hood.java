@@ -5,6 +5,7 @@ import static frc.team3128.Constants.HoodConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
@@ -50,6 +51,13 @@ public class Hood extends PIDSubsystem {
     private void configEncoder() {
         m_encoder = (SparkMaxRelativeEncoder) m_hoodMotor.getEncoder();
         m_encoder.setPositionConversionFactor(ENC_POSITION_CONVERSION_FACTOR);
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        SmartDashboard.putNumber("Hood Setpoint", getSetpoint());
+        SmartDashboard.putNumber("Hood Angle", getMeasurement());
     }
 
     public void startPID(double angle) {

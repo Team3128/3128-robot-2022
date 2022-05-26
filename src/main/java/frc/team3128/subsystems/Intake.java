@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.IntakeConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
@@ -40,8 +41,16 @@ public class Intake extends SubsystemBase {
         m_intake.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
     private void configPneumatics() {
-        m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, INTAKE_SOLENOID_FORWARD_CHANNEL_ID, INTAKE_SOLENOID_BACKWARD_CHANNEL_ID);
+        m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+                                                INTAKE_SOLENOID_FORWARD_CHANNEL_ID, 
+                                                INTAKE_SOLENOID_BACKWARD_CHANNEL_ID);
         retractIntake();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Intake Speed", m_intake.get());
+        SmartDashboard.putString("Intake State", getSolenoid());
     }
 
     public void runIntake(){
@@ -71,6 +80,6 @@ public class Intake extends SubsystemBase {
     public String getSolenoid() {
         return m_intakeSolenoid.get().toString();
     }
-
+    
 }
 
