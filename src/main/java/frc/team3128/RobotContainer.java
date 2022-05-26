@@ -30,13 +30,11 @@ import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdIntakeCargo;
 import frc.team3128.commands.CmdOuttake;
-import frc.team3128.commands.CmdRetractHopper;
-import frc.team3128.commands.CmdShootDist;
-import frc.team3128.commands.CmdShootRPM;
+import frc.team3128.commands.CmdShoot;
+import frc.team3128.commands.CmdShootAlign;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
-import frc.team3128.common.hardware.limelight.LimelightKey;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Climber;
@@ -107,30 +105,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         //RIGHT
-        m_rightStick.getButton(1).whenPressed(
-                new SequentialCommandGroup(
-                    new CmdRetractHopper(), 
-                    // new CmdExtendIntake(),
-                    new ParallelCommandGroup(
-                        // new RunCommand(m_intake::runIntake, m_intake),
-                        new CmdAlign(), 
-                        new InstantCommand(() -> m_hopper.runHopper(-0.1)),
-                        new CmdShootDist())))
-                    .whenReleased(new ParallelCommandGroup(
-                        new InstantCommand(m_shooter::stopShoot, m_shooter),
-                        new InstantCommand(m_hopper::stopHopper, m_hopper)));
+        m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
-        // m_rightStick.getButton(1).whenPressed(
-        //         new SequentialCommandGroup(
-        //             new CmdRetractHopper(), 
-        //             new ParallelCommandGroup(
-        //                 new InstantCommand(() -> m_hood.startPID(12)), 
-        //                 new CmdShootRPM(2700), 
-        //                 new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
-        //                 .whenReleased(new ParallelCommandGroup(
-        //                     new InstantCommand(m_shooter::stopShoot, m_shooter),
-        //                     new InstantCommand(m_hopper::stopHopper, m_hopper)));
+        // m_rightStick.getButton(1).whenHeld(
+        //                 new CmdShoot(2700, 12));
 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun())
                                 .whenReleased(new CmdIntakeCargo().withTimeout(0.25));
@@ -143,26 +122,14 @@ public class RobotContainer {
         //                 .beforeStarting(new WaitCommand(0.5)));
 
         // lower hub shot
-        m_rightStick.getButton(3).whenHeld(new SequentialCommandGroup(
-                    new CmdRetractHopper(),
+        m_rightStick.getButton(3).whenHeld(
                     new ParallelCommandGroup(
-                        new RunCommand(m_drive::stop, m_drive),
-                        new InstantCommand(() -> m_hopper.runHopper(-0.1)),
-                        new InstantCommand(() -> m_hood.startPID(28)),
-                        new CmdShootRPM(1200))))
-                    .whenReleased(new ParallelCommandGroup(
-                        new InstantCommand(m_shooter::stopShoot, m_shooter),
-                        new InstantCommand(m_hopper::stopHopper, m_hopper)));
+                        new CmdShoot(1200, 28),
+                        new RunCommand(m_drive::stop, m_drive)));
 
-        m_rightStick.getButton(4).whenPressed(new SequentialCommandGroup(
-                    new CmdRetractHopper(), 
-                    new ParallelCommandGroup(
-                        new InstantCommand(() -> m_hood.startPID(7), m_hood),
-                        new CmdShootRPM(2800), 
-                        new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
-                    .whenReleased(new ParallelCommandGroup(
-                        new InstantCommand(m_shooter::stopShoot, m_shooter), 
-                        new InstantCommand(m_hopper::stopHopper, m_hopper)));
+        // ram shot
+        m_rightStick.getButton(4).whenHeld(
+                        new CmdShoot(2800, 7));
 
         m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
       
@@ -170,7 +137,6 @@ public class RobotContainer {
 
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
 
-        // extend intake and outtake
         m_rightStick.getButton(8).whenHeld(new SequentialCommandGroup(
                                                 new CmdExtendIntake().withTimeout(0.1), 
                                                 new CmdOuttake()));
@@ -190,20 +156,18 @@ public class RobotContainer {
 
         //LEFT
 
-        // manual shot - we probably need to tune one somewhere
-        m_leftStick.getButton(1).whenPressed(new SequentialCommandGroup(
-                    new CmdRetractHopper(), 
-                    new ParallelCommandGroup(
-                            new InstantCommand(() -> m_hood.startPID(ConstantsInt.ShooterConstants.SET_ANGLE)),
-                            new CmdShootRPM(2800), 
-                            new InstantCommand(() -> m_hopper.runHopper(-0.1)))))
-                    .whenReleased(new ParallelCommandGroup(
-                        new InstantCommand(m_shooter::stopShoot, m_shooter), 
-                        new InstantCommand(m_hopper::stopHopper, m_hopper)));
-
         m_leftStick.getButton(2).whenPressed(() -> m_climber.resetLeftEncoder());        
 
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
+
+        m_leftStick.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
+                                    .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_leftStick.getDownPOVButton().whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
+                                    .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        
+        m_leftStick.getRightPOVButton().whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
+        m_leftStick.getLeftPOVButton().whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
 
         m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
@@ -219,10 +183,6 @@ public class RobotContainer {
 
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
-
-        m_leftStick.getButton(9).whenPressed(new CmdClimbEncoder(CLIMB_ENC_DIAG_EXTENSION));
-        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
-        m_leftStick.getButton(10).whenPressed(new CmdClimbEncoder(-120));
 
         // Triggers
 

@@ -111,15 +111,15 @@ public class NAR_Joystick {
     }
 
     public POVButton getDownPOVButton() {
-        return getPOVButton(180);
+        return getPOVButton(4);
     }
 
     public POVButton getLeftPOVButton() {
-        return getPOVButton(270);
+        return getPOVButton(6);
     }
 
     public POVButton getRightPOVButton() {
-        return getPOVButton(90);
+        return getPOVButton(2);
     }
 
     public void setXDeadband(double xDeadband) {

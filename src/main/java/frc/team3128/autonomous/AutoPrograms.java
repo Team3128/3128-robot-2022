@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import static frc.team3128.Constants.HoodConstants.*;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdExtendIntake;
@@ -23,9 +22,9 @@ import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdInPlaceTurn;
 import frc.team3128.commands.CmdInPlaceTurnVision;
 import frc.team3128.commands.CmdRetractHopper;
+import frc.team3128.commands.CmdShoot;
+import frc.team3128.commands.CmdShootAlign;
 import frc.team3128.commands.CmdOuttake;
-import frc.team3128.commands.CmdShootDist;
-import frc.team3128.commands.CmdShootRPM;
 import frc.team3128.commands.CmdShootSingleBall;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.subsystems.Hood;
@@ -130,7 +129,7 @@ public class AutoPrograms {
         autoMap = new LinkedHashMap<String, AutoInfo>();
 
         auto_1Ball = new SequentialCommandGroup(
-                            alignShootCmd(),
+                            new CmdShootAlign().withTimeout(2),
                             trajectoryCmd(Trajectories.driveBack30In)
         );
 
@@ -144,7 +143,7 @@ public class AutoPrograms {
 
                             new CmdInPlaceTurn(180),
 
-                            alignShootCmd()
+                            new CmdShootAlign().withTimeout(2)
         );
 
         auto_3Ball180 = new SequentialCommandGroup(
@@ -156,7 +155,7 @@ public class AutoPrograms {
             ),
 
             new CmdInPlaceTurn(180),
-            alignShootCmd(),
+            new CmdShootAlign().withTimeout(2),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
@@ -165,7 +164,7 @@ public class AutoPrograms {
             ),
 
             turnRightToAligned(),
-            alignShootCmd()
+            new CmdShootAlign().withTimeout(2)
         );
 
         auto_S2H1 = new SequentialCommandGroup(
@@ -179,7 +178,7 @@ public class AutoPrograms {
 
                             //turn and shoot
                             new CmdInPlaceTurn(180),
-                            alignShootCmd(),
+                            new CmdShootAlign().withTimeout(2),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(90),
@@ -210,7 +209,7 @@ public class AutoPrograms {
 
                             //turn and shoot
                             new CmdInPlaceTurn(180),
-                            alignShootCmd(),
+                            new CmdShootAlign().withTimeout(2),
 
                             //turn and hoard first ball
                             new CmdInPlaceTurn(90),
@@ -226,12 +225,6 @@ public class AutoPrograms {
                             new ParallelDeadlineGroup(
                                 trajectoryCmd("S2H2_iii"), 
                                 new CmdExtendIntakeAndRun()),
-
-                            // trajectoryCmd(12),
-                            // new ParallelDeadlineGroup(
-                            //     trajectoryCmd(13),
-                            //     new CmdExtendIntakeAndRun()
-                            // ),
                             
                             //hide ball behinde hub
                             trajectoryCmd("S2H2_iv"),
@@ -251,7 +244,7 @@ public class AutoPrograms {
 
                             //turn and shoot 2 balls
                             new CmdInPlaceTurn(180),
-                            shootCmd(),
+                            new CmdShoot(),
 
                             //drive to ball and terminal and intake
                             new InstantCommand(() -> intake.ejectIntake(), intake),
@@ -263,7 +256,7 @@ public class AutoPrograms {
                             //drive to tarmac and shoot
                             trajectoryCmd("Terminal2Tarmac"),
                             new CmdInPlaceTurn(180),
-                            alignShootCmd()
+                            new CmdShootAlign().withTimeout(2)
 
         );
 
@@ -275,7 +268,7 @@ public class AutoPrograms {
             ),
 
             new CmdInPlaceTurn(180),
-            alignShootCmd(),
+            new CmdShootAlign().withTimeout(2),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
@@ -285,7 +278,7 @@ public class AutoPrograms {
 
             new ParallelCommandGroup(
                 turnRightToAligned(),
-                shootCmd()
+                new CmdShoot()
             ),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
@@ -301,7 +294,7 @@ public class AutoPrograms {
 
             new ParallelCommandGroup(
                 turnRightToAligned(),
-                shootCmd()
+                new CmdShoot()
             )
         );
 
@@ -333,7 +326,7 @@ public class AutoPrograms {
 
                             new CmdInPlaceTurn(96),
 
-                            alignShootCmd()
+                            new CmdShootAlign().withTimeout(2)
         );
 
         auto_S1H1 = new SequentialCommandGroup(
@@ -350,9 +343,8 @@ public class AutoPrograms {
             new CmdRetractHopper(),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
+            ).withTimeout(2),
             
             trajectoryCmd("S1H1_ii"),
             new CmdExtendIntake(),
@@ -373,9 +365,8 @@ public class AutoPrograms {
             new CmdRetractHopper(),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
+            ).withTimeout(2)
         );
 
         auto_S1H2 = new SequentialCommandGroup(
@@ -391,9 +382,8 @@ public class AutoPrograms {
             new CmdRetractHopper(),
             new ParallelCommandGroup(
                 new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootSingleBall()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
+            ).withTimeout(2),
 
             new InstantCommand(() -> intake.ejectIntake(), intake),
             new ParallelDeadlineGroup(
@@ -459,42 +449,6 @@ public class AutoPrograms {
                         drive::tankDriveVolts,
                         drive)
                 .andThen(() -> drive.stop());
-    }
-
-    private SequentialCommandGroup shootCmd() {
-        return new SequentialCommandGroup(
-            new CmdRetractHopper(),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> hopper.runHopper(-0.1)),
-                new CmdShootDist()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
-        );
-    }
-    
-    private SequentialCommandGroup shootCmd(int RPM) {
-        return shootCmd(RPM, HOME_ANGLE);
-    }
-
-    private SequentialCommandGroup shootCmd(int RPM, double angle) {
-        return new SequentialCommandGroup(
-            new CmdRetractHopper(),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> hood.startPID(angle)),
-                new InstantCommand(() -> hopper.runHopper(-0.1)),
-                new CmdShootRPM(RPM)
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
-        );
-    }
-
-    private SequentialCommandGroup alignShootCmd() {
-        return new SequentialCommandGroup(
-            new CmdRetractHopper(),
-            new ParallelCommandGroup(
-                new CmdAlign(),
-                new InstantCommand(() -> hopper.runHopper(-0.1)),
-                new CmdShootDist()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
-        );
     }
 
     private Command turnLeftToAligned() {
