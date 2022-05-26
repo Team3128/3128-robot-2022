@@ -130,7 +130,7 @@ public class Shooter extends PIDSubsystem {
     }
 
     public boolean isReady() {
-        return plateauCount >= PLATEAU_COUNT;
+        return (plateauCount >= PLATEAU_COUNT) && (getSetpoint() != 0);
     }
 
     @Override

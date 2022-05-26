@@ -93,7 +93,7 @@ public class RobotContainer {
         m_leftStick = new NAR_Joystick(0);
         m_rightStick = new NAR_Joystick(1);
 
-        isShooting = new Trigger(m_shooter::isReady).and(new Trigger(() -> m_shooter.getSetpoint() != 0));
+        isShooting = new Trigger(m_shooter::isReady);
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
