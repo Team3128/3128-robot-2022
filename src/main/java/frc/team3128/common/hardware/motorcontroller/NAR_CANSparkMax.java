@@ -1,8 +1,5 @@
 package frc.team3128.common.hardware.motorcontroller;
 
-// import com.revrobotics.RelativeEncoder;
-// import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;

@@ -1,7 +1,5 @@
 package frc.team3128.common.hardware.limelight;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
