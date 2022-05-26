@@ -42,6 +42,7 @@ public class CmdOuttake extends CommandBase{
         m_intake.retractIntake();
     }
 
+    @Override
     public boolean isFinished(){
         return false;
     }

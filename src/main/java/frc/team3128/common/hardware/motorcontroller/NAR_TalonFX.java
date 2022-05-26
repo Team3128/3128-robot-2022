@@ -6,9 +6,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.team3128.common.infrastructure.NAR_EMotor;
 
-public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
+public class NAR_TalonFX extends WPI_TalonFX {
 
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
@@ -28,6 +27,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		enableVoltageCompensation(true);
 	}
 
+	@Override
 	public void set(ControlMode controlMode, double outputValue) {
 		if (outputValue != prevValue || controlMode != prevControlMode) {
 			super.set(controlMode, outputValue);
@@ -39,13 +39,11 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		return prevValue;
 	}
 
-	@Override
 	public void setEncoderPosition(double n) {
 		super.setSelectedSensorPosition(n);
 	}
 
 	// getInverted() stuff should only be temporary
-	@Override
 	public void setSimPosition(double pos) {
 		if(super.getInverted()) {
 			pos *= -1;
@@ -54,7 +52,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	// getInverted() stuff should only be temporary
-	@Override
 	public void setSimVelocity(double vel) {
 		if(super.getInverted()) {
 			vel *= -1;
@@ -68,10 +65,7 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	@Override
-	public void follow(NAR_EMotor motor) {
-		if(!(motor instanceof IMotorController)) {
-			throw new RuntimeException("Bad follow: NAR_TalonFX " + getDeviceID() + " attempted to follow non-CTRE motor controller.");
-		}
+	public void follow(IMotorController motor) {
 		super.follow((IMotorController)motor);
 	}
 }

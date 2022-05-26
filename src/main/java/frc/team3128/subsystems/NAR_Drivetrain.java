@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_Drivetrain extends SubsystemBase {
 
@@ -74,8 +73,8 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void configMotors() {
-        leftFollower.follow((NAR_EMotor)leftLeader);
-        rightFollower.follow((NAR_EMotor)rightLeader);
+        leftFollower.follow(leftLeader);
+        rightFollower.follow(rightLeader);
         
         leftLeader.setInverted(true);
         leftFollower.setInverted(true);
