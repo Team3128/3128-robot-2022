@@ -115,7 +115,7 @@ public class Shooter extends PIDSubsystem {
             getController().setTolerance(thresholdPercent * setpoint);
         }
 
-        if (Math.abs(getMeasurement() - setpoint) <= (thresholdPercent * setpoint) && (setpoint != 0)) {
+        if (getController().atSetpoint() && (setpoint != 0)) {
             plateauCount ++;
         } else {
             plateauCount = 0;
