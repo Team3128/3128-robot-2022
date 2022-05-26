@@ -5,38 +5,31 @@ import static frc.team3128.Constants.HoodConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
-import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.IdleMode;
 import net.thefletcher.revrobotics.enums.MotorType;
 import net.thefletcher.revrobotics.enums.PeriodicFrame;
 
-public class Hood extends NAR_PIDSubsystem {
+public class Hood extends PIDSubsystem {
 
     private static Hood instance;
     private NAR_CANSparkMax m_hoodMotor;
-    //private NAR_TalonFX m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
     
     private double tolerance = TOLERANCE_MIN;
-
-    private double time;
-    private double prevTime;
     
     public Hood() {
-        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
+        super(new PIDController(kP, kI, kD));
 
         configMotors();
         configEncoder();
     }
 
     public static synchronized Hood getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new Hood();
         }
         return instance;
@@ -59,8 +52,19 @@ public class Hood extends NAR_PIDSubsystem {
         m_encoder.setPositionConversionFactor(ENC_POSITION_CONVERSION_FACTOR);
     }
 
-    public void setSpeed(double speed) {
-        m_hoodMotor.set(speed);
+    public void startPID(double angle) {
+        // angle = ConstantsInt.ShooterConstants.SET_ANGLE; // uncomment for interpolation
+        super.setSetpoint(angle);
+        getController().setTolerance(tolerance);
+    }
+
+    @Override
+    protected void useOutput(double output, double setpoint) {
+        // ff needs a fix b/c "degrees" are fake right now (min angle was given an arbitrary number, not the real number)
+        double ff = kF * Math.cos(Units.degreesToRadians(setpoint)); // ff keeps the hood at steady to counteract Fg (gravity)
+        double voltageOutput = output + ff;
+
+        m_hoodMotor.set(MathUtil.clamp(voltageOutput / 12.0, -1, 1));
     }
 
     public void stop() {
@@ -74,48 +78,15 @@ public class Hood extends NAR_PIDSubsystem {
         m_hoodMotor.setEncoderPosition(0);
     }
 
-    public void startPID(double angle) {
-        tolerance = TOLERANCE_MIN;
-        // angle = ConstantsInt.ShooterConstants.SET_ANGLE;
-        super.setSetpoint(angle);
-        super.resetPlateauCount();
-        getController().setTolerance(tolerance);
-    }
-
-    /**
-     * Attempts to PID to minimum angle. Will likely be replaced by full homing routine once limit switch is added.
-     */
-    public void zero() {
-        startPID(MIN_ANGLE);
-    }
-
-    @Override
-    protected void useOutput(double output, double setpoint) {
-        double ff = kF * Math.cos(Units.degreesToRadians(setpoint));
-        double voltageOutput = output + ff;
-
-        time = RobotController.getFPGATime() / 1e6;
-        if (tolerance < TOLERANCE_MAX) {
-            tolerance += (time - prevTime) * (TOLERANCE_MAX - TOLERANCE_MIN) / TIME_TO_MAX_TOLERANCE;
-            getController().setTolerance(tolerance);
-        }
-
-        checkPlateau(setpoint, tolerance);
-
-        m_hoodMotor.set(voltageOutput / 12.0);
-
-        prevTime = time;
-
-        // SmartDashboard.putNumber("Hood voltage", voltageOutput);
-        // SmartDashboard.putNumber("Hood percentage output", voltageOutput / 12.0);
-
-    }
-
     @Override
     public double getMeasurement() {
         return m_hoodMotor.getSelectedSensorPosition() + MIN_ANGLE;
     }
 
+    /**
+     * Calculates the preferred hood angle for shooting at distance dist
+     * Uses InterpolatingTreeMap in Constants
+     */
     public double calculateAngleFromDist(double dist) {
         return MathUtil.clamp(
             hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, 

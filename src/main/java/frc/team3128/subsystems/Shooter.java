@@ -12,35 +12,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
-import frc.team3128.common.utility.Log;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 
-public class Shooter extends NAR_PIDSubsystem {
-    
-    public enum ShooterState {
-
-        OFF(0, 0, 0, 0),
-        UPPERHUB(0, HIGH_kP, HIGH_kI, HIGH_kD),
-        LOWERHUB(1250, LOW_kP, LOW_kI, LOW_kD);
-
-        public double shooterRPM;
-        public double kP;
-        public double kI;
-        public double kD;
-
-        private ShooterState(double RPM, double kP, double kI, double kD) {
-            this.shooterRPM = RPM;
-            this.kP = kP;
-            this.kI = kI;
-            this.kD = kD;
-        }
-
-    }
+public class Shooter extends PIDSubsystem {
 
     private static Shooter instance;
 
@@ -48,17 +26,14 @@ public class Shooter extends NAR_PIDSubsystem {
     private NAR_TalonFX m_leftShooter;
     private NAR_TalonFX m_rightShooter;
 
-    private ShooterState shooterState = ShooterState.OFF;
-    private double time = 0, preTime = 0;
+    private double currTime = 0, prevTime = 0;
+    private int plateauCount = 0;
     private double thresholdPercent = RPM_THRESHOLD_PERCENT;
 
     private FlywheelSim m_shooterSim;
 
-    // private SimpleMotorFeedforward lowFF = new SimpleMotorFeedforward(ShooterConstants.LOW_kS, ShooterConstants.LOW_kV, ShooterConstants.LOW_kA);
-    // private SimpleMotorFeedforward highFF = new SimpleMotorFeedforward(ShooterConstants.HIGH_kS, ShooterConstants.HIGH_kV, ShooterConstants.HIGH_kA);
-
     public Shooter() {
-        super(new PIDController(HIGH_kP, HIGH_kI, HIGH_kD), PLATEAU_COUNT);
+        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
     
         configMotors();
 
@@ -99,66 +74,21 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     /**
-     * Sets the Shooter State for the shooter
-     * @param state Desired Shooter State
+     * Begins the PID loop to achieve the desired RPM to shoot
      */
-    public void setState(ShooterState state) {
-        this.shooterState = state;
-        
-        m_controller.setPID(shooterState.kP, shooterState.kI, shooterState.kD);
-        Log.info("Shooter", "Set state to " + state.toString());
-        Log.info("Shooter", "Set kP to " + String.valueOf(state.kP));
-        Log.info("Shooter", "Set kI to " + String.valueOf(state.kI));
-        Log.info("Shooter", "Set kD to " + String.valueOf(state.kD));
-    }
-
-    /**
-     * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
-     */
-    public void startPID() {
+    public void beginShoot(double rpm) {
         thresholdPercent = RPM_THRESHOLD_PERCENT;
-        super.setSetpoint(shooterState.shooterRPM);  
-        super.resetPlateauCount();
-        getController().setTolerance(RPM_THRESHOLD_PERCENT * shooterState.shooterRPM);
-    }
+        prevTime = RobotController.getFPGATime() / 1e6;
+        plateauCount = 0;
 
-    /**
-     * Begins the PID loop to achieve the desired RPM with the currently set Shooter State
-     */
-    public void startPID(double rpm) {
-        thresholdPercent = RPM_THRESHOLD_PERCENT;
-        // rpm = ConstantsInt.ShooterConstants.SET_RPM;
-        super.setSetpoint(rpm);
+        // rpm = ConstantsInt.ShooterConstants.SET_RPM; // uncomment for interpolation
+        setSetpoint(rpm);
         getController().setTolerance(RPM_THRESHOLD_PERCENT * rpm);
     }
 
-    /**
-     * Sets the state using {@link #setState(ShooterState)} and begins the PID loop to achieve it using {@link #startPID()}
-     * @param state Desired Shooter State
-     */
-    public void beginShoot(ShooterState state) {
-        setState(state);
-        startPID();
-    }
-
-    /**
-     * Sets the state using {@link #setState(ShooterState)} and begins the PID loop to achieve it using {@link #startPID()}
-     * @param state Desired Shooter State
-     */
-    public void beginShoot(double rpm) {
-        startPID(rpm);
-    }
-
     public void stopShoot() {
-        super.resetPlateauCount();
+        plateauCount = 0;
         setSetpoint(0);
-    }
-
-    /**
-     * @return The Shooter State
-     */
-    public ShooterState getState() {
-        return shooterState;
     }
 
     @Override
@@ -176,26 +106,31 @@ public class Shooter extends NAR_PIDSubsystem {
     @Override
     protected void useOutput(double output, double setpoint) {
         double ff = kF * setpoint;
-        // if (shooterState == ShooterState.LOWERHUB)
-        //     ff = lowFF.calculate(setpoint);
-        // else if (shooterState == ShooterState.UPPERHUB)
-        //     ff = highFF.calculate(setpoint);
         double voltageOutput = output + ff;
 
-        time = RobotController.getFPGATime() / 1e6;
+        // Increase the tolerance as time goes on (unsure if this is needed, but we want to shoot better late than never)
+        currTime = RobotController.getFPGATime() / 1e6;
         if (thresholdPercent < RPM_THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += (time - preTime) * (RPM_THRESHOLD_PERCENT_MAX - RPM_THRESHOLD_PERCENT) / TIME_TO_MAX_THRESHOLD;
+            thresholdPercent += (currTime - prevTime) * (RPM_THRESHOLD_PERCENT_MAX - RPM_THRESHOLD_PERCENT) / TIME_TO_MAX_THRESHOLD;
             getController().setTolerance(thresholdPercent * setpoint);
         }
 
-        checkPlateau(setpoint, thresholdPercent);
+        if (Math.abs(getMeasurement() - setpoint) <= (thresholdPercent * setpoint) && (setpoint != 0)) {
+            plateauCount ++;
+        } else {
+            plateauCount = 0;
+        }
 
         if (setpoint == 0)
             voltageOutput = 0;
             
-        m_leftShooter.set(ControlMode.PercentOutput, voltageOutput / 12.0);
+        m_leftShooter.set(ControlMode.PercentOutput, MathUtil.clamp(voltageOutput / 12.0, -1, 1));
 
-        preTime = time;
+        prevTime = currTime;
+    }
+
+    public boolean isReady() {
+        return plateauCount >= PLATEAU_COUNT;
     }
 
     @Override

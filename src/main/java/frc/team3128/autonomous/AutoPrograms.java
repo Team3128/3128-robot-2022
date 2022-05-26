@@ -34,7 +34,6 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.Shooter;
-import frc.team3128.subsystems.Shooter.ShooterState;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -349,7 +348,6 @@ public class AutoPrograms {
             new CmdInPlaceTurn(180),
             
             new CmdRetractHopper(),
-            new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
@@ -373,7 +371,6 @@ public class AutoPrograms {
             new CmdInPlaceTurn(180),
             
             new CmdRetractHopper(),
-            new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
@@ -392,7 +389,6 @@ public class AutoPrograms {
             new CmdInPlaceTurn(180),
             
             new CmdRetractHopper(),
-            new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
@@ -468,7 +464,6 @@ public class AutoPrograms {
     private SequentialCommandGroup shootCmd() {
         return new SequentialCommandGroup(
             new CmdRetractHopper(),
-            new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
@@ -483,7 +478,6 @@ public class AutoPrograms {
     private SequentialCommandGroup shootCmd(int RPM, double angle) {
         return new SequentialCommandGroup(
             new CmdRetractHopper(),
-            new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new InstantCommand(() -> hood.startPID(angle)),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
@@ -495,7 +489,6 @@ public class AutoPrograms {
     private SequentialCommandGroup alignShootCmd() {
         return new SequentialCommandGroup(
             new CmdRetractHopper(),
-            new InstantCommand(() -> shooter.setState(ShooterState.UPPERHUB)),
             new ParallelCommandGroup(
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),

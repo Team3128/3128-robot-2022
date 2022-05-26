@@ -87,16 +87,9 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double LOW_kP = 1e-4; //1.24e-6;
-        public static final double LOW_kI = 0;
-        public static final double LOW_kD = 0;
-
-        public static final double HIGH_kP = 2e-4; // 3.2e-3;
-        public static final double HIGH_kI = 0;
-        public static final double HIGH_kD = 0; // 5e-4;
-
-        public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
-        public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
+        public static final double kP = 2e-4; // 3.2e-3;
+        public static final double kI = 0;
+        public static final double kD = 0; // 5e-4;
 
         public static final double kF = 0.00190678;
 
@@ -104,7 +97,9 @@ public class Constants {
         public static final double RPM_THRESHOLD_PERCENT = 0.05;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
-        
+
+        public static final double LOW_kV = 0.0017857 * 0.9; // 0.00163; //Velocity gain in PID Feed Forward
+        public static final double LOW_kA = 0.0053359 * 0.9; // 0.0349; //Acceleration gain PID Feed Forward
         public static final LinearSystem<N1, N1, N1> SHOOTER_CHAR = 
         LinearSystemId.identifyVelocitySystem(
             LOW_kV, 
@@ -210,10 +205,7 @@ public class Constants {
         public static final double kD = 0; //8e-6;
         public static final double kF = 0.49072349; 
 
-        public static final int PLATEAU_COUNT = 3;
-        public static final double TOLERANCE_MIN = 0.1; // degrees
-        public static final double TOLERANCE_MAX = 0.5; // degrees
-        public static final double TIME_TO_MAX_TOLERANCE = 4; // seconds
+        public static final double TOLERANCE_MIN = 0.3; // degrees
 
         public static final int HOOD_SHOOTER_GEAR_RATIO = 111; // Bowen number
         public static final double ENC_POSITION_CONVERSION_FACTOR = 360.0 / HOOD_SHOOTER_GEAR_RATIO; // Multiply by this to convert encoder rotations to hood degrees

@@ -48,7 +48,6 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.Shooter;
-import frc.team3128.subsystems.Shooter.ShooterState;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -113,7 +112,6 @@ public class RobotContainer {
         m_rightStick.getButton(1).whenPressed(
                 new SequentialCommandGroup(
                     new CmdRetractHopper(), 
-                    new InstantCommand(() -> m_shooter.setState(ShooterState.UPPERHUB)),
                     // new CmdExtendIntake(),
                     new ParallelCommandGroup(
                         // new RunCommand(m_intake::runIntake, m_intake),
@@ -149,7 +147,6 @@ public class RobotContainer {
         // lower hub shot
         m_rightStick.getButton(3).whenHeld(new SequentialCommandGroup(
                     new CmdRetractHopper(),
-                    new InstantCommand(() -> m_shooter.setState(ShooterState.LOWERHUB)),
                     new ParallelCommandGroup(
                         new RunCommand(m_drive::stop, m_drive),
                         new InstantCommand(() -> m_hopper.runHopper(-0.1)),
@@ -238,7 +235,7 @@ public class RobotContainer {
 
     public void init() {
         initPneumatics();
-        m_hood.zero();
+        m_hood.startPID(MIN_ANGLE);
     }
 
     private void initDashboard() {
