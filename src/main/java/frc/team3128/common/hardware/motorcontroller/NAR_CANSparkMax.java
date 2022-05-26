@@ -4,11 +4,12 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 
+import frc.team3128.common.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.MotorType;
 
-public class NAR_CANSparkMax extends CANSparkMax {
+public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	private double prevValue = 0;
 	private SparkMaxRelativeEncoder encoder;
@@ -47,27 +48,41 @@ public class NAR_CANSparkMax extends CANSparkMax {
 		return prevValue;
 	}
 
+	@Override
 	public double getSelectedSensorPosition() {
 		return encoder.getPosition();
 	}
 
+	@Override
 	public double getSelectedSensorVelocity() {
 		return encoder.getVelocity();
 	}
 
+	@Override
 	public double getMotorOutputVoltage() {
 		return getAppliedOutput() * getBusVoltage();
 	}
 
+	@Override
 	public void setEncoderPosition(double encPos) {
 		encoder.setPosition(encPos);
 	}
 
+	@Override
 	public void setSimPosition(double pos) {
 		encoder.setPosition(pos);
 	}
 
+	@Override
 	public void setSimVelocity(double vel) {
 		encoderSimVel.set(vel);
+	}
+
+	@Override
+	public void follow(NAR_EMotor motor) {
+		if(!(motor instanceof CANSparkMax)) {
+			throw new RuntimeException("Bad follow: NAR_CANSparkMax " + getDeviceId() + " attempted to follow non-CANSparkMax motor controller.");
+		}
+		super.follow((CANSparkMax)motor);
 	}
 }
