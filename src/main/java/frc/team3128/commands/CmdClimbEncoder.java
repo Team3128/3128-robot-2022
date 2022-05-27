@@ -9,6 +9,11 @@ public class CmdClimbEncoder extends CommandBase{
     private final double distance;
     private boolean isGoingDown;
 
+    /**
+     * Moves climber arms to stated distance
+     * @param distance distance to move arms to (encoder ticks)
+     * @Requirements Climber
+     */
     public CmdClimbEncoder(double distance) {
         m_climber = Climber.getInstance();
         this.distance = distance;
@@ -17,8 +22,9 @@ public class CmdClimbEncoder extends CommandBase{
 
     @Override
     public void initialize() {
-
-        if (distance > m_climber.getCurrentTicks()) { // want to go higher than current place = go up
+        
+        // want to go higher than current place = go up
+        if (distance > m_climber.getCurrentTicks()) { 
             m_climber.bothExtend();
             isGoingDown = false;
         }

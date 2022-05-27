@@ -8,7 +8,6 @@ import static frc.team3128.Constants.VisionConstants.*;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
-
 public class CmdAlign extends CommandBase {
 
     private enum VisionState {
@@ -28,7 +27,10 @@ public class CmdAlign extends CommandBase {
 
     private VisionState aimState = VisionState.SEARCHING;
 
-
+    /**
+     * Aligns the robot to the hub using the limelight
+     * @Requirements Drivetrain  
+     */
     public CmdAlign() {
         this.drive = NAR_Drivetrain.getInstance();
         this.limelights = LimelightSubsystem.getInstance();
@@ -51,10 +53,12 @@ public class CmdAlign extends CommandBase {
         currTime = RobotController.getFPGATime() / 1e6;
         switch (aimState) {
             case SEARCHING:
-                if(limelights.getShooterHasValidTarget())
+                if (limelights.getShooterHasValidTarget())
                     targetFoundCount++;
                 else
                     targetFoundCount = 0;
+                
+                // if target found for enough iterations, switch to FEEDBACK
                 if(targetFoundCount > 5) {
                     currHorizontalOffset = limelights.getShooterTX();
                     prevError = goalHorizontalOffset - currHorizontalOffset;
@@ -63,12 +67,14 @@ public class CmdAlign extends CommandBase {
                 break;
             
             case FEEDBACK:
+                // if no more valid target, switch to SEARCHING
                 if(!limelights.getShooterHasValidTarget()) {
                     aimState = VisionState.SEARCHING;
                     plateauCount = 0;
                     break;
                 }
 
+                // turn with PID loop using input as horizontal tx error to target
                 currHorizontalOffset = limelights.getShooterTX();
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
 
@@ -78,7 +84,8 @@ public class CmdAlign extends CommandBase {
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
-                
+    
+                // if degrees of horizontal tx error below threshold (aligned enough)
                 if (Math.abs(currError) < txThreshold) {
                     plateauCount++;
                     if (plateauCount > ALIGN_PLATEAU_COUNT) {

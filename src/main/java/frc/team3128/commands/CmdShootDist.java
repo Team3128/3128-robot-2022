@@ -12,7 +12,12 @@ public class CmdShootDist extends CommandBase {
     private LimelightSubsystem limelights;
     private Hood hood;
     private Hopper hopper;
-    
+
+    /**
+     * Shoot through calculating the approximate distance to target via the limelight 
+     * and initialize+execute the PID loops for the shooter and hood
+     * @Requirements Shooter, Hood
+     */
     public CmdShootDist() {
         shooter = Shooter.getInstance();
         limelights = LimelightSubsystem.getInstance();

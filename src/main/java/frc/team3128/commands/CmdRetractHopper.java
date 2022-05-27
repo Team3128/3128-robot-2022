@@ -7,6 +7,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class CmdRetractHopper extends WaitCommand {
     private Hopper m_hopper;
 
+    /**
+     * Runs hopper back to balls against intake and away from shooter flywheel
+     * 
+     * Intended to allow shooter to ramp up to speed
+     */
     public CmdRetractHopper() {
         super(0.5);
         m_hopper = Hopper.getInstance();

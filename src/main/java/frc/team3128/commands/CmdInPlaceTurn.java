@@ -11,6 +11,11 @@ public class CmdInPlaceTurn extends PIDCommand {
     private NAR_Drivetrain drivetrain;
     private double turnDeg;
 
+    /**
+     * Rotates the robot a given amount of degrees
+     * @param turnDeg degrees to turn the robot
+     * @Requirements Drivetrain
+     */
     public CmdInPlaceTurn(double turnDeg) {
 
         super(
@@ -24,6 +29,7 @@ public class CmdInPlaceTurn extends PIDCommand {
         this.drivetrain = NAR_Drivetrain.getInstance();
         this.turnDeg = turnDeg;
 
+        addRequirements(drivetrain);
         getController().enableContinuousInput(-180, 180);
         getController().setTolerance(TURN_TOLERANCE);
     }

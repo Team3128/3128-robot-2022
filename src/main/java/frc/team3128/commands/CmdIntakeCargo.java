@@ -8,7 +8,10 @@ public class CmdIntakeCargo extends CommandBase{
     private Intake m_intake; 
     private Hopper m_hopper;
 
-
+    /**
+     * Run intake and hopper forward
+     * @Requirements Intake, Hopper
+     */
     public CmdIntakeCargo(){
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();

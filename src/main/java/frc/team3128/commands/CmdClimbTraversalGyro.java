@@ -9,6 +9,10 @@ import static frc.team3128.Constants.ClimberConstants.*;
 public class CmdClimbTraversalGyro extends SequentialCommandGroup{
     private Climber m_climber;
 
+    /**
+     * Climbs robot to Traversal rung autonomously using gyro
+     * @Requirements Climber
+     */
     public CmdClimbTraversalGyro() {
         m_climber = Climber.getInstance();
 

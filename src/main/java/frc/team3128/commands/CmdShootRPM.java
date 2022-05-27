@@ -10,7 +10,12 @@ public class CmdShootRPM extends CommandBase {
     private Shooter shooter;
     private Hopper hopper;
     private double rpm;
-    
+
+    /**
+     * Shoot through initializing+executing the PID loop for the shooter with a parameter RPM
+     * @param rpm Target RPM for the shooter 
+     * @Requirements Shooter
+     */
     public CmdShootRPM(double rpm) {
         shooter = Shooter.getInstance();
         hopper = Hopper.getInstance();

@@ -16,6 +16,12 @@ public class CmdShootSingleBall extends CommandBase {
     private boolean prevIsReady = false;
     private boolean currIsReady;
     
+    /**
+     * Shoot a single ball when two in robot
+     * 
+     * Uses limelight approximated distance for the shooter and hood PID loops
+     * @Requirements Shooter, hood
+     */
     public CmdShootSingleBall() {
         shooter = Shooter.getInstance();
         limelights = LimelightSubsystem.getInstance();

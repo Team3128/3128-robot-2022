@@ -7,6 +7,10 @@ import frc.team3128.subsystems.Hood;
 
 public class CmdShoot extends SequentialCommandGroup {
 
+    /**
+     * Shoot without aligning using the limelight approximated distance 
+     * @Requirements Shooter, Hood 
+     */
     public CmdShoot() {
         addCommands(
             new CmdRetractHopper(),
@@ -14,6 +18,10 @@ public class CmdShoot extends SequentialCommandGroup {
         );
     }
 
+    /**
+     * Shoot without aligning using parameter RPM and angle
+     * @Requirements Shooter, Hood
+     */
     public CmdShoot(double RPM, double angle) {
         addCommands(
             new CmdRetractHopper(),
@@ -23,6 +31,10 @@ public class CmdShoot extends SequentialCommandGroup {
         );
     }
 
+    /**
+     * Shoot without aligning using parameter RPM and angle
+     * @Requirements Shooter, Hood
+     */
     public CmdShoot(int RPM, int angle) {
         addCommands(
             new CmdRetractHopper(),

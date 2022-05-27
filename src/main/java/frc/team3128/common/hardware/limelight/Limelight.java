@@ -70,7 +70,7 @@ public class Limelight {
      * Checks to see if the Limelight has a valid target
      */
     public boolean hasValidTarget() {
-        return getValueAverage(LimelightKey.VALID_TARGET, 1) > 0.99;
+        return getValue(LimelightKey.VALID_TARGET) > 0.99;
     }
 
     public double calculateDistToTopTarget(double targetHeight) {

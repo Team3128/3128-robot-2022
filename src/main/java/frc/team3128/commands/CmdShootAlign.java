@@ -5,6 +5,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class CmdShootAlign extends SequentialCommandGroup {
 
+    /**
+     * Align and shoot using the limelight approximated distance 
+     * @Requirements Drivetrain, Shooter, Hood
+     */
     public CmdShootAlign() {
         addCommands(
             new CmdRetractHopper(),

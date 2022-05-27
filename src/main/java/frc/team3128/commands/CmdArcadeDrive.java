@@ -16,6 +16,10 @@ public class CmdArcadeDrive extends CommandBase {
 
     private SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.ARCADE_DRIVE_RATE_LIMIT);
 
+    /**
+     * Drives the Differential Drivetrain robot with Arcade Drive
+     * @Requirements Drivetrain
+     */
     public CmdArcadeDrive(DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle) {
         m_drivetrain = NAR_Drivetrain.getInstance();
         

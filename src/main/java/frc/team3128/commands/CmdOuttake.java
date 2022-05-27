@@ -12,14 +12,27 @@ public class CmdOuttake extends CommandBase{
     private double intakePower;
     private double hopperPower;
 
+    /**
+     * Outtakes cargo with reversing intake and hopper at default powers
+     * @Requirements Intake, Hopper
+     */
     public CmdOuttake(){
         this(OUTTAKE_MOTOR_POWER, REVERSE_HOPPER_MOTOR_POWER);
     }
 
+    /**
+     * Outtakes cargo with reversing intake and hopper at parameter intake power
+     * @param power Intake power to run when outtaking [0, 1]
+     * @Requirements Intake, Hopper
+     */
     public CmdOuttake(double power){
         this(-power, -1.0);
     }
 
+    /**
+     * Outtakes cargo with reversing intake and hopper at default powers
+     * @Requirements Intake, Hopper
+     */
     public CmdOuttake(double intakePower, double hopperPower){
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();

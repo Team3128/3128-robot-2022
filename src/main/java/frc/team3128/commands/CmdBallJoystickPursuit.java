@@ -3,9 +3,10 @@ package frc.team3128.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team3128.Constants.DriveConstants;
+import static frc.team3128.Constants.DriveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.LimelightSubsystem;
@@ -33,7 +34,14 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
     private BallPursuitState aimState = BallPursuitState.SEARCHING;
 
-    
+    private SlewRateLimiter filter = new SlewRateLimiter(ARCADE_DRIVE_RATE_LIMIT);
+
+    /**
+     * Aligns robot to ball and pursuits autonomously and with joystick input
+     * 
+     * Functionally same as CmdArcadeDrive if no target spotted
+     * @Requirements Drivetrain
+     */
     public CmdBallJoystickPursuit(DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier throttleSupplier) {
         
         drive = NAR_Drivetrain.getInstance();
@@ -47,14 +55,10 @@ public class CmdBallJoystickPursuit extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-
-    }
-
-    @Override
     public void execute() {
         switch (aimState) {
             case SEARCHING:
+                // if no target, switch back to BLIND
                 if (limelights.getBallHasValidTarget()) {
                     targetCount++;
                 } else {
@@ -63,6 +67,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
                     aimState = BallPursuitState.BLIND;
                 }
 
+                // if targets found for enough iterations, switch to FEEDBACK
                 if (targetCount > BALL_THRESHOLD) {
                     Log.info("CmdBallJoystickPursuit", "Target found, switching to FEEDBACK.");
                     
@@ -77,17 +82,18 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 break;
             
             case FEEDBACK:
+                // if no target, switch to SEARCHING
                 if (!limelights.getBallHasValidTarget()) {
                     Log.info("CmdBallJoystickPursuit", "No valid target anymore.");
                     aimState = BallPursuitState.SEARCHING;
                 } 
                 else {
+                    // PID feedback loop for turning power based on horizontal tx error
                     currentHorizontalOffset = limelights.getBallTX();
 
                     currentTime = RobotController.getFPGATime() / 1e6; 
                     currentError = currentHorizontalOffset;
 
-                    // PID feedback loop for left+right powers based on horizontal offset errors
                     double turnPower = 0;
                     
                     turnPower += BALL_VISION_kP * currentError;
@@ -95,6 +101,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
                     turnPower = MathUtil.clamp(turnPower, -1, 1);
 
+                    // calculate x (forward/backward) power based on joystick input + constant FF
                     double xPower = MathUtil.clamp(
                         BALL_AUTO_PURSUIT_kF + 
                         xSupplier.getAsDouble() * throttleSupplier.getAsDouble()
@@ -109,7 +116,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
                     double multiplier = POWER_MULTIPLIER * 1.0;
 
-                    drive.arcadeDrive(xPower * multiplier, turnPower * POWER_MULTIPLIER);
+                    drive.arcadeDrive(filter.calculate(xPower * multiplier), turnPower * POWER_MULTIPLIER);
 
                     previousTime = currentTime;
                     previousError = currentError;
@@ -117,11 +124,12 @@ public class CmdBallJoystickPursuit extends CommandBase {
                 break;
             
             case BLIND:
+                // if no target, let driver have regular drive control of robot
                 double throttle = throttleSupplier.getAsDouble();
                 double x = xSupplier.getAsDouble();
-                double y = DriveConstants.ARCADE_DRIVE_TURN_MULT * ySupplier.getAsDouble();
+                double y = ARCADE_DRIVE_TURN_MULT * ySupplier.getAsDouble();
 
-                drive.arcadeDrive(x * throttle, y * throttle);
+                drive.arcadeDrive(filter.calculate(x * throttle), y);
 
                 if (limelights.getBallHasValidTarget()) {
                     Log.info("CmdBallJoystickPursuit", "Target found - Switching to SEARCHING");

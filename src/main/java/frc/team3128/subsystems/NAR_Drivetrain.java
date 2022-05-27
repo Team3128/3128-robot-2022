@@ -30,10 +30,10 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     // Initialize the generic motors
 
-    private NAR_TalonFX leftLeader = new NAR_TalonFX(DRIVE_MOTOR_LEFT_LEADER_ID);
-    private NAR_TalonFX rightLeader = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_LEADER_ID);
-    private NAR_TalonFX leftFollower = new NAR_TalonFX(DRIVE_MOTOR_LEFT_FOLLOWER_ID);
-    private NAR_TalonFX rightFollower = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    private NAR_TalonFX leftLeader;
+    private NAR_TalonFX rightLeader;
+    private NAR_TalonFX leftFollower;
+    private NAR_TalonFX rightFollower;
 
     private static NAR_Drivetrain instance;
 
@@ -80,6 +80,11 @@ public class NAR_Drivetrain extends SubsystemBase {
      * Initializes motors and sets up CAN frame periods
      */
     public void configMotors() {
+        leftLeader = new NAR_TalonFX(DRIVE_MOTOR_LEFT_LEADER_ID);
+        rightLeader = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_LEADER_ID);
+        leftFollower = new NAR_TalonFX(DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+        rightFollower = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
         
