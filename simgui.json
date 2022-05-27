@@ -6,6 +6,26 @@
           "open": true
         }
       },
+      "Talon FX[4]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[4]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[4]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[4]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      },
       "Talon SRX[3128]": {
         "header": {
           "open": true
@@ -120,6 +140,16 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Hopper": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Shooter": {
         "window": {
           "visible": true
         }
