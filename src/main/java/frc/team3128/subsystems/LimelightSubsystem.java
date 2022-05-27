@@ -8,6 +8,10 @@ import frc.team3128.common.hardware.limelight.LimelightKey;
 
 import static frc.team3128.Constants.VisionConstants.*;
 
+/**
+ * Class for the Limelight Subsystem 
+ */
+
 public class LimelightSubsystem extends SubsystemBase{
 
     public static LimelightSubsystem instance;
@@ -65,7 +69,7 @@ public class LimelightSubsystem extends SubsystemBase{
     }
 
     /**
-     * Wrapper function to get if the shooter has a valid target
+     * Wrapper function to get if the shooter limelight has a valid target
      */
     public boolean getShooterHasValidTarget() {
         return m_shooterLimelight.hasValidTarget();
@@ -86,20 +90,28 @@ public class LimelightSubsystem extends SubsystemBase{
     }
 
     /**
-     * Wrapper function to get if the ball has a valid target
+     * Wrapper function to get if the ball limelight has a valid target
      */
     public boolean getBallHasValidTarget() {
         return m_ballLimelight.hasValidTarget();
     }
-
+    
+    /**
+     * Returns top-facing limelight object
+     * @return shooterLimelight object
+     */
     public Limelight getShooterLimelight() {
         return m_shooterLimelight;
     }
 
+    /**
+     * Returns bottom-facing limelight object
+     * @return ballLimelight object
+     */
     public Limelight getBallLimelight() {
         return m_ballLimelight;
     }
-
+    
     public void turnShooterLEDOff() {
         m_shooterLimelight.setLEDMode(LEDMode.OFF);
     }

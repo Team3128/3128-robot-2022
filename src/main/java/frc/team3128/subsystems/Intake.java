@@ -11,6 +11,9 @@ import static frc.team3128.Constants.IntakeConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
+/**
+ * Class for the Intake Subsystem 
+ */
 
 public class Intake extends SubsystemBase {
 
@@ -31,6 +34,9 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
+    /**
+     * Initializes motors and sets up CAN frame periods
+     */
     private void configMotors () {
         m_intake = new NAR_TalonSRX(INTAKE_MOTOR_ID);
         m_intake.setInverted(true);
@@ -40,6 +46,10 @@ public class Intake extends SubsystemBase {
         m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
         m_intake.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
+
+    /**
+     * Initializes pneumatics 
+     */
     private void configPneumatics() {
         m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
                                                 INTAKE_SOLENOID_FORWARD_CHANNEL_ID, 
@@ -53,30 +63,44 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putString("Intake State", getSolenoid());
     }
 
+    /**
+     * Runs intake motor forward at default power 
+     */
     public void runIntake(){
         m_intake.set(ControlMode.PercentOutput, INTAKE_MOTOR_POWER);
     }
 
+    /**
+     * Runs intake motor forward at parameter power 
+     */
     public void runIntake(double power) {
         m_intake.set(ControlMode.PercentOutput, power);
     }
 
+    /**
+     * Stops intake motor
+     */
     public void stopIntake(){
         m_intake.set(ControlMode.PercentOutput, 0);
     }
 
+    /**
+     * Retracts intake pneumatics to upright state
+     */
     public void retractIntake(){
         m_intakeSolenoid.set(kReverse);
     }
 
+    /**
+     * Ejects intake pneumatics to out/ejected state
+     */
     public void ejectIntake(){
         m_intakeSolenoid.set(kForward);
-
-    }
-    public void off() {
-        m_intakeSolenoid.set(kOff); 
     }
 
+    /**
+     * Gets current intake pneumatics state
+     */
     public String getSolenoid() {
         return m_intakeSolenoid.get().toString();
     }

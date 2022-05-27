@@ -18,6 +18,10 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 
+/**
+ * Class for the Shooter Subsystem 
+ */
+
 public class Shooter extends PIDSubsystem {
 
     private static Shooter instance;
@@ -52,6 +56,9 @@ public class Shooter extends PIDSubsystem {
         return instance;
     }
 
+    /**
+     * Initializes motors and sets up CAN frame periods
+     */
     private void configMotors() {
         m_leftShooter = new NAR_TalonFX(LEFT_SHOOTER_ID);
         m_rightShooter = new NAR_TalonFX(RIGHT_SHOOTER_ID);
@@ -61,7 +68,6 @@ public class Shooter extends PIDSubsystem {
 
         m_rightShooter.follow(m_leftShooter);
 
-        // set CAN status frame periods
         m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
         m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
         m_rightShooter.setControlFramePeriod(ControlFrame.Control_3_General, 45);
@@ -94,11 +100,17 @@ public class Shooter extends PIDSubsystem {
         getController().setTolerance(RPM_THRESHOLD_PERCENT * rpm);
     }
 
+    /**
+     * Stops the shooter from shooting by setting the setpoint to 0
+     */
     public void stopShoot() {
         plateauCount = 0;
         setSetpoint(0);
     }
 
+    /**
+     * Gets the current shooter RPM 
+     */
     @Override
     public double getMeasurement() {
         return m_leftShooter.getSelectedSensorVelocity() * FALCON_NUpS_TO_RPM;
@@ -137,6 +149,9 @@ public class Shooter extends PIDSubsystem {
         prevTime = currTime;
     }
 
+    /**
+     * Returns if the shooter is ready to shoot
+     */
     public boolean isReady() {
         return (plateauCount >= PLATEAU_COUNT) && (getSetpoint() != 0);
     }
@@ -157,7 +172,11 @@ public class Shooter extends PIDSubsystem {
         
     }
 
-    public double calculateMotorVelocityFromDist(double dist) {
+    /**
+     * Calculates the preferred shooter RPM for shooting at distance dist
+     * Uses InterpolatingTreeMap in Constants
+     */
+    public double calculateRPMFromDist(double dist) {
         return shooterSpeedsMap.getInterpolated(new InterpolatingDouble(dist)).value;
     }
 }

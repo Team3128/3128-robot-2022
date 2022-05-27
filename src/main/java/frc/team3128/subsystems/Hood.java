@@ -14,6 +14,10 @@ import net.thefletcher.revrobotics.enums.IdleMode;
 import net.thefletcher.revrobotics.enums.MotorType;
 import net.thefletcher.revrobotics.enums.PeriodicFrame;
 
+/**
+ * Class for the Adjustable Hood Subsystem 
+ */
+
 public class Hood extends PIDSubsystem {
 
     private static Hood instance;
@@ -36,6 +40,9 @@ public class Hood extends PIDSubsystem {
         return instance;
     }
 
+    /**
+     * Initializes motors and sets up CAN frame periods
+     */
     private void configMotors() {
         m_hoodMotor = new NAR_CANSparkMax(HOOD_MOTOR_ID, MotorType.kBrushless);
         m_hoodMotor.setSmartCurrentLimit(HOOD_CURRENT_LIMIT);
@@ -48,6 +55,9 @@ public class Hood extends PIDSubsystem {
         m_hoodMotor.setControlFramePeriodMs(20);
     }
 
+    /**
+     * Initializes SparkMax encoder for the hood angle measurements
+     */
     private void configEncoder() {
         m_encoder = (SparkMaxRelativeEncoder) m_hoodMotor.getEncoder();
         m_encoder.setPositionConversionFactor(ENC_POSITION_CONVERSION_FACTOR);
@@ -60,12 +70,23 @@ public class Hood extends PIDSubsystem {
         SmartDashboard.putNumber("Hood Angle", getMeasurement());
     }
 
+    /**
+     * Begins the PID loop to achieve the desired angle to shoot
+     */
     public void startPID(double angle) {
         // angle = ConstantsInt.ShooterConstants.SET_ANGLE; // uncomment for interpolation
         super.setSetpoint(angle);
         getController().setTolerance(tolerance);
     }
 
+    /**
+     * Adds feedforward component that counteracts the gravitational force (Fg) 
+     * and the raw voltage output from the PID loop
+     * and convert it to a percentage of total possible voltage to apply to the motors.
+     * 
+     * @param output Output from the PID Loop 
+     * @param setpoint The desired setpoint angle for the PID Loop (angle)
+     */
     @Override
     protected void useOutput(double output, double setpoint) {
         // ff needs a fix b/c "degrees" are fake right now (min angle was given an arbitrary number, not the real number)
@@ -75,17 +96,23 @@ public class Hood extends PIDSubsystem {
         m_hoodMotor.set(MathUtil.clamp(voltageOutput / 12.0, -1, 1));
     }
 
+    /**
+     * Stops hood motor
+     */
     public void stop() {
         m_hoodMotor.set(0);
     }
 
     /**
-     * Encoder returns 0 deg when at min angle.
+     * Sets the encoder to 0 (corresponding to min angle)
      */
     public void zeroEncoder() {
         m_hoodMotor.setEncoderPosition(0);
     }
 
+    /**
+     * Gets current hood angle
+     */
     @Override
     public double getMeasurement() {
         return m_hoodMotor.getSelectedSensorPosition() + MIN_ANGLE;

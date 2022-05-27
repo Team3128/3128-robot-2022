@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 
+/**
+ * Class for the Drivetrain Subsystem 
+ */
+
 public class NAR_Drivetrain extends SubsystemBase {
 
     // Initialize the generic motors
@@ -72,6 +76,9 @@ public class NAR_Drivetrain extends SubsystemBase {
         return instance;
     }
 
+    /**
+     * Initializes motors and sets up CAN frame periods
+     */
     public void configMotors() {
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);
@@ -162,10 +169,16 @@ public class NAR_Drivetrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
+    /**
+     * @return the left encoder position in meters
+     */
     public double getLeftEncoderDistance() {
         return leftLeader.getSelectedSensorPosition() * DRIVE_NU_TO_METER;
     }
 
+    /**
+     * @return the right encoder position in meters
+     */
     public double getRightEncoderDistance() {
         return rightLeader.getSelectedSensorPosition() * DRIVE_NU_TO_METER;
     }

@@ -33,7 +33,7 @@ public class CmdShootSingleBall extends CommandBase {
     @Override
     public void execute() {
         double dist = limelights.calculateShooterDistance();
-        shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
+        shooter.beginShoot(shooter.calculateRPMFromDist(dist));
         hood.startPID(hood.calculateAngleFromDist(dist));
 
         prevIsReady = currIsReady;
