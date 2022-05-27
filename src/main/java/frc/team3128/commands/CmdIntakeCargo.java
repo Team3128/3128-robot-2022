@@ -37,6 +37,7 @@ public class CmdIntakeCargo extends CommandBase{
         m_hopper.stopHopper();
     }
 
+    @Override
     public boolean isFinished(){
         return false;
     }

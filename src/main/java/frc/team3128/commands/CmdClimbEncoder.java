@@ -35,10 +35,6 @@ public class CmdClimbEncoder extends CommandBase{
     }
 
     @Override
-    public void execute() {
-    }
-
-    @Override
     public void end(boolean interrupted) {
         m_climber.bothStop();
     }

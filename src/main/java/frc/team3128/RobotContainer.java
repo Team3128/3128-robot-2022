@@ -21,7 +21,6 @@ import static frc.team3128.Constants.HoodConstants.*;
 import static frc.team3128.Constants.ClimberConstants.*;
 
 import frc.team3128.autonomous.AutoPrograms;
-import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdBallJoystickPursuit;
 import frc.team3128.commands.CmdClimbEncoder;
@@ -118,8 +117,6 @@ public class RobotContainer {
         //             new CmdBallJoystickPursuit(
         //                 m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle),
         //             new CmdExtendIntakeAndRun()) 
-        //             // Wait 0.5s, then extend intake so as to not block vision
-        //                 .beforeStarting(new WaitCommand(0.5)));
 
         // lower hub shot
         m_rightStick.getButton(3).whenHeld(
@@ -205,6 +202,7 @@ public class RobotContainer {
             SmartDashboard.putData("Climber", m_climber);
             SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
             SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
+            SmartDashboard.putData("Limelights", m_ll);
         }
 
         NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());

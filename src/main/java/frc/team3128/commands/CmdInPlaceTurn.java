@@ -43,6 +43,7 @@ public class CmdInPlaceTurn extends PIDCommand {
         m_setpoint = () ->  setpoint;
     }
 
+    @Override
     public boolean isFinished() {
         return getController().atSetpoint();
     }

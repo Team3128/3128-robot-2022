@@ -21,7 +21,6 @@ public class CmdBallJoystickPursuit extends CommandBase {
     private NAR_Drivetrain drive;
     private LimelightSubsystem limelights;
 
-    private double previousVerticalAngle;
     private double approxDistance;
 
     private double currentError, previousError;
@@ -30,7 +29,7 @@ public class CmdBallJoystickPursuit extends CommandBase {
 
     private DoubleSupplier xSupplier, ySupplier, throttleSupplier;
 
-    private int targetCount, plateauCount;
+    private int targetCount;
 
     private BallPursuitState aimState = BallPursuitState.SEARCHING;
 

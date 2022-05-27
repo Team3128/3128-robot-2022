@@ -131,6 +131,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Field", field);
     }
 
+    @Override
     public void simulationPeriodic() {
 
         // Set motor voltage inputs
