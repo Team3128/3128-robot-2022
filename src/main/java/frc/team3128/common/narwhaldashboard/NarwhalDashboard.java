@@ -1,8 +1,10 @@
 package frc.team3128.common.narwhaldashboard;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +30,7 @@ public class NarwhalDashboard extends WebSocketServer {
     }
 
     private static HashMap<String, String> debugValues = new HashMap<String, String>();
-    private static LinkedHashMap<String, Command> autoPrograms = new LinkedHashMap<String, Command>();
+    private static ArrayList<String> autoPrograms = new ArrayList<String>();
 
     private static HashMap<String, DashButtonCallback> buttons = new HashMap<String, DashButtonCallback>();
     private static HashMap<String, NumericalDataCallback> numDataCallbacks = new HashMap<String, NumericalDataCallback>();
@@ -81,37 +83,20 @@ public class NarwhalDashboard extends WebSocketServer {
      * Clears the list of autonomous programs.
      */
     public static void clearAutos() {
-        autoPrograms = new LinkedHashMap<String, Command>();
+        autoPrograms = new ArrayList<String>();
     }
 
     /**
      * Adds an autonomous program to NarwhalDashboard's auto picker
      * 
      * @param name    - The human-readable name of the autonomous program
-     * @param program - The auto program to run if this element is chosen
      */
-    public static void addAuto(String name, Command program) {
-        autoPrograms.put(name, program);
+    public static void addAuto(String name) {
+        autoPrograms.add(name);
     }
 
     public static void addLimelight(Limelight light) {
         limelights.put(light.hostname, light);
-    }
-
-    /**
-     * Returns the currently selected auto program
-     */
-    public static Command getSelectedAuto() {
-        if (selectedAuto == null)
-            return null;
-
-        // Redundant to onMessage()
-        // if (!autoPrograms.containsKey(selectedAuto)) {
-        //     Log.recoverable("NarwhalDashboard", "Auto program \"" + selectedAuto
-        //             + "\" does not exist. Perhaps it was deleted between its selection and the beginning of the autonomous period?");
-        // }
-
-        return autoPrograms.get(selectedAuto);
     }
 
     public static String getSelectedAutoName() {
@@ -194,7 +179,7 @@ public class NarwhalDashboard extends WebSocketServer {
 
                 if(!pushed) {
                     JSONArray autoProgramArr = new JSONArray();
-                    for (String autoName : autoPrograms.keySet()) {
+                    for (String autoName : autoPrograms) {
                         autoProgramArr.add(autoName);
                     }
                     obj.put("auto", autoProgramArr);
@@ -245,7 +230,7 @@ public class NarwhalDashboard extends WebSocketServer {
 
             if (programName.equals("null")) {
                 selectedAuto = null;
-            } else if (autoPrograms.containsKey(programName)) {
+            } else if (autoPrograms.contains(programName)) {
                 selectedAuto = programName;
                 SmartDashboard.putString("Auto", programName);
                 Log.info("NarwhalDashboard", "Selected auto program: \"" + selectedAuto + "\"");

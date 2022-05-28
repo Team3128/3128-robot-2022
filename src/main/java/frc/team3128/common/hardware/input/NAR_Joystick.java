@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * Wrapper for the WPILib Joystick class. Works with Logitech Extreme 3D Pro and Thrustmaster T16000M.
- * 
+ * @author Daniel Wang
  */
 public class NAR_Joystick {
 

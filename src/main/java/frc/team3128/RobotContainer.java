@@ -146,8 +146,8 @@ public class RobotContainer {
 
         m_rightStick.getButton(16).whenPressed(() -> m_intake.retractIntake());
 
-        m_rightStick.getPOVButton(0).whenPressed(() -> m_ll.turnShooterLEDOn());
-        m_rightStick.getPOVButton(4).whenPressed(() -> m_ll.turnShooterLEDOff());
+        m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
+        m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
 
         //LEFT
 
