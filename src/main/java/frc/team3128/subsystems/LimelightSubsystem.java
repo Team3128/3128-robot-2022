@@ -44,7 +44,8 @@ public class LimelightSubsystem extends SubsystemBase{
      * in this function (eg: interpolation to get accurate distance)
      */
     public double calculateShooterDistance() {
-        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT);
+        // we need to redo interpolation
+        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT) + 10;
     }
 
     /**

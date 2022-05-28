@@ -27,6 +27,7 @@ public class CmdShootRPM extends CommandBase {
     @Override
     public void initialize() {
         // rpm = ConstantsInt.ShooterConstants.SET_RPM;
+        shooter.resetPlateauCount();
         shooter.beginShoot(rpm);
         hopper.runHopper(-0.1);
     }

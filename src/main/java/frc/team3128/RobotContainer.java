@@ -129,8 +129,6 @@ public class RobotContainer {
                         new CmdShoot(2800, 7));
 
         m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
-      
-        m_rightStick.getButton(6).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
 
@@ -156,6 +154,8 @@ public class RobotContainer {
         m_leftStick.getButton(2).whenPressed(() -> m_climber.resetLeftEncoder());        
 
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
+
+        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
         m_leftStick.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                     .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));

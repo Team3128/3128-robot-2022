@@ -31,6 +31,7 @@ public class CmdShootDist extends CommandBase {
     public void initialize() {
         limelights.turnShooterLEDOn();
         hopper.runHopper(-0.1);
+        shooter.resetPlateauCount();
     }
     
     @Override

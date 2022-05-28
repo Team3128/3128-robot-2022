@@ -85,6 +85,7 @@ public class Shooter extends PIDSubsystem {
         SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", getMeasurement());
         SmartDashboard.putBoolean("Shooter isReady", isReady());
+        SmartDashboard.putBoolean("atSetpoint", getController().atSetpoint());
     }
 
     /**
@@ -93,7 +94,6 @@ public class Shooter extends PIDSubsystem {
     public void beginShoot(double rpm) {
         thresholdPercent = RPM_THRESHOLD_PERCENT;
         prevTime = RobotController.getFPGATime() / 1e6;
-        plateauCount = 0;
 
         // rpm = ConstantsInt.ShooterConstants.SET_RPM; // uncomment for interpolation
         setSetpoint(rpm);
@@ -154,6 +154,13 @@ public class Shooter extends PIDSubsystem {
      */
     public boolean isReady() {
         return (plateauCount >= PLATEAU_COUNT) && (getSetpoint() != 0);
+    }
+
+    /**
+     * Resets the plateau count for Shooter.isReady()
+     */
+    public void resetPlateauCount() {
+        plateauCount = 0;
     }
 
     @Override

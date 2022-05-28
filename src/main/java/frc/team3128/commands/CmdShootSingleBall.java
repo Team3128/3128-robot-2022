@@ -34,6 +34,8 @@ public class CmdShootSingleBall extends CommandBase {
     @Override
     public void initialize() {
         hopper.runHopper(-0.1);
+        shooter.resetPlateauCount();
+        limelights.turnShooterLEDOn();
     }
     
     @Override

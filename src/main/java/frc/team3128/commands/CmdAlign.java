@@ -43,7 +43,7 @@ public class CmdAlign extends CommandBase {
 
     @Override
     public void initialize() {
-        limelights.turnShooterLEDOn();
+        // limelights.turnShooterLEDOn();
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
     }
@@ -109,7 +109,7 @@ public class CmdAlign extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drive.stop();
-        limelights.turnShooterLEDOff();
+        // limelights.turnShooterLEDOff();
     }
     
     @Override
