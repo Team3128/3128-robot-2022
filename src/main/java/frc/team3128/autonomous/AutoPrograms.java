@@ -20,13 +20,14 @@ import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdInPlaceTurn;
-import frc.team3128.commands.CmdInPlaceTurnVision;
 import frc.team3128.commands.CmdRetractHopper;
 import frc.team3128.commands.CmdShoot;
 import frc.team3128.commands.CmdShootAlign;
 import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdShootSingleBall;
+import frc.team3128.commands.CmdShootTurnVision;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
+import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
 import frc.team3128.subsystems.Intake;
@@ -157,8 +158,7 @@ public class AutoPrograms {
                                     new CmdExtendIntakeAndRun()
                                 ),
 
-                                turnRightToAligned(),
-                                new CmdShootAlign().withTimeout(2));
+                                new CmdShootTurnVision(-170));
                 break;
             case "4 Ball":
                 initialPose = trajectories.get("4Ball_Terminal180_i").getInitialPose();
@@ -203,10 +203,7 @@ public class AutoPrograms {
                                     new CmdExtendIntakeAndRun()
                                 ),
 
-                                new ParallelCommandGroup(
-                                    turnRightToAligned(),
-                                    new CmdShoot()
-                                ),
+                                new CmdShootTurnVision(-170),
 
                                 new InstantCommand(() -> intake.ejectIntake(), intake),
                                 new ParallelDeadlineGroup(
@@ -219,10 +216,7 @@ public class AutoPrograms {
 
                                 trajectoryCmd("5Ballv2_ii"),
 
-                                new ParallelCommandGroup(
-                                    turnRightToAligned(),
-                                    new CmdShoot()
-                                )
+                                new CmdShootTurnVision(-170)
                             );
                 break;
             case "S2H1":
@@ -395,6 +389,9 @@ public class AutoPrograms {
 
                                 new CmdShootAlign().withTimeout(2));
                 break;
+            default: 
+                Log.info("Auto Selector", "Something went wrong in getting the auto name - misspelling?");
+                break;
         }
 
         drive.resetPose(initialPose);
@@ -419,18 +416,6 @@ public class AutoPrograms {
                         drive::tankDriveVolts,
                         drive)
                 .andThen(() -> drive.stop());
-    }
-
-    private Command turnLeftToAligned() {
-        return new SequentialCommandGroup(
-            new CmdInPlaceTurnVision(170),
-            new CmdAlign());
-    }
-
-    private Command turnRightToAligned() {
-        return new SequentialCommandGroup(
-            new CmdInPlaceTurnVision(-170),
-            new CmdAlign()).withTimeout(3);
     }
 
     /**
