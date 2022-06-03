@@ -32,7 +32,8 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	public NAR_TalonFX(int deviceNumber) {
-		
+		this(deviceNumber, null);
+		this.motor = motor;
 	}
 
 	public void set(ControlMode controlMode, double outputValue) {
