@@ -20,7 +20,12 @@ public class NAR_VictorSPX extends WPI_VictorSPX {
      */
     public NAR_VictorSPX(int deviceNumber, NAR_Motor motor){
         super(deviceNumber);
+        this.motor = motor;
     }
+
+    public NAR_VictorSPX(int deviceNumber) {
+		this(deviceNumber, null);
+	}
 
     @Override
     public void set(ControlMode controlMode, double outputValue) {
