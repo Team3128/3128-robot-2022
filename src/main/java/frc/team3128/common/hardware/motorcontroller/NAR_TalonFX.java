@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.team3128.common.hardware.motor.NAR_Motor;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
@@ -13,12 +14,14 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonFXSimCollection motorSim;
+	private NAR_Motor motor;
 
 	/**	 
 	 * @param deviceNumber device id
 	 */
-	public NAR_TalonFX(int deviceNumber) {
+	public NAR_TalonFX(int deviceNumber, NAR_Motor motor) {
 		super(deviceNumber);
+		this.motor = motor;
 
 		if(RobotBase.isSimulation()){
 			motorSim = getTalonFXSimCollection();
@@ -26,6 +29,10 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 
 		configVoltageCompSaturation(12, 10);
 		enableVoltageCompensation(true);
+	}
+
+	public NAR_TalonFX(int deviceNumber) {
+		
 	}
 
 	public void set(ControlMode controlMode, double outputValue) {
@@ -72,6 +79,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 		if(!(motor instanceof IMotorController)) {
 			throw new RuntimeException("Bad follow: NAR_TalonFX " + getDeviceID() + " attempted to follow non-CTRE motor controller.");
 		}
-		super.follow((IMotorController)motor);
+		super.follow((IMotorController) motor);
 	}
 }

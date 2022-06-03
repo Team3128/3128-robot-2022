@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.team3128.common.hardware.motor.NAR_Motor;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 
 public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor {
@@ -13,11 +14,12 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonSRXSimCollection motorSim;
+	private NAR_Motor motor;
 
 	/**
 	 * @param deviceNumber device id
 	 */
-	public NAR_TalonSRX(int deviceNumber) {
+	public NAR_TalonSRX(int deviceNumber, NAR_Motor motor) {
 		super(deviceNumber);
 
 		if(RobotBase.isSimulation())

@@ -1,11 +1,16 @@
 package frc.team3128.subsystems;
 
+import frc.team3128.Constants;
 import frc.team3128.ConstantsInt;
+import frc.team3128.Robot;
+
 import static frc.team3128.Constants.HoodConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
@@ -28,6 +33,8 @@ public class Hood extends NAR_PIDSubsystem {
     private double time;
     private double prevTime;
 
+    private SingleJointedArmSim singleJointedArmSim;
+
     public static synchronized Hood getInstance() {
         if(instance == null) {
             instance = new Hood();
@@ -40,6 +47,17 @@ public class Hood extends NAR_PIDSubsystem {
 
         configMotors();
         configEncoder();
+
+        if(Robot.isSimulation()) {
+            singleJointedArmSim = new SingleJointedArmSim(
+                DCMotor.getNeo550(1), 
+                HOOD_SHOOTER_GEAR_RATIO, 
+                0, //TODO Find this (COMMUNISM OVER CAPITALISM) 
+                0.2400046, 
+                Units.degreesToRadians(3), 
+                Units.degreesToRadians(32), 
+                0.795601019, true);
+        }
     }
 
     private void configMotors() {
@@ -119,6 +137,18 @@ public class Hood extends NAR_PIDSubsystem {
         // double yay = 7.62717674e-8*dist*dist*dist*dist - 3.20341423e-5*dist*dist*dist + 5.01101227e-3*dist*dist - 2.624432553e-0*dist + 2.20193191e1;
 
         return MathUtil.clamp(hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, MIN_ANGLE, MAX_ANGLE);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        singleJointedArmSim.setInputVoltage(
+            m_hoodMotor.getMotorOutputVoltage()
+        );
+
+        singleJointedArmSim.update(0.02);
+
+        m_encoder.setPosition(singleJointedArmSim.getAngleRads()/(2*Math.PI));
+        m_hoodMotor.setSimVelocity(singleJointedArmSim.getVelocityRadPerSec() / Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION);
     }
 }
 

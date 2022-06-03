@@ -6,7 +6,8 @@ package frc.team3128.common.hardware.motorcontroller;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
-
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.team3128.common.hardware.motor.NAR_Motor;
 import frc.team3128.common.infrastructure.NAR_EMotor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
@@ -18,14 +19,18 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	private SparkMaxRelativeEncoder encoder;
 	private SimDeviceSim encoderSim;
 	private SimDouble encoderSimVel;
+	private NAR_Motor motor;
+
+	SingleJointedArmSim
 
 	/**
 	 * 
 	 * @param deviceNumber device id
 	 * @param type         kBrushed(0) for brushed motor, kBrushless(1) for brushless motor
 	 */
-	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
+	 public NAR_CANSparkMax(int deviceNumber, MotorType type, NAR_Motor motor) {
 		super(deviceNumber, type);
+		this.motor = motor;
 
 		restoreFactoryDefaults(); // Reset config parameters, unfollow other motor controllers
 
@@ -38,6 +43,11 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 			encoderSimVel = encoderSim.getDouble("Velocity");
 		}
 	}
+
+	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
+		this(deviceNumber, type, null);
+	}
+
 
 	@Override
 	public void set(double outputValue) {
