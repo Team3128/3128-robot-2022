@@ -45,14 +45,14 @@ import java.util.HashMap;
 
 public class AutoPrograms {
 
-    private static NAR_Drivetrain drive;
-    private static Shooter shooter;
-    private static Intake intake;
-    private static Hopper hopper;
-    private static Hood hood;
-    private static LimelightSubsystem limelights;
+    private NAR_Drivetrain drive;
+    private Shooter shooter;
+    private Intake intake;
+    private Hopper hopper;
+    private Hood hood;
+    private LimelightSubsystem limelights;
 
-    private static HashMap<String, Trajectory> trajectories;
+    private HashMap<String, Trajectory> trajectories;
 
     public AutoPrograms() {
         drive = NAR_Drivetrain.getInstance();
@@ -66,7 +66,7 @@ public class AutoPrograms {
         initAutoSelector();
     }
 
-    private static void loadTrajectories() {
+    private void loadTrajectories() {
         trajectories = new HashMap<String, Trajectory>();
 
         final String[] trajectoryNames = {
@@ -101,15 +101,16 @@ public class AutoPrograms {
         }
     }
 
-    private static void initAutoSelector() {
+    private void initAutoSelector() {
         String[] autoStrings = new String[] {"1 Ball", "2 Ball", "3 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
         for (String key : autoStrings) {
             NarwhalDashboard.addAuto(key);
         }
     }
 
-    public static Command getAutonomousCommand() {
-        String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+    public Command getAutonomousCommand() {
+        // String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+        String selectedAutoName = "3 Ball";
 
         if (selectedAutoName == null) {
             return null;
@@ -399,11 +400,11 @@ public class AutoPrograms {
     }
 
     // Helpers to define common commands used in autos
-    private static Command trajectoryCmd(String trajName) {
+    private Command trajectoryCmd(String trajName) {
         return trajectoryCmd(trajectories.get(trajName));
     }
 
-    private static Command trajectoryCmd(Trajectory traj) {
+    private Command trajectoryCmd(Trajectory traj) {
         return new RamseteCommand(
                         traj,
                         drive::getPose,
@@ -421,7 +422,7 @@ public class AutoPrograms {
     /**
      * pose is the same translation but flipped 180 rotation
      */
-    private static Pose2d inverseRotation(Pose2d pose) {
+    private Pose2d inverseRotation(Pose2d pose) {
         return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
     }
 }

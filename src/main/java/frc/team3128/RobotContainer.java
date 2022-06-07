@@ -68,7 +68,7 @@ public class RobotContainer {
     private Trigger isShooting;
 
     public RobotContainer() {
-        ConstantsInt.initTempConstants();
+        // ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
         m_intake = Intake.getInstance();
