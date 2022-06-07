@@ -1,6 +1,5 @@
 package frc.team3128.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -74,7 +73,6 @@ public class Shooter extends PIDSubsystem {
         
         m_leftShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
         m_leftShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
-        m_leftShooter.setControlFramePeriod(ControlFrame.Control_3_General, 20);
 
         m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }

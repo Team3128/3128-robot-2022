@@ -49,10 +49,9 @@ public class Hood extends PIDSubsystem {
         m_hoodMotor.enableVoltageCompensation(12.0);
         m_hoodMotor.setIdleMode(IdleMode.kBrake);
 
-        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 15);
-        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 45);
-        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 15);
-        m_hoodMotor.setControlFramePeriodMs(20);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 19);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 53);
     }
 
     /**
