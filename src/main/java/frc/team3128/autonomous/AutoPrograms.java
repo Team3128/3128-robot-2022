@@ -435,7 +435,8 @@ public class AutoPrograms {
     }
 
     public Command getAutonomousCommand() {
-        String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+        // String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+        String selectedAutoName = "4 Ball";
 
         if (selectedAutoName == null) {
             return null;
@@ -445,6 +446,7 @@ public class AutoPrograms {
         drive.resetPose(selectedInfo.initialPose);
 
         return selectedInfo.command;
+        // return auto_3Ball180;
     }
 
     // Helpers to define common commands used in autos
@@ -491,7 +493,7 @@ public class AutoPrograms {
                 new InstantCommand(() -> hood.startPID(angle)),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootRPM(RPM)
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper)
+            ).withTimeout(2).andThen(hopper::stopHopper)
         );
     }
 
@@ -504,7 +506,7 @@ public class AutoPrograms {
                 new CmdAlign(),
                 new InstantCommand(() -> hopper.runHopper(-0.1)),
                 new CmdShootDist()
-            ).withTimeout(2).andThen(hopper::stopHopper, hopper),
+            ).withTimeout(2).andThen(hopper::stopHopper),
             new InstantCommand(() -> limelights.turnShooterLEDOff())
         );
     }
