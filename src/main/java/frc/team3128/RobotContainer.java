@@ -14,13 +14,11 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
 import static frc.team3128.Constants.ClimberConstants.*;
 
-import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdBallJoystickPursuit;
 import frc.team3128.commands.CmdClimbEncoder;
@@ -64,10 +62,8 @@ public class RobotContainer {
     private NAR_Joystick m_rightStick;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
-
-    private AutoPrograms autos;
   
-    private boolean DEBUG = true;
+    private boolean DEBUG = true; 
 
     private Trigger isShooting;
 
@@ -92,9 +88,7 @@ public class RobotContainer {
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
-        autos = new AutoPrograms();
         initDashboard();
-        initLimelights(m_ll.getShooterLimelight(), m_ll.getBallLimelight()); 
         configureButtonBindings();
         
         if(RobotBase.isSimulation())
@@ -103,12 +97,11 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        //RIGHT
+        // RIGHT
         m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
-        // m_rightStick.getButton(1).whenHeld(
-        //                 new CmdShoot(2700, 12));
+        // m_rightStick.getButton(1).whenHeld(new CmdShoot(2700, 12));
 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun())
                                 .whenReleased(new CmdIntakeCargo().withTimeout(0.25));
@@ -149,7 +142,7 @@ public class RobotContainer {
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
 
-        //LEFT
+        // LEFT
 
         m_leftStick.getButton(2).whenPressed(() -> m_climber.resetLeftEncoder());        
 
@@ -181,7 +174,7 @@ public class RobotContainer {
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
 
-        // Triggers
+        // TRIGGERS
 
         isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
                                         .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
@@ -189,8 +182,9 @@ public class RobotContainer {
     }
 
     public void init() {
-        initPneumatics();
-        m_hood.startPID(MIN_ANGLE);
+        m_climber.retractPiston();
+        m_intake.retractIntake();
+        m_hood.startPID(HOME_ANGLE);
     }
 
     private void initDashboard() {
@@ -206,27 +200,17 @@ public class RobotContainer {
         }
 
         NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
-        NarwhalDashboard.startServer();       
-    }
-
-    public void stopDrivetrain() {
-        m_drive.stop();
-    }
-  
-    private void initLimelights(Limelight... limelightList) {
+        NarwhalDashboard.startServer();   
+        
         Log.info("NarwhalRobot", "Setting up limelight chooser...");
       
-        for (Limelight ll : limelightList) {
+        for (Limelight ll : new Limelight[] {m_ll.getShooterLimelight(), m_ll.getBallLimelight()}) {
             NarwhalDashboard.addLimelight(ll);
             ll.setLEDMode(LEDMode.OFF);
         }
-
     }
 
     public void updateDashboard() {
-
-        // Update necessary Nardash debug data
-
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
@@ -235,15 +219,5 @@ public class RobotContainer {
         NarwhalDashboard.put("y", m_drive.getPose().getY());
         NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
         NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicks());
-        
-    }
-
-    public void initPneumatics() {
-        m_climber.retractPiston();
-        m_intake.retractIntake();
-    }
-
-    public Command getAutonomousCommand() {
-        return autos.getAutonomousCommand();
     }
 }

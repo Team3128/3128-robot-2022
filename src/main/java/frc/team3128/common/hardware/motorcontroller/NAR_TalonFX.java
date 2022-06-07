@@ -63,9 +63,4 @@ public class NAR_TalonFX extends WPI_TalonFX {
 	public double getSelectedSensorVelocity() {
 		return super.getSelectedSensorVelocity() * 10; // convert nu/100ms to nu/s
 	}
-
-	@Override
-	public void follow(IMotorController motor) {
-		super.follow((IMotorController)motor);
-	}
 }

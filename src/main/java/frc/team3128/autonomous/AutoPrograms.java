@@ -45,14 +45,14 @@ import java.util.HashMap;
 
 public class AutoPrograms {
 
-    private NAR_Drivetrain drive;
-    private Shooter shooter;
-    private Intake intake;
-    private Hopper hopper;
-    private Hood hood;
-    private LimelightSubsystem limelights;
+    private static NAR_Drivetrain drive;
+    private static Shooter shooter;
+    private static Intake intake;
+    private static Hopper hopper;
+    private static Hood hood;
+    private static LimelightSubsystem limelights;
 
-    private HashMap<String, Trajectory> trajectories;
+    private static HashMap<String, Trajectory> trajectories;
 
     public AutoPrograms() {
         drive = NAR_Drivetrain.getInstance();
@@ -66,7 +66,7 @@ public class AutoPrograms {
         initAutoSelector();
     }
 
-    private void loadTrajectories() {
+    private static void loadTrajectories() {
         trajectories = new HashMap<String, Trajectory>();
 
         final String[] trajectoryNames = {
@@ -101,14 +101,14 @@ public class AutoPrograms {
         }
     }
 
-    private void initAutoSelector() {
+    private static void initAutoSelector() {
         String[] autoStrings = new String[] {"1 Ball", "2 Ball", "3 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
         for (String key : autoStrings) {
             NarwhalDashboard.addAuto(key);
         }
     }
 
-    public Command getAutonomousCommand() {
+    public static Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
 
         if (selectedAutoName == null) {
@@ -399,11 +399,11 @@ public class AutoPrograms {
     }
 
     // Helpers to define common commands used in autos
-    private Command trajectoryCmd(String trajName) {
+    private static Command trajectoryCmd(String trajName) {
         return trajectoryCmd(trajectories.get(trajName));
     }
 
-    private Command trajectoryCmd(Trajectory traj) {
+    private static Command trajectoryCmd(Trajectory traj) {
         return new RamseteCommand(
                         traj,
                         drive::getPose,
@@ -421,7 +421,7 @@ public class AutoPrograms {
     /**
      * pose is the same translation but flipped 180 rotation
      */
-    private Pose2d inverseRotation(Pose2d pose) {
+    private static Pose2d inverseRotation(Pose2d pose) {
         return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
     }
 }
