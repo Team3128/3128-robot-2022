@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -40,6 +41,8 @@ public class Intake extends SubsystemBase {
     private void configMotors () {
         m_intake = new NAR_TalonSRX(INTAKE_MOTOR_ID);
         m_intake.setInverted(true);
+
+        m_intake.setNeutralMode(NeutralMode.Coast);
 
         // set CAN status frame periods
         m_intake.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);

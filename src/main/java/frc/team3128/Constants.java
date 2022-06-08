@@ -8,8 +8,6 @@ import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
@@ -184,7 +182,6 @@ public class Constants {
         public static final double SMALL_VERTICAL_DISTANCE = 5; 
         public static final double ANGLED_DISTANCE = 12; 
     
-        public static final NeutralMode CLIMBER_NEUTRAL_MODE = NeutralMode.Brake;
         public static final double CLIMBER_POWER = 0.8; // 0.9
         public static final double MANUAL_POWER = 0.3;
 

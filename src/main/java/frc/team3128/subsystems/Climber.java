@@ -5,6 +5,7 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -53,8 +54,8 @@ public class Climber extends SubsystemBase {
         m_rightMotor.follow(m_leftMotor); 
         m_rightMotor.setInverted(InvertType.OpposeMaster);
         
-        m_leftMotor.setNeutralMode(CLIMBER_NEUTRAL_MODE);
-        m_rightMotor.setNeutralMode(CLIMBER_NEUTRAL_MODE);
+        m_leftMotor.setNeutralMode(NeutralMode.Brake);
+        m_rightMotor.setNeutralMode(NeutralMode.Brake);
 
         m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_leftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);

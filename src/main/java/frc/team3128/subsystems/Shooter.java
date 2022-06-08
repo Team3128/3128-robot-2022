@@ -2,6 +2,7 @@ package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
@@ -67,6 +68,9 @@ public class Shooter extends PIDSubsystem {
         m_rightShooter.setInverted(true);
 
         m_rightShooter.follow(m_leftShooter);
+
+        m_leftShooter.setNeutralMode(NeutralMode.Coast);
+        m_rightShooter.setNeutralMode(NeutralMode.Coast);
 
         m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
         m_rightShooter.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);

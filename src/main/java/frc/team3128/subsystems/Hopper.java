@@ -1,6 +1,7 @@
 package frc.team3128.subsystems; 
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -39,6 +40,9 @@ public class Hopper extends SubsystemBase {
     private void configMotors() {
         m_hopper1 = new NAR_TalonSRX(HOPPER_MOTOR_ID);
         m_hopper2 = new NAR_TalonSRX(HOPPER_MOTOR_2_ID);
+
+        m_hopper1.setNeutralMode(NeutralMode.Coast);
+        m_hopper2.setNeutralMode(NeutralMode.Coast);
 
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);

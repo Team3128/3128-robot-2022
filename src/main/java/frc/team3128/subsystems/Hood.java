@@ -47,6 +47,7 @@ public class Hood extends PIDSubsystem {
         m_hoodMotor = new NAR_CANSparkMax(HOOD_MOTOR_ID, MotorType.kBrushless);
         m_hoodMotor.setSmartCurrentLimit(HOOD_CURRENT_LIMIT); // Neo 550s require current limiting 20 A or below 
         m_hoodMotor.enableVoltageCompensation(12.0);
+        
         m_hoodMotor.setIdleMode(IdleMode.kBrake);
 
         m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 15);

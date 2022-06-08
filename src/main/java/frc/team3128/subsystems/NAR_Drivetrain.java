@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -97,6 +98,11 @@ public class NAR_Drivetrain extends SubsystemBase {
         leftFollower.setSafetyEnabled(false);
         rightLeader.setSafetyEnabled(false);
         rightFollower.setSafetyEnabled(false);
+
+        leftLeader.setNeutralMode(NeutralMode.Coast);
+        leftFollower.setNeutralMode(NeutralMode.Coast);
+        rightLeader.setNeutralMode(NeutralMode.Coast);
+        rightFollower.setNeutralMode(NeutralMode.Coast);
 
         // set CAN status frame periods
         leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
