@@ -30,18 +30,5 @@ public class CmdShoot extends SequentialCommandGroup {
                 new CmdShootRPM(RPM))
         );
     }
-
-    /**
-     * Shoot without aligning using parameter RPM and angle
-     * @Requirements Shooter, Hood
-     */
-    public CmdShoot(int RPM, int angle) {
-        addCommands(
-            new CmdRetractHopper(),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> Hood.getInstance().startPID(angle), Hood.getInstance()),
-                new CmdShootRPM(RPM))
-        );
-    }
     
 }

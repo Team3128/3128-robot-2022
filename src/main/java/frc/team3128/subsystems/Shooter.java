@@ -31,9 +31,7 @@ public class Shooter extends PIDSubsystem {
     private NAR_TalonFX m_leftShooter;
     private NAR_TalonFX m_rightShooter;
 
-    private double currTime = 0, prevTime = 0;
     private int plateauCount = 0;
-    private double thresholdPercent = RPM_THRESHOLD_PERCENT;
 
     private FlywheelSim m_shooterSim;
 
@@ -96,9 +94,6 @@ public class Shooter extends PIDSubsystem {
      * Begins the PID loop to achieve the desired RPM to shoot
      */
     public void beginShoot(double rpm) {
-        thresholdPercent = RPM_THRESHOLD_PERCENT;
-        prevTime = RobotController.getFPGATime() / 1e6;
-
         // rpm = ConstantsInt.ShooterConstants.SET_RPM; // uncomment for interpolation
         setSetpoint(rpm);
         getController().setTolerance(RPM_THRESHOLD_PERCENT * rpm);
@@ -132,25 +127,15 @@ public class Shooter extends PIDSubsystem {
         double ff = kF * setpoint;
         double voltageOutput = output + ff;
 
-        // Increase the tolerance as time goes on (unsure if this is needed, but we want to shoot better late than never)
-        currTime = RobotController.getFPGATime() / 1e6;
-        if (thresholdPercent < RPM_THRESHOLD_PERCENT_MAX) {
-            thresholdPercent += (currTime - prevTime) * (RPM_THRESHOLD_PERCENT_MAX - RPM_THRESHOLD_PERCENT) / TIME_TO_MAX_THRESHOLD;
-            getController().setTolerance(thresholdPercent * setpoint);
-        }
-
         if (getController().atSetpoint() && (setpoint != 0)) {
             plateauCount ++;
         } else {
             plateauCount = 0;
         }
 
-        if (setpoint == 0)
-            voltageOutput = 0;
+        if (setpoint == 0) voltageOutput = 0;
             
         m_leftShooter.set(ControlMode.PercentOutput, MathUtil.clamp(voltageOutput / 12.0, -1, 1));
-
-        prevTime = currTime;
     }
 
     /**

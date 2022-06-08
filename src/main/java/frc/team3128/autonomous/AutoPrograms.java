@@ -109,8 +109,8 @@ public class AutoPrograms {
     }
 
     public Command getAutonomousCommand() {
-        // String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
-        String selectedAutoName = "3 Ball";
+        String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+        // String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
 
         if (selectedAutoName == null) {
             return null;
