@@ -22,9 +22,7 @@ public class NAR_VictorSPX extends WPI_VictorSPX {
     @Override
     public void set(double speed) {
         if (speed != prevValue || prevControlMode != ControlMode.PercentOutput) {
-            super.set(prevValue);
-            prevValue = speed;
-            prevControlMode = ControlMode.PercentOutput;
+            set(ControlMode.PercentOutput, speed);
         }
     }
 

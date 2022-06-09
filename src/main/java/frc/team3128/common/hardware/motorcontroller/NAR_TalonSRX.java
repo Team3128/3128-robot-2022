@@ -28,9 +28,7 @@ public class NAR_TalonSRX extends WPI_TalonSRX {
 	@Override
 	public void set(double speed){
 		if (speed != prevValue || prevControlMode != ControlMode.PercentOutput){
-			super.set(speed);
-			prevValue = speed;
-			prevControlMode = ControlMode.PercentOutput;
+			set(ControlMode.PercentOutput, speed);
 		}
 	}
 

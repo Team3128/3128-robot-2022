@@ -33,7 +33,7 @@ public class NAR_Joystick {
 
         // Thrustmaster joystick has 16 buttons
         for (int i = 0; i < 16; i++)
-            buttons[i] = new JoystickButton(stick, i);
+            buttons[i] = new JoystickButton(stick, i+1);
         for (int i = 0; i < 8; i++)
             povButtons[i] = new POVButton(stick, i * 45);
 
