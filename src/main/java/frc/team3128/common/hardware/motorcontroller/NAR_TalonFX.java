@@ -28,9 +28,7 @@ public class NAR_TalonFX extends WPI_TalonFX {
 
 	@Override
 	public void set(double speed) {
-		if (speed != prevValue || prevControlMode != ControlMode.PercentOutput){
-			set(ControlMode.PercentOutput, speed);
-		}
+		set(ControlMode.PercentOutput, speed);
 	}
 
 	@Override
