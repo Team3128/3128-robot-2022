@@ -51,10 +51,6 @@ public class NAR_TalonSRX extends WPI_TalonSRX {
 		return prevControlMode;
 	}
 
-	public ControlMode getPrevControlMode() {
-		return prevControlMode;
-	}
-
 	public void setEncoderPosition(double n) {
 		setSelectedSensorPosition(n);
 	}
