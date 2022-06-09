@@ -20,15 +20,29 @@ public class NAR_VictorSPX extends WPI_VictorSPX {
     }
 
     @Override
+    public void set(double speed) {
+        if (speed != prevValue || prevControlMode != ControlMode.PercentOutput) {
+            super.set(prevValue);
+            prevValue = speed;
+            prevControlMode = ControlMode.PercentOutput;
+        }
+    }
+
+    @Override
     public void set(ControlMode controlMode, double outputValue) {
         if (outputValue != prevValue || controlMode != prevControlMode) {
             super.set(controlMode, outputValue);
             prevValue = outputValue;
+            prevControlMode = controlMode;
         }
     }
 
     public double getSetpoint() {
         return prevValue;
+    }
+
+    public ControlMode getControlMode() {
+        return prevControlMode;
     }
 }
     

@@ -1,7 +1,6 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -135,7 +134,7 @@ public class Shooter extends PIDSubsystem {
 
         if (setpoint == 0) voltageOutput = 0;
             
-        m_leftShooter.set(ControlMode.PercentOutput, MathUtil.clamp(voltageOutput / 12.0, -1, 1));
+        m_leftShooter.set(MathUtil.clamp(voltageOutput / 12.0, -1, 1));
     }
 
     /**

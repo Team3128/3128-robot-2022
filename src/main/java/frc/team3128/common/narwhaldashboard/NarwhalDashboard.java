@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -91,8 +92,8 @@ public class NarwhalDashboard extends WebSocketServer {
      * 
      * @param name    - The human-readable name of the autonomous program
      */
-    public static void addAuto(String name) {
-        autoPrograms.add(name);
+    public static void addAutos(String[] names) {
+        autoPrograms.addAll(Arrays.asList(names));
     }
 
     public static void addLimelight(Limelight light) {

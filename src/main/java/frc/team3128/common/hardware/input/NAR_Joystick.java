@@ -1,7 +1,5 @@
 package frc.team3128.common.hardware.input;
 
-import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -14,13 +12,13 @@ public class NAR_Joystick {
 
     private Joystick stick;
 
-    private HashMap<Integer, JoystickButton> buttons;
+    private JoystickButton[] buttons;
 
     /**
      * POV convention: 0 = up, 45 = top right, 90 = right, 135 = buttom right, 180 = down, 225 = bottom left, 270 = left, 315 = top left
      * We assign indices as angle / 45 [0,7]
      */
-    private HashMap<Integer, POVButton> povButtons;
+    private POVButton[] povButtons;
 
     private double xDeadband = 0.05;
     private double yDeadband = 0.05;
@@ -29,15 +27,15 @@ public class NAR_Joystick {
     private double throttleUpperBound = 0.8;
 
     public NAR_Joystick(int deviceNumber) {
-        buttons = new HashMap<Integer, JoystickButton>();
-        povButtons = new HashMap<Integer, POVButton>();
+        buttons = new JoystickButton[16];
+        povButtons = new POVButton[8];
         stick = new Joystick(deviceNumber);
 
         // Thrustmaster joystick has 16 buttons
-        for (int i = 1; i < 17; i++)
-            buttons.put(i, new JoystickButton(stick, i));
+        for (int i = 0; i < 16; i++)
+            buttons[i] = new JoystickButton(stick, i);
         for (int i = 0; i < 8; i++)
-            povButtons.put(i, new POVButton(stick, i * 45));
+            povButtons[i] = new POVButton(stick, i * 45);
 
     }
 
@@ -99,11 +97,11 @@ public class NAR_Joystick {
     }
 
     public JoystickButton getButton(int i) {
-        return buttons.get(i);
+        return buttons[i-1];
     }
 
     public POVButton getPOVButton(int i) {
-        return povButtons.get(i);
+        return povButtons[i];
     }
 
     public POVButton getUpPOVButton() {
