@@ -17,13 +17,11 @@ public class CmdAlign extends CommandBase {
     private NAR_Drivetrain drive;
     private LimelightSubsystem limelights;
 
-    private double txThreshold = TX_THRESHOLD;
     private double goalHorizontalOffset, currHorizontalOffset;
     private double prevError, currError;
     
     private double prevTime, currTime; // seconds
     private int plateauCount, targetFoundCount;
-    private boolean isAligned;
 
     private VisionState aimState = VisionState.SEARCHING;
 
@@ -36,7 +34,6 @@ public class CmdAlign extends CommandBase {
         this.limelights = LimelightSubsystem.getInstance();
 
         goalHorizontalOffset = TX_OFFSET;
-        isAligned = false;
 
         addRequirements(drive);
     }
@@ -84,26 +81,8 @@ public class CmdAlign extends CommandBase {
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
-    
-                // if degrees of horizontal tx error below threshold (aligned enough)
-                if (Math.abs(currError) < txThreshold) {
-                    plateauCount++;
-                    if (plateauCount > ALIGN_PLATEAU_COUNT) {
-                        isAligned = true;
-                    }
-                }
-                else {
-                    isAligned = false;
-                    plateauCount = 0;
-                }
-
-                prevError = currError;
-
-                break;
-                
         }
         prevTime = currTime;
-        SmartDashboard.putBoolean("Shooter isAligned", isAligned);
     }
 
     @Override
@@ -114,6 +93,20 @@ public class CmdAlign extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return isAligned;
+        // if degrees of horizontal tx error below threshold (aligned enough)
+        if (Math.abs(currError) < TX_THRESHOLD) {
+            plateauCount++;
+            if (plateauCount > ALIGN_PLATEAU_COUNT) {
+                SmartDashboard.putBoolean("Shooter isAligned", true);
+                return true;
+            }
+        }
+        else {
+            plateauCount = 0;
+        }
+        SmartDashboard.putBoolean("Shooter isAligned", false);
+        prevError = currError;
+
+        return false;
     }
 }
