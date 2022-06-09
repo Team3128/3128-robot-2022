@@ -1,7 +1,6 @@
 package frc.team3128.common.hardware.motorcontroller;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -27,15 +26,25 @@ public class NAR_TalonSRX extends WPI_TalonSRX {
 	}
 
 	@Override
+	public void set(double speed){
+		set(ControlMode.PercentOutput, speed);
+	}
+
+	@Override
 	public void set(ControlMode controlMode, double outputValue) {
 		if (outputValue != prevValue || controlMode != prevControlMode) {
 			super.set(controlMode, outputValue);
 			prevValue = outputValue;
+			prevControlMode = controlMode;
 		}
 	}
 
 	public double getSetpoint() {
 		return prevValue;
+	}
+
+	public ControlMode getControlMode() {
+		return prevControlMode;
 	}
 
 	public void setEncoderPosition(double n) {

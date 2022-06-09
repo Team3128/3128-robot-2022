@@ -24,8 +24,6 @@ public class Hood extends PIDSubsystem {
     private NAR_CANSparkMax m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
     
-    private double tolerance = TOLERANCE_MIN;
-    
     public Hood() {
         super(new PIDController(kP, kI, kD));
 
@@ -77,7 +75,7 @@ public class Hood extends PIDSubsystem {
     public void startPID(double angle) {
         // angle = ConstantsInt.ShooterConstants.SET_ANGLE; // uncomment for interpolation
         super.setSetpoint(angle);
-        getController().setTolerance(tolerance);
+        getController().setTolerance(TOLERANCE_MIN);
     }
 
     /**

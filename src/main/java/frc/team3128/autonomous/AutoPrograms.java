@@ -103,9 +103,7 @@ public class AutoPrograms {
 
     private void initAutoSelector() {
         String[] autoStrings = new String[] {"1 Ball", "2 Ball", "3 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
-        for (String key : autoStrings) {
-            NarwhalDashboard.addAuto(key);
-        }
+        NarwhalDashboard.addAutos(autoStrings);
     }
 
     public Command getAutonomousCommand() {

@@ -1,6 +1,5 @@
 package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlFrame;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
@@ -70,21 +69,21 @@ public class Intake extends SubsystemBase {
      * Runs intake motor forward at default power 
      */
     public void runIntake(){
-        m_intake.set(ControlMode.PercentOutput, INTAKE_MOTOR_POWER);
+        m_intake.set(INTAKE_MOTOR_POWER);
     }
 
     /**
      * Runs intake motor forward at parameter power 
      */
     public void runIntake(double power) {
-        m_intake.set(ControlMode.PercentOutput, power);
+        m_intake.set(power);
     }
 
     /**
      * Stops intake motor
      */
     public void stopIntake(){
-        m_intake.set(ControlMode.PercentOutput, 0);
+        m_intake.set(0);
     }
 
     /**
