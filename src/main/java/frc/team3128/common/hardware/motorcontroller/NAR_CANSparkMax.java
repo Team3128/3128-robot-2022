@@ -21,8 +21,6 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	private SimDouble encoderSimVel;
 	private NAR_Motor motor;
 
-	SingleJointedArmSim
-
 	/**
 	 * 
 	 * @param deviceNumber device id

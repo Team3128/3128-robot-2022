@@ -52,7 +52,7 @@ public class Hood extends NAR_PIDSubsystem {
             singleJointedArmSim = new SingleJointedArmSim(
                 DCMotor.getNeo550(1), 
                 HOOD_SHOOTER_GEAR_RATIO, 
-                0, //TODO Find this (COMMUNISM OVER CAPITALISM) 
+                0.054195108, //TODO Find this (COMMUNISM OVER CAPITALISM) 
                 0.2400046, 
                 Units.degreesToRadians(3), 
                 Units.degreesToRadians(32), 
@@ -147,8 +147,13 @@ public class Hood extends NAR_PIDSubsystem {
 
         singleJointedArmSim.update(0.02);
 
-        m_encoder.setPosition(singleJointedArmSim.getAngleRads()/(2*Math.PI));
+        double angle = singleJointedArmSim.getAngleRads()/(Math.PI) * 360;
+
+        m_encoder.setPosition(angle);
         m_hoodMotor.setSimVelocity(singleJointedArmSim.getVelocityRadPerSec() / Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION);
+        m_hoodMotor.setSimPosition(angle);
+
+        //SmartDashboard.putNumber("Hood Position", m_encoder.getPosition());
     }
 }
 
