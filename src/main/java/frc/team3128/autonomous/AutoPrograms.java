@@ -29,7 +29,7 @@ import static frc.team3128.autonomous.Trajectories.*;
 
 /**
  * Class to store information about autonomous routines.
- * @author Daniel Wang
+ * @author Daniel Wang, Mason Lam
  */
 
 public class AutoPrograms {
@@ -296,14 +296,18 @@ public class AutoPrograms {
         return autoCommand;
     }
     
-    //Drive trajectory and intake balls
+    /** 
+     * Follow trajectory and intake balls along the path
+     */
     private SequentialCommandGroup IntakePathCmd(String trajectory) {
-        ParallelDeadlineGroup movement = new ParallelDeadlineGroup (trajectoryCmd(trajectory), new CmdExtendIntakeAndRun());
+        ParallelDeadlineGroup movement = new ParallelDeadlineGroup(
+                                            trajectoryCmd(trajectory), 
+                                            new CmdExtendIntakeAndRun());
         return new SequentialCommandGroup(new InstantCommand(intake::ejectIntake, intake), movement);
     }
 
     /**
-     * pose is the same translation but flipped 180 rotation
+     * Flip 180 degrees rotation wise but keep same pose translation 
      */
     private Pose2d inverseRotation(Pose2d pose) {
         return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
