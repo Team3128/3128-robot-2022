@@ -25,6 +25,8 @@ public class CmdAlign extends CommandBase {
 
     private VisionState aimState = VisionState.SEARCHING;
 
+    private boolean isAligned;
+
     /**
      * Aligns the robot to the hub using the limelight
      * @Requirements Drivetrain  
@@ -34,6 +36,7 @@ public class CmdAlign extends CommandBase {
         this.limelights = LimelightSubsystem.getInstance();
 
         goalHorizontalOffset = TX_OFFSET;
+        isAligned = false;
 
         addRequirements(drive);
     }
@@ -81,8 +84,25 @@ public class CmdAlign extends CommandBase {
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
+                prevTime = currTime;
+
+                if (Math.abs(currError) < TX_THRESHOLD) {
+                    plateauCount++;
+                    if (plateauCount > ALIGN_PLATEAU_COUNT) {
+                        SmartDashboard.putBoolean("Shooter isAligned", true);
+                        isAligned = true;
+                    }
+                }
+                else {
+                    plateauCount = 0;
+                    isAligned = false;
+                }
+                SmartDashboard.putBoolean("Shooter isAligned", false);
+                prevError = currError;
+
+                break;
+                
         }
-        prevTime = currTime;
     }
 
     @Override
@@ -94,19 +114,6 @@ public class CmdAlign extends CommandBase {
     @Override
     public boolean isFinished() {
         // if degrees of horizontal tx error below threshold (aligned enough)
-        if (Math.abs(currError) < TX_THRESHOLD) {
-            plateauCount++;
-            if (plateauCount > ALIGN_PLATEAU_COUNT) {
-                SmartDashboard.putBoolean("Shooter isAligned", true);
-                return true;
-            }
-        }
-        else {
-            plateauCount = 0;
-        }
-        SmartDashboard.putBoolean("Shooter isAligned", false);
-        prevError = currError;
-
-        return false;
+        return isAligned;
     }
 }

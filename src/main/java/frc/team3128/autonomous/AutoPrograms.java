@@ -25,6 +25,7 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.Shooter;
+import static frc.team3128.autonomous.Trajectories.*;
 
 /**
  * Class to store information about autonomous routines.
@@ -41,7 +42,6 @@ public class AutoPrograms {
     private LimelightSubsystem limelights;
 
     public AutoPrograms() {
-        super();
         drive = NAR_Drivetrain.getInstance();
         shooter = Shooter.getInstance();
         intake = Intake.getInstance();
@@ -70,13 +70,13 @@ public class AutoPrograms {
 
         switch (selectedAutoName) {
             case "1 Ball":
-                initialPose = Trajectories.driveBack30In.getInitialPose();
+                initialPose = driveBack30In.getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                 new CmdShootAlign().withTimeout(2),
                                 trajectoryCmd("driveBack30In"));
                 break;
             case "2 Ball":
-                initialPose = Trajectories.twoBallTraj.getInitialPose();
+                initialPose = twoBallTraj.getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                     new InstantCommand(() -> intake.ejectIntake(), intake),
 
@@ -90,29 +90,29 @@ public class AutoPrograms {
                                     new CmdShootAlign().withTimeout(2));
                 break;
             case "3 Ball":
-                initialPose = Trajectories.get("3Ballv2_i").getInitialPose();
+                initialPose = get("3Ballv2_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
-                                pathCmd("3Ballv2_i"), 
+                                IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
                                 new CmdShootAlign().withTimeout(2),
 
-                                pathCmd("3Ballv2_ii"),
+                                IntakePathCmd("3Ballv2_ii"),
 
                                 new CmdShootTurnVision(-170));
                 break;
             case "4 Ball":
-                initialPose = Trajectories.get("4Ball_Terminal180_i").getInitialPose();
+                initialPose = get("4Ball_Terminal180_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                 //drive and intake 1 ball
-                                pathCmd("4Ball_Terminal180_i"),  
+                                IntakePathCmd("4Ball_Terminal180_i"),  
 
                                 //turn and shoot 2 balls
                                 new CmdInPlaceTurn(180),
                                 new CmdShoot(),
 
                                 //drive to ball and terminal and intake
-                                pathCmd("4Ball_Terminal180_ii"), 
+                                IntakePathCmd("4Ball_Terminal180_ii"), 
 
                                 new CmdExtendIntakeAndRun().withTimeout(1),
 
@@ -122,18 +122,18 @@ public class AutoPrograms {
                                 new CmdShootAlign().withTimeout(2));
                 break;
             case "5 Ball":
-                initialPose = Trajectories.get("3Ballv2_i").getInitialPose();
+                initialPose = get("3Ballv2_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
-                                pathCmd("3Ballv2_i"), 
+                                IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
                                 new CmdShootAlign().withTimeout(2),
 
-                                pathCmd("3Ballv2_ii"),
+                                IntakePathCmd("3Ballv2_ii"),
 
                                 new CmdShootTurnVision(-170),
 
-                                pathCmd("5Ballv2_i"),
+                                IntakePathCmd("5Ballv2_i"),
                                 
                                 new InstantCommand(() -> drive.stop()),
 
@@ -143,11 +143,11 @@ public class AutoPrograms {
                             );
                 break;
             case "S2H1":
-                initialPose = Trajectories.get("S2H2_i").getInitialPose();
+                initialPose = get("S2H2_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                 //drive and intake ball
 
-                                pathCmd("S2H2_i"),
+                                IntakePathCmd("S2H2_i"),
 
                                 //turn and shoot
                                 new CmdInPlaceTurn(180),
@@ -156,7 +156,7 @@ public class AutoPrograms {
                                 //turn and hoard first ball
                                 new CmdInPlaceTurn(90),
 
-                                pathCmd("S2H2_ii"),
+                                IntakePathCmd("S2H2_ii"),
 
                                 //drive behind hub
                                 new CmdInPlaceTurn(-90),
@@ -167,11 +167,11 @@ public class AutoPrograms {
                                 new CmdOuttake(0.5).withTimeout(2));
                 break;
             case "S2H2":
-                initialPose = Trajectories.get("S2H2_i").getInitialPose();
+                initialPose = get("S2H2_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
 
                                 //drive and intake ball
-                                pathCmd("S2H2_i"),
+                                IntakePathCmd("S2H2_i"),
 
                                 //turn and shoot
                                 new CmdInPlaceTurn(180),
@@ -180,12 +180,12 @@ public class AutoPrograms {
                                 //turn and hoard first ball
                                 new CmdInPlaceTurn(90),
 
-                                pathCmd("S2H2_ii"),
+                                IntakePathCmd("S2H2_ii"),
 
                                 // turn and hoard second ball
                                 new CmdInPlaceTurn(180),
 
-                                pathCmd("S2H2_iii"), 
+                                IntakePathCmd("S2H2_iii"), 
                                 
                                 //hide ball behind hub
                                 trajectoryCmd("S2H2_iv"),
@@ -195,10 +195,10 @@ public class AutoPrograms {
                                 new CmdOuttake(0.4).withTimeout(1));
                 break;
             case "S1H1":
-                initialPose = Trajectories.get("S1H1_i").getInitialPose();
+                initialPose = get("S1H1_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(          
                                 //drive and intake enemy ball          
-                                pathCmd("S1H1_i"), 
+                                IntakePathCmd("S1H1_i"), 
                                 new InstantCommand(() -> drive.stop()),
                                 
                                 //turn and shoot 1 ball
@@ -216,10 +216,10 @@ public class AutoPrograms {
                                 new CmdOuttake(0.5).withTimeout(1));
                 break;
             case "S1H2":
-                initialPose = Trajectories.get("S1H1_i").getInitialPose();
+                initialPose = get("S1H1_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                 //drive and intake enemy ball
-                                pathCmd("S1H1_i"), 
+                                IntakePathCmd("S1H1_i"), 
                                 new InstantCommand(() -> drive.stop()),
 
                                 //turn and shoot 1 ball
@@ -232,7 +232,7 @@ public class AutoPrograms {
                                 ).withTimeout(2),
 
                                 //drive and intake enemy ball
-                                pathCmd("S1H2_ii"), 
+                                IntakePathCmd("S1H2_ii"), 
 
                                 //hide enemy balls behind hub
                                 new CmdInPlaceTurn(180),
@@ -243,10 +243,10 @@ public class AutoPrograms {
                                 new CmdOuttake(0.5).withTimeout(2));
                 break;
             case "S1I1":
-                initialPose = Trajectories.get("S1H1_i").getInitialPose();
+                initialPose = get("S1H1_i").getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                 //drive and intake enemy ball
-                                pathCmd("S1H1_i"), 
+                                IntakePathCmd("S1H1_i"), 
                                 new InstantCommand(() -> drive.stop()),
 
                                 //turn and shoot 1 ball
@@ -271,7 +271,7 @@ public class AutoPrograms {
                                 //turn, drive, and intake enemy ball
                                 new CmdInPlaceTurn(70),
 
-                                pathCmd("Billiards_i"),
+                                IntakePathCmd("Billiards_i"),
 
                                 //turn and eject enemy ball
                                 new CmdInPlaceTurn(55),
@@ -280,7 +280,7 @@ public class AutoPrograms {
                                 new CmdOuttake(0.6).withTimeout(1.5),
 
                                 //drive and intake ball
-                                pathCmd("Billiards_ii"),
+                                IntakePathCmd("Billiards_ii"),
 
                                 //turn and shoot
                                 new CmdInPlaceTurn(96),
@@ -297,14 +297,9 @@ public class AutoPrograms {
     }
     
     //Drive trajectory and intake balls
-    private SequentialCommandGroup pathCmd(String trajectory) {
+    private SequentialCommandGroup IntakePathCmd(String trajectory) {
         ParallelDeadlineGroup movement = new ParallelDeadlineGroup (trajectoryCmd(trajectory), new CmdExtendIntakeAndRun());
         return new SequentialCommandGroup(new InstantCommand(intake::ejectIntake, intake), movement);
-    }
-
-    // Helpers to define common commands used in autos
-    private Command trajectoryCmd(String trajName) {
-        return Trajectories.trajectoryCmd(trajName);
     }
 
     /**
