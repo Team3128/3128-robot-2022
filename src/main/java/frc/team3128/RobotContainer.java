@@ -96,13 +96,15 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
+        //Right Joystick
 
-        // RIGHT
+        // Shoot
         m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_rightStick.getButton(1).whenHeld(new CmdShoot(2700, 12));
 
+        //Extend Intake and intake cargo 
         m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun())
                                 .whenReleased(new CmdIntakeCargo().withTimeout(0.25));
         
@@ -121,67 +123,91 @@ public class RobotContainer {
         m_rightStick.getButton(4).whenHeld(
                         new CmdShoot(2800, 7));
 
+        //auto climb
         m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
 
+        //climber down to 0
         m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
 
+        //Outtake the ball
         m_rightStick.getButton(8).whenHeld(new SequentialCommandGroup(
                                                 new CmdExtendIntake().withTimeout(0.1), 
                                                 new CmdOuttake()));
 
+        //Stop climber
         m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
 
+        //Extend Intake
         m_rightStick.getButton(11).whenPressed(new CmdExtendIntake());
 
+        //Hood set to lowest angle
         m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
 
+        //Hood set to highest angle
         m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
 
+        //Retract Intake
         m_rightStick.getButton(16).whenPressed(() -> m_intake.retractIntake());
 
+        //Limelight LED mode on
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
+        //Limelight Led mode off
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
 
-        // LEFT
-
+        // LEFT Joystick
+        
+        //Reset Climber encoder to 0
         m_leftStick.getButton(2).whenPressed(() -> m_climber.resetLeftEncoder());        
 
+        //Reset Hood encoder to minimum angle
         m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
 
+        //Climb to highest height
         m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
+        //Manual climber extend upwards fast
         m_leftStick.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                     .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
+        //Manual climber retract downwards fast
         m_leftStick.getDownPOVButton().whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
                                     .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
         
+        //Extend Climber piston Out
         m_leftStick.getRightPOVButton().whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
+        //Retract Climber piston In
         m_leftStick.getLeftPOVButton().whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
 
+        //Manual climber extend upwards slow
         m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
+        //Manual climber retract downwards slow
         m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
+        //Manual climber extend upwards fast
         m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
+        //Manual climber retract downwards fast
         m_leftStick.getButton(14).whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
+        //Extend Climber piston out
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
+        //Retract climber Piston in
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
 
         // TRIGGERS
-
+        //Runs Hopper whenever shooter is at correct RPM
         isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
                                         .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
         
     }
 
     public void init() {
+        // Start with climber and intake in, with hood at default angle
         m_climber.retractPiston();
         m_intake.retractIntake();
         m_hood.startPID(HOME_ANGLE);
