@@ -17,7 +17,6 @@ public class CmdAlign extends CommandBase {
     private NAR_Drivetrain drive;
     private LimelightSubsystem limelights;
 
-    private double txThreshold = TX_THRESHOLD;
     private double goalHorizontalOffset, currHorizontalOffset;
     private double prevError, currError;
     
@@ -86,7 +85,7 @@ public class CmdAlign extends CommandBase {
                 drive.tankDrive(-feedbackPower, feedbackPower);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
-                if (Math.abs(currError) < txThreshold) {
+                if (Math.abs(currError) < TX_THRESHOLD) {
                     plateauCount++;
                     if (plateauCount > ALIGN_PLATEAU_COUNT) {
                         isAligned = true;

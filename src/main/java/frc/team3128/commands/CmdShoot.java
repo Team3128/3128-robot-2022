@@ -8,7 +8,7 @@ import frc.team3128.subsystems.Hood;
 public class CmdShoot extends SequentialCommandGroup {
 
     /**
-     * Shoot without aligning using the limelight approximated distance 
+     * Shoot without aligning, uses the limelight distance 
      * @Requirements Shooter, Hood 
      */
     public CmdShoot() {
