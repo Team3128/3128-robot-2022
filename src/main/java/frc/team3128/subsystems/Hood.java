@@ -5,120 +5,126 @@ import static frc.team3128.Constants.HoodConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
-import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_PIDSubsystem;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.IdleMode;
 import net.thefletcher.revrobotics.enums.MotorType;
 import net.thefletcher.revrobotics.enums.PeriodicFrame;
 
-public class Hood extends NAR_PIDSubsystem {
+/**
+ * Class for the Adjustable Hood Subsystem 
+ */
+
+public class Hood extends PIDSubsystem {
 
     private static Hood instance;
     private NAR_CANSparkMax m_hoodMotor;
-    //private NAR_TalonFX m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
     
-    private double tolerance = TOLERANCE_MIN;
-
-    private double time;
-    private double prevTime;
-
-    public static synchronized Hood getInstance() {
-        if(instance == null) {
-            instance = new Hood();
-        }
-        return instance;
-    }
-
     public Hood() {
-        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
+        super(new PIDController(kP, kI, kD));
 
         configMotors();
         configEncoder();
     }
 
-    private void configMotors() {
-        m_hoodMotor = new NAR_CANSparkMax(HOOD_MOTOR_ID, MotorType.kBrushless);
-        m_hoodMotor.setSmartCurrentLimit(HOOD_CURRENT_LIMIT);
-        m_hoodMotor.enableVoltageCompensation(12.0);
-        m_hoodMotor.setIdleMode(IdleMode.kBrake);
-
-        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 19);
-        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
-        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 53);
+    public static synchronized Hood getInstance() {
+        if (instance == null) {
+            instance = new Hood();
+        }
+        return instance;
     }
 
+    /**
+     * Initializes motors and sets up CAN frame periods
+     */
+    private void configMotors() {
+        m_hoodMotor = new NAR_CANSparkMax(HOOD_MOTOR_ID, MotorType.kBrushless);
+        m_hoodMotor.setSmartCurrentLimit(HOOD_CURRENT_LIMIT); // Neo 550s require current limiting 20 A or below 
+        m_hoodMotor.enableVoltageCompensation(12.0);
+        
+        m_hoodMotor.setIdleMode(IdleMode.kBrake);
+
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 15);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 45);
+        m_hoodMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 15);
+        m_hoodMotor.setControlFramePeriodMs(20);
+    }
+
+    /**
+     * Initializes SparkMax encoder for the hood angle measurements
+     */
     private void configEncoder() {
         m_encoder = (SparkMaxRelativeEncoder) m_hoodMotor.getEncoder();
         m_encoder.setPositionConversionFactor(ENC_POSITION_CONVERSION_FACTOR);
     }
 
-    public void setSpeed(double speed) {
-        m_hoodMotor.set(speed);
+    @Override
+    public void periodic() {
+        super.periodic();
+        SmartDashboard.putNumber("Hood Setpoint", getSetpoint());
+        SmartDashboard.putNumber("Hood Angle", getMeasurement());
     }
 
+    /**
+     * Begins the PID loop to achieve the desired angle to shoot
+     */
+    public void startPID(double angle) {
+        // angle = ConstantsInt.ShooterConstants.SET_ANGLE; // uncomment for interpolation
+        super.setSetpoint(angle);
+        getController().setTolerance(TOLERANCE_MIN);
+    }
+
+    /**
+     * Adds feedforward component that counteracts the gravitational force (Fg) 
+     * and the raw voltage output from the PID loop
+     * and convert it to a percentage of total possible voltage to apply to the motors.
+     * 
+     * @param output Output from the PID Loop 
+     * @param setpoint The desired setpoint angle for the PID Loop (angle)
+     */
+    @Override
+    protected void useOutput(double output, double setpoint) {
+        // ff needs a fix b/c "degrees" are fake right now (min angle was given an arbitrary number, not the real number)
+        double ff = kF * Math.cos(Units.degreesToRadians(setpoint)); // ff keeps the hood at steady to counteract Fg (gravity)
+        double voltageOutput = output + ff;
+
+        m_hoodMotor.set(MathUtil.clamp(voltageOutput / 12.0, -1, 1));
+    }
+
+    /**
+     * Stops hood motor
+     */
     public void stop() {
         m_hoodMotor.set(0);
     }
 
     /**
-     * Encoder returns 0 deg when at min angle.
+     * Sets the encoder to 0 (corresponding to min angle)
      */
     public void zeroEncoder() {
         m_hoodMotor.setEncoderPosition(0);
     }
 
-    public void startPID(double angle) {
-        tolerance = TOLERANCE_MIN;
-        // angle = ConstantsInt.ShooterConstants.SET_ANGLE;
-        super.setSetpoint(angle);
-        super.resetPlateauCount();
-        getController().setTolerance(tolerance);
-    }
-
     /**
-     * Attempts to PID to minimum angle. Will likely be replaced by full homing routine once limit switch is added.
+     * Gets current hood angle
      */
-    public void zero() {
-        startPID(MIN_ANGLE);
-    }
-
-    @Override
-    protected void useOutput(double output, double setpoint) {
-        double ff = kF * Math.cos(Units.degreesToRadians(setpoint));
-        double voltageOutput = output + ff;
-
-        time = RobotController.getFPGATime() / 1e6;
-        if (tolerance < TOLERANCE_MAX) {
-            tolerance += (time - prevTime) * (TOLERANCE_MAX - TOLERANCE_MIN) / TIME_TO_MAX_TOLERANCE;
-            getController().setTolerance(tolerance);
-        }
-
-        checkPlateau(setpoint, tolerance);
-
-        m_hoodMotor.set(voltageOutput / 12.0);
-
-        prevTime = time;
-
-        // SmartDashboard.putNumber("Hood voltage", voltageOutput);
-        // SmartDashboard.putNumber("Hood percentage output", voltageOutput / 12.0);
-
-    }
-
     @Override
     public double getMeasurement() {
         return m_hoodMotor.getSelectedSensorPosition() + MIN_ANGLE;
     }
 
-    public double calculateAngleFromDistance(double dist) {
-        // double yay = 7.62717674e-8*dist*dist*dist*dist - 3.20341423e-5*dist*dist*dist + 5.01101227e-3*dist*dist - 2.624432553e-0*dist + 2.20193191e1;
-
-        return MathUtil.clamp(hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, MIN_ANGLE, MAX_ANGLE);
+    /**
+     * Calculates the preferred hood angle for shooting at distance dist
+     * Uses InterpolatingTreeMap in Constants
+     */
+    public double calculateAngleFromDist(double dist) {
+        return MathUtil.clamp(
+            hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, 
+            MIN_ANGLE, MAX_ANGLE);
     }
 }
 
