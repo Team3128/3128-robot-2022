@@ -60,6 +60,7 @@ public class Hood extends PIDSubsystem {
     private void configEncoder() {
         m_encoder = (SparkMaxRelativeEncoder) m_hoodMotor.getEncoder();
         m_encoder.setPositionConversionFactor(ENC_POSITION_CONVERSION_FACTOR);
+        zeroEncoder();
     }
 
     @Override
