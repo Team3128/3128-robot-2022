@@ -35,7 +35,7 @@ public class Shooter extends PIDSubsystem {
     private FlywheelSim m_shooterSim;
 
     public Shooter() {
-        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
+        super(new PIDController(kP, kI, kD));
     
         configMotors();
 
