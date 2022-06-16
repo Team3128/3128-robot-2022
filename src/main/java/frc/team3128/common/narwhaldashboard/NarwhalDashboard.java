@@ -158,7 +158,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 JSONObject constantsObj = new JSONObject();
                 for(String category : ConstantsInt.categories.keySet()) {
                     JSONArray catArr = new JSONArray();
-                    List<Field> fields = ConstantsInt.getConstantInfo(category);
+                    Field[] fields = ConstantsInt.getConstantInfo(category);
                     for(Field field : fields) {
                         try {
                         // get value from Field
