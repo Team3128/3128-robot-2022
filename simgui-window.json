@@ -1,11 +1,11 @@
 {
   "MainWindow": {
     "GLOBAL": {
-      "height": "991",
+      "height": "1779",
       "maximized": "1",
       "style": "0",
       "userScale": "2",
-      "width": "1920",
+      "width": "2880",
       "xpos": "0",
       "ypos": "34"
     }
@@ -16,55 +16,60 @@
       "Pos": "532,45",
       "Size": "941,571"
     },
+    "###/SmartDashboard/Hood": {
+      "Collapsed": "0",
+      "Pos": "179,255",
+      "Size": "270,134"
+    },
     "###/SmartDashboard/Hopper": {
       "Collapsed": "0",
       "Pos": "255,86",
-      "Size": "178,98"
+      "Size": "270,134"
     },
     "###/SmartDashboard/Shooter": {
       "Collapsed": "0",
       "Pos": "253,195",
-      "Size": "178,98"
+      "Size": "270,134"
     },
     "###FMS": {
       "Collapsed": "0",
       "Pos": "5,540",
-      "Size": "336,164"
+      "Size": "495,218"
     },
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "119,729",
-      "Size": "976,179"
+      "Size": "1516,249"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
-      "Pos": "1533,86",
+      "Pos": "2214,128",
       "Size": "300,560"
     },
     "###Keyboard 1 Settings": {
       "Collapsed": "0",
-      "Pos": "1210,90",
+      "Pos": "2042,639",
       "Size": "300,560"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "1140,696",
-      "Size": "750,185"
+      "Pos": "1050,958",
+      "Size": "1385,804"
     },
     "###Other Devices": {
       "Collapsed": "0",
-      "Pos": "1497,31",
+      "Pos": "1818,24",
       "Size": "250,695"
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "93,294",
-      "Size": "232,254"
+      "Pos": "329,1145",
+      "Size": "354,362"
     },
     "###Timing": {
       "Collapsed": "0",
-      "Pos": "5,150",
-      "Size": "162,142"
+      "Pos": "-7,239",
+      "Size": "241,187"
     },
     "Debug##Default": {
       "Collapsed": "0",
@@ -74,7 +79,7 @@
     "Robot State": {
       "Collapsed": "0",
       "Pos": "5,20",
-      "Size": "109,114"
+      "Size": "161,159"
     }
   }
 }

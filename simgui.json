@@ -144,6 +144,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Hood": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Hopper": {
         "window": {
           "visible": true
