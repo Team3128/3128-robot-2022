@@ -10,30 +10,20 @@ import java.util.HashMap;
 
 import frc.team3128.common.utility.Log;
 
-public class ConstantsInt extends Constants {
+public class ConstantsInt {
 
     public static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
-
-    //Get each class in the Constants class
-    private static class ConversionConstants extends Constants.ConversionConstants {}
-    private static class DriveConstants extends Constants.DriveConstants {}
-    private static class ClimberConstants extends Constants.ClimberConstants {}
-    public static class ShooterConstants extends Constants.ShooterConstants {}
-    private static class HopperConstants extends Constants.HopperConstants {}
-    private static class IntakeConstants extends Constants.IntakeConstants {}
-    private static class VisionConstants extends Constants.VisionConstants {}
-
 
     static {
         categories = new HashMap<String, Class<?>>();
         //Add each class to the HashMap
-        categories.put("ConversionConstants", ConstantsInt.ConversionConstants.class);
-        categories.put("DriveConstants", ConstantsInt.DriveConstants.class);
-        categories.put("ClimberConstants", ConstantsInt.ClimberConstants.class);
-        categories.put("ShooterConstants", ConstantsInt.ShooterConstants.class);
-        categories.put("HopperConstants", ConstantsInt.HopperConstants.class);
-        categories.put("IntakeConstants", ConstantsInt.IntakeConstants.class);
-        categories.put("VisionConstants", ConstantsInt.VisionConstants.class);
+        categories.put("ConversionConstants", Constants.ConversionConstants.class);
+        categories.put("DriveConstants", Constants.DriveConstants.class);
+        categories.put("ClimberConstants", Constants.ClimberConstants.class);
+        categories.put("ShooterConstants", Constants.ShooterConstants.class);
+        categories.put("HopperConstants", Constants.HopperConstants.class);
+        categories.put("IntakeConstants", Constants.IntakeConstants.class);
+        categories.put("VisionConstants", Constants.VisionConstants.class);
         
         initTempConstants();
     }
