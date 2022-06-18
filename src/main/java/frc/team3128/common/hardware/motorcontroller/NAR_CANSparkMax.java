@@ -54,7 +54,7 @@ public class NAR_CANSparkMax extends CANSparkMax {
 	}
 
 	public double getSelectedSensorVelocity() {
-		return encoder.getVelocity();
+		return encoder.getVelocity() / 60; // convert from nu/min to nu/sec
 	}
 
 	public double getMotorOutputVoltage() {
