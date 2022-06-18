@@ -4,13 +4,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.subsystems.Climber;
-import frc.team3128.subsystems.NAR_Drivetrain;
 import static frc.team3128.Constants.ClimberConstants.*;
-import frc.team3128.Constants.ClimberConstants;
 
 public class CmdClimbTraversalGyro extends SequentialCommandGroup{
     private Climber m_climber;
 
+    /**
+     * Climbs robot to Traversal rung autonomously using gyro
+     * @Requirements Climber
+     */
     public CmdClimbTraversalGyro() {
         m_climber = Climber.getInstance();
 

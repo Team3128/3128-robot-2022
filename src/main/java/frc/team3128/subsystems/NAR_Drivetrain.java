@@ -1,5 +1,6 @@
 package frc.team3128.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.kauailabs.navx.frc.AHRS;
@@ -21,16 +22,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
-import frc.team3128.common.infrastructure.NAR_EMotor;
+
+/**
+ * Class for the Drivetrain Subsystem 
+ */
 
 public class NAR_Drivetrain extends SubsystemBase {
 
     // Initialize the generic motors
 
-    private NAR_TalonFX leftLeader = new NAR_TalonFX(DRIVE_MOTOR_LEFT_LEADER_ID);
-    private NAR_TalonFX rightLeader = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_LEADER_ID);
-    private NAR_TalonFX leftFollower = new NAR_TalonFX(DRIVE_MOTOR_LEFT_FOLLOWER_ID);
-    private NAR_TalonFX rightFollower = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    private NAR_TalonFX leftLeader;
+    private NAR_TalonFX rightLeader;
+    private NAR_TalonFX leftFollower;
+    private NAR_TalonFX rightFollower;
 
     private static NAR_Drivetrain instance;
 
@@ -38,38 +42,13 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDrivetrainSim robotDriveSim;
     private DifferentialDriveOdometry odometry;
 
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
     
     public NAR_Drivetrain(){
-
-        leftFollower.follow((NAR_EMotor)leftLeader);
-        rightFollower.follow((NAR_EMotor)rightLeader);
         
-        leftLeader.setInverted(true);
-        leftFollower.setInverted(true);
-        rightLeader.setInverted(false);
-        rightFollower.setInverted(false);
-
-        leftLeader.setSafetyEnabled(false);
-        leftFollower.setSafetyEnabled(false);
-        rightLeader.setSafetyEnabled(false);
-        rightFollower.setSafetyEnabled(false);
-
-        // set CAN status frame periods
-        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
-        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
-
-        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
-        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
-
-        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
-        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
-        
-        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
-        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
-
+        configMotors();
 
         robotDrive = new DifferentialDrive(
             new MotorControllerGroup(leftLeader, leftFollower),
@@ -98,21 +77,67 @@ public class NAR_Drivetrain extends SubsystemBase {
         return instance;
     }
 
+    /**
+     * Initializes motors and sets up CAN frame periods
+     */
+    public void configMotors() {
+        leftLeader = new NAR_TalonFX(DRIVE_MOTOR_LEFT_LEADER_ID);
+        rightLeader = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_LEADER_ID);
+        leftFollower = new NAR_TalonFX(DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+        rightFollower = new NAR_TalonFX(DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+
+        leftFollower.follow(leftLeader);
+        rightFollower.follow(rightLeader);
+        
+        leftLeader.setInverted(true);
+        leftFollower.setInverted(true);
+        rightLeader.setInverted(false);
+        rightFollower.setInverted(false);
+
+        leftLeader.setSafetyEnabled(false);
+        leftFollower.setSafetyEnabled(false);
+        rightLeader.setSafetyEnabled(false);
+        rightFollower.setSafetyEnabled(false);
+
+        leftLeader.setNeutralMode(NeutralMode.Coast);
+        leftFollower.setNeutralMode(NeutralMode.Coast);
+        rightLeader.setNeutralMode(NeutralMode.Coast);
+        rightFollower.setNeutralMode(NeutralMode.Coast);
+
+        // set CAN status frame periods
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+        leftFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        leftFollower.setControlFramePeriod(ControlFrame.Control_3_General, 45);
+
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+        rightFollower.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
+        rightFollower.setControlFramePeriod(ControlFrame.Control_3_General, 45);
+
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
+        leftLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
+        leftLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
+        
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
+        rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
+        rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
+    }
+
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
         field.setRobotPose(getPose());   
         
-        // SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
-        // SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
-        // SmartDashboard.putNumber("Left Encoder Speed (m per s)", getLeftEncoderSpeed());
-        // SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
-        // SmartDashboard.putString("getPose()", getPose().toString());
-        // SmartDashboard.putNumber("Gyro", getHeading());
+        SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
+        SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
+        SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
+        SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
+        SmartDashboard.putString("getPose()", getPose().toString());
+        SmartDashboard.putNumber("Gyro", getHeading());
 
         SmartDashboard.putData("Field", field);
     }
 
+    @Override
     public void simulationPeriodic() {
 
         // Set motor voltage inputs
@@ -141,7 +166,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         
     public double getHeading() {
         //gyro.getYaw uses CW as positive
-        return -gyro.getYaw(); // (Math.IEEEremainder(gyro.getAngle(), 360) + 360) % 360;
+        return -gyro.getYaw(); 
     }
 
     public double getPitch() {
@@ -156,10 +181,16 @@ public class NAR_Drivetrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
+    /**
+     * @return the left encoder position in meters
+     */
     public double getLeftEncoderDistance() {
         return leftLeader.getSelectedSensorPosition() * DRIVE_NU_TO_METER;
     }
 
+    /**
+     * @return the right encoder position in meters
+     */
     public double getRightEncoderDistance() {
         return rightLeader.getSelectedSensorPosition() * DRIVE_NU_TO_METER;
     }
