@@ -5,6 +5,7 @@ import frc.team3128.ConstantsInt;
 import frc.team3128.Robot;
 
 import static frc.team3128.Constants.HoodConstants.*;
+import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -39,7 +40,7 @@ public class Hood extends PIDSubsystem {
     }
 
     public Hood() {
-        super(new PIDController(kP, kI, kD), PLATEAU_COUNT);
+        super(new PIDController(kP, kI, kD));
 
         configMotors();
         configEncoder();
@@ -159,7 +160,7 @@ public class Hood extends PIDSubsystem {
         double angle = singleJointedArmSim.getAngleRads()/(2*Math.PI) * 360;
 
         m_encoder.setPosition((angle-MIN_ANGLE) / (2 * Math.PI));
-        m_hoodMotor.setSimVelocity(singleJointedArmSim.getVelocityRadPerSec() / Constants.ConversionConstants.SPARK_ENCODER_RESOLUTION);
+        m_hoodMotor.setSimVelocity(singleJointedArmSim.getVelocityRadPerSec() / SPARKMAX_ENCODER_RESOLUTION);
         m_hoodMotor.setSimPosition(angle - MIN_ANGLE);
 
         //SmartDashboard.putNumber("Hood Position", m_encoder.getPosition());
