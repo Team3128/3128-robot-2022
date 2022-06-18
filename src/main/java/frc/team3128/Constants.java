@@ -208,9 +208,9 @@ public class Constants {
 
         public static final int HOOD_CURRENT_LIMIT = Integer.valueOf(10); // Amps
 
-        public static final double MIN_ANGLE = Double.valueOf(3.0); // deg
-        public static final double MAX_ANGLE = Double.valueOf(34.0); // deg
-        public static final double HOME_ANGLE = Double.valueOf(22.0); // deg
+        public static final double MIN_ANGLE = Double.valueOf(9.4); // deg
+        public static final double MAX_ANGLE = Double.valueOf(41.4); // deg
+        public static final double HOME_ANGLE = Double.valueOf(28.5); // deg
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
