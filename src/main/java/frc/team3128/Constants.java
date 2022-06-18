@@ -208,9 +208,9 @@ public class Constants {
 
         public static final int HOOD_CURRENT_LIMIT = 10; // Amps
 
-        public static final double MIN_ANGLE = 3.0; // deg
-        public static final double MAX_ANGLE = 34.0; // deg
-        public static final double HOME_ANGLE = 22.0; // deg
+        public static final double MIN_ANGLE = 9.4; // deg
+        public static final double MAX_ANGLE = 40.4; // deg
+        public static final double HOME_ANGLE = 28.4; // deg
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
@@ -277,5 +277,8 @@ public class Constants {
 
         public static final double BALL_VEL_THRESHOLD = 2.54; // m/s - 100 in/s 
         public static final int BALL_VEL_PLATEAU_THRESHOLD = 10;
+    }
+    public static class SimConstants {
+        public static final double SIM_HUB_DISTANCE = 70; //degrees
     }
 }

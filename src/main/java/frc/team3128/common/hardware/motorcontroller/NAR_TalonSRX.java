@@ -11,18 +11,24 @@ public class NAR_TalonSRX extends WPI_TalonSRX {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonSRXSimCollection motorSim;
+	private NAR_Motor motor;
 
 	/**
 	 * @param deviceNumber device id
 	 */
-	public NAR_TalonSRX(int deviceNumber) {
+	public NAR_TalonSRX(int deviceNumber, NAR_Motor motor) {
 		super(deviceNumber);
+		this.motor = motor;
 
 		if(RobotBase.isSimulation())
 			motorSim = getTalonSRXSimCollection();
 			
 		enableVoltageCompensation(true);
 		configVoltageCompSaturation(12, 10);
+	}
+
+	public NAR_TalonSRX(int deviceNumber) {
+		this(deviceNumber, null);
 	}
 
 	@Override

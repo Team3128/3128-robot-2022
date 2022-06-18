@@ -163,3 +163,8 @@ bin/
 imgui.ini
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
+
+# Ignore Display Settings on WPILib Simulation GUI
+simgui-ds.json
+simgui-window.json
+simgui.json

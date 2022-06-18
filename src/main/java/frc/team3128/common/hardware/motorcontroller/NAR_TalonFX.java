@@ -11,12 +11,14 @@ public class NAR_TalonFX extends WPI_TalonFX {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonFXSimCollection motorSim;
+	private NAR_Motor motor;
 
 	/**	 
 	 * @param deviceNumber device id
 	 */
-	public NAR_TalonFX(int deviceNumber) {
+	public NAR_TalonFX(int deviceNumber, NAR_Motor motor) {
 		super(deviceNumber);
+		this.motor = motor;
 
 		if(RobotBase.isSimulation()){
 			motorSim = getTalonFXSimCollection();
@@ -25,13 +27,16 @@ public class NAR_TalonFX extends WPI_TalonFX {
 		configVoltageCompSaturation(12, 10);
 		enableVoltageCompensation(true);
 	}
+  
+  public NAR_TalonFX(int deviceNumber) {
+		this(deviceNumber, null);
+	}
 
 	@Override
 	public void set(double speed) {
 		set(ControlMode.PercentOutput, speed);
 	}
-
-	@Override
+  
 	public void set(ControlMode controlMode, double outputValue) {
 		if (outputValue != prevValue || controlMode != prevControlMode) {
 			super.set(controlMode, outputValue);
