@@ -115,21 +115,6 @@ public class ConstantsInt {
         return null;    //Return null if the value is not a number or boolean
     }
 
-    /*Get a constant from a specifc group of constants
-     * Necessary because of constant folding ಠ╭╮ಠ in Java*/
-    public static Object getConstant(String category, String name) {
-        Field field = null; //Get the field of a constant in the specified category
-        try {
-            field = categories.get(category).getField(name);
-        } catch (NoSuchFieldException | SecurityException e) {}
-        assertNotNull(field);   //Check that field is not null
-        try {
-            return field.get(null); //Get the value of the constant
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Constant does not exist");
-        }
-    }
-
     //Return each field of a constants class
     public static Field[] getConstantInfo(String category) {
         return categories.get(category).getFields();
