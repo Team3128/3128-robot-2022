@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.team3128.common.hardware.motor.NAR_Motor;
 
 public class NAR_TalonFX extends WPI_TalonFX {
 

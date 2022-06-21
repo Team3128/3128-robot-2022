@@ -5,6 +5,7 @@ import com.revrobotics.REVLibError;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
+import frc.team3128.common.hardware.motor.NAR_Motor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.MotorType;
@@ -83,4 +84,11 @@ public class NAR_CANSparkMax extends CANSparkMax {
 	public REVLibError follow(CANSparkMax motor) {
 		return super.follow((CANSparkMax)motor);
 	}
+
+	// public void follow(NAR_EMotor motor) {
+	// 	if(!(motor instanceof CANSparkMax)) {
+	// 		throw new RuntimeException("Bad follow: NAR_CANSparkMax " + getDeviceId() + " attempted to follow non-CANSparkMax motor controller.");
+	// 	}
+	// 	super.follow((CANSparkMax)motor);
+	// }
 }
