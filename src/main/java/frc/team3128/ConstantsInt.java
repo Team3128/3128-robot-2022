@@ -10,6 +10,11 @@ import java.util.HashMap;
 
 import frc.team3128.common.utility.Log;
 
+/**
+ * Constants class to update the values of constants.
+ * @author Sohan Agarkar, Mason Lam
+ */
+
 public class ConstantsInt {
 
     public static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
