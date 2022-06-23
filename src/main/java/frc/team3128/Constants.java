@@ -65,7 +65,7 @@ public class Constants {
         public static final double RAMSETE_ZETA = Double.valueOf(0.7); //default value - don't change unless absolutely necessary
         public static final double RAMSETE_KP = Double.valueOf(3.0101);
 
-        public static final Boolean GYRO_REVERSED = Boolean.valueOf(false);
+        public static final boolean GYRO_REVERSED = Boolean.valueOf(false);
 
         public static final DCMotor GEARBOX = DCMotor.getFalcon500(4); 
         public static final LinearSystem<N2, N2, N2> DRIVE_CHAR = 

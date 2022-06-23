@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import frc.team3128.common.utility.Log;
@@ -18,6 +20,14 @@ import frc.team3128.common.utility.Log;
 public class ConstantsInt {
 
     public static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
+    
+    private static ArrayList<String> displayConstants = new ArrayList<String>(
+        Arrays.asList(new String[]{
+            //Stuff
+            //Stuff
+            //Stuff
+        })
+    );
 
     static {
         categories = new HashMap<String, Class<?>>();
@@ -29,7 +39,6 @@ public class ConstantsInt {
         categories.put("HopperConstants", Constants.HopperConstants.class);
         categories.put("IntakeConstants", Constants.IntakeConstants.class);
         categories.put("VisionConstants", Constants.VisionConstants.class);
-        
         initTempConstants();
     }
     
@@ -80,6 +89,7 @@ public class ConstantsInt {
 
     //Change the value of a constant
     public static void updateConstant(String category, String name, String value){
+        if (!displayConstants.contains(name)) throw new IllegalArgumentException("Constant not accessible");
         Class<?> clazz = categories.get(category);  //Get the specified Constant class
         if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
         try {
@@ -95,7 +105,7 @@ public class ConstantsInt {
             }
             return;
         }
-        catch (NoSuchFieldException e) {
+        catch (NoSuchFieldException | IllegalArgumentException e) {
             throw new IllegalArgumentException("Constant does not exist");
         }
     }
@@ -103,12 +113,10 @@ public class ConstantsInt {
     //Take a string and convert it to a usable type
     private static Object parseData(String value) {
         try {
-            Double number = Double.parseDouble(value);  //Convert the String to a double value
-            //Return an int form of the double value if the value is an int
-            if(number % 1 == 0) {
-                return number.intValue();
+            if (value.contains(".")){
+                return Double.parseDouble(value);
             }
-            return number;
+            return Integer.parseInt(value);
         }
         catch(NumberFormatException e) {}
 
@@ -121,7 +129,13 @@ public class ConstantsInt {
     }
 
     //Return each field of a constants class
-    public static Field[] getConstantInfo(String category) {
-        return categories.get(category).getFields();
+    public static ArrayList<Field> getConstantInfo(String category) {
+        ArrayList<Field> fieldList = (ArrayList<Field>) Arrays.asList(categories.get(category).getDeclaredFields());
+        for (Field field : fieldList) {
+            if (!displayConstants.contains(field.getName())) {
+                fieldList.remove(field);
+            }
+        }
+        return fieldList;
     }
 }
