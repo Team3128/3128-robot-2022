@@ -114,12 +114,12 @@ public class RobotContainer {
         // lower hub shot
         m_rightStick.getButton(3).whenHeld(
                     new ParallelCommandGroup(
-                        new CmdShoot(1200, 28),
+                        new CmdShoot(1200, 34.4),
                         new RunCommand(m_drive::stop, m_drive)));
 
         // ram shot
         m_rightStick.getButton(4).whenHeld(
-                        new CmdShoot(2800, 7));
+                        new CmdShoot(2800, 13.4));
 
         m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
 

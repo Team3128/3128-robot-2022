@@ -12,7 +12,7 @@ public class CmdShootAlign extends SequentialCommandGroup {
     public CmdShootAlign() {
         addCommands(
             new CmdRetractHopper(),
-            new ParallelCommandGroup(
+            parallel (
                 new CmdAlign(),
                 new CmdShootDist()
             )

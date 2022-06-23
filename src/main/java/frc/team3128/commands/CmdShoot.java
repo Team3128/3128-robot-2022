@@ -25,9 +25,10 @@ public class CmdShoot extends SequentialCommandGroup {
     public CmdShoot(double RPM, double angle) {
         addCommands(
             new CmdRetractHopper(),
-            new ParallelCommandGroup(
+            parallel (
                 new InstantCommand(() -> Hood.getInstance().startPID(angle), Hood.getInstance()),
-                new CmdShootRPM(RPM))
+                new CmdShootRPM(RPM)
+            )
         );
     }
     
