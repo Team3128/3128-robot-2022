@@ -163,7 +163,7 @@ public class Shooter extends PIDSubsystem {
     
         // SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
         // SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
-        SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
+        SmartDashboard.putNumber("shooter RPMSIM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
         
     }
 

@@ -8,6 +8,8 @@ import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
@@ -36,6 +38,9 @@ public class Constants {
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.029);
         public static final double TRACK_WIDTH_METERS = 0.56147;
+
+        public static final Pose2d HUB_POS = new Pose2d(Units.inchesToMeters(324), Units.inchesToMeters(162), new Rotation2d(0)); // meters
+        public static final double HUB_RADIUS = 26.69;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / FALCON_ENCODER_RESOLUTION;
@@ -147,6 +152,11 @@ public class Constants {
         public static final double HOPPER_MOTOR_POWER = 0.6;
         public static final double HOPPER_MOTOR_2_POWER = 0.7;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1;
+
+        public static final DCMotor GEARBOX = DCMotor.getVex775Pro(1);
+        public static final double HOPPER_MOTOR_GEAR_RATIO = 0.25;
+        public static final double HOPPER_MOMENT_OF_INERTIA = 0.04e-4;
+        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16e-4;
 
     }
 

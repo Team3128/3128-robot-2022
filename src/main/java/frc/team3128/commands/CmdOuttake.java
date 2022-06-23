@@ -2,6 +2,8 @@ package frc.team3128.commands;
 import frc.team3128.subsystems.Intake;
 import static frc.team3128.Constants.IntakeConstants.*;
 import static frc.team3128.Constants.HopperConstants.*;
+
+import frc.team3128.Robot;
 import frc.team3128.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -46,6 +48,10 @@ public class CmdOuttake extends CommandBase{
     public void initialize() {
         m_intake.runIntake(intakePower);
         m_hopper.reverseHopper(hopperPower);
+
+        if (Robot.isSimulation()){
+            m_hopper.resetBallCount();
+        }
     }
 
     @Override
