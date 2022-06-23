@@ -6,16 +6,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdInPlaceTurn;
-import frc.team3128.commands.CmdRetractHopper;
 import frc.team3128.commands.CmdShoot;
 import frc.team3128.commands.CmdShootAlign;
+import frc.team3128.commands.CmdShootAlignSingle;
 import frc.team3128.commands.CmdOuttake;
-import frc.team3128.commands.CmdShootSingleBall;
 import frc.team3128.commands.CmdShootTurnVision;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
@@ -80,10 +79,7 @@ public class AutoPrograms {
                 autoCommand = new SequentialCommandGroup(
                                     new InstantCommand(() -> intake.ejectIntake(), intake),
 
-                                    new ParallelDeadlineGroup(
-                                        trajectoryCmd("twoBallTraj"), 
-                                        new CmdExtendIntakeAndRun()
-                                    ),
+                                    IntakePathCmd("twoBallTraj"),
 
                                     new CmdInPlaceTurn(180),
 
@@ -114,7 +110,7 @@ public class AutoPrograms {
                                 //drive to ball and terminal and intake
                                 IntakePathCmd("4Ball_Terminal180_ii"), 
 
-                                new CmdExtendIntakeAndRun().withTimeout(1),
+                                new CmdExtendIntakeAndRun().withTimeout(1), // is this still needed?
 
                                 //drive to tarmac and shoot
                                 trajectoryCmd("Terminal2Tarmac"),
@@ -204,11 +200,7 @@ public class AutoPrograms {
                                 //turn and shoot 1 ball
                                 new CmdInPlaceTurn(180),
                                 
-                                new CmdRetractHopper(),
-                                new ParallelCommandGroup(
-                                    new CmdAlign(),
-                                    new CmdShootSingleBall()
-                                ).withTimeout(2),
+                                new CmdShootAlignSingle().withTimeout(2),
                                 
                                 //hide enemy ball behind hub
                                 trajectoryCmd("S1H1_ii"),
@@ -225,11 +217,7 @@ public class AutoPrograms {
                                 //turn and shoot 1 ball
                                 new CmdInPlaceTurn(180),
                                 
-                                new CmdRetractHopper(),
-                                new ParallelCommandGroup(
-                                    new CmdAlign(),
-                                    new CmdShootSingleBall()
-                                ).withTimeout(2),
+                                new CmdShootAlignSingle().withTimeout(2),
 
                                 //drive and intake enemy ball
                                 IntakePathCmd("S1H2_ii"), 
@@ -252,11 +240,7 @@ public class AutoPrograms {
                                 //turn and shoot 1 ball
                                 new CmdInPlaceTurn(180),
                                 
-                                new CmdRetractHopper(),
-                                new ParallelCommandGroup(
-                                    new CmdAlign(),
-                                    new CmdShootSingleBall()
-                                ).withTimeout(2));
+                                new CmdShootAlignSingle().withTimeout(2));
                 break;
             case "Billiards":
                 // initial position: (6.8, 6.272, 45 deg - should be approx. pointing straight at the ball to knock)
@@ -302,7 +286,7 @@ public class AutoPrograms {
     private SequentialCommandGroup IntakePathCmd(String trajectory) {
         ParallelDeadlineGroup movement = new ParallelDeadlineGroup(
                                             trajectoryCmd(trajectory), 
-                                            new CmdExtendIntakeAndRun());
+                                            new ScheduleCommand(new CmdExtendIntakeAndRun()));
         return new SequentialCommandGroup(new InstantCommand(intake::ejectIntake, intake), movement);
     }
 
