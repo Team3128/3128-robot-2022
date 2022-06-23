@@ -34,6 +34,10 @@ public class Hopper extends SubsystemBase {
     
     private FlywheelSim m_flywheelSim;
 
+    private FlywheelSim noBallSim;
+
+    private FlywheelSim ballSim;
+
     protected int ballCount;
 
     public Hopper() {
@@ -45,7 +49,9 @@ public class Hopper extends SubsystemBase {
         timer.start();
 
         if(Robot.isSimulation()) {
-            m_flywheelSim = new FlywheelSim(GEARBOX, HOPPER_MOTOR_GEAR_RATIO, HOPPER_MOMENT_OF_INERTIA);
+            noBallSim  = new FlywheelSim(GEARBOX, HOPPER_MOTOR_GEAR_RATIO, HOPPER_MOMENT_OF_INERTIA);
+            ballSim = new FlywheelSim(GEARBOX, HOPPER_MOTOR_GEAR_RATIO, HOPPER_MOMENT_OF_INERTIA_BALL);
+            m_flywheelSim = noBallSim;
         }
     }
 
@@ -159,10 +165,10 @@ public class Hopper extends SubsystemBase {
     public void simulationPeriodic() {
 
         if (ballCount > 0) {
-            m_flywheelSim = new FlywheelSim(GEARBOX, HOPPER_MOTOR_GEAR_RATIO, HOPPER_MOMENT_OF_INERTIA_BALL);
+            m_flywheelSim = noBallSim;
         }
         else {
-            m_flywheelSim = new FlywheelSim(GEARBOX, HOPPER_MOTOR_GEAR_RATIO, HOPPER_MOMENT_OF_INERTIA);
+            m_flywheelSim = ballSim;
         }
         
         m_flywheelSim.setInputVoltage(
