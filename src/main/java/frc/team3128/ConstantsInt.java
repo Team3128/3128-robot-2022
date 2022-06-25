@@ -20,16 +20,11 @@ import frc.team3128.common.utility.Log;
 public class ConstantsInt {
 
     public static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
-    
-    private static ArrayList<String> displayConstants = new ArrayList<String>(
-        Arrays.asList(new String[]{
-            //Stuff
-            //Stuff
-            //Stuff
-        })
-    );
+
+    public static HashMap<String, ArrayList<String>> editConstants;
 
     static {
+
         categories = new HashMap<String, Class<?>>();
         //Add each class to the HashMap
         categories.put("ConversionConstants", Constants.ConversionConstants.class);
@@ -39,6 +34,17 @@ public class ConstantsInt {
         categories.put("HopperConstants", Constants.HopperConstants.class);
         categories.put("IntakeConstants", Constants.IntakeConstants.class);
         categories.put("VisionConstants", Constants.VisionConstants.class);
+
+        editConstants = new HashMap<String, ArrayList<String>>();
+
+        editConstants.put("ConversionConstants", new ArrayList<String>());
+        editConstants.put("DriveConstants", new ArrayList<String>());
+        editConstants.put("ClimberConstants", new ArrayList<String>());
+        editConstants.put("ShooterConstants", new ArrayList<String>());
+        editConstants.put("HopperConstants", new ArrayList<String>());
+        editConstants.put("IntakeConstants", new ArrayList<String>());
+        editConstants.put("VisionConstants", new ArrayList<String>());
+
         initTempConstants();
     }
     
@@ -89,7 +95,6 @@ public class ConstantsInt {
 
     //Change the value of a constant
     public static void updateConstant(String category, String name, String value){
-        if (!displayConstants.contains(name)) throw new IllegalArgumentException("Constant not accessible");
         Class<?> clazz = categories.get(category);  //Get the specified Constant class
         if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
         try {
@@ -130,12 +135,25 @@ public class ConstantsInt {
 
     //Return each field of a constants class
     public static ArrayList<Field> getConstantInfo(String category) {
-        ArrayList<Field> fieldList = (ArrayList<Field>) Arrays.asList(categories.get(category).getDeclaredFields());
-        for (Field field : fieldList) {
-            if (!displayConstants.contains(field.getName())) {
+        Field[] fieldArray = categories.get(category).getDeclaredFields();
+        ArrayList<Field> fieldList = (ArrayList<Field>) Arrays.asList(fieldArray);
+        ArrayList<String> editableConstants = editConstants.get(category);
+        for(Field field : fieldList) {
+            if(!editableConstants.contains(field.getName())) {
                 fieldList.remove(field);
             }
         }
         return fieldList;
     }
+
+    public static void addConstant(String category, String name) throws IllegalArgumentException{
+        for (Field field : categories.get(category).getFields()){
+            if (field.getName().equals(name)){
+                editConstants.get(category).add(name);
+                break;
+            }
+        }
+        throw new IllegalArgumentException("Constant does not exist");
+    }
+
 }

@@ -41,7 +41,6 @@ public class NarwhalDashboard extends WebSocketServer {
     private static String selectedAuto = null;
     private static String selectedLimelight = null;
     private static boolean pushed = false;
-    private static volatile boolean constantsChanged = true;
 
     public NarwhalDashboard(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -296,7 +295,19 @@ public class NarwhalDashboard extends WebSocketServer {
             String value = parts[3];
             ConstantsInt.updateConstant(category, name, value);
             //constantsChanged = true;
-        } else {
+        } else if(parts[0].equals("newconstant")){
+            String category = parts[1];
+            String name = parts[2];
+            try{
+                ConstantsInt.addConstant(category, name);
+            }
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+                JSONObject errorObj = new JSONObject();
+                errorObj.put("Error", name + " does not exist!");
+                conn.send(errorObj.toJSONString());
+            }
+        }else {
             Log.info("NarwhalDashboard", "Message recieved: " + message);
         }
         

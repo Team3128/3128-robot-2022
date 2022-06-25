@@ -18,14 +18,14 @@ public class Constants {
 
     public static class ConversionConstants {
 
-        public static final double SPARK_VELOCITY_FACTOR = Double.valueOf(SPARKMAX_ENCODER_RESOLUTION / 60); // RPM to nu/s
-        public static final double FALCON_NUp100MS_TO_RPM = Double.valueOf(10 * 60 / FALCON_ENCODER_RESOLUTION); // sensor units per 100 ms to rpm
-        public static final double FALCON_NUpS_TO_RPM = Double.valueOf(60 / FALCON_ENCODER_RESOLUTION); // sensor units per second to rpm
+        public static final double SPARK_VELOCITY_FACTOR = SPARKMAX_ENCODER_RESOLUTION / 60; // RPM to nu/s
+        public static final double FALCON_NUp100MS_TO_RPM = 10 * 60 / FALCON_ENCODER_RESOLUTION; // sensor units per 100 ms to rpm
+        public static final double FALCON_NUpS_TO_RPM = 60 / FALCON_ENCODER_RESOLUTION; // sensor units per second to rpm
     }
 
     public static class DriveConstants {
 
-        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = Integer.valueOf(0);
+        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
         public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = Integer.valueOf(1);
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = Integer.valueOf(2);
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = Integer.valueOf(3);
