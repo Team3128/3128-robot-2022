@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class CmdRetractHopper extends WaitCommand {
     private Hopper m_hopper;
-    // TODO: change this to some better way of knowing it is retracted than a wait command
 
     /**
      * Runs hopper back to balls against intake and away from shooter flywheel

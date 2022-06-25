@@ -39,12 +39,5 @@ public class CmdShoot extends SequentialCommandGroup {
             )
         );
     }
-
-    @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
-        // could also do .andThen()
-        new InstantCommand(() -> Hopper.getInstance().stopHopper(), Hopper.getInstance()).schedule();
-    }
     
 }
