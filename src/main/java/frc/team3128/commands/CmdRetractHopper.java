@@ -11,10 +11,12 @@ public class CmdRetractHopper extends WaitCommand {
      * Runs hopper back to balls against intake and away from shooter flywheel
      * 
      * Intended to allow shooter to ramp up to speed
+     * @Requirements Hopper
      */
     public CmdRetractHopper() {
         super(0.5);
         m_hopper = Hopper.getInstance(); 
+        addRequirements(m_hopper);
     }
 
     @Override
