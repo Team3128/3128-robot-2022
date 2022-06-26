@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
+
 import frc.team3128.common.utility.Log;
 
 /**
@@ -21,7 +23,11 @@ public class ConstantsInt {
 
     public static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
 
-    public static HashMap<String, ArrayList<String>> editConstants;
+    public static HashMap<String, ArrayList<Field>> editConstants;
+
+    //Members of the Field class used to change the finality of a field
+    private static Method getRoot;
+    private static Field modifiers;
 
     static {
 
@@ -35,15 +41,15 @@ public class ConstantsInt {
         categories.put("IntakeConstants", Constants.IntakeConstants.class);
         categories.put("VisionConstants", Constants.VisionConstants.class);
 
-        editConstants = new HashMap<String, ArrayList<String>>();
+        editConstants = new HashMap<String, ArrayList<Field>>();
 
-        editConstants.put("ConversionConstants", new ArrayList<String>());
-        editConstants.put("DriveConstants", new ArrayList<String>());
-        editConstants.put("ClimberConstants", new ArrayList<String>());
-        editConstants.put("ShooterConstants", new ArrayList<String>());
-        editConstants.put("HopperConstants", new ArrayList<String>());
-        editConstants.put("IntakeConstants", new ArrayList<String>());
-        editConstants.put("VisionConstants", new ArrayList<String>());
+        editConstants.put("ConversionConstants", new ArrayList<Field>());
+        editConstants.put("DriveConstants", new ArrayList<Field>());
+        editConstants.put("ClimberConstants", new ArrayList<Field>());
+        editConstants.put("ShooterConstants", new ArrayList<Field>());
+        editConstants.put("HopperConstants", new ArrayList<Field>());
+        editConstants.put("IntakeConstants", new ArrayList<Field>());
+        editConstants.put("VisionConstants", new ArrayList<Field>());
 
         initTempConstants();
     }
@@ -63,7 +69,7 @@ public class ConstantsInt {
         try {
             fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
-        Field modifiers = null;     //Store the modifiers field of the Field class
+        modifiers = null;     //Store the modifiers field of the Field class
         for (Field field : fields) {
             //Get the modifiers field of the Field class
             if ("modifiers".equals(field.getName())) {
@@ -76,21 +82,11 @@ public class ConstantsInt {
         /*Reflect has another security check where changing the modifiers field does not override
          the value and the modifier change is not permanent, however each field object has a root
          field, which when modified permanently changes the field*/
-        Method getRoot = null;      //Method to get the root field of a field
+        //Method getRoot = null;      //Method to get the root field of a field
         try {
             getRoot = Field.class.getDeclaredMethod("getRoot");
         } catch (NoSuchMethodException | SecurityException e1) {} 
         getRoot.setAccessible(true);        //set the method to be accessible
-        //Cycle through each class in the Constants class
-        for (Class<?> cat : categories.values()) {
-            //Get the field of each constant in the class
-            for (Field field : cat.getFields()) {
-                try {
-                    field = (Field) getRoot.invoke(field);      //get the root of the field
-                    modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
-                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {}
-            }
-        }
     }
 
     //Change the value of a constant
@@ -105,8 +101,9 @@ public class ConstantsInt {
                 assertNotNull(toUse);   //Check that the value is not null
                 field.set(null, toUse);     //Set the value of the constant
             } catch (IllegalAccessException|IllegalArgumentException e) {
-                Log.info("Constants Interface", "Constant Change Operation Blocked, Check If Constant Is Valid");
+                Log.info("Constants Interface", "Constant Change Operation Blocked, Check If Constant Is Valid and Editable");
                 e.printStackTrace();
+                throw new IllegalArgumentException("Constant Change Operation Blocked; Check if Constant is Valid and Editable");
             }
             return;
         }
@@ -117,13 +114,15 @@ public class ConstantsInt {
 
     //Take a string and convert it to a usable type
     private static Object parseData(String value) {
+
         try {
-            if (value.contains(".")){
-                return Double.parseDouble(value);
-            }
             return Integer.parseInt(value);
         }
         catch(NumberFormatException e) {}
+
+        try {
+            return Double.parseDouble(value);
+        } catch(NumberFormatException e) {}
 
         //Return a boolean value if the String is a boolean
         if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
@@ -135,25 +134,27 @@ public class ConstantsInt {
 
     //Return each field of a constants class
     public static ArrayList<Field> getConstantInfo(String category) {
-        Field[] fieldArray = categories.get(category).getDeclaredFields();
-        ArrayList<Field> fieldList = (ArrayList<Field>) Arrays.asList(fieldArray);
-        ArrayList<String> editableConstants = editConstants.get(category);
-        for(Field field : fieldList) {
-            if(!editableConstants.contains(field.getName())) {
-                fieldList.remove(field);
-            }
-        }
-        return fieldList;
+        return editConstants.get(category);
     }
 
     public static void addConstant(String category, String name) throws IllegalArgumentException{
         for (Field field : categories.get(category).getFields()){
             if (field.getName().equals(name)){
-                editConstants.get(category).add(name);
+                try {
+                    removeFinal(field);
+                    editConstants.get(category).add(field);
+                }
+                catch(Exception e) {
+                    throw new IllegalArgumentException("Internal Error. Unable to unfinalize this constant");
+                }
                 break;
             }
         }
-        throw new IllegalArgumentException("Constant does not exist");
+        throw new IllegalArgumentException(name+" does not exist");
     }
 
+    public static void removeFinal(Field field) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+            field = (Field) getRoot.invoke(field);      //get the root of the field
+            modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
+    }
 }

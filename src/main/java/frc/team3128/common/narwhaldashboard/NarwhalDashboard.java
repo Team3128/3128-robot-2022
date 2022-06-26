@@ -293,7 +293,15 @@ public class NarwhalDashboard extends WebSocketServer {
             String category = parts[1];
             String name = parts[2];
             String value = parts[3];
-            ConstantsInt.updateConstant(category, name, value);
+            try {
+                ConstantsInt.updateConstant(category, name, value);
+            }
+            catch(IllegalArgumentException e) {
+                e.printStackTrace();
+                JSONObject errorObj = new JSONObject();
+                errorObj.put("error", e.getMessage());
+                conn.send(errorObj.toJSONString());
+            }
             //constantsChanged = true;
         } else if(parts[0].equals("newconstant")){
             String category = parts[1];
@@ -304,7 +312,7 @@ public class NarwhalDashboard extends WebSocketServer {
             catch (IllegalArgumentException e){
                 e.printStackTrace();
                 JSONObject errorObj = new JSONObject();
-                errorObj.put("Error", name + " does not exist!");
+                errorObj.put("error", e.getMessage());
                 conn.send(errorObj.toJSONString());
             }
         }else {
