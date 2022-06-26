@@ -7,10 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
-import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import frc.team3128.common.utility.Log;
 
@@ -21,7 +18,7 @@ import frc.team3128.common.utility.Log;
 
 public class ConstantsInt {
 
-    public static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
+    private static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
 
     public static HashMap<String, ArrayList<Field>> editConstants;
 
@@ -90,7 +87,9 @@ public class ConstantsInt {
     }
 
     //Change the value of a constant
-    public static void updateConstant(String category, String name, String value){
+    public static void updateConstant(String category, String name, String value) throws IllegalArgumentException {
+        String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if(!callerClass.equals("frc.team3128.common.narwhaldashboard.NarwhalDashboard")) throw new IllegalArgumentException("Caller class is not valid!");
         Class<?> clazz = categories.get(category);  //Get the specified Constant class
         if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
         try {
@@ -100,7 +99,7 @@ public class ConstantsInt {
                 Log.info("Constants Interface", field.getType().toString());
                 assertNotNull(toUse);   //Check that the value is not null
                 field.set(null, toUse);     //Set the value of the constant
-            } catch (IllegalAccessException|IllegalArgumentException e) {
+            } catch (IllegalAccessException|IllegalArgumentException|AssertionError e) {
                 Log.info("Constants Interface", "Constant Change Operation Blocked, Check If Constant Is Valid and Editable");
                 e.printStackTrace();
                 throw new IllegalArgumentException("Constant Change Operation Blocked; Check if Constant is Valid and Editable");
@@ -114,7 +113,6 @@ public class ConstantsInt {
 
     //Take a string and convert it to a usable type
     private static Object parseData(String value) {
-
         try {
             return Integer.parseInt(value);
         }
@@ -137,23 +135,25 @@ public class ConstantsInt {
         return editConstants.get(category);
     }
 
+    //Make a constant editable
     public static void addConstant(String category, String name) throws IllegalArgumentException{
-        for (Field field : categories.get(category).getFields()){
-            if (field.getName().equals(name)){
-                try {
-                    removeFinal(field);
-                    editConstants.get(category).add(field);
-                }
-                catch(Exception e) {
-                    throw new IllegalArgumentException("Internal Error. Unable to unfinalize this constant");
-                }
-                break;
+        try {
+            Field field = categories.get(category).getField(name); 
+            try {
+                removeFinal(field);     //Make the field non-final
+                editConstants.get(category).add(field);     //Make the field editable by the UI
+            }
+            catch(Exception e) {
+                throw new IllegalArgumentException("Internal Error. Unable to unfinalize this constant");
             }
         }
-        throw new IllegalArgumentException(name+" does not exist");
+        catch (NoSuchFieldException | SecurityException e) {
+            throw new IllegalArgumentException(name+" does not exist");
+        }
     }
 
-    public static void removeFinal(Field field) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+    //Remove the final modifier from a constant
+    private static void removeFinal(Field field) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             field = (Field) getRoot.invoke(field);      //get the root of the field
             modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
     }
