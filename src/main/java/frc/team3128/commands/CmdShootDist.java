@@ -62,6 +62,10 @@ public class CmdShootDist extends CommandBase {
         hopper.stopHopper();
         limelights.turnShooterLEDOff();
         Log.info("CmdShootDist", "Cancelling shooting");
+
+        if (Robot.isSimulation()) {
+            hopper.resetBallCount();
+        }
     }
     
     @Override

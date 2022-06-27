@@ -90,7 +90,7 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 4; 
         public static final int RIGHT_SHOOTER_ID = 5; 
 
-        public static final double kP = 2e-4; // 3.2e-3;
+        public static final double kP = 2e-4; // 3.2e-3; 
         public static final double kI = 0;
         public static final double kD = 0; // 5e-4;
 
@@ -111,6 +111,7 @@ public class Constants {
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
+        public static final double SHOOTER_MOMENT_OF_INERTIA = 0.001271812;
 
         public static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
@@ -155,9 +156,8 @@ public class Constants {
 
         public static final DCMotor GEARBOX = DCMotor.getVex775Pro(1);
         public static final double HOPPER_MOTOR_GEAR_RATIO = 0.25;
-        public static final double HOPPER_MOMENT_OF_INERTIA = 0.04e-4;
-        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16e-4;
-
+        public static final double HOPPER_MOMENT_OF_INERTIA = 0.04e-4; // 0.04e-4
+        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16e-4; // 0.16e-4
     }
 
     public static class IntakeConstants {
@@ -221,6 +221,11 @@ public class Constants {
         public static final double MIN_ANGLE = 9.4; // deg
         public static final double MAX_ANGLE = 40.4; // deg
         public static final double HOME_ANGLE = 28.4; // deg
+
+        public static final DCMotor HOOD_GEARBOX = DCMotor.getNeo550(1);
+        public static final double HOOD_MOMENT_OF_INERTIA = 0.054195108;
+        public static final double HOOD_ARM_LENGTH_METERS = 0.2400046;
+        public static final double HOOD_ARM_MASS_KG = 0.795601019;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {

@@ -49,13 +49,13 @@ public class Hood extends PIDSubsystem {
             m_hoodMotor.setSimPosition(0);
             m_encoder.setPosition(0);
             singleJointedArmSim = new SingleJointedArmSim(
-                DCMotor.getNeo550(1), 
+                HOOD_GEARBOX, 
                 HOOD_SHOOTER_GEAR_RATIO, 
-                0.054195108,
-                0.2400046, 
+                HOOD_MOMENT_OF_INERTIA,
+                HOOD_ARM_LENGTH_METERS, 
                 Units.degreesToRadians(MIN_ANGLE), 
                 Units.degreesToRadians(MAX_ANGLE), 
-                0.795601019, 
+                HOOD_ARM_MASS_KG, 
                 true);
         }
     }
@@ -151,11 +151,18 @@ public class Hood extends PIDSubsystem {
 
     @Override
     public void simulationPeriodic() {
+
+        // Sets input voltage for the sim
+
         singleJointedArmSim.setInputVoltage(
             m_hoodMotor.getMotorOutputVoltage()
         );
 
+        // Updates simulation every 20 ms
+
         singleJointedArmSim.update(0.02);
+
+        // Updates angle 
 
         double angle = singleJointedArmSim.getAngleRads()/(2*Math.PI) * 360;
 

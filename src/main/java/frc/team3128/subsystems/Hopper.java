@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
@@ -91,21 +92,6 @@ public class Hopper extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
-
-        double dt = timer.get();
-        
-        timer.reset();
-
-        double angularVelocity = m_encoder.getRate() / 4 * 2 * Math.PI;
-        
-        double angularAcceleration = (angularVelocity - prevAngularVelocity) / dt;
-
-        double torque = 0.71-(0.71/18734.05)*angularVelocity;
-
-        double momentOfInertia = torque / angularAcceleration;
-        
-        SmartDashboard.putNumber("Hopper Moment of Inertia", momentOfInertia * 10000);
-
     }
 
     /**
@@ -164,11 +150,17 @@ public class Hopper extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
 
+        FlywheelSim prevFlywheelSim = noBallSim;
+
         if (ballCount > 0) {
-            m_flywheelSim = noBallSim;
+            m_flywheelSim = ballSim;
         }
         else {
-            m_flywheelSim = ballSim;
+            m_flywheelSim = noBallSim;
+        }
+
+        if (m_flywheelSim != prevFlywheelSim) {
+            m_flywheelSim.setState(VecBuilder.fill(prevFlywheelSim.getAngularVelocityRadPerSec()));
         }
         
         m_flywheelSim.setInputVoltage(

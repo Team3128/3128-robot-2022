@@ -42,7 +42,8 @@ public class Shooter extends PIDSubsystem {
         //Robot is a simulation
         if(RobotBase.isSimulation()){
             m_shooterSim = new FlywheelSim(
-                SHOOTER_CHAR, SHOOTER_GEARBOX, SHOOTER_GEARING 
+                SHOOTER_GEARBOX, SHOOTER_GEARING, SHOOTER_MOMENT_OF_INERTIA
+                
             );
         }
     }
@@ -158,12 +159,7 @@ public class Shooter extends PIDSubsystem {
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * SHOOTER_RADIUS_METERS);
-        //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * SHOOTER_RADIUS_METERS);
-    
-        // SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
-        // SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
-        SmartDashboard.putNumber("shooter RPMSIM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
+        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI) / FALCON_NUpS_TO_RPM);
         
     }
 

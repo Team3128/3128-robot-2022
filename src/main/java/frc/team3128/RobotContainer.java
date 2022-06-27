@@ -178,16 +178,6 @@ public class RobotContainer {
 
         isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
                                         .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
-
-        if (Robot.isSimulation()) {
-            isShooting.debounce(0.1).whenActive(new SequentialCommandGroup
-                                        (
-                                        new InstantCommand(m_hopper::runHopper, m_hopper),
-                                        new InstantCommand(m_hopper::resetBallCount, m_hopper)
-                                        )
-                                     )
-                                    .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
-        }
         
     }
 
