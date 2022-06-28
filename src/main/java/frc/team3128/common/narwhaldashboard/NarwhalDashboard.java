@@ -54,10 +54,9 @@ public class NarwhalDashboard extends NarwhalDashboardBase {
 
         (new Thread(() -> {
             while (conn.isOpen()) {
-                JSONObject obj = new JSONObject();
 
                 // Call the baseOnOpen method for data not changing from year to year
-                baseOnOpen(conn, handshake, obj);
+                JSONObject obj = baseOnOpen(conn, handshake);
 
                 obj.put("selected_limelight", selectedLimelight);
                 if(selectedLimelight != null) {

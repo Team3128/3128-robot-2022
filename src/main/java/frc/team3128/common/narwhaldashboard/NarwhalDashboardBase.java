@@ -112,7 +112,8 @@ public abstract class NarwhalDashboardBase extends WebSocketServer {
      * 
      * Essentially super.onOpen() but called in a different way due to onOpen structure
      */
-    public void baseOnOpen(WebSocket conn, ClientHandshake handshake, JSONObject obj) {
+    public JSONObject baseOnOpen(WebSocket conn, ClientHandshake handshake) {
+        JSONObject obj = new JSONObject();
         SmartDashboard.putNumber("Debug", debugValues.size());
 
         JSONArray debugArr = new JSONArray();
@@ -125,6 +126,8 @@ public abstract class NarwhalDashboardBase extends WebSocketServer {
         obj.put("debug", debugArr);
         
         obj.put("selected_auto", selectedAuto);
+        
+        return obj;
     }
 
     /**
