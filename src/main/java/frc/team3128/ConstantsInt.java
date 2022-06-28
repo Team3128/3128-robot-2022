@@ -40,13 +40,9 @@ public class ConstantsInt {
 
         editConstants = new HashMap<String, ArrayList<Field>>();
 
-        editConstants.put("ConversionConstants", new ArrayList<Field>());
-        editConstants.put("DriveConstants", new ArrayList<Field>());
-        editConstants.put("ClimberConstants", new ArrayList<Field>());
-        editConstants.put("ShooterConstants", new ArrayList<Field>());
-        editConstants.put("HopperConstants", new ArrayList<Field>());
-        editConstants.put("IntakeConstants", new ArrayList<Field>());
-        editConstants.put("VisionConstants", new ArrayList<Field>());
+        for(String category : categories.keySet()){
+            editConstants.put(category, new ArrayList<Field>());
+        }
 
         initTempConstants();
     }
@@ -55,7 +51,7 @@ public class ConstantsInt {
     private static void initTempConstants() {
         /*Reflect prevents the editing of the modifiers of a field by running a security check
         preventing Field.getFields() from accessing the modifiers of a field. We can get around this
-        by calling getDeclaredFields0, a method in Class that does not have a security change.*/
+        by calling getDeclaredFields0, a method in Class that does not have a security check.*/
         Method getDeclaredFields0 = null;   //Method to get the declared fields of a class
         try {
             //get the non security check get fields method
@@ -99,14 +95,12 @@ public class ConstantsInt {
                 Log.info("Constants Interface", field.getType().toString());
                 assertNotNull(toUse);   //Check that the value is not null
                 field.set(null, toUse);     //Set the value of the constant
-            } catch (IllegalAccessException|IllegalArgumentException|AssertionError e) {
+            } catch (Throwable e) {
                 Log.info("Constants Interface", "Constant Change Operation Blocked, Check If Constant Is Valid and Editable");
-                e.printStackTrace();
                 throw new IllegalArgumentException("Constant Change Operation Blocked; Check if Constant is Valid and Editable");
             }
-            return;
         }
-        catch (NoSuchFieldException | IllegalArgumentException e) {
+        catch (NoSuchFieldException e) {
             throw new IllegalArgumentException("Constant does not exist");
         }
     }
@@ -153,7 +147,7 @@ public class ConstantsInt {
     }
 
     //Remove the final modifier from a constant
-    private static void removeFinal(Field field) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    private static void removeFinal(Field field) throws Exception {
             field = (Field) getRoot.invoke(field);      //get the root of the field
             modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
     }
