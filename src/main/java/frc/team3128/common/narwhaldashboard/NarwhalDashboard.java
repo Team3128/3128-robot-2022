@@ -308,6 +308,7 @@ public class NarwhalDashboard extends WebSocketServer {
             String name = parts[2];
             try{
                 ConstantsInt.addConstant(category, name);
+                onOpen(conn, null);
             }
             catch (IllegalArgumentException e){
                 e.printStackTrace();

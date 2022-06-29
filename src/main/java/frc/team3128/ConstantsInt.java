@@ -134,6 +134,7 @@ public class ConstantsInt {
         try {
             Field field = categories.get(category).getField(name); 
             try {
+                if(editConstants.get(category).contains(field)) return;
                 removeFinal(field);     //Make the field non-final
                 editConstants.get(category).add(field);     //Make the field editable by the UI
             }
