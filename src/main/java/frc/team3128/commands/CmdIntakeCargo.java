@@ -8,7 +8,10 @@ public class CmdIntakeCargo extends CommandBase{
     private Intake m_intake; 
     private Hopper m_hopper;
 
-
+    /**
+     * Run intake and hopper forward
+     * @Requirements Intake, Hopper
+     */
     public CmdIntakeCargo(){
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
@@ -23,12 +26,18 @@ public class CmdIntakeCargo extends CommandBase{
     }
 
     @Override
+    public void execute() {
+        // nothing in execute because runIntake() and runHopper() just set speeds - nothing is updated in command
+    }
+
+    @Override
     public void end(boolean interrupted){
         m_intake.retractIntake();
         m_intake.stopIntake();
         m_hopper.stopHopper();
     }
 
+    @Override
     public boolean isFinished(){
         return false;
     }

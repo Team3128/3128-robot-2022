@@ -1,8 +1,6 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team3128.Constants.VisionConstants;
-import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.LimelightSubsystem;
@@ -12,11 +10,16 @@ public class CmdShootDist extends CommandBase {
     private Shooter shooter;
     private LimelightSubsystem limelights;
     private Hood hood;
-    
+
+    /**
+     * Shoot through calculating the approximate distance to target via the limelight 
+     * and initialize+execute the PID loops for the shooter and hood
+     * @Requirements Shooter, Hood
+     */
     public CmdShootDist() {
-        this.shooter = Shooter.getInstance();
-        this.limelights = LimelightSubsystem.getInstance();
-        this.hood = Hood.getInstance();
+        shooter = Shooter.getInstance();
+        limelights = LimelightSubsystem.getInstance();
+        hood = Hood.getInstance();
 
         addRequirements(shooter, hood);
     }
@@ -24,13 +27,14 @@ public class CmdShootDist extends CommandBase {
     @Override
     public void initialize() {
         limelights.turnShooterLEDOn();
+        shooter.resetPlateauCount();
     }
     
     @Override
     public void execute() {
-        double dist = limelights.calculateDistance("shooter");
-        shooter.beginShoot(shooter.calculateMotorVelocityFromDist(dist));
-        hood.startPID(hood.calculateAngleFromDistance(dist));
+        double dist = limelights.calculateShooterDistance();
+        shooter.beginShoot(shooter.calculateRPMFromDist(dist));
+        hood.startPID(hood.calculateAngleFromDist(dist));
     }
     
     @Override

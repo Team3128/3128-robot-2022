@@ -8,9 +8,14 @@ import frc.team3128.subsystems.Shooter;
 public class CmdShootRPM extends CommandBase {
     private Shooter shooter;
     private double rpm;
-    
+
+    /**
+     * Shoot through initializing+executing the PID loop for the shooter with a parameter RPM
+     * @param rpm Target RPM for the shooter 
+     * @Requirements Shooter
+     */
     public CmdShootRPM(double rpm) {
-        this.shooter = Shooter.getInstance();
+        shooter = Shooter.getInstance();
         this.rpm = rpm;
 
         addRequirements(shooter);
@@ -19,13 +24,14 @@ public class CmdShootRPM extends CommandBase {
     @Override
     public void initialize() {
         // rpm = ConstantsInt.ShooterConstants.SET_RPM;
+        shooter.resetPlateauCount();
         shooter.beginShoot(rpm);
     }
     
     @Override
     public void end(boolean interrupted) {
         shooter.stopShoot();
-        Log.info("command shoot", "im cancelling");
+        Log.info("CmdShootRPM", "Cancelling shooting");
     }
     
     @Override
