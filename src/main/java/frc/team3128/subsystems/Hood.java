@@ -23,18 +23,18 @@ public class Hood extends PIDSubsystem {
     private static Hood instance;
     private NAR_CANSparkMax m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
-    
-    public Hood() {
+
+    static{
+        instance = new Hood();
+    }
+    private Hood() {
         super(new PIDController(kP, kI, kD));
 
         configMotors();
         configEncoder();
     }
 
-    public static synchronized Hood getInstance() {
-        if (instance == null) {
-            instance = new Hood();
-        }
+    public static Hood getInstance() {
         return instance;
     }
 

@@ -45,8 +45,12 @@ public class NAR_Drivetrain extends SubsystemBase {
     private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
+
+    static{
+        instance = new NAR_Drivetrain();
+    }
     
-    public NAR_Drivetrain(){
+    private NAR_Drivetrain(){
         
         configMotors();
 
@@ -70,10 +74,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         resetEncoders();
     }
 
-    public static synchronized NAR_Drivetrain getInstance() {
-        if (instance == null) {
-            instance = new NAR_Drivetrain();
-        }
+    public static NAR_Drivetrain getInstance() {
         return instance;
     }
 

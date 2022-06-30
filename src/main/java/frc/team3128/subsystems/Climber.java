@@ -27,7 +27,11 @@ public class Climber extends SubsystemBase {
     private DoubleSolenoid m_climberSolenoid;
     private NAR_TalonFX m_leftMotor, m_rightMotor;
 
-    public Climber() {
+    static{
+        instance = new Climber();
+    }
+
+    private Climber() {
 
         configMotors();
         configPneumatics();
@@ -35,10 +39,7 @@ public class Climber extends SubsystemBase {
         resetLeftEncoder();
     }
 
-    public static synchronized Climber getInstance() {
-        if (instance == null) {
-            instance = new Climber();
-        }
+    public static Climber getInstance() {
         return instance;
     }
 

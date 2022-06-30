@@ -22,15 +22,16 @@ public class Intake extends SubsystemBase {
     private DoubleSolenoid m_intakeSolenoid;
     private NAR_TalonSRX m_intake;
 
-    public Intake() {
+    static{
+        instance = new Intake();
+    }
+
+    private Intake() {
         configMotors();
         configPneumatics();
     }
 
-    public static synchronized Intake getInstance() {
-        if (instance == null) {
-            instance = new Intake();
-        }
+    public static Intake getInstance() {
         return instance;
     }
 

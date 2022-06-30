@@ -14,19 +14,20 @@ import static frc.team3128.Constants.VisionConstants.*;
 
 public class LimelightSubsystem extends SubsystemBase{
 
-    public static LimelightSubsystem instance;
+    private static LimelightSubsystem instance;
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
-    public LimelightSubsystem() {
+    static {
+        instance = new LimelightSubsystem();
+    }
+
+    private LimelightSubsystem() {
         m_shooterLimelight = new Limelight("limelight-cog", TOP_CAMERA_ANGLE, TOP_CAMERA_HEIGHT, TOP_FRONT_DIST); 
         m_ballLimelight = new Limelight("limelight-sog", BALL_LL_ANGLE, BALL_LL_HEIGHT, BALL_LL_FRONT_DIST);
     }
 
-    public static synchronized LimelightSubsystem getInstance() {
-        if (instance == null) {
-            instance = new LimelightSubsystem();
-        }
+    public static LimelightSubsystem getInstance() {
         return instance;
     }
 

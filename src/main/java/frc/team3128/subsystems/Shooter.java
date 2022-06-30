@@ -34,7 +34,11 @@ public class Shooter extends PIDSubsystem {
 
     private FlywheelSim m_shooterSim;
 
-    public Shooter() {
+    static{
+        instance = new Shooter();
+    }
+
+    private Shooter() {
         super(new PIDController(kP, kI, kD));
     
         configMotors();
@@ -47,10 +51,7 @@ public class Shooter extends PIDSubsystem {
         }
     }
 
-    public static synchronized Shooter getInstance() {
-        if (instance == null) {
-            instance = new Shooter();
-        }
+    public static Shooter getInstance() {
         return instance;
     }
 

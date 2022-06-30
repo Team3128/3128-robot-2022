@@ -23,14 +23,16 @@ public class Hopper extends SubsystemBase {
 
     private Encoder m_encoder;
 
-    public Hopper() {
+    static {
+        instance = new Hopper();
+    }
+    
+    private Hopper() {
         configMotors();
         configEncoders();
     }
 
-    public static synchronized Hopper getInstance() {
-        if (instance == null) 
-            instance = new Hopper();
+    public static Hopper getInstance() {
         return instance;
     }
 
