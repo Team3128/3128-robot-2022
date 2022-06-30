@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 
 import frc.team3128.common.utility.Log;
 
@@ -18,9 +18,9 @@ import frc.team3128.common.utility.Log;
 
 public class ConstantsInt {
 
-    private static HashMap<String, Class<?>> categories;     // HashMap storing each class in the Constants class
+    private static volatile Hashtable<String, Class<?>> categories;     // HashMap storing each class in the Constants class
 
-    public static HashMap<String, ArrayList<Field>> editConstants;
+    public static volatile Hashtable<String, ArrayList<Field>> editConstants;
 
     //Members of the Field class used to change the finality of a field
     private static Method getRoot;
@@ -28,7 +28,7 @@ public class ConstantsInt {
 
     static {
 
-        categories = new HashMap<String, Class<?>>();
+        categories = new Hashtable<String, Class<?>>();
         //Add each class to the HashMap
         categories.put("ConversionConstants", Constants.ConversionConstants.class);
         categories.put("DriveConstants", Constants.DriveConstants.class);
@@ -38,7 +38,7 @@ public class ConstantsInt {
         categories.put("IntakeConstants", Constants.IntakeConstants.class);
         categories.put("VisionConstants", Constants.VisionConstants.class);
 
-        editConstants = new HashMap<String, ArrayList<Field>>();
+        editConstants = new Hashtable<String, ArrayList<Field>>();
 
         for(String category : categories.keySet()){
             editConstants.put(category, new ArrayList<Field>());
