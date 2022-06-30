@@ -90,6 +90,13 @@ public class ConstantsInt {
         if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
         try {
             Field field = clazz.getField(name); //Get the field of the specified constant
+            if(Modifier.isFinal(field.getModifiers())) {
+                try {
+                    removeFinal(field);
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Internal error, please help");
+                }
+            }
             try {
                 Object toUse = parseData(value);   //Parse the value to the correct type
                 Log.info("Constants Interface", field.getType().toString());
