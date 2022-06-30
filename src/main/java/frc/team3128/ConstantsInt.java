@@ -83,7 +83,7 @@ public class ConstantsInt {
     }
 
     //Change the value of a constant
-    public static void updateConstant(String category, String name, String value) throws IllegalArgumentException {
+    public static synchronized void updateConstant(String category, String name, String value) throws IllegalArgumentException {
         String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
         if(!callerClass.equals("frc.team3128.common.narwhaldashboard.NarwhalDashboard")) throw new IllegalArgumentException("Caller class is not valid!");
         Class<?> clazz = categories.get(category);  //Get the specified Constant class
@@ -132,12 +132,12 @@ public class ConstantsInt {
     }
 
     //Return each field of a constants class
-    public static ArrayList<Field> getConstantInfo(String category) {
+    public static synchronized ArrayList<Field> getConstantInfo(String category) {
         return editConstants.get(category);
     }
 
     //Make a constant editable
-    public static void addConstant(String category, String name) throws IllegalArgumentException{
+    public static synchronized void addConstant(String category, String name) throws IllegalArgumentException{
         try {
             Field field = categories.get(category).getField(name); 
             try {
