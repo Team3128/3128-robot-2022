@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Set;
 
 import frc.team3128.common.utility.Log;
 
@@ -20,7 +21,7 @@ public class ConstantsInt {
 
     private static volatile Hashtable<String, Class<?>> categories;     // HashMap storing each class in the Constants class
 
-    public static volatile Hashtable<String, ArrayList<Field>> editConstants;
+    private static volatile Hashtable<String, ArrayList<Field>> editConstants;
 
     //Members of the Field class used to change the finality of a field
     private static Method getRoot;
@@ -133,6 +134,8 @@ public class ConstantsInt {
 
     //Return each field of a constants class
     public static synchronized ArrayList<Field> getConstantInfo(String category) {
+        String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if(!callerClass.equals("frc.team3128.common.narwhaldashboard.NarwhalDashboard")) throw new IllegalArgumentException("Caller class is not valid!");
         return editConstants.get(category);
     }
 
@@ -141,7 +144,7 @@ public class ConstantsInt {
         try {
             Field field = categories.get(category).getField(name); 
             try {
-                if(editConstants.get(category).contains(field)) return;
+                if(editConstants.get(category).contains(field) && !Modifier.isFinal(field.getModifiers())) return;
                 removeFinal(field);     //Make the field non-final
                 editConstants.get(category).add(field);     //Make the field editable by the UI
             }
@@ -158,5 +161,9 @@ public class ConstantsInt {
     private static void removeFinal(Field field) throws Exception {
             field = (Field) getRoot.invoke(field);      //get the root of the field
             modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
+    }
+
+    public static Set<String> getCategories() {
+        return categories.keySet();
     }
 }

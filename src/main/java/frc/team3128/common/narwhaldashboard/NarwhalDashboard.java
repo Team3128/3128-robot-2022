@@ -155,7 +155,7 @@ public class NarwhalDashboard extends WebSocketServer {
                 }
 
                 JSONObject constantsObj = new JSONObject();
-                for(String category : ConstantsInt.editConstants.keySet()) {
+                for(String category : ConstantsInt.getCategories()) {
                     JSONArray catArr = new JSONArray();
                     ArrayList<Field> fields = ConstantsInt.getConstantInfo(category);
                     for(Field field : fields) {
@@ -170,6 +170,10 @@ public class NarwhalDashboard extends WebSocketServer {
                         Log.info("Narwhal Dashboard", "Constant Of "+newConstant.toJSONString());
                         }
                         catch(IllegalAccessException e) {
+                            JSONObject error = new JSONObject();
+                            error.put("key","Private");
+                            error.put("value","Constant");
+                            catArr.add(error);
                             continue;
                         }
                     } 
