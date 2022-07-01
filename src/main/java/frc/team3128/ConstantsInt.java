@@ -26,7 +26,7 @@ public class ConstantsInt {
     private static Method getRoot;
     private static Field modifiers;
     
-    private static final String validCaller = "frc.team3128.common.narwhaldashboard.NarwhalDashboard";
+    //private static final String validCaller = "frc.team3128.common.narwhaldashboard.NarwhalDashboard";
 
     static {
 
@@ -104,8 +104,8 @@ public class ConstantsInt {
 
     //Change the value of a constant
     public static synchronized void updateConstant(String category, String name, String value) throws IllegalArgumentException {
-        String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
+        // String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        // if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
         Class<?> clazz = categories.get(category);  //Get the specified Constant class
         if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
         try {
@@ -154,8 +154,8 @@ public class ConstantsInt {
 
     //Return each field of a constants class
     public static synchronized ArrayList<Field> getConstantInfo(String category) {
-        String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
+        // String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        // if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
         return editConstants.get(category);
     }
 
