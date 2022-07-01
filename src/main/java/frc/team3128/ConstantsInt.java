@@ -3,12 +3,10 @@ package frc.team3128;
 import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Set;
 
 import frc.team3128.common.utility.Log;
 
@@ -62,7 +60,7 @@ public class ConstantsInt {
         Field[] fields = null;          //Store the all the fields of the Field class (this kinda confusing)
         try {
             fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
+        } catch (Exception e) {}
         modifiers = null;     //Store the modifiers field of the Field class
         for (Field field : fields) {
             //Get the modifiers field of the Field class
@@ -163,7 +161,7 @@ public class ConstantsInt {
             modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
     }
 
-    public static Set<String> getCategories() {
-        return categories.keySet();
+    public static ArrayList<String> getCategories() {
+        return new ArrayList<String>(categories.keySet());
     }
 }
