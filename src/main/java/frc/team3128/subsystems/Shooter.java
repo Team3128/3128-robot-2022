@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import static frc.team3128.Constants.ShooterConstants.*;
-import frc.team3128.ConstantsInt;
 import static frc.team3128.Constants.ConversionConstants.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;

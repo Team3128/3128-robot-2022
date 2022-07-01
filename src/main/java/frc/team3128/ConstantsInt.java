@@ -1,133 +1,173 @@
 package frc.team3128;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import frc.team3128.common.utility.Log;
 
-public class ConstantsInt extends Constants {
+/**
+ * Constants class to update the values of constants.
+ * @author Sohan Agarkar, Mason Lam
+ */
 
-    public static HashMap<String, Class<?>> categories;
-    public static HashMap<String, List<Field>> constants;
-    private static final List<Class<?>> primitiveNumbers;
+public class ConstantsInt {
 
+    private static volatile Hashtable<String, Class<?>> categories;     // HashMap storing each class in the Constants class
 
-    //How To Use: Redefine any constants you want to change through NarwhalDashboard in this class.
-    //The Constants will be overridden and NarwhalDashboard will be able to change it
-    //IMPORTANT: Omit "final" when temporarily adding constants to this class
+    private static volatile Hashtable<String, ArrayList<Field>> editConstants;
+
+    //Members of the Field class used to change the finality of a field
+    private static Method getRoot;
+    private static Field modifiers;
     
-    public static class ConversionConstants extends Constants.ConversionConstants {}
-    public static class DriveConstants extends Constants.DriveConstants {}
-    public static class ClimberConstants extends Constants.ClimberConstants {}
-    public static class ShooterConstants extends Constants.ShooterConstants {
-        // public static double SET_RPM = 3000;
-        // public static double SET_ANGLE = 25;
-    }
-    public static class HopperConstants extends Constants.HopperConstants {}
-    public static class IntakeConstants extends Constants.IntakeConstants {}
-    public static class VisionConstants extends Constants.VisionConstants {}
-
+    //private static final String validCaller = "frc.team3128.common.narwhaldashboard.NarwhalDashboard";
 
     static {
-        categories = new HashMap<String, Class<?>>();
-        constants = new HashMap<String, List<Field>>();
-        primitiveNumbers = Arrays.asList(int.class, long.class, double.class, byte.class, short.class);
-        categories.put("ConversionConstants", ConstantsInt.ConversionConstants.class);
-        categories.put("DriveConstants", ConstantsInt.DriveConstants.class);
-        categories.put("ClimberConstants", ConstantsInt.ClimberConstants.class);
-        categories.put("ShooterConstants", ConstantsInt.ShooterConstants.class);
-        categories.put("HopperConstants", ConstantsInt.HopperConstants.class);
-        categories.put("IntakeConstants", ConstantsInt.IntakeConstants.class);
-        categories.put("VisionConstants", ConstantsInt.VisionConstants.class);
 
-        for(String category : categories.keySet()) {
-            constants.put(category, new ArrayList<Field>());
+        categories = new Hashtable<String, Class<?>>();
+        //Add each class to the HashMap
+        categories.put("ConversionConstants", Constants.ConversionConstants.class);
+        categories.put("DriveConstants", Constants.DriveConstants.class);
+        categories.put("ClimberConstants", Constants.ClimberConstants.class);
+        categories.put("ShooterConstants", Constants.ShooterConstants.class);
+        categories.put("HopperConstants", Constants.HopperConstants.class);
+        categories.put("IntakeConstants", Constants.IntakeConstants.class);
+        categories.put("VisionConstants", Constants.VisionConstants.class);
+
+        editConstants = new Hashtable<String, ArrayList<Field>>();
+
+        for(String category : categories.keySet()){
+            editConstants.put(category, new ArrayList<Field>());
         }
 
-        
-        //initTempConstants();
+        initTempConstants();
     }
-
-    public static List<Field> getConstantInfo(String category) {
-        return constants.get(category);
-    }
-
-    public static void initTempConstants() {
-        for(String cat : categories.keySet()) {
-            Class<?> categoryClass = categories.get(cat);
-            for(Field field : categoryClass.getFields()) {
-                try {
-                    Field backConstantField = categoryClass.getSuperclass().getField(field.getName());
-                    field.set(null, backConstantField.get(null));
-                    Log.info("Constants Interface", "Adding Constants Interface Field: "+field.getName());
-                    constants.get(cat).add(field);
-                } catch (NoSuchFieldException e) {
-                    Log.info("Constants Interface", "Constants Field does not Exist: "+field.getName());
-                } catch (SecurityException e) {
-                    Log.info("Constants Interface", "Reflection API blocked by security manager");
-                } catch (IllegalArgumentException e) {} 
-                catch (IllegalAccessException e) {
-                    Log.info("Constants Interface", "Skipping, Constant set to final: "+field.getName());
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Updates a constant with the given name to a given value
-     * @throws IllegalArgumentException constants sub-class doesn't exist
-     * @throws IllegalAccessException invalid value for the given constant
-     */
-    public static void updateConstant(String category, String name, String value){
-        Class<?> clazz = categories.get(category);
-        if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
-        for(Field field : clazz.getFields()) {
-            if(field.getName().equals(name)) {
-                try {
-                    Object toUse = value;
-                    Log.info("Constants Interface", field.getType().toString());
-                    if(field.getType().getSuperclass() != null && field.getType().getSuperclass().equals(Number.class)) {
-                        toUse = parseNumber(value, field.getType());
-                    }
-                    else if(primitiveNumbers.contains(field.getType())) {
-                        toUse = parseNumber(value, field.getType());
-                    }
-                    if(toUse == null) {
-                        throw new IllegalArgumentException("Invalid value for constant");
-                    }
-                    field.set(null, toUse);
-                } catch (IllegalAccessException e) {
-                    Log.info("Constants Interface", "Constant Change Operation Blocked");
-                    e.printStackTrace();
-                }
-                catch(IllegalArgumentException e) {
-                    Log.info("Constants Interface", "Invalid value for constant");
-                    e.printStackTrace();
-                }
-                return;
-            }
-        }
-        throw new IllegalArgumentException("Constant does not exist");
-    }
-
-    private static Number parseNumber(String value, Class<?> type) {
+    
+    //Init the temp constants by removing the final modifier from each field
+    private static void initTempConstants() {
+        /*Reflect prevents the editing of the modifiers of a field by running a security check
+        preventing Field.getFields() from accessing the modifiers of a field. We can get around this
+        by calling getDeclaredFields0, a method in Class that does not have a security check.*/
+        Method getDeclaredFields0 = null;   //Method to get the declared fields of a class
         try {
-        if(type.equals(Integer.class) || type.equals(int.class)) {
-           return Integer.parseInt(value);
+            //get the non security check get fields method
+            getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", boolean.class );
+        } catch (NoSuchMethodException | SecurityException e) {}
+        getDeclaredFields0.setAccessible(true);     //set the method to be accessible
+        Field[] fields = null;          //Store the all the fields of the Field class (this kinda confusing)
+        try {
+            fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
+        } catch (Exception e) {}
+        modifiers = null;     //Store the modifiers field of the Field class
+        for (Field field : fields) {
+            //Get the modifiers field of the Field class
+            if ("modifiers".equals(field.getName())) {
+                modifiers = field;
+                break;
+            }
         }
-        else if(type.equals(Double.class) || type.equals(double.class)) {
-            return Double.parseDouble(value);
+        modifiers.setAccessible(true);      //set the modifiers field to be accessible
+
+        /*Reflect has another security check where changing the modifiers field does not override
+         the value and the modifier change is not permanent, however each field object has a root
+         field, which when modified permanently changes the field*/
+        //Method getRoot = null;      //Method to get the root field of a field
+        try {
+            getRoot = Field.class.getDeclaredMethod("getRoot");
+        } catch (NoSuchMethodException | SecurityException e1) {} 
+        getRoot.setAccessible(true);        //set the method to be accessible
+    }
+
+    //Make a constant editable
+    public static synchronized void addConstant(String category, String name) throws IllegalArgumentException{
+        try {
+            Field field = categories.get(category).getField(name);      
+            try {
+                if(editConstants.get(category).contains(field) && !Modifier.isFinal(field.getModifiers())) return;
+                removeFinal(field);     //Make the field non-final
+                editConstants.get(category).add(field);     //Make the field editable by the UI
+            }
+            catch(Exception e) {
+                throw new IllegalArgumentException("Internal Error. Unable to unfinalize this constant");
+            }
         }
+        catch (NoSuchFieldException | SecurityException e) {
+            throw new IllegalArgumentException(name+" does not exist");
+        }
+    }
+
+    //Change the value of a constant
+    public static synchronized void updateConstant(String category, String name, String value) throws IllegalArgumentException {
+        // String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        // if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
+        Class<?> clazz = categories.get(category);  //Get the specified Constant class
+        if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
+        try {
+            Field field = clazz.getField(name); //Get the field of the specified constant
+            assertTrue(editConstants.get(category).contains(field));    //Make sure the constant is something the user intends to edit
+            if(Modifier.isFinal(field.getModifiers())) {
+                try {
+                    removeFinal(field);
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Internal error, please help");
+                }
+            }
+            try {
+                Object toUse = parseData(value);   //Parse the value to the correct type
+                Log.info("Constants Interface", field.getType().toString());
+                assertNotNull(toUse);   //Check that the value is not null
+                field.set(null, toUse);     //Set the value of the constant
+            } catch (Throwable e) {
+                Log.info("Constants Interface", "Constant Change Operation Blocked, Check If Constant Is Valid and Editable");
+                throw new IllegalArgumentException("Constant Change Operation Blocked; Check if Constant is Valid and Editable");
+            }
+        }
+        catch (NoSuchFieldException|AssertionError e) {
+            throw new IllegalArgumentException("Constant does not exist");
+        }
+    }
+
+    //Take a string and convert it to a usable type
+    private static Object parseData(String value) {
+        try {
+            return Integer.parseInt(value);
         }
         catch(NumberFormatException e) {}
 
-        return null;
+        try {
+            return Double.parseDouble(value);
+        } catch(NumberFormatException e) {}
+
+        //Return a boolean value if the String is a boolean
+        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+            return Boolean.parseBoolean(value);
+        }
+
+        return null;    //Return null if the value is not a number or boolean
     }
 
+    //Return each field of a constants class
+    public static synchronized ArrayList<Field> getConstantInfo(String category) {
+        // String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        // if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
+        return editConstants.get(category);
+    }
+
+    //Get the different categories for each set of constants
+    public static ArrayList<String> getCategories() {
+        return new ArrayList<String>(categories.keySet());
+    }
+
+    //Remove the final modifier from a constant
+    private static void removeFinal(Field field) throws Exception {
+            field = (Field) getRoot.invoke(field);      //get the root of the field
+            modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
+    }
 
 }

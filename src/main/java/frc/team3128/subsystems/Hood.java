@@ -1,6 +1,5 @@
 package frc.team3128.subsystems;
 
-import frc.team3128.ConstantsInt;
 import static frc.team3128.Constants.HoodConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;

@@ -41,7 +41,6 @@ public class NarwhalDashboard extends WebSocketServer {
     private static String selectedAuto = null;
     private static String selectedLimelight = null;
     private static boolean pushed = false;
-    private static volatile boolean constantsChanged = true;
 
     public NarwhalDashboard(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -156,9 +155,9 @@ public class NarwhalDashboard extends WebSocketServer {
                 }
 
                 JSONObject constantsObj = new JSONObject();
-                for(String category : ConstantsInt.categories.keySet()) {
+                for(String category : ConstantsInt.getCategories()) {
                     JSONArray catArr = new JSONArray();
-                    List<Field> fields = ConstantsInt.getConstantInfo(category);
+                    ArrayList<Field> fields = ConstantsInt.getConstantInfo(category);
                     for(Field field : fields) {
                         try {
                         // get value from Field
@@ -171,6 +170,10 @@ public class NarwhalDashboard extends WebSocketServer {
                         Log.info("Narwhal Dashboard", "Constant Of "+newConstant.toJSONString());
                         }
                         catch(IllegalAccessException e) {
+                            JSONObject error = new JSONObject();
+                            error.put("key","Private");
+                            error.put("value","Constant");
+                            catArr.add(error);
                             continue;
                         }
                     } 
@@ -294,9 +297,29 @@ public class NarwhalDashboard extends WebSocketServer {
             String category = parts[1];
             String name = parts[2];
             String value = parts[3];
-            ConstantsInt.updateConstant(category, name, value);
+            try {
+                ConstantsInt.updateConstant(category, name, value);
+            }
+            catch(IllegalArgumentException e) {
+                e.printStackTrace();
+                JSONObject errorObj = new JSONObject();
+                errorObj.put("error", e.getMessage());
+                conn.send(errorObj.toJSONString());
+            }
             //constantsChanged = true;
-        } else {
+        } else if(parts[0].equals("newconstant")){
+            String category = parts[1];
+            String name = parts[2];
+            try{
+                ConstantsInt.addConstant(category, name);
+            }
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+                JSONObject errorObj = new JSONObject();
+                errorObj.put("error", e.getMessage());
+                conn.send(errorObj.toJSONString());
+            }
+        }else {
             Log.info("NarwhalDashboard", "Message recieved: " + message);
         }
         
@@ -311,4 +334,5 @@ public class NarwhalDashboard extends WebSocketServer {
     public void onStart() {
 
     }
+
 }
