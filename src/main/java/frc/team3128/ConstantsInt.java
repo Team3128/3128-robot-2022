@@ -1,6 +1,7 @@
 package frc.team3128;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -24,6 +25,8 @@ public class ConstantsInt {
     //Members of the Field class used to change the finality of a field
     private static Method getRoot;
     private static Field modifiers;
+    
+    private static final String validCaller = "frc.team3128.common.narwhaldashboard.NarwhalDashboard";
 
     static {
 
@@ -81,14 +84,33 @@ public class ConstantsInt {
         getRoot.setAccessible(true);        //set the method to be accessible
     }
 
+    //Make a constant editable
+    public static synchronized void addConstant(String category, String name) throws IllegalArgumentException{
+        try {
+            Field field = categories.get(category).getField(name);      
+            try {
+                if(editConstants.get(category).contains(field) && !Modifier.isFinal(field.getModifiers())) return;
+                removeFinal(field);     //Make the field non-final
+                editConstants.get(category).add(field);     //Make the field editable by the UI
+            }
+            catch(Exception e) {
+                throw new IllegalArgumentException("Internal Error. Unable to unfinalize this constant");
+            }
+        }
+        catch (NoSuchFieldException | SecurityException e) {
+            throw new IllegalArgumentException(name+" does not exist");
+        }
+    }
+
     //Change the value of a constant
     public static synchronized void updateConstant(String category, String name, String value) throws IllegalArgumentException {
         String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if(!callerClass.equals("frc.team3128.common.narwhaldashboard.NarwhalDashboard")) throw new IllegalArgumentException("Caller class is not valid!");
+        if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
         Class<?> clazz = categories.get(category);  //Get the specified Constant class
         if(clazz == null) throw new IllegalArgumentException("Invalid Constants Sub-Class");
         try {
             Field field = clazz.getField(name); //Get the field of the specified constant
+            assertTrue(editConstants.get(category).contains(field));    //Make sure the constant is something the user intends to edit
             if(Modifier.isFinal(field.getModifiers())) {
                 try {
                     removeFinal(field);
@@ -106,7 +128,7 @@ public class ConstantsInt {
                 throw new IllegalArgumentException("Constant Change Operation Blocked; Check if Constant is Valid and Editable");
             }
         }
-        catch (NoSuchFieldException e) {
+        catch (NoSuchFieldException|AssertionError e) {
             throw new IllegalArgumentException("Constant does not exist");
         }
     }
@@ -133,26 +155,13 @@ public class ConstantsInt {
     //Return each field of a constants class
     public static synchronized ArrayList<Field> getConstantInfo(String category) {
         String callerClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if(!callerClass.equals("frc.team3128.common.narwhaldashboard.NarwhalDashboard")) throw new IllegalArgumentException("Caller class is not valid!");
+        if(!callerClass.equals(validCaller)) throw new IllegalArgumentException("Caller class is not valid!");
         return editConstants.get(category);
     }
 
-    //Make a constant editable
-    public static synchronized void addConstant(String category, String name) throws IllegalArgumentException{
-        try {
-            Field field = categories.get(category).getField(name); 
-            try {
-                if(editConstants.get(category).contains(field) && !Modifier.isFinal(field.getModifiers())) return;
-                removeFinal(field);     //Make the field non-final
-                editConstants.get(category).add(field);     //Make the field editable by the UI
-            }
-            catch(Exception e) {
-                throw new IllegalArgumentException("Internal Error. Unable to unfinalize this constant");
-            }
-        }
-        catch (NoSuchFieldException | SecurityException e) {
-            throw new IllegalArgumentException(name+" does not exist");
-        }
+    //Get the different categories for each set of constants
+    public static ArrayList<String> getCategories() {
+        return new ArrayList<String>(categories.keySet());
     }
 
     //Remove the final modifier from a constant
@@ -161,7 +170,4 @@ public class ConstantsInt {
             modifiers.setInt(field, modifiers.getInt(field) & ~Modifier.FINAL);     //Remove the final modifier
     }
 
-    public static ArrayList<String> getCategories() {
-        return new ArrayList<String>(categories.keySet());
-    }
 }
