@@ -1,4 +1,4 @@
-package frc.team3128.common.narwhaldashboard;
+package frc.team3128;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -18,6 +18,8 @@ import org.json.simple.JSONObject;
 
 import frc.team3128.common.utility.Log;
 import frc.team3128.common.hardware.limelight.*;
+import frc.team3128.common.narwhaldashboard.DashButtonCallback;
+import frc.team3128.common.narwhaldashboard.NumericalDataCallback;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.ConstantsInt;
