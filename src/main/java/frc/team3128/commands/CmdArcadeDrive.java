@@ -12,7 +12,7 @@ public class CmdArcadeDrive extends CommandBase {
     private final NAR_Drivetrain m_drivetrain;
     private final DoubleSupplier m_xSpeed;
     private final DoubleSupplier m_turn;
-    private final DoubleSupplier m_throttle;
+    private final Double m_throttle;
 
     private SlewRateLimiter filter = new SlewRateLimiter(ARCADE_DRIVE_RATE_LIMIT);
 
@@ -20,7 +20,7 @@ public class CmdArcadeDrive extends CommandBase {
      * Drives the Differential Drivetrain robot with Arcade Drive
      * @Requirements Drivetrain
      */
-    public CmdArcadeDrive(DoubleSupplier xSpeed, DoubleSupplier turn, DoubleSupplier throttle) {
+    public CmdArcadeDrive(DoubleSupplier xSpeed, DoubleSupplier turn, Double throttle) {
         m_drivetrain = NAR_Drivetrain.getInstance();
         
         m_xSpeed = xSpeed;
@@ -32,11 +32,10 @@ public class CmdArcadeDrive extends CommandBase {
     
     @Override
     public void execute() {
-        double throttle = m_throttle.getAsDouble();
         double xSpeed = m_xSpeed.getAsDouble();
         double turn = ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble();
 
-        m_drivetrain.arcadeDrive(filter.calculate(xSpeed * throttle), turn);
+        m_drivetrain.arcadeDrive(filter.calculate(xSpeed * m_throttle), turn);
     }
     
     @Override
