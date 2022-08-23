@@ -116,9 +116,6 @@ public class NAR_Joystick {
         return getPOVButton(6);
     }
 
-    public POVButton getRightPOVButton() {
-        return getPOVButton(2);
-    }
 
     public void setXDeadband(double xDeadband) {
         this.xDeadband = xDeadband;
