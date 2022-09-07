@@ -1,21 +1,18 @@
 package frc.team3128.commands;
 
-import edu.wpi.first.math.MathUtil;
+import frc.team3128.commands.CmdAlign_Feedback;
+import frc.team3128.commands.CmdAlign_Search;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import static frc.team3128.Constants.VisionConstants.*;
 
-import java.util.function.DoubleConsumer;
-import java.util.function.DoubleSupplier;
 
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
-import static frc.team3128.Constants.DriveConstants.*;
 
 public class CmdAlign extends PIDCommand {
 
@@ -23,17 +20,20 @@ public class CmdAlign extends PIDCommand {
         SEARCHING, FEEDBACK;
     }
 
-    private NAR_Drivetrain drive;
-    private LimelightSubsystem limelights;
+    protected NAR_Drivetrain drive;
+    protected LimelightSubsystem limelights;
 
-    private double goalHorizontalOffset, currHorizontalOffset;
-    private double prevError, currError;
+    protected double goalHorizontalOffset, currHorizontalOffset;
+    protected double prevError, currError;
     
-    private double prevTime, currTime; // seconds
-    private int plateauCount, targetFoundCount;
-    private boolean isAligned;
+    protected double prevTime, currTime; // seconds
+    protected int plateauCount, targetFoundCount;
+    protected boolean isAligned;
 
-    private VisionState aimState = VisionState.SEARCHING;
+    protected VisionState aimState = VisionState.SEARCHING;
+
+    private CmdAlign_Feedback cmdFeedback;
+    private CmdAlign_Search cmdSearch;
 
     /**
      * Aligns the robot to the hub using the limelight
@@ -42,10 +42,11 @@ public class CmdAlign extends PIDCommand {
     public CmdAlign() {
         super
         (
-            new PIDController(TURN_kP, TURN_kI, TURN_kD),
+            new PIDController(VISION_PID_kP, VISION_PID_kI, VISION_PID_kD),
             NAR_Drivetrain.getInstance()::getHeading,
             0, // setpoint initialized in initalize
-            output -> NAR_Drivetrain.getInstance().tankDrive(output + Math.copySign(TURN_kF, output), -output - Math.copySign(TURN_kF, output))
+            output -> NAR_Drivetrain.getInstance().tankDrive(output + Math.copySign(VISION_PID_kF, output),
+            -output - Math.copySign(VISION_PID_kF, output))
         );
         this.drive = NAR_Drivetrain.getInstance();
         this.limelights = LimelightSubsystem.getInstance();
@@ -68,52 +69,17 @@ public class CmdAlign extends PIDCommand {
         currTime = RobotController.getFPGATime() / 1e6;
         switch (aimState) {
             case SEARCHING:
-                if (limelights.getShooterHasValidTarget())
-                    targetFoundCount++;
-                else
-                    targetFoundCount = 0;
-                
-                // if target found for enough iterations, switch to FEEDBACK
-                if(targetFoundCount > 5) {
-                    currHorizontalOffset = limelights.getShooterTX();
-                    prevError = goalHorizontalOffset - currHorizontalOffset;
-                    aimState = VisionState.FEEDBACK;
+                cmdSearch = new CmdAlign_Search();
+                if (cmdSearch != null) {
+                    cmdSearch.schedule();
                 }
                 break;
             
             case FEEDBACK:
-                // if no more valid target, switch to SEARCHING
-                if(!limelights.getShooterHasValidTarget()) {
-                    aimState = VisionState.SEARCHING;
-                    plateauCount = 0;
-                    break;
+                cmdFeedback = new CmdAlign_Feedback();
+                if (cmdFeedback != null) {
+                    cmdFeedback.schedule();
                 }
-
-                // turn with PID loop using input as horizontal tx error to target
-                currHorizontalOffset = limelights.getShooterTX();
-                currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
-
-                double ff = Math.signum(currError) * VISION_PID_kF;
-                double feedbackPower = VISION_PID_kP * currError + VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
-                
-                feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
-
-                drive.tankDrive(-feedbackPower, feedbackPower);
-    
-                // if degrees of horizontal tx error below threshold (aligned enough)
-                if (Math.abs(currError) < TX_THRESHOLD) {
-                    plateauCount++;
-                    if (plateauCount > ALIGN_PLATEAU_COUNT) {
-                        isAligned = true;
-                    }
-                }
-                else {
-                    isAligned = false;
-                    plateauCount = 0;
-                }
-
-                prevError = currError;
-
                 break;
                 
         }
