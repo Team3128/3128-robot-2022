@@ -15,9 +15,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation.
@@ -30,8 +27,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit(){
         LiveWindow.disableAllTelemetry();
-        DataLogManager.start();
-        DriverStation.startDataLog(DataLogManager.getLog());
     }
 
     @Override
