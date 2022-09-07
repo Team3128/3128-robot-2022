@@ -98,13 +98,13 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // RIGHT
-        m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
+        m_rightStick.getButton(1).whileActiveOnce(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_rightStick.getButton(1).whenHeld(new CmdShoot(2700, 12));
 
-        m_rightStick.getButton(2).whenHeld(new CmdExtendIntakeAndRun())
-                                .whenReleased(new CmdIntakeCargo().withTimeout(0.25));
+        m_rightStick.getButton(2).whileActiveOnce(new CmdExtendIntakeAndRun())
+                                .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
         
         // m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(
         //             new CmdBallJoystickPursuit(
@@ -112,67 +112,68 @@ public class RobotContainer {
         //             new CmdExtendIntakeAndRun()) 
 
         // lower hub shot
-        m_rightStick.getButton(3).whenHeld(
+        m_rightStick.getButton(3).whileActiveOnce(
                     new ParallelCommandGroup(
                         new CmdShoot(1200, 34.4),
                         new RunCommand(m_drive::stop, m_drive)));
 
         // ram shot
-        m_rightStick.getButton(4).whenHeld(
+        m_rightStick.getButton(4).whileActiveOnce(
                         new CmdShoot(2800, 13.4));
 
-        m_rightStick.getButton(5).whenPressed(new CmdClimbTraversalGyro());
+        m_rightStick.getButton(5).whenActive(new CmdClimbTraversalGyro());
 
-        m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
+        m_rightStick.getButton(7).whenActive(new CmdClimbEncoder(0));
 
-        m_rightStick.getButton(8).whenHeld(new SequentialCommandGroup(
+        m_rightStick.getButton(8).whileActiveOnce(new SequentialCommandGroup(
                                                 new CmdExtendIntake().withTimeout(0.1), 
                                                 new CmdOuttake()));
 
-        m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
+        m_rightStick.getButton(10).whenActive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_rightStick.getButton(11).whenPressed(new CmdExtendIntake());
+        m_rightStick.getButton(11).whenActive(new CmdExtendIntake());
 
-        m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
+        m_rightStick.getButton(13).whenActive(() -> m_hood.startPID(MIN_ANGLE));
 
-        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
+        m_rightStick.getButton(14).whenActive(() -> m_hood.startPID(MAX_ANGLE));
 
-        m_rightStick.getButton(16).whenPressed(() -> m_intake.retractIntake());
+        m_rightStick.getButton(16).whenActive(() -> m_intake.retractIntake());
 
-        m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
-        m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
+        m_rightStick.getUpPOVButton().whenActive(() -> m_ll.turnShooterLEDOn());
+        m_rightStick.getDownPOVButton().whenActive(() -> m_ll.turnShooterLEDOff());
 
         // LEFT
 
-        m_leftStick.getButton(2).whenPressed(() -> m_climber.resetLeftEncoder());        
+        m_leftStick.getButton(2).whenActive(() -> m_climber.resetLeftEncoder());        
 
-        m_leftStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
+        m_leftStick.getButton(5).whenActive(() -> m_hood.zeroEncoder()); 
 
-        m_leftStick.getButton(8).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
+        m_leftStick.getButton(8).whenActive(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
-        m_leftStick.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
-                                    .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getUpPOVButton().whenActive(new InstantCommand(m_climber::bothExtend, m_climber))
+                                    .whenActive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getDownPOVButton().whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
-                                    .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getDownPOVButton().whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
+                                    .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
         
-        m_leftStick.getRightPOVButton().whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
-        m_leftStick.getLeftPOVButton().whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
+        m_leftStick.getRightPOVButton().whenActive(new InstantCommand(m_climber::extendPiston, m_climber));
+        
+        m_leftStick.getLeftPOVButton().whenActive(new InstantCommand(m_climber::retractPiston, m_climber));
 
-        m_leftStick.getButton(11).whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getButton(11).whenActive(new InstantCommand(m_climber::bothManualExtend, m_climber))
+                                .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(16).whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getButton(16).whenActive(new InstantCommand(m_climber::bothManualRetract, m_climber))
+                                .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getButton(13).whenActive(new InstantCommand(m_climber::bothExtend, m_climber))
+                                .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(14).whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getButton(14).whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
+                                .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
-        m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
+        m_leftStick.getButton(12).whenActive(new InstantCommand(m_climber::extendPiston, m_climber));
+        m_leftStick.getButton(15).whenActive(new InstantCommand(m_climber::retractPiston, m_climber));
 
         // TRIGGERS
 
