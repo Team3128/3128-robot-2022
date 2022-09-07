@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Hopper;
+import static frc.team3128.Constants.DriveConstants.*;
 
 public class CmdShootAlign extends SequentialCommandGroup {
 

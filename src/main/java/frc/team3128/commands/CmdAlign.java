@@ -1,14 +1,23 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+// import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import static frc.team3128.Constants.VisionConstants.*;
+
+import java.util.function.DoubleConsumer;
+import java.util.function.DoubleSupplier;
+
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
+import static frc.team3128.Constants.DriveConstants.*;
 
-public class CmdAlign extends CommandBase {
+public class CmdAlign extends PIDCommand {
 
     private enum VisionState {
         SEARCHING, FEEDBACK;
@@ -31,6 +40,13 @@ public class CmdAlign extends CommandBase {
      * @Requirements Drivetrain  
      */
     public CmdAlign() {
+        super
+        (
+            new PIDController(TURN_kP, TURN_kI, TURN_kD),
+            NAR_Drivetrain.getInstance()::getHeading,
+            0, // setpoint initialized in initalize
+            output -> NAR_Drivetrain.getInstance().tankDrive(output + Math.copySign(TURN_kF, output), -output - Math.copySign(TURN_kF, output))
+        );
         this.drive = NAR_Drivetrain.getInstance();
         this.limelights = LimelightSubsystem.getInstance();
 
