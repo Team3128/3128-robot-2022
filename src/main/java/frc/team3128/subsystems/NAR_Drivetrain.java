@@ -3,7 +3,8 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.kauailabs.navx.frc.AHRS;
+import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2Configuration;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
@@ -21,6 +22,9 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
+
+import java.lang.reflect.Array;
+
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 
 /**
@@ -42,13 +46,16 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDrivetrainSim robotDriveSim;
     private DifferentialDriveOdometry odometry;
 
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private double[] xyz_dps;
+
+    private static Pigeon2 gyro = new Pigeon2(0);    
 
     private static Field2d field;
     
     public NAR_Drivetrain(){
         
         configMotors();
+        configSensors();
 
         robotDrive = new DifferentialDrive(
             new MotorControllerGroup(leftLeader, leftFollower),
@@ -122,6 +129,15 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
 
+    public void configSensors() {
+        Pigeon2Configuration config = new Pigeon2Configuration();
+        // set mount pose
+        config.MountPoseYaw = 0;
+        config.MountPosePitch = 0;
+        config.MountPoseRoll = 0;
+        gyro.configAllSettings(config);
+    }
+
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
@@ -170,11 +186,12 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public double getPitch() {
-        return gyro.getRoll();
+        return gyro.getPitch();
     }
    
     public double getPitchRate() {
-        return gyro.getRawGyroY();
+        gyro.getRawGyro(xyz_dps);
+        return xyz_dps[2];
     }
 
     public Pose2d getPose() {
@@ -278,7 +295,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void resetGyro() {
-        gyro.reset();
+        gyro.setYaw(0);
     }
 
 }
