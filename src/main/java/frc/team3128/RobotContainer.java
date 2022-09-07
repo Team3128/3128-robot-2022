@@ -101,12 +101,12 @@ public class RobotContainer {
         m_rightStick.getButton(1).whileActiveOnce(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
-        // m_rightStick.getButton(1).whenHeld(new CmdShoot(2700, 12));
+        // m_rightStick.getButton(1).whileActiveOnce(new CmdShoot(2700, 12));
 
         m_rightStick.getButton(2).whileActiveOnce(new CmdExtendIntakeAndRun())
                                 .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
         
-        // m_rightStick.getButton(3).whenHeld(new ParallelCommandGroup(
+        // m_rightStick.getButton(3).whileActiveOnce(new ParallelCommandGroup(
         //             new CmdBallJoystickPursuit(
         //                 m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle),
         //             new CmdExtendIntakeAndRun()) 
@@ -151,7 +151,7 @@ public class RobotContainer {
         m_leftStick.getButton(8).whenActive(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
         m_leftStick.getUpPOVButton().whenActive(new InstantCommand(m_climber::bothExtend, m_climber))
-                                    .whenActive(new InstantCommand(m_climber::bothStop, m_climber));
+                                    .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
         m_leftStick.getDownPOVButton().whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
                                     .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
