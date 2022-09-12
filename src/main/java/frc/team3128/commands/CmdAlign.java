@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -25,6 +26,7 @@ public class CmdAlign extends CommandBase {
     private boolean isAligned;
 
     private VisionState aimState = VisionState.SEARCHING;
+    private PIDController controller;
 
     /**
      * Aligns the robot to the hub using the limelight
@@ -45,6 +47,7 @@ public class CmdAlign extends CommandBase {
         // limelights.turnShooterLEDOn();
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
+        controller = new PIDController(VISION_PID_kP, VISION_PID_kI, VISION_PID_kD);
     }
 
     @Override
@@ -62,6 +65,7 @@ public class CmdAlign extends CommandBase {
                     currHorizontalOffset = limelights.getShooterTX();
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
+                    controller.disableContinuousInput();
                 }
                 break;
             
@@ -70,16 +74,16 @@ public class CmdAlign extends CommandBase {
                 if(!limelights.getShooterHasValidTarget()) {
                     aimState = VisionState.SEARCHING;
                     plateauCount = 0;
+                    controller.enableContinuousInput(-180, 180);
                     break;
                 }
 
                 // turn with PID loop using input as horizontal tx error to target
                 currHorizontalOffset = limelights.getShooterTX();
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
-
-                double ff = Math.signum(currError) * VISION_PID_kF;
-                double feedbackPower = VISION_PID_kP * currError + VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
                 
+                double feedbackPower = controller.calculate(currHorizontalOffset);
+
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
