@@ -65,7 +65,7 @@ public class CmdAlign extends CommandBase {
                     currHorizontalOffset = limelights.getShooterTX();
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
-                    controller.disableContinuousInput();
+                    controller.enableContinuousInput(-180, 180);
                 }
                 break;
             
@@ -74,7 +74,7 @@ public class CmdAlign extends CommandBase {
                 if(!limelights.getShooterHasValidTarget()) {
                     aimState = VisionState.SEARCHING;
                     plateauCount = 0;
-                    controller.enableContinuousInput(-180, 180);
+                    controller.disableContinuousInput();
                     break;
                 }
 
@@ -82,7 +82,8 @@ public class CmdAlign extends CommandBase {
                 currHorizontalOffset = limelights.getShooterTX();
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
                 
-                double feedbackPower = controller.calculate(currHorizontalOffset);
+                double ff = Math.signum(currError) * VISION_PID_kF;
+                double feedbackPower = controller.calculate(currHorizontalOffset) + ff;
 
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
