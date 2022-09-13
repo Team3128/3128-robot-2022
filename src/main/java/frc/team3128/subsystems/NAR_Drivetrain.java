@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 
 /**
  * Class for the Drivetrain Subsystem 
@@ -66,6 +68,7 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
+        init_shuffleboard();
 
         resetEncoders();
     }
@@ -120,6 +123,10 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 15);
         rightLeader.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 15);
         rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
+    }
+
+    public void init_shuffleboard(){
+        Shuffleboard.getTab("General").addNumber("Gyro",this::getHeading);
     }
 
     @Override

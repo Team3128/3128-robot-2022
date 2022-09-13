@@ -34,6 +34,7 @@ import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
@@ -211,6 +212,7 @@ public class RobotContainer {
     }
 
     public void updateDashboard() {
+        NAR_Shuffleboard.update();
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
