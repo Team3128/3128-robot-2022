@@ -83,7 +83,7 @@ public class CmdAlign extends CommandBase {
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
                 
                 double ff = Math.signum(currError) * VISION_PID_kF;
-                double feedbackPower = controller.calculate(currHorizontalOffset) + ff;
+                double feedbackPower = controller.calculate(currError) + ff;
 
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
