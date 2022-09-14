@@ -126,7 +126,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void init_shuffleboard(){
-        Shuffleboard.getTab("General").addNumber("Gyro",this::getHeading);
+        Shuffleboard.getTab("Shooter").addNumber("Gyro",this::getHeading);
     }
 
     @Override

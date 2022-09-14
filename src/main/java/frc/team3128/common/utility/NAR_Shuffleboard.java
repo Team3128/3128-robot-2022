@@ -11,18 +11,22 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 
 public class NAR_Shuffleboard{
 
-    private static class tabInfo {
+    private static class entryInfo {
         
         public NetworkTableEntry m_data;
 
+        public SimpleWidget m_entry;
+
         private Supplier<Object> m_supply;
 
-        public tabInfo(NetworkTableEntry data, Supplier<Object> supply){
+        public entryInfo(SimpleWidget entry, Supplier<Object> supply){
             m_supply = supply;
-            m_data = data;
+            m_entry = entry;
+            m_data = entry.getEntry();
         }
 
         public void update() {
@@ -31,33 +35,34 @@ public class NAR_Shuffleboard{
         }
     }
 
-    private static HashMap<String, HashMap<String, tabInfo>> tabs;
+    private static HashMap<String, HashMap<String, entryInfo>> tabs;
 
     static {
-        tabs = new HashMap<String, HashMap<String,tabInfo>>();
+        tabs = new HashMap<String, HashMap<String,entryInfo>>();
     }
 
     private static void create_tab(String tabName) {
-        tabs.put(tabName, new HashMap<String,tabInfo>());
+        tabs.put(tabName, new HashMap<String,entryInfo>());
     }
 
-    public static void addData(String tabName, String name, Supplier<Object> supply){
-        addData(tabName,name,supply.get(), supply);
+    public static SimpleWidget addData(String tabName, String name, Object data){
+        return addData(tabName,name,()-> data);
     }
 
-    public static void addData(String tabName, String name, Object data){
-        addData(tabName,name,data,null);
-    }
-
-    private static void addData(String tabName, String name, Object data, Supplier<Object> supply){
+    public static SimpleWidget addData(String tabName, String name, Supplier<Object> supply){
         if(!tabs.containsKey(tabName)){
             create_tab(tabName);
         }
         else {
             if(tabs.get(tabName).containsKey(name)) throw new IllegalArgumentException("DEBUG ISSUE");
         }
-        NetworkTableEntry entry = Shuffleboard.getTab(tabName).add(name,data).getEntry();
-        tabs.get(tabName).put(name, new tabInfo(entry,supply));
+        SimpleWidget entry = Shuffleboard.getTab(tabName).add(name,supply.get());
+        tabs.get(tabName).put(name, new entryInfo(entry,supply));
+        return entry;
+    }
+
+    public static SimpleWidget getEntry(String tabName, String name){
+        return tabs.get(tabName).get(name).m_entry;
     }
 
     public static void update() {
