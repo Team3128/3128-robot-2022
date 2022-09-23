@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 
 import static frc.team3128.Constants.VisionConstants.*;
 
@@ -30,12 +31,20 @@ public class LimelightSubsystem extends SubsystemBase{
         return instance;
     }
 
+    public void init_shuffleboard() {
+        NAR_Shuffleboard.addData("Limelight", "Range", this::calculateShooterDistance);
+        NAR_Shuffleboard.addData("Limelight", "ty", this::getShooterTY);
+        NAR_Shuffleboard.addData("Limelight", "tx", this::getShooterTX);
+        NAR_Shuffleboard.addData("Limelight", "hasValidTarget", this::getShooterHasValidTarget);
+        NAR_Shuffleboard.addSubsystem("Limelight", "Limelight", this).withPosition(0,1);
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("range", calculateShooterDistance());
-        SmartDashboard.putNumber("ty", getShooterTY());
-        SmartDashboard.putNumber("tx", getShooterTX());
-        SmartDashboard.putBoolean("hasValidTarget", getShooterHasValidTarget());
+        // SmartDashboard.putNumber("range", calculateShooterDistance());
+        // SmartDashboard.putNumber("ty", getShooterTY());
+        // SmartDashboard.putNumber("tx", getShooterTX());
+        // SmartDashboard.putBoolean("hasValidTarget", getShooterHasValidTarget());
     }
 
     /**

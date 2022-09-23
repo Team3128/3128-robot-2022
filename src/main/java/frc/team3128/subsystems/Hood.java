@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.IdleMode;
@@ -63,11 +64,17 @@ public class Hood extends PIDSubsystem {
         zeroEncoder();
     }
 
+    public void init_shuffleboard() {
+        NAR_Shuffleboard.addData("Shooter + Hood", "Hood Setpoint", this::getSetpoint);
+        NAR_Shuffleboard.addData("Shooter + Hood", "Hood Angle", this::getMeasurement);
+        NAR_Shuffleboard.addSubsystem("Shooter + Hood", "Hood", this).withPosition(0,2);
+    }
+
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putNumber("Hood Setpoint", getSetpoint());
-        SmartDashboard.putNumber("Hood Angle", getMeasurement());
+        // SmartDashboard.putNumber("Hood Setpoint", getSetpoint());
+        // SmartDashboard.putNumber("Hood Angle", getMeasurement());
     }
 
     /**

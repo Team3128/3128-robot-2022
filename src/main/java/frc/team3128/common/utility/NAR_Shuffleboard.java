@@ -1,31 +1,26 @@
 package frc.team3128.common.utility;
 
 import java.util.HashMap;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+import java.util.Map;
 import java.util.function.Supplier;
 
-import javax.lang.model.element.Name;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 
 public class NAR_Shuffleboard{
 
     private static class entryInfo {
         
-        public NetworkTableEntry m_data;
-
-        public SimpleWidget m_entry;
+        private NetworkTableEntry m_data;
 
         private Supplier<Object> m_supply;
 
         public entryInfo(SimpleWidget entry, Supplier<Object> supply){
             m_supply = supply;
-            m_entry = entry;
             m_data = entry.getEntry();
         }
 
@@ -53,16 +48,27 @@ public class NAR_Shuffleboard{
         if(!tabs.containsKey(tabName)){
             create_tab(tabName);
         }
-        else {
-            if(tabs.get(tabName).containsKey(name)) throw new IllegalArgumentException("DEBUG ISSUE");
-        }
         SimpleWidget entry = Shuffleboard.getTab(tabName).add(name,supply.get());
         tabs.get(tabName).put(name, new entryInfo(entry,supply));
         return entry;
     }
 
-    public static SimpleWidget getEntry(String tabName, String name){
-        return tabs.get(tabName).get(name).m_entry;
+    public static ComplexWidget addSubsystem(String tabName, String name, Sendable data) {
+        return Shuffleboard.getTab(tabName).add(name, data);
+    }
+
+    public static void debug_slider(String tabName, String name, double min, double max) {
+        if(!tabs.containsKey(tabName)){
+            create_tab(tabName);
+        }
+        SimpleWidget tab = Shuffleboard.getTab(tabName).add(name,0)
+                                        .withWidget(BuiltInWidgets.kNumberSlider)
+                                        .withProperties(Map.of("min",min,"max",max));
+        tabs.get(tabName).put(name, new entryInfo(tab, null));
+    }
+
+    public static Object getEntry(String tabName, String name){
+        return tabs.get(tabName).get(name).m_data.getValue();
     }
 
     public static void update() {
@@ -73,7 +79,4 @@ public class NAR_Shuffleboard{
         }
     }
 
-    public static Object getData(String tabName, String dataName) {
-        return tabs.get(tabName).get(dataName).m_data.getValue();
-    }
 }

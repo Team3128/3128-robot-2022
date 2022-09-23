@@ -68,7 +68,6 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
-        init_shuffleboard();
 
         resetEncoders();
     }
@@ -126,7 +125,17 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void init_shuffleboard(){
-        Shuffleboard.getTab("Shooter").addNumber("Gyro",this::getHeading);
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance).withPosition(1, 3);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance).withPosition(0, 3);
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed).withSize(2, 1).withPosition(0,5);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed).withSize(2, 1).withPosition(0, 4);
+        NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString())).withSize(4, 1);
+        NAR_Shuffleboard.addData("Drivetrain","Gyro",this::getHeading);
+        NAR_Shuffleboard.addSubsystem("Drivetrain","Drivetrain", this).withPosition(0,1);
+        if(RobotBase.isSimulation()) {
+            NAR_Shuffleboard.addData("Drivetrain","LeftSimSpeed", leftLeader::getSelectedSensorVelocity).withPosition(1,6);
+            NAR_Shuffleboard.addData("Drivetrain","RightSimSpeed", rightLeader::getSelectedSensorVelocity).withPosition(0,6);
+        }
     }
 
     @Override
@@ -134,12 +143,12 @@ public class NAR_Drivetrain extends SubsystemBase {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
         field.setRobotPose(getPose());   
         
-        SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
-        SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
-        SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
-        SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
-        SmartDashboard.putString("getPose()", getPose().toString());
-        SmartDashboard.putNumber("Gyro", getHeading());
+        // SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
+        // SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
+        // SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
+        // SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
+        // SmartDashboard.putString("getPose()", getPose().toString());
+        // SmartDashboard.putNumber("Gyro", getHeading());
 
         SmartDashboard.putData("Field", field);
     }
@@ -162,8 +171,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / DRIVE_NU_TO_METER);
         rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / DRIVE_NU_TO_METER);
         
-        SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
 
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
