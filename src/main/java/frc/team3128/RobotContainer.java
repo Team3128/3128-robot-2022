@@ -60,7 +60,7 @@ public class RobotContainer {
     private LimelightSubsystem m_ll;
 
     private NAR_XboxController m_driverController;
-    // private NAR_XboxController m_operatorController;
+    private NAR_XboxController m_operatorController;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
   
@@ -69,68 +69,135 @@ public class RobotContainer {
     private Trigger isShooting;
 
     public RobotContainer() {
-        // ConstantsInt.initTempConstants();
+        ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
-        // m_shooter = Shooter.getInstance();
-        // m_intake = Intake.getInstance();
-        // m_hopper = Hopper.getInstance();
-        // m_climber = Climber.getInstance();
-        // m_hood = Hood.getInstance();
-        // m_ll = LimelightSubsystem.getInstance();
+        m_shooter = Shooter.getInstance();
+        m_intake = Intake.getInstance();
+        m_hopper = Hopper.getInstance();
+        m_climber = Climber.getInstance();
+        m_hood = Hood.getInstance();
+        m_ll = LimelightSubsystem.getInstance();
 
         //Enable all PIDSubsystems so that useOutput runs
-        // m_shooter.enable();
-        // m_hood.enable();
+        m_shooter.enable();
+        m_hood.enable();
 
-        m_driverController = new NAR_XboxController(1);
-        // m_operatorController = new NAR_XboxController(1);
+        m_driverController = new NAR_XboxController(0);
+        m_operatorController = new NAR_XboxController(1);
 
-        // isShooting = new Trigger(m_shooter::isReady);
+        isShooting = new Trigger(m_shooter::isReady);
 
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_driverController::getLeftY, m_driverController::getRightX, 0.55));
 
         initDashboard();        
+        configureDriverBindings();
+        // configureOperatorBindings();
+
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
     }   
 
+    private void configureDriverBindings() {
+
+        /*
+
+        All Driver Bindings:
+
+        Right Bumper - Shoot Upper Hub
+        Right Trigger - Intake
+        Left Bumper - Ram Shot
+        Left Trigger - Outtake
+        Press RightStick - Extend Climber to Top (Not Done Yet)
+        Press LeftStick - Shoot Lower Hub
+        Start - Climber Up Slowly
+        Back - Climber Down Slowly
+        B Button - Extend Pistons
+        X Button - Retract Pistons
+        Y Button - Climber Up
+        A Button - Climber Down
+
+         */
+
+        m_operatorController.getButton("RightBumper").whenHeld(new CmdShootAlign());
+
+        m_operatorController.getRightTrigger().whileActiveOnce(new CmdExtendIntakeAndRun())
+                                            .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
+
+        m_operatorController.getButton("LeftStick").whenHeld(
+            new ParallelCommandGroup(
+                new CmdShoot(1200, 34.4),
+                new RunCommand(m_drive::stop, m_drive)));
+        
+        m_operatorController.getLeftTrigger().whileActiveOnce(new SequentialCommandGroup(
+            new CmdExtendIntake().withTimeout(0.1), 
+            new CmdOuttake()));
+
+        m_operatorController.getButton("LeftBumper").whenHeld(
+            new CmdShoot(2800, 13.4));
+
+        // m_operatorController.getButton("RightStick").whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
+        // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_operatorController.getButton("Start").whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_operatorController.getButton("Back").whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_operatorController.getButton("B").whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
+
+        m_operatorController.getButton("X").whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
+
+        m_operatorController.getButton("Y").whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
+        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_operatorController.getButton("A").whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
+        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+
+    }
+
+    // private void configureOperatorBindings() {
+
+    // }
+
     public void init() {
-        // m_climber.retractPiston();
-        // m_intake.retractIntake();
-        // m_hood.startPID(HOME_ANGLE);
+        m_climber.retractPiston();
+        m_intake.retractIntake();
+        m_hood.startPID(HOME_ANGLE);
     }
 
     private void initDashboard() {
-        // if (DEBUG) {
-        //     SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-        //     SmartDashboard.putData("Drivetrain", m_drive);
-        //     SmartDashboard.putData("Intake", m_intake);
-        //     SmartDashboard.putData("Hopper", m_hopper);
-        //     SmartDashboard.putData("Climber", m_climber);
-        //     SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
-        //     SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
-        //     SmartDashboard.putData("Limelights", m_ll);
-        // }
+        if (DEBUG) {
+            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+            SmartDashboard.putData("Drivetrain", m_drive);
+            SmartDashboard.putData("Intake", m_intake);
+            SmartDashboard.putData("Hopper", m_hopper);
+            SmartDashboard.putData("Climber", m_climber);
+            SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
+            SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
+            SmartDashboard.putData("Limelights", m_ll);
+        }
 
-        // NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
-        // NarwhalDashboard.startServer();   
+        NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
+        NarwhalDashboard.startServer();   
         
-        // Log.info("NarwhalRobot", "Setting up limelight chooser...");
+        Log.info("NarwhalRobot", "Setting up limelight chooser...");
       
-        // for (Limelight ll : new Limelight[] {m_ll.getShooterLimelight(), m_ll.getBallLimelight()}) {
-        //     NarwhalDashboard.addLimelight(ll);
-        //     ll.setLEDMode(LEDMode.OFF);
-        // }
+        for (Limelight ll : new Limelight[] {m_ll.getShooterLimelight(), m_ll.getBallLimelight()}) {
+            NarwhalDashboard.addLimelight(ll);
+            ll.setLEDMode(LEDMode.OFF);
+        }
     }
 
     public void updateDashboard() {
-        // NarwhalDashboard.put("time", Timer.getMatchTime());
+        NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
-        // NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
-        // NarwhalDashboard.put("range", m_ll.calculateShooterDistance());
+        NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
+        NarwhalDashboard.put("range", m_ll.calculateShooterDistance());
         NarwhalDashboard.put("x", m_drive.getPose().getX());
         NarwhalDashboard.put("y", m_drive.getPose().getY());
         NarwhalDashboard.put("theta", Units.degreesToRadians(m_drive.getHeading()));
-        // NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicks());
+        NarwhalDashboard.put("climbEnc", m_climber.getCurrentTicks());
     }
 }
