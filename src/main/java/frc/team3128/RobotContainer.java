@@ -59,7 +59,7 @@ public class RobotContainer {
     private Hood m_hood;
     private LimelightSubsystem m_ll;
 
-    private NAR_XboxController m_driverController;
+    private NAR_Joystick m_rightStick;
     private NAR_XboxController m_operatorController;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
@@ -69,7 +69,7 @@ public class RobotContainer {
     private Trigger isShooting;
 
     public RobotContainer() {
-        ConstantsInt.initTempConstants();
+        // ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
         m_shooter = Shooter.getInstance();
         m_intake = Intake.getInstance();
@@ -82,22 +82,22 @@ public class RobotContainer {
         m_shooter.enable();
         m_hood.enable();
 
-        m_driverController = new NAR_XboxController(0);
+        m_rightStick = new NAR_Joystick(0);
         m_operatorController = new NAR_XboxController(1);
+        // m_operatorController = new XboxController(1);
 
         isShooting = new Trigger(m_shooter::isReady);
 
-        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_driverController::getLeftY, m_driverController::getRightX, 0.55));
+        m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();        
-        configureDriverBindings();
-        // configureOperatorBindings();
+        configureButtonBindings();
 
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
     }   
 
-    private void configureDriverBindings() {
+    private void configureButtonBindings() {
 
         /*
 
@@ -119,6 +119,8 @@ public class RobotContainer {
          */
 
         m_operatorController.getButton("RightBumper").whenHeld(new CmdShootAlign());
+        // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
+        // m_operatorController.getButton("RightBumper").whenHeld(new CmdShoot(2700, 12));
 
         m_operatorController.getRightTrigger().whileActiveOnce(new CmdExtendIntakeAndRun())
                                             .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
@@ -134,6 +136,8 @@ public class RobotContainer {
 
         m_operatorController.getButton("LeftBumper").whenHeld(
             new CmdShoot(2800, 13.4));
+
+        m_operatorController.getButton("RightStick").whenPressed(new CmdClimbTraversalGyro());
 
         // m_operatorController.getButton("RightStick").whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
         // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
@@ -154,12 +158,32 @@ public class RobotContainer {
         m_operatorController.getButton("A").whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
         .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
+        // TODO: add buttons for
+        // m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
+
+        // m_rightStick.getButton(8).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
+
+        // m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
+
+        // RIGHT 
+
+        m_rightStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
+
+        m_rightStick.getButton(6).whenPressed(() -> m_climber.resetLeftEncoder());
+
+        m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
+
+        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
+
+        m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
+        m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
+
+        // TRIGGERS
+
+        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
+                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
 
     }
-
-    // private void configureOperatorBindings() {
-
-    // }
 
     public void init() {
         m_climber.retractPiston();
