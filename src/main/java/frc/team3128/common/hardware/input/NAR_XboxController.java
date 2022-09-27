@@ -27,7 +27,7 @@ public class NAR_XboxController extends XboxController {
         super(port);
         buttons = new HashMap<String, JoystickButton>();
         for (int i = 0; i < 10; i++) {
-            buttons.put(buttonNames[i], new JoystickButton(this, i));
+            buttons.put(buttonNames[i], new JoystickButton(this, i+1));
         }   
     }
 
