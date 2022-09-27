@@ -99,30 +99,11 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        /*
-
-        All Driver Bindings:
-
-        Right Bumper - Shoot Upper Hub
-        Right Trigger - Intake
-        Left Bumper - Ram Shot
-        Left Trigger - Outtake
-        Press RightStick - Extend Climber to Top (Not Done Yet)
-        Press LeftStick - Shoot Lower Hub
-        Start - Climber Up Slowly
-        Back - Climber Down Slowly
-        B Button - Extend Pistons
-        X Button - Retract Pistons
-        Y Button - Climber Up
-        A Button - Climber Down
-
-         */
-
-        m_operatorController.getButton("RightBumper").whenHeld(new CmdShootAlign());
+        m_operatorController.getRightTrigger().whileActiveOnce(new CmdShootAlign());
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_operatorController.getButton("RightBumper").whenHeld(new CmdShoot(2700, 12));
 
-        m_operatorController.getRightTrigger().whileActiveOnce(new CmdExtendIntakeAndRun())
+        m_operatorController.getButton("RightBumper").whenHeld(new CmdExtendIntakeAndRun())
                                             .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
 
         m_operatorController.getButton("LeftStick").whenHeld(
@@ -130,23 +111,24 @@ public class RobotContainer {
                 new CmdShoot(1200, 34.4),
                 new RunCommand(m_drive::stop, m_drive)));
         
-        m_operatorController.getLeftTrigger().whileActiveOnce(new SequentialCommandGroup(
+        m_operatorController.getButton("LeftBumper").whenHeld(new SequentialCommandGroup(
             new CmdExtendIntake().withTimeout(0.1), 
             new CmdOuttake()));
 
-        m_operatorController.getButton("LeftBumper").whenHeld(
+        m_operatorController.getLeftTrigger().whileActiveOnce(
             new CmdShoot(2800, 13.4));
 
-        m_operatorController.getButton("RightStick").whenPressed(new CmdClimbTraversalGyro());
+        m_operatorController.getButton("Start").whenPressed(new CmdClimbTraversalGyro());
+        m_operatorController.getButton("Back").whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
 
         // m_operatorController.getButton("RightStick").whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
         // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_operatorController.getButton("Start").whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
-        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        // m_operatorController.getButton("Start").whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+        // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_operatorController.getButton("Back").whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
-        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        // m_operatorController.getButton("Back").whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+        // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
         m_operatorController.getButton("B").whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
 
@@ -161,7 +143,7 @@ public class RobotContainer {
         // TODO: add buttons for
         // m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
 
-        // m_rightStick.getButton(8).whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
+        m_operatorController.getButton("RightStick").whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
         // m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
 
