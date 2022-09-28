@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -84,7 +83,6 @@ public class RobotContainer {
 
         m_rightStick = new NAR_Joystick(0);
         m_operatorController = new NAR_XboxController(1);
-        // m_operatorController = new XboxController(1);
 
         isShooting = new Trigger(m_shooter::isReady);
 
@@ -100,52 +98,53 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         m_operatorController.getRightTrigger().whileActiveOnce(new CmdShootAlign());
-        // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
-        // m_operatorController.getButton("RightBumper").whenHeld(new CmdShoot(2700, 12));
 
-        m_operatorController.getButton("RightBumper").whenHeld(new CmdExtendIntakeAndRun())
+        // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
+        // m_operatorController.getButton("RightBumper").whileActiveOnce(new CmdShoot(2700, 12));
+
+        m_operatorController.getButton("RightBumper").whileActiveOnce(new CmdExtendIntakeAndRun())
                                             .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
 
-        m_operatorController.getButton("LeftStick").whenHeld(
+        m_operatorController.getButton("LeftStick").whileActiveOnce(
             new ParallelCommandGroup(
                 new CmdShoot(1200, 34.4),
                 new RunCommand(m_drive::stop, m_drive)));
         
-        m_operatorController.getButton("LeftBumper").whenHeld(new SequentialCommandGroup(
+        m_operatorController.getButton("LeftBumper").whileActiveOnce(new SequentialCommandGroup(
             new CmdExtendIntake().withTimeout(0.1), 
             new CmdOuttake()));
 
         m_operatorController.getLeftTrigger().whileActiveOnce(
             new CmdShoot(2800, 13.4));
 
-        m_operatorController.getButton("Start").whenPressed(new CmdClimbTraversalGyro());
-        m_operatorController.getButton("Back").whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
+        m_operatorController.getButton("Start").whenActive(new CmdClimbTraversalGyro());
+        m_operatorController.getButton("Back").whenActive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        // m_operatorController.getButton("RightStick").whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
+        // m_operatorController.getButton("RightStick").whenActive(new InstantCommand(m_climber::bothExtend, m_climber))
         // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        // m_operatorController.getButton("Start").whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+        // m_operatorController.getButton("Start").whenActive(new InstantCommand(m_climber::bothManualExtend, m_climber))
         // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        // m_operatorController.getButton("Back").whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+        // m_operatorController.getButton("Back").whenActive(new InstantCommand(m_climber::bothManualRetract, m_climber))
         // .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_operatorController.getButton("B").whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
+        m_operatorController.getButton("B").whenActive(new InstantCommand(m_climber::extendPiston, m_climber));
 
-        m_operatorController.getButton("X").whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
+        m_operatorController.getButton("X").whenActive(new InstantCommand(m_climber::retractPiston, m_climber));
 
-        m_operatorController.getButton("Y").whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
-        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_operatorController.getButton("Y").whenActive(new InstantCommand(m_climber::bothExtend, m_climber))
+        .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_operatorController.getButton("A").whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
-        .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_operatorController.getButton("A").whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
+        .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
         // TODO: add buttons for
-        // m_rightStick.getButton(7).whenPressed(new CmdClimbEncoder(0));
+        // m_rightStick.getButton(7).whenActive(new CmdClimbEncoder(0));
 
-        m_operatorController.getButton("RightStick").whenPressed(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
+        m_operatorController.getButton("RightStick").whenActive(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
-        // m_rightStick.getButton(10).whenPressed(new InstantCommand(m_climber::bothStop, m_climber));
+        // m_rightStick.getButton(10).whenActive(new InstantCommand(m_climber::bothStop, m_climber));
 
         // RIGHT 
 
