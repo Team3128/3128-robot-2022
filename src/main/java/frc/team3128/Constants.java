@@ -25,10 +25,10 @@ public class Constants {
 
     public static class DriveConstants {
 
-        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
+        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
-        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
-        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
+        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 5;
+        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 6;
 
         public static final double ARCADE_DRIVE_TURN_MULT = 0.70 * 0.35;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
@@ -82,8 +82,8 @@ public class Constants {
         public static final double SET_RPM = 3000;
         public static final double SET_ANGLE = 25;
 
-        public static final int LEFT_SHOOTER_ID = 4; 
-        public static final int RIGHT_SHOOTER_ID = 5; 
+        public static final int LEFT_SHOOTER_ID = 10; 
+        public static final int RIGHT_SHOOTER_ID = 9; 
 
         public static final double kP = 2e-4; // 3.2e-3;
         public static final double kI = 0;
@@ -135,8 +135,8 @@ public class Constants {
 
     public static class HopperConstants {
 
-        public static final int HOPPER_MOTOR_ID = 6;
-        public static final int HOPPER_MOTOR_2_ID = 9;
+        public static final int HOPPER_MOTOR_ID = 12;
+        public static final int HOPPER_MOTOR_2_ID = 4;
         public static final int BOTTOM_SENSOR_ID = 12;
         public static final int TOP_SENSOR_ID = 13;
 
@@ -152,7 +152,7 @@ public class Constants {
 
     public static class IntakeConstants {
 
-        public static final int INTAKE_MOTOR_ID = 7; 
+        public static final int INTAKE_MOTOR_ID = 3; 
         public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 4;
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
@@ -163,8 +163,8 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_MOTOR_LEFT_ID = 12;
-        public static final int CLIMBER_MOTOR_RIGHT_ID = 13;
+        public static final int CLIMBER_MOTOR_LEFT_ID = 0;
+        public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 
         public static final int CLIMBER_SENSOR_LEFT_ID = 7;
         public static final int CLIMBER_SENSOR_RIGHT_ID = 6;
