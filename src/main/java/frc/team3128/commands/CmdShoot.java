@@ -39,5 +39,11 @@ public class CmdShoot extends SequentialCommandGroup {
             )
         );
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        Hopper.getInstance().stopHopper();
+    }
     
 }
