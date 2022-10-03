@@ -1,5 +1,7 @@
 package frc.team3128.commands;
 
+import java.time.Instant;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
@@ -24,6 +26,12 @@ public class CmdShootAlign extends SequentialCommandGroup {
                 new CmdShootDist()
             )
         );
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        Hopper.getInstance().stopHopper();
     }
     
 }
