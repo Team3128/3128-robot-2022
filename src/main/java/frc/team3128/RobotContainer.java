@@ -14,6 +14,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PneumaticsBase;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -29,6 +31,7 @@ import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
 import frc.team3128.subsystems.*;
 import frc.team3128.subsystems.Shooter.ShooterState;
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -43,6 +46,7 @@ public class RobotContainer {
     private Intake m_intake;   
     private Hopper m_hopper;
     private Climber m_climber;
+    private PneumaticsBase m_compressor;
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
@@ -105,6 +109,9 @@ public class RobotContainer {
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
         m_climber = Climber.getInstance();
+
+        //compressor object
+        m_compressor.makeCompressor();
 
         //Enable all PIDSubsystems so that useOutput runs
         m_shooter.enable();
@@ -259,6 +266,8 @@ public class RobotContainer {
         m_leftStick.getPOVButton(0).whenPressed(() -> m_drive.resetPose());
 
         m_leftStick.getButton(4).whenPressed(new CmdInPlaceTurn(m_drive, 180));
+
+        m_leftStick.getButton(17).whenPressed(() -> m_compressor.enableCompressorDigital());
 
     }
 
@@ -697,6 +706,10 @@ public class RobotContainer {
         SmartDashboard.putString("Intake state:", m_intake.getSolenoid());
 
         SmartDashboard.putString("Drive half speed", String.valueOf(driveHalfSpeed));
+
+        SmartDashboard.putNumber("compressor current", m_compressor.getCompressorCurrent());
+        SmartDashboard.putNumber("compressor voltage", m_compressor.getAnalogVoltage(0));
+        SmartDashboard.putNumber("compressor pressure", m_compressor.getPressure(0));
     }
 
     public Command getAutonomousCommand() {
