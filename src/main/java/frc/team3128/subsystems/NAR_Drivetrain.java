@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
+
+import frc.team3128.Robot;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 
 /**
@@ -66,6 +68,7 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
+        SmartDashboard.putData("Field", field);
 
         resetEncoders();
     }
@@ -132,6 +135,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
         SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
         SmartDashboard.putString("getPose()", getPose().toString());
+        
         SmartDashboard.putNumber("Gyro", getHeading());
 
         SmartDashboard.putData("Field", field);
@@ -170,6 +174,11 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public double getPitch() {
+
+        if(Robot.isSimulation()) {
+            
+        }
+
         return gyro.getRoll();
     }
    

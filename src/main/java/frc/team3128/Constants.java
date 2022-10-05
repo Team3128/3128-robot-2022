@@ -156,8 +156,8 @@ public class Constants {
 
         public static final DCMotor GEARBOX = DCMotor.getVex775Pro(1);
         public static final double HOPPER_MOTOR_GEAR_RATIO = 0.25;
-        public static final double HOPPER_MOMENT_OF_INERTIA = 0.04e-4; // 0.04e-4
-        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16e-4; // 0.16e-4
+        public static final double HOPPER_MOMENT_OF_INERTIA = 0.04; // 0.04e-4
+        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16; // 0.16e-4
     }
 
     public static class IntakeConstants {
@@ -295,5 +295,8 @@ public class Constants {
     }
     public static class SimConstants {
         public static final double SIM_HUB_DISTANCE = 70; //degrees
+        public static final double CLIMBER_LONG_ARM_LENGTH = 0.78 * 39.3701; //inches
+        public static final double CLIMBER_SHORT_ARM_LENGTH = 0.2 * 39.3701; //inches
+        public static final double GRAVITATIONAL_CONSTANT = 9.8; // m/s^2
     }
 }

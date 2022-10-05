@@ -87,6 +87,7 @@ public class Shooter extends PIDSubsystem {
         SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", getMeasurement());
         SmartDashboard.putBoolean("Shooter isReady", isReady());
+
         SmartDashboard.putBoolean("atSetpoint", getController().atSetpoint());
     }
 
@@ -159,8 +160,7 @@ public class Shooter extends PIDSubsystem {
         );  
         m_shooterSim.update(0.02);    
         
-        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI) / FALCON_NUpS_TO_RPM);
-        
+        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI) / FALCON_NUpS_TO_RPM);  
     }
 
     /**

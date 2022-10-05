@@ -150,7 +150,7 @@ public class Hopper extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
 
-        FlywheelSim prevFlywheelSim = noBallSim;
+        FlywheelSim prevFlywheelSim = m_flywheelSim;
 
         if (ballCount > 0) {
             m_flywheelSim = ballSim;
