@@ -67,18 +67,18 @@ public class Hopper extends SubsystemBase {
      */
     private void configMotors() {
         m_hopper1 = new NAR_TalonSRX(HOPPER_MOTOR_ID);
-        m_hopper2 = new NAR_TalonSRX(HOPPER_MOTOR_2_ID);
+        // m_hopper2 = new NAR_TalonSRX(HOPPER_MOTOR_2_ID);
 
         m_hopper1.setNeutralMode(NeutralMode.Coast);
-        m_hopper2.setNeutralMode(NeutralMode.Coast);
+        // m_hopper2.setNeutralMode(NeutralMode.Coast);
 
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
         m_hopper1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
         m_hopper1.setControlFramePeriod(ControlFrame.Control_3_General, 20);
 
-        m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
-        m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
-        m_hopper2.setControlFramePeriod(ControlFrame.Control_3_General, 20);
+        // m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 45);
+        // m_hopper2.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 45);
+        // m_hopper2.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
 
     /**
@@ -92,6 +92,20 @@ public class Hopper extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
+
+        double dt = timer.get();
+
+        timer.reset();
+
+        double angularVelocity = m_encoder.getRate() / 4 * 2 * Math.PI;
+
+        double angularAcceleration = (angularVelocity - prevAngularVelocity) / dt;
+
+        double torque = 0.71-(0.71/18734.05) * angularVelocity * 30 / Math.PI;
+
+        double momentOfInertia = torque / angularAcceleration;
+
+        SmartDashboard.putNumber("Hopper Moment of Inertia", momentOfInertia * 10000);
     }
 
     /**
@@ -99,7 +113,7 @@ public class Hopper extends SubsystemBase {
      */
     public void runHopper() {
         m_hopper1.set(HOPPER_MOTOR_POWER);
-        m_hopper2.set(HOPPER_MOTOR_2_POWER);
+        // m_hopper2.set(HOPPER_MOTOR_2_POWER);
     }
 
     /**
@@ -107,7 +121,7 @@ public class Hopper extends SubsystemBase {
      */
     public void runHopper(double power) {
         m_hopper1.set(power);
-        m_hopper2.set(power + 0.1);
+        // m_hopper2.set(power + 0.1);
     }
 
     /**
@@ -122,7 +136,7 @@ public class Hopper extends SubsystemBase {
      */
     public void stopHopper() {
         m_hopper1.set(0);
-        m_hopper2.set(0);
+        // m_hopper2.set(0);
     }
 
     /**
@@ -169,9 +183,9 @@ public class Hopper extends SubsystemBase {
         
         m_flywheelSim.update(0.02);
 
-        SmartDashboard.putNumber("Hopper 1 Motor RPM", m_flywheelSim.getAngularVelocityRPM());
+        SmartDashboard.putNumber("Hopper 1 Motor RPM", m_flywheelSim.getAngularVelocityRPM()/4);
         SmartDashboard.putNumber("Hopper 1 Motor Voltage", m_hopper1.getMotorOutputVoltage());
-        SmartDashboard.putNumber("Hopper 2 Motor Voltage", m_hopper2.getMotorOutputVoltage());
+        // SmartDashboard.putNumber("Hopper 2 Motor Voltage", m_hopper2.getMotorOutputVoltage());
         SmartDashboard.putNumber("Hopper Ball Count", ballCount);
     }
 

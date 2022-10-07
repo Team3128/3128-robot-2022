@@ -48,7 +48,7 @@ public class CmdShootDist extends CommandBase {
              
             Pose2d pose = NAR_Drivetrain.getInstance().getPose().relativeTo(HUB_POS);
 
-            dist = Units.metersToInches(Math.sqrt(pose.getX() * pose.getX() + pose.getY() * pose.getY())) - HUB_RADIUS; // meters
+            dist = Units.metersToInches(Math.sqrt(pose.getX() * pose.getX() + pose.getY() * pose.getY())) - HUB_RADIUS; // inches
 
             SmartDashboard.putNumber("Distance from hub (meters)", Units.inchesToMeters(dist));
         }

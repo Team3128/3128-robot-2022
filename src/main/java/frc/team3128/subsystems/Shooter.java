@@ -7,6 +7,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import static frc.team3128.Constants.ShooterConstants.*;
 import frc.team3128.ConstantsInt;
+import frc.team3128.Robot;
+
 import static frc.team3128.Constants.ConversionConstants.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -124,7 +126,7 @@ public class Shooter extends PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double ff = kF * setpoint;
+        double ff = Robot.isSimulation() ? kF * setpoint * 1.678 : kF * setpoint;
         double voltageOutput = output + ff;
 
         if (getController().atSetpoint() && (setpoint != 0)) {
@@ -157,9 +159,12 @@ public class Shooter extends PIDSubsystem {
         m_shooterSim.setInput(
             m_leftShooter.getMotorOutputVoltage()
         );  
+        
         m_shooterSim.update(0.02);    
         
         m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI) / FALCON_NUpS_TO_RPM);
+
+        SmartDashboard.putNumber("Shooter Motor Voltage", m_leftShooter.getMotorOutputVoltage());
         
     }
 
