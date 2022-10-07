@@ -156,8 +156,8 @@ public class Constants {
 
         public static final DCMotor GEARBOX = DCMotor.getVex775Pro(1);
         public static final double HOPPER_MOTOR_GEAR_RATIO = 0.25;
-        public static final double HOPPER_MOMENT_OF_INERTIA = 0.04; // 0.04e-4
-        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16; // 0.16e-4
+        public static final double HOPPER_MOMENT_OF_INERTIA = 0.0006; // 0.04e-4
+        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16e-4; // 0.16e-4
     }
 
     public static class IntakeConstants {
