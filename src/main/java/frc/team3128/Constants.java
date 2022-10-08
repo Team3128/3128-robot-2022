@@ -253,7 +253,7 @@ public class Constants {
 
         public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 3; // degrees
+        public static final double TX_THRESHOLD = 1.125; // degrees
 
         public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
 
