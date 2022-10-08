@@ -3,7 +3,6 @@ package frc.team3128.common.hardware.input;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class NAR_XboxController extends XboxController {
@@ -21,17 +20,18 @@ public class NAR_XboxController extends XboxController {
         "RightStick"
     };
     
-    private HashMap<String, JoystickButton> buttons;
+    private HashMap<String, Trigger> buttons;
 
     public NAR_XboxController(int port) {
         super(port);
-        buttons = new HashMap<String, JoystickButton>();
+        buttons = new HashMap<String, Trigger>();
         for (int i = 0; i < 10; i++) {
-            buttons.put(buttonNames[i], new JoystickButton(this, i+1));
+            int n = i + 1;
+            buttons.put(buttonNames[i], new Trigger (() -> this.getRawButton(n)));
         }   
     }
 
-    public JoystickButton getButton(String buttonName) {
+    public Trigger getButton(String buttonName) {
         return buttons.get(buttonName);
     }
 
@@ -42,5 +42,5 @@ public class NAR_XboxController extends XboxController {
     public Trigger getRightTrigger() {
         return new Trigger (() -> getRightTriggerAxis() >= 0.5);
     }
-
+    
 }
