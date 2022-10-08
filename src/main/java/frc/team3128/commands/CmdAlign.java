@@ -44,12 +44,12 @@ public class CmdAlign extends CommandBase {
 
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
-        entry = Shuffleboard.getTab("test").add("Error", 0).getEntry();
-        kf = Shuffleboard.getTab("test").add("kf",0).getEntry();
-        kp = Shuffleboard.getTab("test").add("kp",0).getEntry();
-        kd = Shuffleboard.getTab("test").add("kd",0).getEntry();
-        ki = Shuffleboard.getTab("test").add("ki",0).getEntry();
-        thresh = Shuffleboard.getTab("test").add("Thresh",0).getEntry();
+        // entry = Shuffleboard.getTab("test").add("Error", 0).getEntry();
+        // kf = Shuffleboard.getTab("test").add("kf",0).getEntry();
+        // kp = Shuffleboard.getTab("test").add("kp",0).getEntry();
+        // kd = Shuffleboard.getTab("test").add("kd",0).getEntry();
+        // ki = Shuffleboard.getTab("test").add("ki",0).getEntry();
+        // thresh = Shuffleboard.getTab("test").add("Thresh",0).getEntry();
         addRequirements(drive);
     }
 
@@ -92,8 +92,8 @@ public class CmdAlign extends CommandBase {
                 currHorizontalOffset = limelights.getShooterTX();
                 currError = goalHorizontalOffset - currHorizontalOffset; // currError is positive if we are too far left
 
-                double ff = Math.signum(currError) * kf.getDouble(0);
-                double feedbackPower = kp.getDouble(0) * currError + kd.getDouble(0) * (currError - prevError) / (currTime - prevTime) + ff;
+                double ff = Math.signum(currError) * VISION_PID_kF;
+                double feedbackPower = VISION_PID_kP * currError + VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
                 
                 
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
@@ -101,10 +101,10 @@ public class CmdAlign extends CommandBase {
                 drive.tankDrive(-feedbackPower, feedbackPower);
                 SmartDashboard.putNumber("ll feedback power", feedbackPower);
                 SmartDashboard.putNumber("ll curr error", currError);
-                entry.setNumber(currError);
+                // entry.setNumber(currError);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
-                if (Math.abs(currError) < thresh.getDouble(0)) {
+                if (Math.abs(currError) < TX_THRESHOLD) {
                     plateauCount++;
                     if (plateauCount > ALIGN_PLATEAU_COUNT) {
                         isAligned = true;
@@ -127,7 +127,7 @@ public class CmdAlign extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drive.stop();
-        limelights.turnShooterLEDOff();
+        // limelights.turnShooterLEDOff();
     }
     
     @Override

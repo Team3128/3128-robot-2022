@@ -53,9 +53,9 @@ public class Constants {
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
-        public static final double TURN_kP = -2e-3;
+        public static final double TURN_kP = 2e-3;
         public static final double TURN_kI = 0;
-        public static final double TURN_kD = -2e-4;
+        public static final double TURN_kD = 2e-4;
         public static final double TURN_kF = 0.1;
 
         public static final double TURN_TOLERANCE = 12; // deg
@@ -246,16 +246,16 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 2.2e-3;
+        public static final double VISION_PID_kP = 1e-4;
         public static final double VISION_PID_kI = 0; // 0.02;
-        public static final double VISION_PID_kD = 0; // 0.00006;
-        public static final double VISION_PID_kF = 0.06;
+        public static final double VISION_PID_kD = 1e-3; // 0.00006;
+        public static final double VISION_PID_kF = 0.1;
 
         public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 1.125; // degrees
+        public static final double TX_THRESHOLD = 2; // degrees
 
-        public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
+        public static final int ALIGN_PLATEAU_COUNT = 3; //Number of checks at correct RPM to shoot
 
         public static final double BALL_TARGET_HEIGHT = 9.5 / 2;
         public static final double BALL_LL_HEIGHT = 24;
