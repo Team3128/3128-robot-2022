@@ -139,6 +139,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
         SmartDashboard.putString("getPose()", getPose().toString());
         SmartDashboard.putNumber("Gyro", getHeading());
+        SmartDashboard.putNumber("Pitch", getPitch());
+        SmartDashboard.putNumber("PitchRate", getPitchRate());
 
         SmartDashboard.putData("Field", field);
     }
