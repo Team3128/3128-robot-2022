@@ -53,9 +53,9 @@ public class Constants {
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is
         public static final double MAX_DRIVE_VOLTAGE = 7; // volts (hopefully you could figure this out)
 
-        public static final double TURN_kP = 2e-3;
+        public static final double TURN_kP = -2e-3;
         public static final double TURN_kI = 0;
-        public static final double TURN_kD = 2e-4;
+        public static final double TURN_kD = -2e-4;
         public static final double TURN_kF = 0.1;
 
         public static final double TURN_TOLERANCE = 12; // deg

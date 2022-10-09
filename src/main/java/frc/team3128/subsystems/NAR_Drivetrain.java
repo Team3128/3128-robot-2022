@@ -175,7 +175,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     public double getHeading() {
         //gyro.getYaw uses CW as positive
         //WPI_Pigeon2 negates this
-        return gyro.getAngle(); 
+        return -gyro.getAngle(); 
     }
 
     public double getPitch() {
