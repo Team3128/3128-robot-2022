@@ -17,6 +17,6 @@ public class CmdIsTraversalAngle extends CommandBase{
     @Override
     public boolean isFinished() {
         // pitch is used because gyro is mounted on wrong currently 
-        return m_drive.getPitch() <= 5 && m_drive.getPitchRate() >= 0.1;
+        return m_drive.getPitch() <= 10 && m_drive.getPitchRate() >= 0.1;
     }
 }
