@@ -183,12 +183,6 @@ public class RobotContainer {
 
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
-
-        // TRIGGERS
-
-        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
-                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
-        
     }
 
     public void configureDriverOperator() {
@@ -245,9 +239,6 @@ public class RobotContainer {
 
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
-
-        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
-                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
     }
 
     public void init() {

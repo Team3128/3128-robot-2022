@@ -44,12 +44,6 @@ public class CmdAlign extends CommandBase {
 
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
-        // entry = Shuffleboard.getTab("test").add("Error", 0).getEntry();
-        // kf = Shuffleboard.getTab("test").add("kf",0).getEntry();
-        // kp = Shuffleboard.getTab("test").add("kp",0).getEntry();
-        // kd = Shuffleboard.getTab("test").add("kd",0).getEntry();
-        // ki = Shuffleboard.getTab("test").add("ki",0).getEntry();
-        // thresh = Shuffleboard.getTab("test").add("Thresh",0).getEntry();
         addRequirements(drive);
     }
 
@@ -101,7 +95,6 @@ public class CmdAlign extends CommandBase {
                 drive.tankDrive(-feedbackPower, feedbackPower);
                 SmartDashboard.putNumber("ll feedback power", feedbackPower);
                 SmartDashboard.putNumber("ll curr error", currError);
-                // entry.setNumber(currError);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
                 if (Math.abs(currError) < TX_THRESHOLD) {

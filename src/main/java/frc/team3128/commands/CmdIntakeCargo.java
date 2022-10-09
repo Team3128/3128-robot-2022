@@ -16,7 +16,7 @@ public class CmdIntakeCargo extends CommandBase{
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
 
-        addRequirements(m_intake);
+        addRequirements(m_intake, m_hopper);
     }
 
     @Override
@@ -25,10 +25,7 @@ public class CmdIntakeCargo extends CommandBase{
         m_hopper.runHopper();
     }
 
-    @Override
-    public void execute() {
-        // nothing in execute because runIntake() and runHopper() just set speeds - nothing is updated in command
-    }
+    // nothing in execute because runIntake() and runHopper() just set speeds - nothing is updated in command
 
     @Override
     public void end(boolean interrupted){
