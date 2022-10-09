@@ -51,7 +51,9 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             
             new InstantCommand(() -> m_climber.extendPiston()),
             
-            new CmdIsTraversalAngle(),
+            new CmdIsTraversalAngle(">",10),
+
+            new CmdIsTraversalAngle("<", 0),
             
             //elev extend
             new CmdClimbEncoder(CLIMB_ENC_DIAG_EXTENSION),
