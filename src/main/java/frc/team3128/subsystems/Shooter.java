@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -111,8 +112,14 @@ public class Shooter extends PIDSubsystem {
      */
     public void beginShoot(double rpm) {
         // rpm = ConstantsInt.ShooterConstants.SET_RPM; // uncomment for interpolation
+        enable();
         setSetpoint(rpm);
         getController().setTolerance(RPM_THRESHOLD_PERCENT * rpm);
+    }
+
+    public void reverseShoot() {
+        disable();
+        m_leftShooter.set(ControlMode.PercentOutput, -0.5);
     }
 
     /**

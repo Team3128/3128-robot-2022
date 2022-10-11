@@ -91,6 +91,11 @@ public class Climber extends SubsystemBase {
     /**
      * Extends climber arms at regular power
      */
+    public void bothExtend(double power) {
+        m_rightMotor.set(power);
+        m_leftMotor.set(power);
+    }
+
     public void bothExtend() {
         m_rightMotor.set(CLIMBER_POWER);
         m_leftMotor.set(CLIMBER_POWER);
@@ -99,6 +104,11 @@ public class Climber extends SubsystemBase {
     /**
      * Retracts/lowers climber arms at regular power
      */
+    public void bothRetract(double power) {
+        m_rightMotor.set(-power);
+        m_leftMotor.set(-power);
+    }
+
     public void bothRetract() {
         m_rightMotor.set(-CLIMBER_POWER);
         m_leftMotor.set(-CLIMBER_POWER);

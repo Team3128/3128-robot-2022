@@ -14,7 +14,7 @@ public class CmdRetractHopper extends WaitCommand {
      * @Requirements Hopper
      */
     public CmdRetractHopper() {
-        super(0.5);
+        super(0.25);
         m_hopper = Hopper.getInstance(); 
         addRequirements(m_hopper);
     }
