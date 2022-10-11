@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.ClimberConstants.*;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 
 /**
  * Class for the Climber Subsystem 
@@ -77,9 +78,14 @@ public class Climber extends SubsystemBase {
         retractPiston();
     }
 
+    public void init_shuffleboard() {
+        NAR_Shuffleboard.addComplex("Climber", "Climber", this);
+        NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks);
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Climber Encoder", getCurrentTicks());
+        // SmartDashboard.putNumber("Climber Encoder", getCurrentTicks());
     }
 
     /**

@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import static frc.team3128.Constants.ShooterConstants.*;
 import frc.team3128.ConstantsInt;
+import frc.team3128.commands.CmdShootAlign;
+
 import static frc.team3128.Constants.ConversionConstants.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 
 /**
@@ -37,7 +40,7 @@ public class Shooter extends PIDSubsystem {
 
     public Shooter() {
         super(new PIDController(kP, kI, kD));
-    
+
         configMotors();
 
         //Robot is a simulation
@@ -81,13 +84,27 @@ public class Shooter extends PIDSubsystem {
         m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }
 
+    public void init_shuffleboard() {
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady);
+        NAR_Shuffleboard.addData("Shooter + Hood","atSetpoint",()-> (getController().atSetpoint()));
+        NAR_Shuffleboard.addComplex("Shooter + Hood","Shooter", this).withPosition(0, 1);
+        NAR_Shuffleboard.addComplex("Shooter + Hood", "Shooter_PID",m_controller).withPosition(2,1).withSize(2,2);
+        NAR_Shuffleboard.debug("Shooter + Hood","Shooter_ff");
+        NAR_Shuffleboard.getEntry("Shooter + Hood","Shooter_ff").withPosition(2,3);
+        if(RobotBase.isSimulation()) {
+            NAR_Shuffleboard.addData("Shooter + Hood","Sim Shooter RPM", ()-> (m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI)));
+        }
+    }
+
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
-        SmartDashboard.putNumber("Shooter RPM", getMeasurement());
-        SmartDashboard.putBoolean("Shooter isReady", isReady());
-        SmartDashboard.putBoolean("atSetpoint", getController().atSetpoint());
+        // SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
+        // SmartDashboard.putNumber("Shooter RPM", getMeasurement());
+        // SmartDashboard.putBoolean("Shooter isReady", isReady());
+        // SmartDashboard.putBoolean("atSetpoint", getController().atSetpoint());
     }
 
     /**
@@ -170,7 +187,7 @@ public class Shooter extends PIDSubsystem {
     
         // SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
         // SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
-        SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
+        // SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
         
     }
 

@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.team3128.Constants.VisionConstants.*;
+
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
@@ -25,12 +27,6 @@ public class CmdAlign extends CommandBase {
     private double prevTime, currTime; // seconds
     private int plateauCount, targetFoundCount;
     private boolean isAligned;
-    private NetworkTableEntry entry;
-    private NetworkTableEntry kf;
-    private NetworkTableEntry kp;
-    private NetworkTableEntry kd;
-    private NetworkTableEntry ki;
-    private NetworkTableEntry thresh;
 
     private VisionState aimState = VisionState.SEARCHING;
 
@@ -44,6 +40,9 @@ public class CmdAlign extends CommandBase {
 
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
+
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned);
+
         addRequirements(drive);
     }
 
@@ -114,7 +113,6 @@ public class CmdAlign extends CommandBase {
                 
         }
         prevTime = currTime;
-        SmartDashboard.putBoolean("Shooter isAligned", isAligned);
     }
 
     @Override

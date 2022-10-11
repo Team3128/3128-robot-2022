@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
+
 import static frc.team3128.Constants.ClimberConstants.*;
 
 import frc.team3128.commands.CmdAlign;
@@ -41,6 +42,7 @@ import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
@@ -249,15 +251,29 @@ public class RobotContainer {
     }
 
     private void initDashboard() {
+        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withPosition(0,0);
+        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withPosition(0,2);
+        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withPosition(0,3);
+        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withPosition(0,4);
+        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withPosition(0,5);
+        NAR_Shuffleboard.addComplex("General","Limelights",m_ll).withPosition(0,6);
+        m_drive.init_shuffleboard();
+        m_intake.init_shuffleboard();
+        m_hopper.init_shuffleboard();
+        m_climber.init_shuffleboard();
+        m_shooter.init_shuffleboard();
+        m_hood.init_shuffleboard();
+        m_ll.init_shuffleboard();
         if (DEBUG) {
             SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            SmartDashboard.putData("Drivetrain", m_drive);
-            SmartDashboard.putData("Intake", m_intake);
-            SmartDashboard.putData("Hopper", m_hopper);
-            SmartDashboard.putData("Climber", m_climber);
-            SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
-            SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
-            SmartDashboard.putData("Limelights", m_ll);
+            // SmartDashboard.putData("Drivetrain", m_drive);
+            // SmartDashboard.putData("Intake", m_intake);
+            // SmartDashboard.putData("Hopper", m_hopper);
+            // SmartDashboard.putData("Climber", m_climber);
+            // SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
+            // SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
+            // SmartDashboard.putData("Limelights", m_ll);
         }
 
         NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
@@ -272,6 +288,7 @@ public class RobotContainer {
     }
 
     public void updateDashboard() {
+        NAR_Shuffleboard.update();
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());

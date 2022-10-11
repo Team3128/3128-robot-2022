@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +27,7 @@ import static frc.team3128.Constants.DriveConstants.*;
 import java.lang.reflect.Array;
 
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 
 /**
  * Class for the Drivetrain Subsystem 
@@ -128,19 +130,32 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
 
+    public void init_shuffleboard(){
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance).withPosition(1, 3);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance).withPosition(0, 3);
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed).withSize(2, 1).withPosition(0,5);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed).withSize(2, 1).withPosition(0, 4);
+        NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString())).withSize(4, 1);
+        NAR_Shuffleboard.addData("Drivetrain","Gyro",this::getHeading);
+        NAR_Shuffleboard.addComplex("Drivetrain","Drivetrain", this).withPosition(0,1);
+        if(RobotBase.isSimulation()) {
+            NAR_Shuffleboard.addData("Drivetrain","LeftSimSpeed", leftLeader::getSelectedSensorVelocity).withPosition(1,6);
+            NAR_Shuffleboard.addData("Drivetrain","RightSimSpeed", rightLeader::getSelectedSensorVelocity).withPosition(0,6);
+        }
+    }
+
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
         field.setRobotPose(getPose());   
-        
-        SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
-        SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
-        SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
-        SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
-        SmartDashboard.putString("getPose()", getPose().toString());
-        SmartDashboard.putNumber("Gyro", getHeading());
         SmartDashboard.putNumber("Pitch", getPitch());
         SmartDashboard.putNumber("PitchRate", getPitchRate());
+        // SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
+        // SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
+        // SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
+        // SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
+        // SmartDashboard.putString("getPose()", getPose().toString());
+        // SmartDashboard.putNumber("Gyro", getHeading());
 
         SmartDashboard.putData("Field", field);
     }
@@ -163,8 +178,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / DRIVE_NU_TO_METER);
         rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / DRIVE_NU_TO_METER);
         
-        SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
 
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
