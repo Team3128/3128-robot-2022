@@ -17,7 +17,7 @@ public class CmdIntakeCargo extends CommandBase{
         m_intake = Intake.getInstance();
         m_hopper = Hopper.getInstance();
 
-        addRequirements(m_intake);
+        addRequirements(m_intake, m_hopper);
     }
 
     @Override

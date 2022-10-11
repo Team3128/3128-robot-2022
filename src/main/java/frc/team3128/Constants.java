@@ -27,10 +27,10 @@ public class Constants {
 
     public static class DriveConstants {
 
-        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
+        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
-        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
-        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
+        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 5;
+        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 6;
 
         public static final double ARCADE_DRIVE_TURN_MULT = 0.70 * 0.35;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
@@ -87,8 +87,8 @@ public class Constants {
         public static final double SET_RPM = 3000;
         public static final double SET_ANGLE = 25;
 
-        public static final int LEFT_SHOOTER_ID = 4; 
-        public static final int RIGHT_SHOOTER_ID = 5; 
+        public static final int LEFT_SHOOTER_ID = 10; 
+        public static final int RIGHT_SHOOTER_ID = 9; 
 
         public static final double kP = 2e-4; // 3.2e-3; 
         public static final double kI = 0;
@@ -141,8 +141,8 @@ public class Constants {
 
     public static class HopperConstants {
 
-        public static final int HOPPER_MOTOR_ID = 6;
-        public static final int HOPPER_MOTOR_2_ID = 9;
+        public static final int HOPPER_MOTOR_ID = 12;
+        public static final int HOPPER_MOTOR_2_ID = 4;
         public static final int BOTTOM_SENSOR_ID = 12;
         public static final int TOP_SENSOR_ID = 13;
 
@@ -162,7 +162,7 @@ public class Constants {
 
     public static class IntakeConstants {
 
-        public static final int INTAKE_MOTOR_ID = 7; 
+        public static final int INTAKE_MOTOR_ID = 3; 
         public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 4;
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
@@ -173,8 +173,8 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_MOTOR_LEFT_ID = 12;
-        public static final int CLIMBER_MOTOR_RIGHT_ID = 13;
+        public static final int CLIMBER_MOTOR_LEFT_ID = 0;
+        public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 
         public static final int CLIMBER_SENSOR_LEFT_ID = 7;
         public static final int CLIMBER_SENSOR_RIGHT_ID = 6;
@@ -219,8 +219,8 @@ public class Constants {
         public static final int HOOD_CURRENT_LIMIT = 10; // Amps
 
         public static final double MIN_ANGLE = 9.4; // deg
-        public static final double MAX_ANGLE = 40.4; // deg
-        public static final double HOME_ANGLE = 28.4; // deg
+        public static final double MAX_ANGLE = 41.4; // deg
+        public static final double HOME_ANGLE = 28.5; // deg
 
         public static final DCMotor HOOD_GEARBOX = DCMotor.getNeo550(1);
         public static final double HOOD_MOMENT_OF_INERTIA = 0.054195108;
@@ -230,24 +230,24 @@ public class Constants {
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
 
-            hoodAngleMap.put(new InterpolatingDouble(190.0), new InterpolatingDouble(32.5));
-            hoodAngleMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(32.5));
-            hoodAngleMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(32.5));
-            hoodAngleMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(31.5));
-            hoodAngleMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(27.0));
-            hoodAngleMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(27.5));
-            hoodAngleMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(26.5));
-            hoodAngleMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(24.0));
-            hoodAngleMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(23.5));
+            hoodAngleMap.put(new InterpolatingDouble(190.0), new InterpolatingDouble(38.9));
+            hoodAngleMap.put(new InterpolatingDouble(180.0), new InterpolatingDouble(38.9));
+            hoodAngleMap.put(new InterpolatingDouble(170.0), new InterpolatingDouble(38.9));
+            hoodAngleMap.put(new InterpolatingDouble(160.0), new InterpolatingDouble(37.9));
+            hoodAngleMap.put(new InterpolatingDouble(150.0), new InterpolatingDouble(33.4));
+            hoodAngleMap.put(new InterpolatingDouble(140.0), new InterpolatingDouble(33.9));
+            hoodAngleMap.put(new InterpolatingDouble(130.0), new InterpolatingDouble(32.9));
+            hoodAngleMap.put(new InterpolatingDouble(120.0), new InterpolatingDouble(30.4));
+            hoodAngleMap.put(new InterpolatingDouble(110.0), new InterpolatingDouble(29.9));
 
-            hoodAngleMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(22.0));
-            hoodAngleMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(19.0));
-            hoodAngleMap.put(new InterpolatingDouble(78.0), new InterpolatingDouble(16.0));
-            hoodAngleMap.put(new InterpolatingDouble(68.0), new InterpolatingDouble(14.5));
-            hoodAngleMap.put(new InterpolatingDouble(58.0), new InterpolatingDouble(13.0));
-            hoodAngleMap.put(new InterpolatingDouble(48.0), new InterpolatingDouble(12.0));
-            hoodAngleMap.put(new InterpolatingDouble(38.0), new InterpolatingDouble(11.0));
-            hoodAngleMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(9.0));
+            hoodAngleMap.put(new InterpolatingDouble(98.0), new InterpolatingDouble(28.4));
+            hoodAngleMap.put(new InterpolatingDouble(88.0), new InterpolatingDouble(25.4));
+            hoodAngleMap.put(new InterpolatingDouble(78.0), new InterpolatingDouble(22.4));
+            hoodAngleMap.put(new InterpolatingDouble(68.0), new InterpolatingDouble(20.9));
+            hoodAngleMap.put(new InterpolatingDouble(58.0), new InterpolatingDouble(19.4));
+            hoodAngleMap.put(new InterpolatingDouble(48.0), new InterpolatingDouble(18.4));
+            hoodAngleMap.put(new InterpolatingDouble(38.0), new InterpolatingDouble(17.4));
+            hoodAngleMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(15.4));
             
         };
     }

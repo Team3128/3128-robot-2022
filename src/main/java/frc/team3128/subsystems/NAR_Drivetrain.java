@@ -3,7 +3,8 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.kauailabs.navx.frc.AHRS;
+
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
@@ -22,7 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 
+
 import frc.team3128.Robot;
+import java.lang.reflect.Array;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 
 /**
@@ -44,7 +47,9 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDrivetrainSim robotDriveSim;
     private DifferentialDriveOdometry odometry;
 
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private double[] xyz_dps = new double[3];
+
+    private static WPI_Pigeon2 gyro = new WPI_Pigeon2(0);
 
     private static Field2d field;
     
@@ -172,20 +177,17 @@ public class NAR_Drivetrain extends SubsystemBase {
         
     public double getHeading() {
         //gyro.getYaw uses CW as positive
-        return -gyro.getYaw(); 
+        //WPI_Pigeon2 negates this
+        return gyro.getAngle(); 
     }
 
     public double getPitch() {
-
-        if(Robot.isSimulation()) {
-            
-        }
-
-        return gyro.getRoll();
+        return gyro.getPitch();
     }
    
     public double getPitchRate() {
-        return gyro.getRawGyroY();
+        gyro.getRawGyro(xyz_dps);
+        return xyz_dps[0];
     }
 
     public Pose2d getPose() {

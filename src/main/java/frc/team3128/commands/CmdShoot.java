@@ -1,9 +1,11 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Hood;
+import frc.team3128.subsystems.Hopper;
 
 public class CmdShoot extends SequentialCommandGroup {
 
@@ -13,7 +15,10 @@ public class CmdShoot extends SequentialCommandGroup {
      */
     public CmdShoot() {
         addCommands(
-            new CmdRetractHopper(),
+            // run hopper back to push balls against intake
+            new ProxyScheduleCommand(new CmdRetractHopper()),
+            // run hopper back at slower power to keep balls away from shooter until ready
+            new ScheduleCommand(new InstantCommand(() -> Hopper.getInstance().runHopper(-0.1), Hopper.getInstance())),
             new CmdShootDist()
         );
     }
@@ -24,11 +29,21 @@ public class CmdShoot extends SequentialCommandGroup {
      */
     public CmdShoot(double RPM, double angle) {
         addCommands(
-            new CmdRetractHopper(),
-            new ParallelCommandGroup(
+            // run hopper back to push balls against intake
+            new ProxyScheduleCommand(new CmdRetractHopper()),
+            // run hopper back at slower power to keep balls away from shooter until ready
+            new ScheduleCommand(new InstantCommand(() -> Hopper.getInstance().runHopper(-0.1), Hopper.getInstance())),
+            parallel (
                 new InstantCommand(() -> Hood.getInstance().startPID(angle), Hood.getInstance()),
-                new CmdShootRPM(RPM))
+                new CmdShootRPM(RPM)
+            )
         );
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        Hopper.getInstance().stopHopper();
     }
     
 }
