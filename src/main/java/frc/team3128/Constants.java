@@ -30,7 +30,7 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 5;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 6;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = 0.70 * 0.35;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.70 * 0.45;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
@@ -246,16 +246,16 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 2.2e-3;
+        public static final double VISION_PID_kP = 1e-4;
         public static final double VISION_PID_kI = 0; // 0.02;
-        public static final double VISION_PID_kD = 0; // 0.00006;
-        public static final double VISION_PID_kF = 0.06;
+        public static final double VISION_PID_kD = 1e-3; // 0.00006;
+        public static final double VISION_PID_kF = 0.1;
 
         public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 3; // degrees
+        public static final double TX_THRESHOLD = 2; // degrees
 
-        public static final int ALIGN_PLATEAU_COUNT = 10; //Number of checks at correct RPM to shoot
+        public static final int ALIGN_PLATEAU_COUNT = 3; //Number of checks at correct RPM to shoot
 
         public static final double BALL_TARGET_HEIGHT = 9.5 / 2;
         public static final double BALL_LL_HEIGHT = 24;
