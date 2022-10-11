@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -131,13 +133,18 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void init_shuffleboard(){
+        NAR_Shuffleboard.addComplex("Field","field",field).withWidget("Field").withSize(13,7);
         NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance).withPosition(1, 3);
         NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance).withPosition(0, 3);
         NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed).withSize(2, 1).withPosition(0,5);
         NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed).withSize(2, 1).withPosition(0, 4);
         NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString())).withSize(4, 1);
         NAR_Shuffleboard.addData("Drivetrain","Gyro",this::getHeading);
+        NAR_Shuffleboard.addData("Drivetrain","Pitch",this::getPitch);
+        NAR_Shuffleboard.addData("Drivetrain","PitchRate",this::getPitchRate);
         NAR_Shuffleboard.addComplex("Drivetrain","Drivetrain", this).withPosition(0,1);
+        // ShuffleboardTab tab = Shuffleboard.getTab("Test");
+        // tab.add("Field",field).withWidget("Field");
         if(RobotBase.isSimulation()) {
             NAR_Shuffleboard.addData("Drivetrain","LeftSimSpeed", leftLeader::getSelectedSensorVelocity).withPosition(1,6);
             NAR_Shuffleboard.addData("Drivetrain","RightSimSpeed", rightLeader::getSelectedSensorVelocity).withPosition(0,6);
@@ -148,8 +155,8 @@ public class NAR_Drivetrain extends SubsystemBase {
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
         field.setRobotPose(getPose());   
-        SmartDashboard.putNumber("Pitch", getPitch());
-        SmartDashboard.putNumber("PitchRate", getPitchRate());
+        // SmartDashboard.putNumber("Pitch", getPitch());
+        // SmartDashboard.putNumber("PitchRate", getPitchRate());
         // SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
         // SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
         // SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());

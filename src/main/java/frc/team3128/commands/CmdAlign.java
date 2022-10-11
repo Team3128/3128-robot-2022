@@ -42,6 +42,8 @@ public class CmdAlign extends CommandBase {
         isAligned = false;
 
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned);
+        NAR_Shuffleboard.addData("Drivetrain","AlignError",()->currError);
+        NAR_Shuffleboard.addData("Drivetrain","ll plat count", ()-> targetFoundCount);
 
         addRequirements(drive);
     }
@@ -70,7 +72,7 @@ public class CmdAlign extends CommandBase {
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
                 }
-                SmartDashboard.putNumber("ll plat count", targetFoundCount);
+                //SmartDashboard.putNumber("ll plat count", targetFoundCount);
                 break;
             
             case FEEDBACK:
@@ -92,8 +94,8 @@ public class CmdAlign extends CommandBase {
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
-                SmartDashboard.putNumber("ll feedback power", feedbackPower);
-                SmartDashboard.putNumber("ll curr error", currError);
+                // SmartDashboard.putNumber("ll feedback power", feedbackPower);
+                // SmartDashboard.putNumber("ll curr error", currError);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
                 if (Math.abs(currError) < TX_THRESHOLD) {

@@ -266,7 +266,7 @@ public class RobotContainer {
         m_hood.init_shuffleboard();
         m_ll.init_shuffleboard();
         if (DEBUG) {
-            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+            //SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
             // SmartDashboard.putData("Drivetrain", m_drive);
             // SmartDashboard.putData("Intake", m_intake);
             // SmartDashboard.putData("Hopper", m_hopper);

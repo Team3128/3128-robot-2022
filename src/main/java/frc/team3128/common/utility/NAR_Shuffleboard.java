@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.team3128.subsystems.NAR_Drivetrain;
 
-public class NAR_Shuffleboard{
+public class NAR_Shuffleboard {
 
     private static class entryInfo {
         
@@ -38,6 +40,7 @@ public class NAR_Shuffleboard{
 
     static {
         tabs = new HashMap<String, HashMap<String,entryInfo>>();
+        //ComplexWidget fieldWidget = addComplex("Field", "Field", field).withSize(13,7);
     }
 
     private static void create_tab(String tabName) {
