@@ -64,7 +64,7 @@ public class Hood extends PIDSubsystem {
         // zeroEncoder();
     }
 
-    public void init_shuffleboard() {
+    public void initShuffleboard() {
         NAR_Shuffleboard.addData("Shooter + Hood", "Hood Setpoint", this::getSetpoint).withPosition(4, 0);
         NAR_Shuffleboard.addData("Shooter + Hood", "Hood Angle", this::getMeasurement).withPosition(5, 0);
         NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood", this).withPosition(6,0);

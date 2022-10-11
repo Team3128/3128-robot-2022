@@ -31,20 +31,12 @@ public class LimelightSubsystem extends SubsystemBase{
         return instance;
     }
 
-    public void init_shuffleboard() {
+    public void initShuffleboard() {
         NAR_Shuffleboard.addData("Limelight", "Range", this::calculateShooterDistance).withPosition(2, 1);
         NAR_Shuffleboard.addData("Limelight", "ty", this::getShooterTY).withPosition(4, 1);
         NAR_Shuffleboard.addData("Limelight", "tx", this::getShooterTX).withPosition(3, 1);
         NAR_Shuffleboard.addData("Limelight", "hasValidTarget", this::getShooterHasValidTarget).withPosition(2, 0);
         NAR_Shuffleboard.addComplex("Limelight", "Limelight", this).withPosition(0,0);
-    }
-
-    @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("range", calculateShooterDistance());
-        // SmartDashboard.putNumber("ty", getShooterTY());
-        // SmartDashboard.putNumber("tx", getShooterTX());
-        // SmartDashboard.putBoolean("hasValidTarget", getShooterHasValidTarget());
     }
 
     /**

@@ -84,7 +84,7 @@ public class Shooter extends PIDSubsystem {
         m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }
 
-    public void init_shuffleboard() {
+    public void initShuffleboard() {
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint).withPosition(2, 0);
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement).withPosition(3, 0);
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady).withSize(2, 1).withPosition(0, 2);

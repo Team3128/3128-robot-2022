@@ -78,16 +78,11 @@ public class Climber extends SubsystemBase {
         retractPiston();
     }
 
-    public void init_shuffleboard() {
+    public void initShuffleboard() {
         NAR_Shuffleboard.addComplex("Climber", "Climber", this).withPosition(0, 0);
         NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks).withPosition(2, 0);
         NAR_Shuffleboard.addData("Climber", "Piston State", this::getSolenoid).withPosition(3, 0);
         NAR_Shuffleboard.addData("Climber", "Climber Speed", m_leftMotor::get).withPosition(4, 0);
-    }
-
-    @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("Climber Encoder", getCurrentTicks());
     }
 
     /**

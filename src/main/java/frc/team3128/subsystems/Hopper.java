@@ -63,7 +63,7 @@ public class Hopper extends SubsystemBase {
         m_encoder.setReverseDirection(true);
     }
 
-    public void init_shuffleboard() {
+    public void initShuffleboard() {
         NAR_Shuffleboard.addData("Intake + Hopper","Hopper Enc", m_encoder::getDistance).withPosition(3, 1);
         NAR_Shuffleboard.addComplex("Intake + Hopper", "Hopper", this).withPosition(2,0);
         NAR_Shuffleboard.addData("Intake + Hopper", "Hopper Speed", m_hopper1::get).withPosition(2, 1);

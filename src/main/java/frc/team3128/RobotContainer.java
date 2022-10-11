@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
@@ -258,23 +259,14 @@ public class RobotContainer {
         NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withPosition(2,1);
         NAR_Shuffleboard.addComplex("General","Hood",m_hood).withPosition(4,1);
         NAR_Shuffleboard.addComplex("General","Limelights",m_ll).withPosition(6,0);
-        m_drive.init_shuffleboard();
-        m_intake.init_shuffleboard();
-        m_hopper.init_shuffleboard();
-        m_climber.init_shuffleboard();
-        m_shooter.init_shuffleboard();
-        m_hood.init_shuffleboard();
-        m_ll.init_shuffleboard();
-        if (DEBUG) {
-            //SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            // SmartDashboard.putData("Drivetrain", m_drive);
-            // SmartDashboard.putData("Intake", m_intake);
-            // SmartDashboard.putData("Hopper", m_hopper);
-            // SmartDashboard.putData("Climber", m_climber);
-            // SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
-            // SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
-            // SmartDashboard.putData("Limelights", m_ll);
-        }
+
+        m_drive.initShuffleboard();
+        m_intake.initShuffleboard();
+        m_hopper.initShuffleboard();
+        m_climber.initShuffleboard();
+        m_shooter.initShuffleboard();
+        m_hood.initShuffleboard();
+        m_ll.initShuffleboard();
 
         NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
         NarwhalDashboard.startServer();   

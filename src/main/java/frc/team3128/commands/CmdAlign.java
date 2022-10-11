@@ -41,10 +41,7 @@ public class CmdAlign extends CommandBase {
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
 
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
-        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
-        NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
-        NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
+        initShuffleboard();
 
         addRequirements(drive);
     }
@@ -73,7 +70,6 @@ public class CmdAlign extends CommandBase {
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
                 }
-                //SmartDashboard.putNumber("ll plat count", targetFoundCount);
                 break;
             
             case FEEDBACK:
@@ -95,8 +91,6 @@ public class CmdAlign extends CommandBase {
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
-                // SmartDashboard.putNumber("ll feedback power", feedbackPower);
-                // SmartDashboard.putNumber("ll curr error", currError);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
                 if (Math.abs(currError) < TX_THRESHOLD) {
@@ -127,5 +121,12 @@ public class CmdAlign extends CommandBase {
     @Override
     public boolean isFinished() {
         return isAligned;
+    }
+
+    public void initShuffleboard() {
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
+        NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
     }
 }

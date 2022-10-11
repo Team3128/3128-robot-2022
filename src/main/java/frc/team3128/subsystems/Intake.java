@@ -61,16 +61,10 @@ public class Intake extends SubsystemBase {
         retractIntake();
     }
 
-    public void init_shuffleboard() {
+    public void initShuffleboard() {
         NAR_Shuffleboard.addData("Intake + Hopper", "Intake Speed", m_intake::get).withPosition(0, 1);
         NAR_Shuffleboard.addData("Intake + Hopper", "Intake State", this::getSolenoid).withPosition(1, 1);
         NAR_Shuffleboard.addComplex("Intake + Hopper", "Intake", this).withPosition(0,0);
-    }
-
-    @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("Intake Speed", m_intake.get());
-        // SmartDashboard.putString("Intake State", getSolenoid());
     }
 
     /**

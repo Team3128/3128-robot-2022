@@ -132,7 +132,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setControlFramePeriod(ControlFrame.Control_3_General, 20);
     }
 
-    public void init_shuffleboard(){
+    public void initShuffleboard(){
         NAR_Shuffleboard.addComplex("Field","field",field).withWidget("Field").withSize(13,7);
         NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance).withPosition(1, 1);
         NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance).withPosition(0, 1);
@@ -154,15 +154,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
-        field.setRobotPose(getPose());   
-        // SmartDashboard.putNumber("Pitch", getPitch());
-        // SmartDashboard.putNumber("PitchRate", getPitchRate());
-        // SmartDashboard.putNumber("Left Encoder (m)", getLeftEncoderDistance());
-        // SmartDashboard.putNumber("Right Encoder (m)", getRightEncoderDistance());
-        // SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
-        // SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
-        // SmartDashboard.putString("getPose()", getPose().toString());
-        // SmartDashboard.putNumber("Gyro", getHeading());
+        field.setRobotPose(getPose());
 
         SmartDashboard.putData("Field", field);
     }
@@ -184,9 +176,6 @@ public class NAR_Drivetrain extends SubsystemBase {
         leftLeader.setSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond() / DRIVE_NU_TO_METER);
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / DRIVE_NU_TO_METER);
         rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / DRIVE_NU_TO_METER);
-        
-        // SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
-        // SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
 
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
         SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
