@@ -252,12 +252,12 @@ public class RobotContainer {
 
     private void initDashboard() {
         NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withPosition(0,0);
-        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withPosition(0,1);
-        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withPosition(0,2);
-        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withPosition(0,3);
-        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withPosition(0,4);
-        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withPosition(0,5);
-        NAR_Shuffleboard.addComplex("General","Limelights",m_ll).withPosition(0,6);
+        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withPosition(2,0);
+        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withPosition(4,0);
+        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withPosition(2,1);
+        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withPosition(4,1);
+        NAR_Shuffleboard.addComplex("General","Limelights",m_ll).withPosition(6,0);
         m_drive.init_shuffleboard();
         m_intake.init_shuffleboard();
         m_hopper.init_shuffleboard();

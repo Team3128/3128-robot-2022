@@ -41,9 +41,10 @@ public class CmdAlign extends CommandBase {
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
 
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned);
-        NAR_Shuffleboard.addData("Drivetrain","AlignError",()->currError);
-        NAR_Shuffleboard.addData("Drivetrain","ll plat count", ()-> targetFoundCount);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
+        NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
 
         addRequirements(drive);
     }
