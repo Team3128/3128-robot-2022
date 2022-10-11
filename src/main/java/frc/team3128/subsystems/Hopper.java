@@ -65,7 +65,7 @@ public class Hopper extends SubsystemBase {
 
     public void init_shuffleboard() {
         NAR_Shuffleboard.addData("Intake + Hopper","Hopper Enc", m_encoder::getDistance);
-        NAR_Shuffleboard.addSubsystem("Intake + Hopper", "Hopper", this).withPosition(0,2);
+        NAR_Shuffleboard.addComplex("Intake + Hopper", "Hopper", this).withPosition(0,2);
     }
 
     @Override

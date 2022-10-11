@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase {
     public void init_shuffleboard() {
         NAR_Shuffleboard.addData("Intake + Hopper", "Intake Speed", m_intake::get);
         NAR_Shuffleboard.addData("Intake + Hopper", "Intake State", this::getSolenoid);
-        NAR_Shuffleboard.addSubsystem("Intake + Hopper", "Intake", this).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("Intake + Hopper", "Intake", this).withPosition(0,1);
     }
 
     @Override

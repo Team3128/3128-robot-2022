@@ -79,7 +79,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void init_shuffleboard() {
-        NAR_Shuffleboard.addSubsystem("Climber", "Climber", this);
+        NAR_Shuffleboard.addComplex("Climber", "Climber", this);
         NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks);
     }
 

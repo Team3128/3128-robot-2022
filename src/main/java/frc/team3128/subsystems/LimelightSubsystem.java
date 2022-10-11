@@ -36,7 +36,7 @@ public class LimelightSubsystem extends SubsystemBase{
         NAR_Shuffleboard.addData("Limelight", "ty", this::getShooterTY);
         NAR_Shuffleboard.addData("Limelight", "tx", this::getShooterTX);
         NAR_Shuffleboard.addData("Limelight", "hasValidTarget", this::getShooterHasValidTarget);
-        NAR_Shuffleboard.addSubsystem("Limelight", "Limelight", this).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("Limelight", "Limelight", this).withPosition(0,1);
     }
 
     @Override

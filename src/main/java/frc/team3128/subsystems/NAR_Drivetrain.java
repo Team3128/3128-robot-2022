@@ -131,7 +131,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed).withSize(2, 1).withPosition(0, 4);
         NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString())).withSize(4, 1);
         NAR_Shuffleboard.addData("Drivetrain","Gyro",this::getHeading);
-        NAR_Shuffleboard.addSubsystem("Drivetrain","Drivetrain", this).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("Drivetrain","Drivetrain", this).withPosition(0,1);
         if(RobotBase.isSimulation()) {
             NAR_Shuffleboard.addData("Drivetrain","LeftSimSpeed", leftLeader::getSelectedSensorVelocity).withPosition(1,6);
             NAR_Shuffleboard.addData("Drivetrain","RightSimSpeed", rightLeader::getSelectedSensorVelocity).withPosition(0,6);
