@@ -98,8 +98,8 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-        configureButtonBindings();
-        // configureDriverOperator();
+        //configureButtonBindings();
+        configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -233,9 +233,10 @@ public class RobotContainer {
 
         m_rightStick.getButton(6).whenPressed(() -> m_climber.resetLeftEncoder());
 
-        m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
+        // m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
 
-        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
+        // m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
+        m_rightStick.getButton(14).whenPressed(() -> m_shooter.reverseShoot());
 
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
