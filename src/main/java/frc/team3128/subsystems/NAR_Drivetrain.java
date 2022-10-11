@@ -159,6 +159,8 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / DRIVE_NU_TO_METER);
         rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / DRIVE_NU_TO_METER);
         
+        //SmartDashboard.putNumber("Left Sim Voltage", leftLeader.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Right Sim Voltage", rightLeader.getMotorOutputVoltage());
         SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
 
