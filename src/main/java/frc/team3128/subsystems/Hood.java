@@ -2,6 +2,9 @@ package frc.team3128.subsystems;
 
 import frc.team3128.ConstantsInt;
 import static frc.team3128.Constants.HoodConstants.*;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
@@ -24,6 +27,8 @@ public class Hood extends PIDSubsystem {
     private static Hood instance;
     private NAR_CANSparkMax m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
+    public DoubleSupplier m_ff;
+    public DoubleSupplier m_setpoint;
     
     public Hood() {
         super(new PIDController(kP, kI, kD));
@@ -69,12 +74,16 @@ public class Hood extends PIDSubsystem {
         NAR_Shuffleboard.addData("Shooter + Hood", "Hood Angle", this::getMeasurement).withPosition(5, 0);
         NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood", this).withPosition(6,0);
         NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood_PID", m_controller).withPosition(4, 1).withSize(2,2);
-        NAR_Shuffleboard.debug("Shooter + Hood", "Hood_ff");
+        m_ff = NAR_Shuffleboard.debug("Shooter + Hood", "Hood_ff");
         NAR_Shuffleboard.getEntry("Shooter + Hood", "Hood_ff").withPosition(4, 3);
+        m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","Hood_setpoint");
+        NAR_Shuffleboard.getEntry("Shooter + Hood", "Hood_setpoint").withPosition(5,3);
     }
 
     @Override
     public void periodic() {
+        super.setSetpoint(m_setpoint.getAsDouble());
+        NAR_Shuffleboard.put("Shooter + Hood","Mika is broken", calculateAngleFromDist(LimelightSubsystem.getInstance().calculateShooterDistance()));
         super.periodic();
         // SmartDashboard.putNumber("Hood Setpoint", getSetpoint());
         // SmartDashboard.putNumber("Hood Angle", getMeasurement());
@@ -100,7 +109,7 @@ public class Hood extends PIDSubsystem {
     @Override
     protected void useOutput(double output, double setpoint) {
         // ff needs a fix b/c "degrees" are fake right now (min angle was given an arbitrary number, not the real number)
-        double ff = kF * Math.cos(Units.degreesToRadians(setpoint)); // ff keeps the hood at steady to counteract Fg (gravity)
+        double ff = m_ff.getAsDouble() * Math.cos(Units.degreesToRadians(setpoint)); // ff keeps the hood at steady to counteract Fg (gravity)
         double voltageOutput = output + ff;
 
         m_hoodMotor.set(MathUtil.clamp(voltageOutput / 12.0, -1, 1));

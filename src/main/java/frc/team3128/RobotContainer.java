@@ -31,6 +31,7 @@ import frc.team3128.commands.CmdClimbEncoder;
 import frc.team3128.commands.CmdClimbTraversalGyro;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
+import frc.team3128.commands.CmdHopperShooting;
 import frc.team3128.commands.CmdIntakeCargo;
 import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdRetractHopper;
@@ -101,8 +102,8 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-        //configureButtonBindings();
-        configureDriverOperator();
+        configureButtonBindings();
+        // configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -111,7 +112,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // RIGHT
-        m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
+        m_rightStick.getButton(1).whenHeld(new CmdHopperShooting());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_rightStick.getButton(1).whenHeld(new CmdShoot(2700, 12));

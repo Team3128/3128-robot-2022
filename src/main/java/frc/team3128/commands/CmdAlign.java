@@ -26,7 +26,6 @@ public class CmdAlign extends CommandBase {
     
     private double prevTime, currTime; // seconds
     private int plateauCount, targetFoundCount;
-    private boolean isAligned;
 
     private VisionState aimState = VisionState.SEARCHING;
 
@@ -39,7 +38,6 @@ public class CmdAlign extends CommandBase {
         this.limelights = LimelightSubsystem.getInstance();
 
         goalHorizontalOffset = TX_OFFSET;
-        isAligned = false;
 
         initShuffleboard();
 
@@ -48,7 +46,7 @@ public class CmdAlign extends CommandBase {
 
     @Override
     public void initialize() {
-        isAligned = false;
+
         limelights.turnShooterLEDOn();
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
@@ -76,6 +74,7 @@ public class CmdAlign extends CommandBase {
                 // if no more valid target, switch to SEARCHING
                 if(!limelights.getShooterHasValidTarget()) {
                     aimState = VisionState.SEARCHING;
+                    limelights.setAligned(false);
                     plateauCount = 0;
                     break;
                 }
@@ -96,11 +95,11 @@ public class CmdAlign extends CommandBase {
                 if (Math.abs(currError) < TX_THRESHOLD) {
                     plateauCount++;
                     if (plateauCount > ALIGN_PLATEAU_COUNT) {
-                        isAligned = true;
+                        limelights.setAligned(true);
                     }
                 }
                 else {
-                    isAligned = false;
+                    limelights.setAligned(false);
                     plateauCount = 0;
                 }
 
@@ -115,17 +114,18 @@ public class CmdAlign extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drive.stop();
+        limelights.setAligned(false);
         // limelights.turnShooterLEDOff();
     }
     
     @Override
     public boolean isFinished() {
-        return isAligned;
+        return limelights.isAligned();
     }
 
     public void initShuffleboard() {
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
-        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", ()-> isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", limelights::isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", limelights::isAligned).withPosition(1, 1);
         NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
         NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
     }

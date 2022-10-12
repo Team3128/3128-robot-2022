@@ -19,9 +19,12 @@ public class LimelightSubsystem extends SubsystemBase{
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
+    private boolean isAligned = false;
+
     public LimelightSubsystem() {
         m_shooterLimelight = new Limelight("limelight-cog", TOP_CAMERA_ANGLE, TOP_CAMERA_HEIGHT, TOP_FRONT_DIST); 
         m_ballLimelight = new Limelight("limelight-sog", BALL_LL_ANGLE, BALL_LL_HEIGHT, BALL_LL_FRONT_DIST);
+        isAligned = false;
     }
 
     public static synchronized LimelightSubsystem getInstance() {
@@ -120,6 +123,14 @@ public class LimelightSubsystem extends SubsystemBase{
 
     public void turnShooterLEDOn() {
         m_shooterLimelight.setLEDMode(LEDMode.ON);
+    }
+
+    public void setAligned(boolean isAligned) {
+        this.isAligned = isAligned;
+    }
+
+    public boolean isAligned() {
+        return isAligned;
     }
 
 }
