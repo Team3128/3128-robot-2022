@@ -61,25 +61,25 @@ public class NAR_Shuffleboard {
         return entry;
     }
 
-    public static void put(String tabName, String name, Object data) {
+    public static void put(String tabName, String name, Object data, int x, int y) {
         if(!tabs.containsKey(tabName)) create_tab(tabName);
         if (tabs.get(tabName).containsKey(name)) {
             tabs.get(tabName).get(name).m_data.setValue(data);
             return;
         }
-        addData(tabName, name, data);
+        addData(tabName, name, data).withPosition(x,y);
     }
 
     public static ComplexWidget addComplex(String tabName, String name, Sendable data) {
         return Shuffleboard.getTab(tabName).add(name, data);
     }
 
-    public static DoubleSupplier debug(String tabName, String name) {
+    public static DoubleSupplier debug(String tabName, String name, double standard) {
         if(!tabs.containsKey(tabName)){
             create_tab(tabName);
         }
-        SimpleWidget tab = addData(tabName,name,0);
-        return ()-> tab.getEntry().getDouble(0);
+        SimpleWidget tab = addData(tabName,name,standard);
+        return ()-> tab.getEntry().getDouble(standard);
     }
 
     public static HashMap<String,DoubleSupplier> PID_Setup(String tabName, String suffix) {

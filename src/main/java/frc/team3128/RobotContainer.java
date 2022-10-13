@@ -102,8 +102,8 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-        configureButtonBindings();
-        // configureDriverOperator();
+        // configureButtonBindings();
+        configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -112,7 +112,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // RIGHT
-        m_rightStick.getButton(1).whenHeld(new CmdHopperShooting());
+        m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_rightStick.getButton(1).whenHeld(new CmdShoot(2700, 12));
@@ -253,13 +253,12 @@ public class RobotContainer {
     }
 
     private void initDashboard() {
-        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withPosition(0,0);
-        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withPosition(2,0);
-        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withPosition(4,0);
-        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withPosition(0,1);
-        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withPosition(2,1);
-        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withPosition(4,1);
-        NAR_Shuffleboard.addComplex("General","Limelights",m_ll).withPosition(6,0);
+        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withSize(3, 1).withPosition(0,0);
+        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withSize(3, 1).withPosition(3,0);
+        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withSize(3, 1).withPosition(6,0);
+        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withSize(3, 1).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withSize(3, 1).withPosition(3, 1);
+        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withSize(3, 1).withPosition(6,1);
 
         m_drive.initShuffleboard();
         m_intake.initShuffleboard();

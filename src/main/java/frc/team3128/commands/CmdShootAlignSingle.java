@@ -1,12 +1,13 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team3128.subsystems.Hopper;
 
-public class CmdShootAlignSingle extends SequentialCommandGroup {
+public class CmdShootAlignSingle extends ParallelCommandGroup {
 
     /**
      * Align and shoot using the limelight approximated distance 

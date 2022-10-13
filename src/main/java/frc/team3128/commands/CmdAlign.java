@@ -74,7 +74,6 @@ public class CmdAlign extends CommandBase {
                 // if no more valid target, switch to SEARCHING
                 if(!limelights.getShooterHasValidTarget()) {
                     aimState = VisionState.SEARCHING;
-                    limelights.setAligned(false);
                     plateauCount = 0;
                     break;
                 }
@@ -92,16 +91,8 @@ public class CmdAlign extends CommandBase {
                 drive.tankDrive(-feedbackPower, feedbackPower);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
-                if (Math.abs(currError) < TX_THRESHOLD) {
-                    plateauCount++;
-                    if (plateauCount > ALIGN_PLATEAU_COUNT) {
-                        limelights.setAligned(true);
-                    }
-                }
-                else {
-                    limelights.setAligned(false);
-                    plateauCount = 0;
-                }
+                if (limelights.isAligned()) plateauCount++;
+                else plateauCount = 0;
 
                 prevError = currError;
 
@@ -114,18 +105,15 @@ public class CmdAlign extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drive.stop();
-        limelights.setAligned(false);
         // limelights.turnShooterLEDOff();
     }
     
     @Override
     public boolean isFinished() {
-        return limelights.isAligned();
+        return plateauCount > ALIGN_PLATEAU_COUNT;
     }
 
     public void initShuffleboard() {
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", limelights::isAligned).withPosition(1, 1);
-        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", limelights::isAligned).withPosition(1, 1);
         NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
         NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
     }

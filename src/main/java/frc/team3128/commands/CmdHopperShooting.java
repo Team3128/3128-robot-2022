@@ -28,38 +28,18 @@ public class CmdHopperShooting extends CommandBase {
 
     @Override
     public void execute() {
-        if(!isReady.getAsBoolean()) {
-            m_hopper.runHopper(-0.1); // no shot
-            return;
-        }
-        if(!hasValidTarget.getAsBoolean()) {
-            m_hopper.runHopper(0.1); // ram shot
-            return;
-        }
-        if(isAligned.getAsBoolean()) {
-            m_hopper.runHopper(0.1); // reg shot
-            return;
-        }
-        m_hopper.runHopper(-0.1);
         
-        // if (hasValidTarget.getAsBoolean() && isReady.getAsBoolean()) {
-        //     if(isAligned.getAsBoolean())
-        //     m_hopper.runHopper();
-        // }
-
-        if (hasValidTarget.getAsBoolean()) {
-            if (isReady.getAsBoolean() && isAligned.getAsBoolean()) { 
-                m_hopper.runHopper();
-            } else {
-                m_hopper.runHopper(-0.1);
-            }
-        } else {        
-            if (isReady.getAsBoolean()) { 
-                m_hopper.runHopper();
-            } else {
-                m_hopper.runHopper(-0.1);
-            }
+        // if limelight on & aligned & ready to shoot (normal shot)
+        if ((isAligned.getAsBoolean() && isReady.getAsBoolean())) {
+            m_hopper.runHopper();
+        // if limelight not on & ready to shoot (ram shot)
+        } else if (!hasValidTarget.getAsBoolean() && isReady.getAsBoolean()) {
+            m_hopper.runHopper();
+        // else, don't shoot yet, and keep balls back
+        } else {
+            m_hopper.runHopper(-0.1);
         }
+
     }
 
     @Override

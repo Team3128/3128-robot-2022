@@ -133,7 +133,11 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void initShuffleboard(){
-        NAR_Shuffleboard.addComplex("Field","field",field).withWidget("Field").withSize(13,7);
+        // General Tab
+        NAR_Shuffleboard.addData("General","Gyro",this::getHeading).withPosition(0, 2);
+        NAR_Shuffleboard.addData("General","Pitch",this::getPitch).withPosition(1, 2);
+        // Drivetrain Tab
+        NAR_Shuffleboard.addComplex("Field","field",field).withWidget("Field").withPosition(0,0).withSize(13,7);
         NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance).withPosition(1, 1);
         NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance).withPosition(0, 1);
         NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed).withSize(2, 1).withPosition(0,3);

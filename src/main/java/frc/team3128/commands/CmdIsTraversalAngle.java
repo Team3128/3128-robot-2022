@@ -25,10 +25,10 @@ public class CmdIsTraversalAngle extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if (sign == "<") {
+        if (sign.equals("<")) {
             return m_drive.getPitch() <= pitch;
         }
-        else if (sign == ">") {
+        else if (sign.equals(">")) {
             return m_drive.getPitch() >= pitch;
         } 
         else {

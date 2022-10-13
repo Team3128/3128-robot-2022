@@ -79,6 +79,10 @@ public class Climber extends SubsystemBase {
     }
 
     public void initShuffleboard() {
+        // General Tab
+        NAR_Shuffleboard.addData("General", "Climber Encoder", this::getCurrentTicks).withPosition(7, 2);
+        NAR_Shuffleboard.addData("General", "Climber Speed", m_leftMotor::get).withPosition(8, 2);
+        // Climber Tab
         NAR_Shuffleboard.addComplex("Climber", "Climber", this).withPosition(0, 0);
         NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks).withPosition(2, 0);
         NAR_Shuffleboard.addData("Climber", "Piston State", this::getSolenoid).withPosition(3, 0);
