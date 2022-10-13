@@ -82,11 +82,8 @@ public class Hood extends PIDSubsystem {
         NAR_Shuffleboard.addData("Shooter + Hood", "Hood Angle", this::getMeasurement).withPosition(7, 0);
         NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood", this).withPosition(8,0);
         NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood_PID", m_controller).withPosition(6, 1).withSize(2,2);
-        m_ff = NAR_Shuffleboard.debug("Shooter + Hood", "Hood FF", kF);
-        NAR_Shuffleboard.getEntry("Shooter + Hood", "Hood FF").withPosition(5, 1);
-        m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","SET_ANGLE",0);
-        NAR_Shuffleboard.getEntry("Shooter + Hood", "SET_ANGLE").withPosition(5,2);
-
+        m_ff = NAR_Shuffleboard.debug("Shooter + Hood", "Hood FF", kF,5,1);
+        m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","SET_ANGLE",0,5,2);
     }
 
     @Override
