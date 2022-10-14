@@ -1,7 +1,9 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.team3128.Constants.VisionConstants.*;
@@ -23,6 +25,12 @@ public class CmdAlign extends CommandBase {
     private double prevTime, currTime; // seconds
     private int plateauCount, targetFoundCount;
     private boolean isAligned;
+    private NetworkTableEntry entry;
+    private NetworkTableEntry kf;
+    private NetworkTableEntry kp;
+    private NetworkTableEntry kd;
+    private NetworkTableEntry ki;
+    private NetworkTableEntry thresh;
 
     private VisionState aimState = VisionState.SEARCHING;
 
@@ -36,13 +44,13 @@ public class CmdAlign extends CommandBase {
 
         goalHorizontalOffset = TX_OFFSET;
         isAligned = false;
-
         addRequirements(drive);
     }
 
     @Override
     public void initialize() {
-        // limelights.turnShooterLEDOn();
+        isAligned = false;
+        limelights.turnShooterLEDOn();
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
     }
@@ -63,6 +71,7 @@ public class CmdAlign extends CommandBase {
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
                 }
+                SmartDashboard.putNumber("ll plat count", targetFoundCount);
                 break;
             
             case FEEDBACK:
@@ -80,9 +89,12 @@ public class CmdAlign extends CommandBase {
                 double ff = Math.signum(currError) * VISION_PID_kF;
                 double feedbackPower = VISION_PID_kP * currError + VISION_PID_kD * (currError - prevError) / (currTime - prevTime) + ff;
                 
+                
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
+                SmartDashboard.putNumber("ll feedback power", feedbackPower);
+                SmartDashboard.putNumber("ll curr error", currError);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
                 if (Math.abs(currError) < TX_THRESHOLD) {

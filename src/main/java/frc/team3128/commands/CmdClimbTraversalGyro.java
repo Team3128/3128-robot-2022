@@ -28,9 +28,11 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             new CmdClimbEncoder(m_climber.getDesiredTicks(SMALL_VERTICAL_DISTANCE)),
             //Sim: Latch Short Arm
 
+            new WaitCommand(.25),
             //piston extend
             new InstantCommand(() -> m_climber.extendPiston()),
             
+            new WaitCommand(.5),
             //elev extend
             new CmdClimbEncoder(CLIMB_ENC_DIAG_EXTENSION),
             //Sim: Latch Long Arm
@@ -40,9 +42,10 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             //piston retract
             //Sim: Unlatch Short Arm
             new InstantCommand(() -> m_climber.retractPiston()),
+            new WaitCommand(.5),
             
             //elev retract
-            new CmdClimbEncoder(-350),
+            new CmdClimbEncoder(-350,.6),
 
             //Climber is manually fully retracted on High Bar
             
@@ -53,11 +56,16 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             
             new InstantCommand(() -> m_climber.extendPiston()),
             
-            new CmdIsTraversalAngle(),
+            new CmdIsTraversalAngle(">",10),
+
+            new CmdIsTraversalAngle("<", 0),
             
             //elev extend
             new CmdClimbEncoder(CLIMB_ENC_DIAG_EXTENSION),
             //Sim: Latch Long Arm
+            
+            new WaitCommand(.25),
+
             
             //piston extend
             //Sim: Unlatch Short Arm
