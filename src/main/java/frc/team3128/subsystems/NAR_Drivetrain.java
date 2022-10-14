@@ -168,16 +168,23 @@ public class NAR_Drivetrain extends SubsystemBase {
         //SmartDashboard.putNumber("Right Sim Voltage", rightLeader.getMotorOutputVoltage());
         SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Sim X", robotDriveSim.getPose().getX());
+        SmartDashboard.putNumber("Sim Y", robotDriveSim.getPose().getY());
 
-        int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
-        SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+        int dev = SimDeviceDataJNI.getSimDeviceHandle("CANGyro:Pigeon 2[0]");
+        SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "yaw"));
         angle.set(robotDriveSim.getHeading().getDegrees()); // @Nathan: I tested this out, this seems to work. This preserves parity w/ the real robot in angle, odometry
-        SmartDashboard.putNumber("Sim Gyro", angle.get());
+        SmartDashboard.putNumber("Sim Gyro", robotDriveSim.getHeading().getDegrees());
     }
         
     public double getHeading() {
         //gyro.getYaw uses CW as positive
         //WPI_Pigeon2 negates this
+
+        if(Robot.isSimulation()) {
+            return robotDriveSim.getHeading().getDegrees();
+        }
+
         return gyro.getAngle(); 
     }
 
