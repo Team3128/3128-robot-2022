@@ -1,5 +1,6 @@
 package frc.team3128.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -25,6 +26,7 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             new WaitCommand(.25),
 
             new CmdClimbEncoder(m_climber.getDesiredTicks(SMALL_VERTICAL_DISTANCE)),
+            //Sim: Latch Short Arm
 
             new WaitCommand(.25),
             //piston extend
@@ -33,10 +35,12 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             new WaitCommand(.5),
             //elev extend
             new CmdClimbEncoder(CLIMB_ENC_DIAG_EXTENSION),
+            //Sim: Latch Long Arm
             
             new WaitCommand(0.25),
 
             //piston retract
+            //Sim: Unlatch Short Arm
             new InstantCommand(() -> m_climber.retractPiston()),
             new WaitCommand(.5),
             
@@ -46,7 +50,8 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             //Climber is manually fully retracted on High Bar
             
             new WaitCommand(0.25),
-            
+
+            //Sim: Latch Short Arm            
             new CmdClimbEncoder(m_climber.getDesiredTicks(SMALL_VERTICAL_DISTANCE)),
             
             new InstantCommand(() -> m_climber.extendPiston()),
@@ -57,9 +62,13 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
             
             //elev extend
             new CmdClimbEncoder(CLIMB_ENC_DIAG_EXTENSION),
+            //Sim: Latch Long Arm
+            
             new WaitCommand(.25),
+
             
             //piston extend
+            //Sim: Unlatch Short Arm
             new InstantCommand(() -> m_climber.retractPiston()),
 
             //elev retract

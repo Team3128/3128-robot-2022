@@ -106,6 +106,15 @@ public class Intake extends SubsystemBase {
     public String getSolenoid() {
         return m_intakeSolenoid.get().toString();
     }
+
+    @Override
+    public void simulationPeriodic() {
+        
+        SmartDashboard.putNumber("Intake Motor Voltage", m_intake.getMotorOutputVoltage());
+        
+    }
+
+
     
 }
 

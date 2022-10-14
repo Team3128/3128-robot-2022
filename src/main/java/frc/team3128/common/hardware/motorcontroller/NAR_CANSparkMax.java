@@ -5,7 +5,7 @@ import com.revrobotics.REVLibError;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
-
+import frc.team3128.common.hardware.motor.NAR_Motor;
 import net.thefletcher.revrobotics.CANSparkMax;
 import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
 import net.thefletcher.revrobotics.enums.MotorType;
@@ -16,14 +16,16 @@ public class NAR_CANSparkMax extends CANSparkMax {
 	private SparkMaxRelativeEncoder encoder;
 	private SimDeviceSim encoderSim;
 	private SimDouble encoderSimVel;
+	private NAR_Motor motor;
 
 	/**
 	 * 
 	 * @param deviceNumber device id
 	 * @param type         kBrushed(0) for brushed motor, kBrushless(1) for brushless motor
 	 */
-	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
+	 public NAR_CANSparkMax(int deviceNumber, MotorType type, NAR_Motor motor) {
 		super(deviceNumber, type);
+		this.motor = motor;
 
 		restoreFactoryDefaults(); // Reset config parameters, unfollow other motor controllers
 
@@ -36,6 +38,11 @@ public class NAR_CANSparkMax extends CANSparkMax {
 			encoderSimVel = encoderSim.getDouble("Velocity");
 		}
 	}
+
+	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
+		this(deviceNumber, type, null);
+	}
+
 
 	@Override
 	public void set(double outputValue) {
@@ -77,4 +84,11 @@ public class NAR_CANSparkMax extends CANSparkMax {
 	public REVLibError follow(CANSparkMax motor) {
 		return super.follow((CANSparkMax)motor);
 	}
+
+	// public void follow(NAR_EMotor motor) {
+	// 	if(!(motor instanceof CANSparkMax)) {
+	// 		throw new RuntimeException("Bad follow: NAR_CANSparkMax " + getDeviceId() + " attempted to follow non-CANSparkMax motor controller.");
+	// 	}
+	// 	super.follow((CANSparkMax)motor);
+	// }
 }

@@ -3,6 +3,7 @@ package frc.team3128.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.team3128.Constants.DriveConstants.*;
 import frc.team3128.subsystems.NAR_Drivetrain;
@@ -28,6 +29,7 @@ public class CmdArcadeDrive extends CommandBase {
         m_throttle = throttle;
 
         addRequirements(m_drivetrain);
+
     }
     
     @Override

@@ -1,10 +1,17 @@
 package frc.team3128.subsystems;
 
+import frc.team3128.Constants;
 import frc.team3128.ConstantsInt;
+import frc.team3128.Robot;
+
 import static frc.team3128.Constants.HoodConstants.*;
+import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
@@ -23,19 +30,34 @@ public class Hood extends PIDSubsystem {
     private static Hood instance;
     private NAR_CANSparkMax m_hoodMotor;
     private SparkMaxRelativeEncoder m_encoder;
-    
-    public Hood() {
-        super(new PIDController(kP, kI, kD));
-
-        configMotors();
-        configEncoder();
-    }
+    private SingleJointedArmSim singleJointedArmSim;
 
     public static synchronized Hood getInstance() {
         if (instance == null) {
             instance = new Hood();
         }
         return instance;
+    }
+
+    public Hood() {
+        super(new PIDController(kP, kI, kD));
+
+        configMotors();
+        configEncoder();
+
+        if(Robot.isSimulation()) {
+            m_hoodMotor.setSimPosition(0);
+            m_encoder.setPosition(0);
+            singleJointedArmSim = new SingleJointedArmSim(
+                HOOD_GEARBOX, 
+                HOOD_SHOOTER_GEAR_RATIO, 
+                HOOD_MOMENT_OF_INERTIA,
+                HOOD_ARM_LENGTH_METERS, 
+                Units.degreesToRadians(MIN_ANGLE), 
+                Units.degreesToRadians(MAX_ANGLE), 
+                HOOD_ARM_MASS_KG, 
+                true);
+        }
     }
 
     /**
@@ -126,6 +148,28 @@ public class Hood extends PIDSubsystem {
         return MathUtil.clamp(
             hoodAngleMap.getInterpolated(new InterpolatingDouble(dist)).value, 
             MIN_ANGLE, MAX_ANGLE);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+
+        // Sets input voltage for the sim
+
+        singleJointedArmSim.setInputVoltage(
+            m_hoodMotor.getMotorOutputVoltage()
+        );
+
+        // Updates simulation every 20 ms
+
+        singleJointedArmSim.update(0.02);
+
+        // Updates angle 
+
+        double angle = singleJointedArmSim.getAngleRads()/(2*Math.PI) * 360;
+
+        m_encoder.setPosition((angle-MIN_ANGLE) / (2 * Math.PI));
+        m_hoodMotor.setSimVelocity(singleJointedArmSim.getVelocityRadPerSec() / SPARKMAX_ENCODER_RESOLUTION);
+        m_hoodMotor.setSimPosition(angle - MIN_ANGLE);
     }
 }
 

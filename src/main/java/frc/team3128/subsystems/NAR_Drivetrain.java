@@ -23,8 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 
-import java.lang.reflect.Array;
 
+import frc.team3128.Robot;
+import java.lang.reflect.Array;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 
 /**
@@ -72,6 +73,7 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         field = new Field2d();
+        SmartDashboard.putData("Field", field);
 
         resetEncoders();
     }
@@ -138,6 +140,7 @@ public class NAR_Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Left Encoder Speed (m/s)", getLeftEncoderSpeed());
         SmartDashboard.putNumber("Right Encoder (m/s)", getRightEncoderSpeed());
         SmartDashboard.putString("getPose()", getPose().toString());
+        
         SmartDashboard.putNumber("Gyro", getHeading());
         SmartDashboard.putNumber("Pitch", getPitch());
         SmartDashboard.putNumber("PitchRate", getPitchRate());
@@ -163,19 +166,28 @@ public class NAR_Drivetrain extends SubsystemBase {
         rightLeader.setSimPosition(robotDriveSim.getRightPositionMeters() / DRIVE_NU_TO_METER);
         rightLeader.setSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / DRIVE_NU_TO_METER);
         
+        //SmartDashboard.putNumber("Left Sim Voltage", leftLeader.getMotorOutputVoltage());
+        //SmartDashboard.putNumber("Right Sim Voltage", rightLeader.getMotorOutputVoltage());
         SmartDashboard.putNumber("Left Sim Speed", leftLeader.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Right Sim Speed", rightLeader.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Sim X", robotDriveSim.getPose().getX());
+        SmartDashboard.putNumber("Sim Y", robotDriveSim.getPose().getY());
 
-        int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
-        SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+        int dev = SimDeviceDataJNI.getSimDeviceHandle("CANGyro:Pigeon 2[0]");
+        SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "rawYawInput"));
         angle.set(robotDriveSim.getHeading().getDegrees()); // @Nathan: I tested this out, this seems to work. This preserves parity w/ the real robot in angle, odometry
-        SmartDashboard.putNumber("Sim Gyro", angle.get());
+        SmartDashboard.putNumber("Sim Gyro", robotDriveSim.getHeading().getDegrees());
     }
         
     public double getHeading() {
         //gyro.getYaw uses CW as positive
         //WPI_Pigeon2 negates this
-        return -gyro.getAngle(); 
+
+        // if(Robot.isSimulation()) {
+        //     return robotDriveSim.getHeading().getDegrees();
+        // }
+
+        return gyro.getAngle(); 
     }
 
     public double getPitch() {

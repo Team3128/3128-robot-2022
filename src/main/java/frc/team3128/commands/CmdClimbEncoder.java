@@ -1,7 +1,11 @@
 package frc.team3128.commands;
 
+import edu.wpi.first.wpilibj.IterativeRobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.team3128.Constants.ClimberConstants.*;
+
+import frc.team3128.Robot;
 import frc.team3128.subsystems.Climber;
 
 public class CmdClimbEncoder extends CommandBase{
@@ -32,6 +36,7 @@ public class CmdClimbEncoder extends CommandBase{
     @Override
     public void initialize() {
         
+        SmartDashboard.putNumber("Climber Tick Goal", this.distance);
         // want to go higher than current place = go up
         if (distance > m_climber.getCurrentTicks()) { 
             m_climber.bothExtend(power);
@@ -43,9 +48,21 @@ public class CmdClimbEncoder extends CommandBase{
         }
     }
 
+
+    
+
     @Override
     public void end(boolean interrupted) {
         m_climber.bothStop();
+
+        if(Robot.isSimulation()) {
+            if(distance == CLIMB_ENC_DIAG_EXTENSION) {
+                m_climber.latchLongArm();
+            }
+            else if(distance == m_climber.getDesiredTicks(SMALL_VERTICAL_DISTANCE)) {
+                m_climber.switchToShortArm();
+            }
+        }
     }
 
     @Override

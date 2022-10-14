@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import static frc.team3128.Constants.ShooterConstants.*;
 import frc.team3128.ConstantsInt;
+import frc.team3128.Robot;
+
 import static frc.team3128.Constants.ConversionConstants.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -43,7 +45,8 @@ public class Shooter extends PIDSubsystem {
         //Robot is a simulation
         if(RobotBase.isSimulation()){
             m_shooterSim = new FlywheelSim(
-                SHOOTER_CHAR, SHOOTER_GEARBOX, SHOOTER_GEARING 
+                SHOOTER_GEARBOX, SHOOTER_GEARING, SHOOTER_MOMENT_OF_INERTIA
+                
             );
         }
     }
@@ -87,6 +90,7 @@ public class Shooter extends PIDSubsystem {
         SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", getMeasurement());
         SmartDashboard.putBoolean("Shooter isReady", isReady());
+
         SmartDashboard.putBoolean("atSetpoint", getController().atSetpoint());
     }
 
@@ -130,7 +134,7 @@ public class Shooter extends PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double ff = kF * setpoint;
+        double ff = Robot.isSimulation() ? kF * setpoint * 1.678 : kF * setpoint;
         double voltageOutput = output + ff;
 
         if (getController().atSetpoint() && (setpoint != 0)) {
@@ -163,14 +167,12 @@ public class Shooter extends PIDSubsystem {
         m_shooterSim.setInput(
             m_leftShooter.getMotorOutputVoltage()
         );  
+        
         m_shooterSim.update(0.02);    
         
-        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * SHOOTER_RADIUS_METERS);
-        //m_rightShooter.setQuadSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * SHOOTER_RADIUS_METERS);
-    
-        // SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
-        // SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
-        SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
+        m_leftShooter.setSimVelocity(m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI) / FALCON_NUpS_TO_RPM);
+
+        SmartDashboard.putNumber("Shooter Motor Voltage", m_leftShooter.getMotorOutputVoltage());
         
     }
 

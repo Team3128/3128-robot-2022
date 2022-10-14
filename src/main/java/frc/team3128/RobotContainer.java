@@ -178,8 +178,8 @@ public class RobotContainer {
         m_leftStick.getButton(13).whenPressed(new InstantCommand(m_climber::bothExtend, m_climber))
                                 .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_leftStick.getButton(14).whenPressed(new InstantCommand(m_climber::bothRetract, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_leftStick.getButton(14).whenPressed(new InstantCommand(()-> m_hopper.runHopper(.325), m_hopper))
+                                .whenReleased(new InstantCommand(m_hopper::stopHopper, m_hopper));
 
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));

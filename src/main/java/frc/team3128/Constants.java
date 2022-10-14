@@ -8,6 +8,8 @@ import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 import frc.team3128.common.utility.interpolation.InterpolatingTreeMap;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
@@ -36,6 +38,9 @@ public class Constants {
         public static final double DRIVE_GEARING = 9.6;
         public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.029);
         public static final double TRACK_WIDTH_METERS = 0.56147;
+
+        public static final Pose2d HUB_POS = new Pose2d(Units.inchesToMeters(324), Units.inchesToMeters(162), new Rotation2d(0)); // meters
+        public static final double HUB_RADIUS = 26.69;
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / FALCON_ENCODER_RESOLUTION;
@@ -85,7 +90,7 @@ public class Constants {
         public static final int LEFT_SHOOTER_ID = 10; 
         public static final int RIGHT_SHOOTER_ID = 9; 
 
-        public static final double kP = 2e-4; // 3.2e-3;
+        public static final double kP = 2e-4; // 3.2e-3; 
         public static final double kI = 0;
         public static final double kD = 0; // 5e-4;
 
@@ -106,6 +111,7 @@ public class Constants {
         public static final double SHOOTER_RADIUS_METERS = 0.0508;
         public static final DCMotor SHOOTER_GEARBOX = DCMotor.getCIM(2);
         public static final double SHOOTER_GEARING = 1.5;
+        public static final double SHOOTER_MOMENT_OF_INERTIA = 0.001271812;
 
         public static final InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> shooterSpeedsMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
@@ -148,6 +154,10 @@ public class Constants {
         public static final double HOPPER_MOTOR_2_POWER = 0.7;
         public static final double REVERSE_HOPPER_MOTOR_POWER = -1;
 
+        public static final DCMotor GEARBOX = DCMotor.getVex775Pro(1);
+        public static final double HOPPER_MOTOR_GEAR_RATIO = 0.25;
+        public static final double HOPPER_MOMENT_OF_INERTIA = 0.0006; // 0.04e-4
+        public static final double HOPPER_MOMENT_OF_INERTIA_BALL = 0.16e-4; // 0.16e-4
     }
 
     public static class IntakeConstants {
@@ -211,6 +221,11 @@ public class Constants {
         public static final double MIN_ANGLE = 9.4; // deg
         public static final double MAX_ANGLE = 41.4; // deg
         public static final double HOME_ANGLE = 28.5; // deg
+
+        public static final DCMotor HOOD_GEARBOX = DCMotor.getNeo550(1);
+        public static final double HOOD_MOMENT_OF_INERTIA = 0.054195108;
+        public static final double HOOD_ARM_LENGTH_METERS = 0.2400046;
+        public static final double HOOD_ARM_MASS_KG = 0.795601019;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodAngleMap = new InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble>();
         static {
@@ -277,5 +292,11 @@ public class Constants {
 
         public static final double BALL_VEL_THRESHOLD = 2.54; // m/s - 100 in/s 
         public static final int BALL_VEL_PLATEAU_THRESHOLD = 10;
+    }
+    public static class SimConstants {
+        public static final double SIM_HUB_DISTANCE = 70; //degrees
+        public static final double CLIMBER_LONG_ARM_LENGTH = 0.78 * 39.3701; //inches
+        public static final double CLIMBER_SHORT_ARM_LENGTH = 0.2 * 39.3701; //inches
+        public static final double GRAVITATIONAL_CONSTANT = 9.8; // m/s^2
     }
 }
