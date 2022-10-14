@@ -16,10 +16,13 @@ public class CmdShoot extends SequentialCommandGroup {
     public CmdShoot() {
         addCommands(
             // run hopper back to push balls against intake
-            new ProxyScheduleCommand(new CmdRetractHopper()),
-            // run hopper back at slower power to keep balls away from shooter until ready
-            new ScheduleCommand(new InstantCommand(() -> Hopper.getInstance().runHopper(-0.1), Hopper.getInstance())),
-            new CmdShootDist()
+            new CmdRetractHopper(),
+            parallel(
+                // run hopper back at slower power to keep balls away from shooter until ready
+                new CmdHopperShooting(),
+                // shoot in parallel
+                new CmdShootDist()
+            )
         );
     }
 
@@ -30,20 +33,14 @@ public class CmdShoot extends SequentialCommandGroup {
     public CmdShoot(double RPM, double angle) {
         addCommands(
             // run hopper back to push balls against intake
-            new ProxyScheduleCommand(new CmdRetractHopper()),
-            // run hopper back at slower power to keep balls away from shooter until ready
-            new ScheduleCommand(new InstantCommand(() -> Hopper.getInstance().runHopper(-0.1), Hopper.getInstance())),
-            parallel (
+            new CmdRetractHopper(),
+            parallel(
+                // run hopper back at slower power to keep balls away from shooter until ready
+                new CmdHopperShooting(),
                 new InstantCommand(() -> Hood.getInstance().startPID(angle), Hood.getInstance()),
                 new CmdShootRPM(RPM)
             )
         );
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
-        Hopper.getInstance().stopHopper();
     }
     
 }

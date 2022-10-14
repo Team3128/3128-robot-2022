@@ -6,19 +6,23 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
 import static frc.team3128.Constants.ClimberConstants.*;
 
+import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdBallJoystickPursuit;
 import frc.team3128.commands.CmdClimbEncoder;
@@ -27,8 +31,10 @@ import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdIntakeCargo;
 import frc.team3128.commands.CmdOuttake;
+import frc.team3128.commands.CmdRetractHopper;
 import frc.team3128.commands.CmdShoot;
 import frc.team3128.commands.CmdShootAlign;
+import frc.team3128.commands.CmdShootDist;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.input.NAR_XboxController;
 import frc.team3128.common.hardware.limelight.LEDMode;
@@ -92,8 +98,8 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-         configureButtonBindings();
-        // configureDriverOperator();
+        //configureButtonBindings();
+        configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -177,12 +183,6 @@ public class RobotContainer {
 
         m_leftStick.getButton(12).whenPressed(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenPressed(new InstantCommand(m_climber::retractPiston, m_climber));
-
-        // TRIGGERS
-
-        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
-                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
-        
     }
 
     public void configureDriverOperator() {
@@ -233,15 +233,13 @@ public class RobotContainer {
 
         m_rightStick.getButton(6).whenPressed(() -> m_climber.resetLeftEncoder());
 
-        m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
+        // m_rightStick.getButton(13).whenPressed(() -> m_hood.startPID(MIN_ANGLE));
 
-        m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
+        // m_rightStick.getButton(14).whenPressed(() -> m_hood.startPID(MAX_ANGLE));
+        m_rightStick.getButton(14).whenPressed(() -> m_shooter.reverseShoot());
 
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
-
-        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
-                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
     }
 
     public void init() {
