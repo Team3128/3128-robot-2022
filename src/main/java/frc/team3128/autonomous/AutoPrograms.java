@@ -20,6 +20,7 @@ import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdShootTurnVision;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
 import frc.team3128.subsystems.Intake;
@@ -27,6 +28,8 @@ import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.Shooter;
 import static frc.team3128.autonomous.Trajectories.*;
+
+import java.util.function.Supplier;
 
 /**
  * Class to store information about autonomous routines.
@@ -41,6 +44,7 @@ public class AutoPrograms {
     private Hopper hopper;
     private Hood hood;
     private LimelightSubsystem limelights;
+    private Supplier<String> selected_auto;
 
     public AutoPrograms() {
         drive = NAR_Drivetrain.getInstance();
@@ -49,7 +53,8 @@ public class AutoPrograms {
         hopper = Hopper.getInstance();
         hood = Hood.getInstance();
         limelights = LimelightSubsystem.getInstance();
-
+        NAR_Shuffleboard.addData("Autonomous","Selected_Auto","3 Ball");
+        selected_auto = ()->  (String)NAR_Shuffleboard.getValue("Autonomous", "Selected_Auto");
         initAutoSelector();
     }
 
@@ -73,13 +78,16 @@ public class AutoPrograms {
             case "1 Ball":
                 initialPose = driveBack30In.getInitialPose();
                 autoCommand = new SequentialCommandGroup(
-                                new CmdShootAlign().withTimeout(2),
+                                new CmdShootAlign().withTimeout(4),
                                 trajectoryCmd("driveBack30In"));
                 break;
             case "2 Ball":
-                initialPose = twoBallTraj.getInitialPose();
+                initialPose = inverseRotation(twoBallTraj.getInitialPose());
                 autoCommand = new SequentialCommandGroup(
-                                    new InstantCommand(() -> intake.ejectIntake(), intake),
+                                    
+                                    new CmdShootAlign().withTimeout(2.5),
+
+                                    new CmdInPlaceTurn(180),
 
                                     IntakePathCmd("twoBallTraj"),
 
@@ -88,20 +96,25 @@ public class AutoPrograms {
                                     new CmdShootAlign().withTimeout(2));
                 break;
             case "3 Ball":
-                initialPose = get("3Ballv2_i").getInitialPose();
+                initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                new CmdShootAlign().withTimeout(2.5),
+                                new CmdInPlaceTurn(180),
+
                                 IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
-                                new CmdShootAlign().withTimeout(3.5),
+                                new CmdShootAlign().withTimeout(2.5),
 
                                 IntakePathCmd("3Ballv2_ii"),
 
                                 new CmdShootTurnVision(-170));
                 break;
             case "4 Ball":
-                initialPose = get("4Ball_Terminal180_i").getInitialPose();
+                initialPose = inverseRotation(get("4Ball_Terminal180_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                new CmdShootAlign().withTimeout(2),
+                                new CmdInPlaceTurn(180),
                                 //drive and intake 1 ball
                                 IntakePathCmd("4Ball_Terminal180_i"),  
 
@@ -120,8 +133,11 @@ public class AutoPrograms {
                                 new CmdShootAlign().withTimeout(2));
                 break;
             case "5 Ball":
-                initialPose = get("3Ballv2_i").getInitialPose();
+                initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                new CmdShootAlign().withTimeout(2.5),
+                                new CmdInPlaceTurn(180),
+
                                 IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
