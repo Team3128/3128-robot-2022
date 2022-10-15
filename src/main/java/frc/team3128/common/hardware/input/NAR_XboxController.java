@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class NAR_XboxController extends XboxController {
@@ -20,15 +21,19 @@ public class NAR_XboxController extends XboxController {
         "LeftStick",
         "RightStick"
     };
+    private POVButton[] povButtons;
     
     private HashMap<String, JoystickButton> buttons;
 
     public NAR_XboxController(int port) {
         super(port);
         buttons = new HashMap<String, JoystickButton>();
+        povButtons = new POVButton[8];
         for (int i = 0; i < 10; i++) {
             buttons.put(buttonNames[i], new JoystickButton(this, i+1));
         }   
+        for (int i = 0; i < 8; i++)
+            povButtons[i] = new POVButton(this, i * 45);
     }
 
     public JoystickButton getButton(String buttonName) {
@@ -41,6 +46,26 @@ public class NAR_XboxController extends XboxController {
 
     public Trigger getRightTrigger() {
         return new Trigger (() -> getRightTriggerAxis() >= 0.5);
+    }
+
+    public POVButton getPOVButton(int i) {
+        return povButtons[i];
+    }
+
+    public POVButton getUpPOVButton() {
+        return getPOVButton(0);
+    }
+
+    public POVButton getDownPOVButton() {
+        return getPOVButton(4);
+    }
+
+    public POVButton getLeftPOVButton() {
+        return getPOVButton(6);
+    }
+
+    public POVButton getRightPOVButton() {
+        return getPOVButton(2);
     }
 
 }

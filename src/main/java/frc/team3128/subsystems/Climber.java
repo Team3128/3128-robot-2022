@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.ClimberConstants.*;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 
 /**
  * Class for the Climber Subsystem 
@@ -77,9 +78,15 @@ public class Climber extends SubsystemBase {
         retractPiston();
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Climber Encoder", getCurrentTicks());
+    public void initShuffleboard() {
+        // General Tab
+        NAR_Shuffleboard.addData("General", "Climber Encoder", this::getCurrentTicks).withPosition(7, 2);
+        NAR_Shuffleboard.addData("General", "Climber Speed", m_leftMotor::get).withPosition(8, 2);
+        // Climber Tab
+        NAR_Shuffleboard.addComplex("Climber", "Climber", this).withPosition(0, 0);
+        NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks).withPosition(2, 0);
+        NAR_Shuffleboard.addData("Climber", "Piston State", this::getSolenoid).withPosition(3, 0);
+        NAR_Shuffleboard.addData("Climber", "Climber Speed", m_leftMotor::get).withPosition(4, 0);
     }
 
     /**
@@ -167,5 +174,9 @@ public class Climber extends SubsystemBase {
      */
     public void resetLeftEncoder() {
         m_leftMotor.setEncoderPosition(0);
+    }
+
+    public String getSolenoid() {
+        return m_climberSolenoid.get().toString();
     }
 }

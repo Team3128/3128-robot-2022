@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.team3128.Constants.VisionConstants.*;
+
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
@@ -24,13 +26,6 @@ public class CmdAlign extends CommandBase {
     
     private double prevTime, currTime; // seconds
     private int plateauCount, targetFoundCount;
-    private boolean isAligned;
-    private NetworkTableEntry entry;
-    private NetworkTableEntry kf;
-    private NetworkTableEntry kp;
-    private NetworkTableEntry kd;
-    private NetworkTableEntry ki;
-    private NetworkTableEntry thresh;
 
     private VisionState aimState = VisionState.SEARCHING;
 
@@ -43,13 +38,15 @@ public class CmdAlign extends CommandBase {
         this.limelights = LimelightSubsystem.getInstance();
 
         goalHorizontalOffset = TX_OFFSET;
-        isAligned = false;
+
+        initShuffleboard();
+
         addRequirements(drive);
     }
 
     @Override
     public void initialize() {
-        isAligned = false;
+
         limelights.turnShooterLEDOn();
         prevTime = RobotController.getFPGATime() / 1e6;
         plateauCount = 0;
@@ -71,7 +68,6 @@ public class CmdAlign extends CommandBase {
                     prevError = goalHorizontalOffset - currHorizontalOffset;
                     aimState = VisionState.FEEDBACK;
                 }
-                SmartDashboard.putNumber("ll plat count", targetFoundCount);
                 break;
             
             case FEEDBACK:
@@ -93,20 +89,10 @@ public class CmdAlign extends CommandBase {
                 feedbackPower = MathUtil.clamp(feedbackPower, -1, 1);
 
                 drive.tankDrive(-feedbackPower, feedbackPower);
-                SmartDashboard.putNumber("ll feedback power", feedbackPower);
-                SmartDashboard.putNumber("ll curr error", currError);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
-                if (Math.abs(currError) < TX_THRESHOLD) {
-                    plateauCount++;
-                    if (plateauCount > ALIGN_PLATEAU_COUNT) {
-                        isAligned = true;
-                    }
-                }
-                else {
-                    isAligned = false;
-                    plateauCount = 0;
-                }
+                if (limelights.isAligned()) plateauCount++;
+                else plateauCount = 0;
 
                 prevError = currError;
 
@@ -114,7 +100,6 @@ public class CmdAlign extends CommandBase {
                 
         }
         prevTime = currTime;
-        SmartDashboard.putBoolean("Shooter isAligned", isAligned);
     }
 
     @Override
@@ -125,6 +110,11 @@ public class CmdAlign extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return isAligned;
+        return plateauCount > ALIGN_PLATEAU_COUNT;
+    }
+
+    public void initShuffleboard() {
+        // NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
+        //NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
     }
 }

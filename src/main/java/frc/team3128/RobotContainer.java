@@ -17,9 +17,11 @@ import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
+
 import static frc.team3128.Constants.ClimberConstants.*;
 
 import frc.team3128.commands.CmdAlign;
@@ -29,6 +31,7 @@ import frc.team3128.commands.CmdClimbEncoder;
 import frc.team3128.commands.CmdClimbTraversalGyro;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
+import frc.team3128.commands.CmdHopperShooting;
 import frc.team3128.commands.CmdIntakeCargo;
 import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdRetractHopper;
@@ -41,6 +44,7 @@ import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
@@ -73,8 +77,6 @@ public class RobotContainer {
   
     private boolean DEBUG = true; 
 
-    private Trigger isShooting;
-
     public RobotContainer() {
         // ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
@@ -93,13 +95,11 @@ public class RobotContainer {
         m_rightStick = new NAR_Joystick(1);
         m_operatorController = new NAR_XboxController(2);
 
-        isShooting = new Trigger(m_shooter::isReady);
-
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-        //configureButtonBindings();
-        configureDriverOperator();
+        configureButtonBindings();
+        // configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -108,6 +108,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // RIGHT
+        // m_rightStick.getButton(1).whenPressed(m_shooter::runShooter).whenReleased(m_shooter::stopShoot);
         m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
@@ -151,6 +152,7 @@ public class RobotContainer {
 
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
+        
 
         // LEFT
 
@@ -227,6 +229,12 @@ public class RobotContainer {
         m_operatorController.getButton("A").whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
         .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
+        m_operatorController.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_operatorController.getDownPOVButton().whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
         // RIGHT 
 
         m_rightStick.getButton(5).whenPressed(() -> m_hood.zeroEncoder()); 
@@ -249,16 +257,20 @@ public class RobotContainer {
     }
 
     private void initDashboard() {
-        if (DEBUG) {
-            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            SmartDashboard.putData("Drivetrain", m_drive);
-            SmartDashboard.putData("Intake", m_intake);
-            SmartDashboard.putData("Hopper", m_hopper);
-            SmartDashboard.putData("Climber", m_climber);
-            SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
-            SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
-            SmartDashboard.putData("Limelights", m_ll);
-        }
+        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withSize(3, 1).withPosition(0,0);
+        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withSize(3, 1).withPosition(3,0);
+        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withSize(3, 1).withPosition(6,0);
+        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withSize(3, 1).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withSize(3, 1).withPosition(3, 1);
+        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withSize(3, 1).withPosition(6,1);
+
+        m_drive.initShuffleboard();
+        m_intake.initShuffleboard();
+        m_hopper.initShuffleboard();
+        m_climber.initShuffleboard();
+        m_shooter.initShuffleboard();
+        m_hood.initShuffleboard();
+        m_ll.initShuffleboard();
 
         NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
         NarwhalDashboard.startServer();   
@@ -272,6 +284,7 @@ public class RobotContainer {
     }
 
     public void updateDashboard() {
+        NAR_Shuffleboard.update();
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());
