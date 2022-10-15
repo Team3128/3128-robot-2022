@@ -77,8 +77,6 @@ public class RobotContainer {
   
     private boolean DEBUG = true; 
 
-    private Trigger isShooting;
-
     public RobotContainer() {
         // ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
@@ -97,13 +95,11 @@ public class RobotContainer {
         m_rightStick = new NAR_Joystick(1);
         m_operatorController = new NAR_XboxController(2);
 
-        isShooting = new Trigger(m_shooter::isReady);
-
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-        // configureButtonBindings();
-        configureDriverOperator();
+        configureButtonBindings();
+        // configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -112,6 +108,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // RIGHT
+        // m_rightStick.getButton(1).whenPressed(m_shooter::runShooter).whenReleased(m_shooter::stopShoot);
         m_rightStick.getButton(1).whenHeld(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
@@ -155,6 +152,7 @@ public class RobotContainer {
 
         m_rightStick.getUpPOVButton().whenPressed(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenPressed(() -> m_ll.turnShooterLEDOff());
+        
 
         // LEFT
 

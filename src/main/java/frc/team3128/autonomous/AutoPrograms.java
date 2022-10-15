@@ -44,7 +44,6 @@ public class AutoPrograms {
     private Hopper hopper;
     private Hood hood;
     private LimelightSubsystem limelights;
-    private Supplier<String> selected_auto;
 
     public AutoPrograms() {
         drive = NAR_Drivetrain.getInstance();
@@ -53,8 +52,6 @@ public class AutoPrograms {
         hopper = Hopper.getInstance();
         hood = Hood.getInstance();
         limelights = LimelightSubsystem.getInstance();
-        NAR_Shuffleboard.addData("Autonomous","Selected_Auto","3 Ball");
-        selected_auto = ()->  (String)NAR_Shuffleboard.getValue("Autonomous", "Selected_Auto");
         initAutoSelector();
     }
 
@@ -98,7 +95,7 @@ public class AutoPrograms {
             case "3 Ball":
                 initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
-                                new CmdShootAlign().withTimeout(2.5),
+                                new CmdShootAlign().withTimeout(3),
                                 new CmdInPlaceTurn(180),
 
                                 IntakePathCmd("3Ballv2_i"), 

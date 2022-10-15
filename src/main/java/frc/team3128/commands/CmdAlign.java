@@ -114,7 +114,7 @@ public class CmdAlign extends CommandBase {
     }
 
     public void initShuffleboard() {
-        NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
-        NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
+        // NAR_Shuffleboard.addData("Limelight","AlignError",()->currError).withPosition(4, 0);
+        //NAR_Shuffleboard.addData("Limelight","Plateau Count", ()-> targetFoundCount).withPosition(3, 0);
     }
 }
