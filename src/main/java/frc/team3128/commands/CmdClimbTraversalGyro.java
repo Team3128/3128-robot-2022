@@ -38,7 +38,7 @@ public class CmdClimbTraversalGyro extends SequentialCommandGroup{
 
             //piston retract
             new InstantCommand(() -> m_climber.retractPiston()),
-            new WaitCommand(.25),
+            new WaitCommand(2),
             
             //elev retract
             new CmdClimbEncoder(-350,.6),

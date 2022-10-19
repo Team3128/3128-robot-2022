@@ -56,13 +56,13 @@ public class AutoPrograms {
     }
 
     private void initAutoSelector() {
-        String[] autoStrings = new String[] {"1 Ball", "2 Ball", "3 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
+        String[] autoStrings = new String[] {"1 Ball", "2+1 Ball", "3+1 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
         NarwhalDashboard.addAutos(autoStrings);
     }
 
     public Command getAutonomousCommand() {
         // String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
-        String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
+        String selectedAutoName = "2+1 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
 
         if (selectedAutoName == null) {
             return null;
@@ -78,24 +78,27 @@ public class AutoPrograms {
                                 new CmdShootAlign().withTimeout(4),
                                 trajectoryCmd("driveBack30In"));
                 break;
-            case "2 Ball":
-                initialPose = inverseRotation(twoBallTraj.getInitialPose());
+            case "2+1 Ball":
+                initialPose = (get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+
+                                    IntakePathCmd("3Ballv2_i"),
                                     
-                                    new CmdShootAlign().withTimeout(2.5),
-
                                     new CmdInPlaceTurn(180),
+                                    
+                                    new CmdShootAlign().withTimeout(3));
 
-                                    IntakePathCmd("twoBallTraj"),
+                                    // IntakePathCmd("twoBallTraj"),
 
-                                    new CmdInPlaceTurn(180),
+                                    // new CmdInPlaceTurn(180),
 
-                                    new CmdShootAlign().withTimeout(2));
+                                    // new CmdShootAlign().withTimeout(3));
                 break;
-            case "3 Ball":
+            case "3+1 Ball":
                 initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
                                 new CmdShootAlign().withTimeout(3),
+
                                 new CmdInPlaceTurn(180),
 
                                 IntakePathCmd("3Ballv2_i"), 

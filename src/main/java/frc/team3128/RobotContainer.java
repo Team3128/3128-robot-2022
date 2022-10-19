@@ -33,6 +33,7 @@ import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdHopperShooting;
 import frc.team3128.commands.CmdIntakeCargo;
+import frc.team3128.commands.CmdIntakeShoot;
 import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdRetractHopper;
 import frc.team3128.commands.CmdShoot;
@@ -98,8 +99,8 @@ public class RobotContainer {
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
-        configureButtonBindings();
-        // configureDriverOperator();
+        // configureButtonBindings();
+        configureDriverOperator();
         
         if(RobotBase.isSimulation())
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -188,7 +189,7 @@ public class RobotContainer {
     }
 
     public void configureDriverOperator() {
-        m_operatorController.getRightTrigger().whileActiveOnce(new CmdShootAlign());
+        m_operatorController.getRightTrigger().and(m_operatorController.getButton("RightBumper").negate()).whileActiveOnce(new CmdShootAlign());
 
         m_operatorController.getLeftTrigger().whileActiveOnce(
             new CmdShoot(2800, 13.4));
@@ -196,19 +197,23 @@ public class RobotContainer {
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_operatorController.getRightTrigger().whileActiveOnce(new CmdShoot(2700, 12));
 
-        m_operatorController.getButton("RightBumper").whileActiveOnce(new CmdExtendIntakeAndRun())
+        m_operatorController.getButton("RightBumper").and(m_operatorController.getRightTrigger().negate()).whileActiveOnce(new CmdExtendIntakeAndRun())
                                             .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
                                     
         m_operatorController.getButton("LeftBumper").whileActiveOnce(new SequentialCommandGroup(
                                             new CmdExtendIntake().withTimeout(0.1), 
                                             new CmdOuttake()));
 
+        m_operatorController.getRightTrigger().and(m_operatorController.getButton("RightBumper")).whileActiveOnce(new CmdIntakeShoot());
+
         m_operatorController.getButton("RightStick").whenActive(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
-        m_operatorController.getButton("LeftStick").whileActiveOnce(
-            new ParallelCommandGroup(
-                new CmdShoot(1200, 34.4),
-                new RunCommand(m_drive::stop, m_drive)));
+        m_operatorController.getButton("LeftStick").whenPressed(() -> m_shooter.reverseShoot()).whenReleased(() -> m_shooter.stopShoot());
+
+        // m_operatorController.getButton("LeftStick").whileActiveOnce(
+        //     new ParallelCommandGroup(
+        //         new CmdShoot(1200, 34.4),
+        //         new RunCommand(m_drive::stop, m_drive)));
 
         m_operatorController.getButton("Start").whenActive(new CmdClimbTraversalGyro());
         m_operatorController.getButton("Back").whenActive(new InstantCommand(m_climber::bothStop, m_climber));

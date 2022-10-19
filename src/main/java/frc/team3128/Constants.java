@@ -30,7 +30,7 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 5;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 6;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = 0.70 * 0.45;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.3647;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
