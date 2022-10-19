@@ -129,7 +129,7 @@ public class Shooter extends PIDSubsystem {
 
     public void reverseShoot() {
         disable();
-        m_leftShooter.set(ControlMode.PercentOutput, -0.5);
+        m_leftShooter.set(ControlMode.PercentOutput, -0.3);
     }
 
     /**
@@ -138,6 +138,7 @@ public class Shooter extends PIDSubsystem {
     public void stopShoot() {
         plateauCount = 0;
         setSetpoint(0);
+        disable();
     }
 
     /**
