@@ -6,8 +6,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdInPlaceTurn;
@@ -18,6 +20,7 @@ import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdShootTurnVision;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
 import frc.team3128.subsystems.Intake;
@@ -25,6 +28,8 @@ import frc.team3128.subsystems.LimelightSubsystem;
 import frc.team3128.subsystems.NAR_Drivetrain;
 import frc.team3128.subsystems.Shooter;
 import static frc.team3128.autonomous.Trajectories.*;
+
+import java.util.function.Supplier;
 
 /**
  * Class to store information about autonomous routines.
@@ -47,18 +52,17 @@ public class AutoPrograms {
         hopper = Hopper.getInstance();
         hood = Hood.getInstance();
         limelights = LimelightSubsystem.getInstance();
-
         initAutoSelector();
     }
 
     private void initAutoSelector() {
-        String[] autoStrings = new String[] {"1 Ball", "2 Ball", "3 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
+        String[] autoStrings = new String[] {"1 Ball", "2+1 Ball", "3+1 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
         NarwhalDashboard.addAutos(autoStrings);
     }
 
     public Command getAutonomousCommand() {
-        String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
-        // String selectedAutoName = "3 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
+        // String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+        String selectedAutoName = "2+1 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
 
         if (selectedAutoName == null) {
             return null;
@@ -71,35 +75,46 @@ public class AutoPrograms {
             case "1 Ball":
                 initialPose = driveBack30In.getInitialPose();
                 autoCommand = new SequentialCommandGroup(
-                                new CmdShootAlign().withTimeout(2),
+                                new CmdShootAlign().withTimeout(4),
                                 trajectoryCmd("driveBack30In"));
                 break;
-            case "2 Ball":
-                initialPose = twoBallTraj.getInitialPose();
+            case "2+1 Ball":
+                initialPose = (get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
-                                    new InstantCommand(() -> intake.ejectIntake(), intake),
 
-                                    IntakePathCmd("twoBallTraj"),
-
+                                    IntakePathCmd("3Ballv2_i"),
+                                    
                                     new CmdInPlaceTurn(180),
+                                    
+                                    new CmdShootAlign().withTimeout(3));
 
-                                    new CmdShootAlign().withTimeout(2));
+                                    // IntakePathCmd("twoBallTraj"),
+
+                                    // new CmdInPlaceTurn(180),
+
+                                    // new CmdShootAlign().withTimeout(3));
                 break;
-            case "3 Ball":
-                initialPose = get("3Ballv2_i").getInitialPose();
+            case "3+1 Ball":
+                initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                new CmdShootAlign().withTimeout(3),
+
+                                new CmdInPlaceTurn(180),
+
                                 IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
-                                new CmdShootAlign().withTimeout(2),
+                                new CmdShootAlign().withTimeout(2.5),
 
                                 IntakePathCmd("3Ballv2_ii"),
 
                                 new CmdShootTurnVision(-170));
                 break;
             case "4 Ball":
-                initialPose = get("4Ball_Terminal180_i").getInitialPose();
+                initialPose = inverseRotation(get("4Ball_Terminal180_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                new CmdShootAlign().withTimeout(2),
+                                new CmdInPlaceTurn(180),
                                 //drive and intake 1 ball
                                 IntakePathCmd("4Ball_Terminal180_i"),  
 
@@ -118,8 +133,11 @@ public class AutoPrograms {
                                 new CmdShootAlign().withTimeout(2));
                 break;
             case "5 Ball":
-                initialPose = get("3Ballv2_i").getInitialPose();
+                initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                new CmdShootAlign().withTimeout(2.5),
+                                new CmdInPlaceTurn(180),
+
                                 IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
@@ -286,8 +304,8 @@ public class AutoPrograms {
     private SequentialCommandGroup IntakePathCmd(String trajectory) {
         ParallelDeadlineGroup movement = new ParallelDeadlineGroup(
                                             trajectoryCmd(trajectory), 
-                                            new ScheduleCommand(new CmdExtendIntakeAndRun()));
-        return new SequentialCommandGroup(new InstantCommand(intake::ejectIntake, intake), movement);
+                                            new CmdExtendIntakeAndRun());
+        return new SequentialCommandGroup(new InstantCommand(intake::ejectIntake, intake), new WaitCommand(0.125), movement);
     }
 
     /**

@@ -5,8 +5,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.limelight.LimelightKey;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 
 import static frc.team3128.Constants.VisionConstants.*;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * Class for the Limelight Subsystem 
@@ -18,9 +21,12 @@ public class LimelightSubsystem extends SubsystemBase{
     private Limelight m_shooterLimelight;
     private Limelight m_ballLimelight;
 
+    private BooleanSupplier isAligned;
+
     public LimelightSubsystem() {
         m_shooterLimelight = new Limelight("limelight-cog", TOP_CAMERA_ANGLE, TOP_CAMERA_HEIGHT, TOP_FRONT_DIST); 
         m_ballLimelight = new Limelight("limelight-sog", BALL_LL_ANGLE, BALL_LL_HEIGHT, BALL_LL_FRONT_DIST);
+        isAligned = () -> Math.abs(getShooterTX()) <= TX_THRESHOLD && getShooterHasValidTarget();
     }
 
     public static synchronized LimelightSubsystem getInstance() {
@@ -30,12 +36,20 @@ public class LimelightSubsystem extends SubsystemBase{
         return instance;
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("range", calculateShooterDistance());
-        SmartDashboard.putNumber("ty", getShooterTY());
-        SmartDashboard.putNumber("tx", getShooterTX());
-        SmartDashboard.putBoolean("hasValidTarget", getShooterHasValidTarget());
+    public void initShuffleboard() {
+        // General Tab
+        NAR_Shuffleboard.addData("General","isAligned", this::isAligned).withPosition(3, 2);
+        NAR_Shuffleboard.addData("General", "Range", this::calculateShooterDistance).withPosition(1, 3);
+        NAR_Shuffleboard.addData("General", "hasValidTarget", this::getShooterHasValidTarget).withPosition(2, 2);
+        NAR_Shuffleboard.addData("General", "tx", this::getShooterTX).withPosition(0, 3);
+        // Limelight Tab
+        NAR_Shuffleboard.addData("Limelight", "Range", this::calculateShooterDistance).withPosition(2, 1);
+        NAR_Shuffleboard.addData("Limelight", "ty", this::getShooterTY).withPosition(4, 1);
+        NAR_Shuffleboard.addData("Limelight", "tx", this::getShooterTX).withPosition(3, 1);
+        NAR_Shuffleboard.addData("Limelight", "hasValidTarget", this::getShooterHasValidTarget).withPosition(2, 0);
+        NAR_Shuffleboard.addComplex("Limelight", "Limelight", this).withPosition(0,0);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", this::isAligned).withSize(2, 1).withPosition(0, 1);
+        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", this::isAligned).withPosition(1, 1);
     }
 
     /**
@@ -45,7 +59,7 @@ public class LimelightSubsystem extends SubsystemBase{
      */
     public double calculateShooterDistance() {
         // we need to redo interpolation
-        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT) + 10;
+        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT + 15);
     }
 
     /**
@@ -119,6 +133,10 @@ public class LimelightSubsystem extends SubsystemBase{
 
     public void turnShooterLEDOn() {
         m_shooterLimelight.setLEDMode(LEDMode.ON);
+    }
+
+    public boolean isAligned() {
+        return isAligned.getAsBoolean();
     }
 
 }

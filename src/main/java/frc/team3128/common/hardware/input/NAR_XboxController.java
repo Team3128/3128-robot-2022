@@ -3,6 +3,7 @@ package frc.team3128.common.hardware.input;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -20,6 +21,7 @@ public class NAR_XboxController extends XboxController {
         "LeftStick",
         "RightStick"
     };
+    private POVButton[] povButtons;
     
     private HashMap<String, Trigger> buttons;
     private POVButton[] povButtons;
@@ -67,5 +69,4 @@ public class NAR_XboxController extends XboxController {
     public POVButton getRightPOVButton() {
         return getPOVButton(2);
     }
-    
 }

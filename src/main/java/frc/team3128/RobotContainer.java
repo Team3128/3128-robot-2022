@@ -11,29 +11,39 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static frc.team3128.Constants.HoodConstants.*;
+
 import static frc.team3128.Constants.ClimberConstants.*;
 
+import frc.team3128.commands.CmdAlign;
 import frc.team3128.commands.CmdArcadeDrive;
 import frc.team3128.commands.CmdBallJoystickPursuit;
 import frc.team3128.commands.CmdClimbEncoder;
 import frc.team3128.commands.CmdClimbTraversalGyro;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
+import frc.team3128.commands.CmdHopperShooting;
 import frc.team3128.commands.CmdIntakeCargo;
+import frc.team3128.commands.CmdIntakeShoot;
 import frc.team3128.commands.CmdOuttake;
+import frc.team3128.commands.CmdRetractHopper;
 import frc.team3128.commands.CmdShoot;
 import frc.team3128.commands.CmdShootAlign;
+import frc.team3128.commands.CmdShootDist;
 import frc.team3128.common.hardware.input.NAR_Joystick;
 import frc.team3128.common.hardware.input.NAR_XboxController;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
 import frc.team3128.common.utility.Log;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Hood;
 import frc.team3128.subsystems.Hopper;
@@ -66,8 +76,6 @@ public class RobotContainer {
   
     private boolean DEBUG = true; 
 
-    private Trigger isShooting;
-
     public RobotContainer() {
         // ConstantsInt.initTempConstants();
         m_drive = NAR_Drivetrain.getInstance();
@@ -86,8 +94,6 @@ public class RobotContainer {
         m_rightStick = new NAR_Joystick(1);
         m_operatorController = new NAR_XboxController(2);
 
-        isShooting = new Trigger(m_shooter::isReady);
-
         m_commandScheduler.setDefaultCommand(m_drive, new CmdArcadeDrive(m_rightStick::getY, m_rightStick::getTwist, m_rightStick::getThrottle));
 
         initDashboard();
@@ -101,6 +107,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // RIGHT
+        
         m_rightStick.getButton(1).whileActiveOnce(new CmdShootAlign());
 
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
@@ -177,16 +184,10 @@ public class RobotContainer {
 
         m_leftStick.getButton(12).whenActive(new InstantCommand(m_climber::extendPiston, m_climber));
         m_leftStick.getButton(15).whenActive(new InstantCommand(m_climber::retractPiston, m_climber));
-
-        // TRIGGERS
-
-        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
-                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
-        
     }
 
     public void configureDriverOperator() {
-        m_operatorController.getRightTrigger().whileActiveOnce(new CmdShootAlign());
+        m_operatorController.getRightTrigger().and(m_operatorController.getButton("RightBumper").negate()).whileActiveOnce(new CmdShootAlign());
 
         m_operatorController.getLeftTrigger().whileActiveOnce(
             new CmdShoot(2800, 13.4));
@@ -194,19 +195,23 @@ public class RobotContainer {
         // When interpolating, uncomment this and the lines in Shooter.java and Hood.java calling ConstantsInt
         // m_operatorController.getRightTrigger().whileActiveOnce(new CmdShoot(2700, 12));
 
-        m_operatorController.getButton("RightBumper").whileActiveOnce(new CmdExtendIntakeAndRun())
+        m_operatorController.getButton("RightBumper").and(m_operatorController.getRightTrigger().negate()).whileActiveOnce(new CmdExtendIntakeAndRun())
                                             .whenInactive(new CmdIntakeCargo().withTimeout(0.25));
                                     
         m_operatorController.getButton("LeftBumper").whileActiveOnce(new SequentialCommandGroup(
                                             new CmdExtendIntake().withTimeout(0.1), 
                                             new CmdOuttake()));
 
+        m_operatorController.getRightTrigger().and(m_operatorController.getButton("RightBumper")).whileActiveOnce(new CmdIntakeShoot());
+
         m_operatorController.getButton("RightStick").whenActive(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
-        m_operatorController.getButton("LeftStick").whileActiveOnce(
-            new ParallelCommandGroup(
-                new CmdShoot(1200, 34.4),
-                new RunCommand(m_drive::stop, m_drive)));
+        m_operatorController.getButton("LeftStick").whenPressed(() -> m_shooter.reverseShoot()).whenReleased(() -> m_shooter.stopShoot());
+
+        // m_operatorController.getButton("LeftStick").whileActiveOnce(
+        //     new ParallelCommandGroup(
+        //         new CmdShoot(1200, 34.4),
+        //         new RunCommand(m_drive::stop, m_drive)));
 
         m_operatorController.getButton("Start").whenActive(new CmdClimbTraversalGyro());
         m_operatorController.getButton("Back").whenActive(new InstantCommand(m_climber::bothStop, m_climber));
@@ -227,6 +232,12 @@ public class RobotContainer {
         m_operatorController.getButton("A").whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
         .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
+        m_operatorController.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
+                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
+        m_operatorController.getDownPOVButton().whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
+                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+
         // RIGHT 
 
         m_rightStick.getButton(5).whenActive(() -> m_hood.zeroEncoder()); 
@@ -240,8 +251,6 @@ public class RobotContainer {
         m_rightStick.getUpPOVButton().whenActive(() -> m_ll.turnShooterLEDOn());
         m_rightStick.getDownPOVButton().whenActive(() -> m_ll.turnShooterLEDOff());
 
-        isShooting.debounce(0.1).whenActive(new InstantCommand(m_hopper::runHopper, m_hopper))
-                                        .whenInactive(new InstantCommand(m_hopper::stopHopper, m_hopper));
     }
 
     public void init() {
@@ -251,16 +260,20 @@ public class RobotContainer {
     }
 
     private void initDashboard() {
-        if (DEBUG) {
-            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
-            SmartDashboard.putData("Drivetrain", m_drive);
-            SmartDashboard.putData("Intake", m_intake);
-            SmartDashboard.putData("Hopper", m_hopper);
-            SmartDashboard.putData("Climber", m_climber);
-            SmartDashboard.putData("Shooter", (PIDSubsystem)m_shooter);
-            SmartDashboard.putData("Hood", (PIDSubsystem)m_hood);
-            SmartDashboard.putData("Limelights", m_ll);
-        }
+        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withSize(3, 1).withPosition(0,0);
+        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withSize(3, 1).withPosition(3,0);
+        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withSize(3, 1).withPosition(6,0);
+        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withSize(3, 1).withPosition(0,1);
+        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withSize(3, 1).withPosition(3, 1);
+        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withSize(3, 1).withPosition(6,1);
+
+        m_drive.initShuffleboard();
+        m_intake.initShuffleboard();
+        m_hopper.initShuffleboard();
+        m_climber.initShuffleboard();
+        m_shooter.initShuffleboard();
+        m_hood.initShuffleboard();
+        m_ll.initShuffleboard();
 
         NarwhalDashboard.setSelectedLimelight(m_ll.getBallLimelight());
         NarwhalDashboard.startServer();   
@@ -274,6 +287,7 @@ public class RobotContainer {
     }
 
     public void updateDashboard() {
+        NAR_Shuffleboard.update();
         NarwhalDashboard.put("time", Timer.getMatchTime());
         NarwhalDashboard.put("voltage", RobotController.getBatteryVoltage());
         NarwhalDashboard.put("rpm", m_shooter.getMeasurement());

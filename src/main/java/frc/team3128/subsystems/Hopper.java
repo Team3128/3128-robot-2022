@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
+
 import static frc.team3128.Constants.HopperConstants.*;
 
 /**
@@ -61,9 +63,18 @@ public class Hopper extends SubsystemBase {
         m_encoder.setReverseDirection(true);
     }
 
+    public void initShuffleboard() {
+        // General Tab
+        NAR_Shuffleboard.addData("General", "Hopper Speed", m_hopper1::get).withPosition(7, 3);
+        // Hopper Tab
+        NAR_Shuffleboard.addData("Intake + Hopper","Hopper Enc", m_encoder::getDistance).withPosition(3, 1);
+        NAR_Shuffleboard.addComplex("Intake + Hopper", "Hopper", this).withPosition(2,0);
+        NAR_Shuffleboard.addData("Intake + Hopper", "Hopper Speed", m_hopper1::get).withPosition(2, 1);
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
+        // SmartDashboard.putNumber("Hopper Enc", m_encoder.getDistance());
     }
 
     /**

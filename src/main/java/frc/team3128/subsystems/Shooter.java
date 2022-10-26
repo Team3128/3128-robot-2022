@@ -1,12 +1,18 @@
 package frc.team3128.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import static frc.team3128.Constants.ShooterConstants.*;
+
+import java.util.function.DoubleSupplier;
+
 import frc.team3128.ConstantsInt;
+import frc.team3128.commands.CmdShootAlign;
+
 import static frc.team3128.Constants.ConversionConstants.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -15,7 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
+import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
 
 /**
@@ -32,11 +40,14 @@ public class Shooter extends PIDSubsystem {
 
     private int plateauCount = 0;
 
+    public DoubleSupplier m_ff;
+    public DoubleSupplier m_setpoint;
+
     private FlywheelSim m_shooterSim;
 
     public Shooter() {
         super(new PIDController(kP, kI, kD));
-    
+
         configMotors();
 
         //Robot is a simulation
@@ -80,22 +91,45 @@ public class Shooter extends PIDSubsystem {
         m_leftShooter.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 30, 0.1));
     }
 
+    public void initShuffleboard() {
+        // General Tab
+        NAR_Shuffleboard.addData("General","Shooter Setpoint",this::getSetpoint).withPosition(5, 2);
+        NAR_Shuffleboard.addData("General","Shooter RPM",this::getMeasurement).withPosition(4, 2);
+        NAR_Shuffleboard.addData("General","Shooter isReady",this::isReady).withPosition(2, 3).withSize(2, 1);
+        // Shooter Tab
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint).withPosition(2, 0);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement).withPosition(3, 0);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady).withSize(2, 1).withPosition(0, 2);
+        NAR_Shuffleboard.addComplex("Shooter + Hood","Shooter", this).withPosition(0, 0);
+        NAR_Shuffleboard.addComplex("Shooter + Hood", "Shooter_PID",m_controller).withPosition(2,1).withSize(2,2);
+        m_ff = NAR_Shuffleboard.debug("Shooter + Hood","Shooter FF",kF,4,1);
+        if(RobotBase.isSimulation()) {
+            NAR_Shuffleboard.addData("Shooter + Hood","Sim Shooter RPM", ()-> (m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI)));
+        }
+        m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","SET_RPM",0,4,2);
+
+    }
+
     @Override
     public void periodic() {
+        // setSetpoint(m_setpoint.getAsDouble());
+        NAR_Shuffleboard.put("Shooter + Hood","Pred RPM", calculateRPMFromDist(LimelightSubsystem.getInstance().calculateShooterDistance()),4,0);
         super.periodic();
-        SmartDashboard.putNumber("Shooter Setpoint", getSetpoint());
-        SmartDashboard.putNumber("Shooter RPM", getMeasurement());
-        SmartDashboard.putBoolean("Shooter isReady", isReady());
-        SmartDashboard.putBoolean("atSetpoint", getController().atSetpoint());
     }
 
     /**
      * Begins the PID loop to achieve the desired RPM to shoot
      */
     public void beginShoot(double rpm) {
-        // rpm = ConstantsInt.ShooterConstants.SET_RPM; // uncomment for interpolation
+        // rpm = m_setpoint.getAsDouble(); // uncomment for interpolation
+        enable();
         setSetpoint(rpm);
         getController().setTolerance(RPM_THRESHOLD_PERCENT * rpm);
+    }
+
+    public void reverseShoot() {
+        disable();
+        m_leftShooter.set(ControlMode.PercentOutput, -0.3);
     }
 
     /**
@@ -104,6 +138,7 @@ public class Shooter extends PIDSubsystem {
     public void stopShoot() {
         plateauCount = 0;
         setSetpoint(0);
+        disable();
     }
 
     /**
@@ -123,7 +158,7 @@ public class Shooter extends PIDSubsystem {
      */
     @Override
     protected void useOutput(double output, double setpoint) {
-        double ff = kF * setpoint;
+        double ff = m_ff.getAsDouble() * setpoint;
         double voltageOutput = output + ff;
 
         if (getController().atSetpoint() && (setpoint != 0)) {
@@ -163,7 +198,7 @@ public class Shooter extends PIDSubsystem {
     
         // SmartDashboard.putNumber("test", m_leftShooter.getMotorOutputVoltage()); 
         // SmartDashboard.putString("pogger", String.valueOf(m_shooterSim.getAngularVelocityRadPerSec()));
-        SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
+        // SmartDashboard.putNumber("shooter RPM", m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI));
         
     }
 
