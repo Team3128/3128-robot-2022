@@ -21,7 +21,6 @@ public class NAR_XboxController extends XboxController {
         "LeftStick",
         "RightStick"
     };
-    private POVButton[] povButtons;
     
     private HashMap<String, Trigger> buttons;
     private POVButton[] povButtons;
