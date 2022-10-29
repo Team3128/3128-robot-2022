@@ -1,7 +1,6 @@
 package frc.team3128.common.hardware.input;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -35,12 +34,12 @@ public class NAR_Joystick {
 
         for (int i = 0; i < 16; i++) {
             int buttonId = i;
-            buttons[buttonId] = new Trigger(()->stick.getRawButton(buttonId + 1)); 
+            buttons[buttonId] = new Trigger(() -> stick.getRawButton(buttonId + 1)); 
         }
             
         for (int i = 0; i < 8; i++) {
             int povButtonId = i;
-            povButtons[povButtonId] = new Trigger(()->stick.getPOV(povButtonId) == povButtonId * 45);
+            povButtons[povButtonId] = new Trigger(() -> stick.getPOV() == povButtonId * 45);
         }
             
     }

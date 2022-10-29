@@ -232,11 +232,11 @@ public class RobotContainer {
         m_operatorController.getButton("A").whenActive(new InstantCommand(m_climber::bothRetract, m_climber))
         .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_operatorController.getUpPOVButton().whenPressed(new InstantCommand(m_climber::bothManualExtend, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_operatorController.getUpPOVButton().whenActive(new InstantCommand(m_climber::bothManualExtend, m_climber))
+                                .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
-        m_operatorController.getDownPOVButton().whenPressed(new InstantCommand(m_climber::bothManualRetract, m_climber))
-                                .whenReleased(new InstantCommand(m_climber::bothStop, m_climber));
+        m_operatorController.getDownPOVButton().whenActive(new InstantCommand(m_climber::bothManualRetract, m_climber))
+                                .whenInactive(new InstantCommand(m_climber::bothStop, m_climber));
 
         // RIGHT 
 
