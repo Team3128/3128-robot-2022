@@ -3,8 +3,6 @@ package frc.team3128.common.hardware.input;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class NAR_XboxController extends XboxController {
@@ -21,22 +19,25 @@ public class NAR_XboxController extends XboxController {
         "LeftStick",
         "RightStick"
     };
-    private POVButton[] povButtons;
     
-    private HashMap<String, JoystickButton> buttons;
+    private HashMap<String, Trigger> buttons;
+    private Trigger[] povButtons;
 
     public NAR_XboxController(int port) {
         super(port);
-        buttons = new HashMap<String, JoystickButton>();
-        povButtons = new POVButton[8];
+        buttons = new HashMap<String, Trigger>();
+        povButtons = new Trigger[8];
         for (int i = 0; i < 10; i++) {
-            buttons.put(buttonNames[i], new JoystickButton(this, i+1));
+            int n = i + 1;
+            buttons.put(buttonNames[i], new Trigger (() -> getRawButton(n)));
         }   
-        for (int i = 0; i < 8; i++)
-            povButtons[i] = new POVButton(this, i * 45);
+        for (int i = 0; i < 8; i++) {
+            int n = i;
+            povButtons[i] = new Trigger (() -> getPOV() == n * 45);
+        }
     }
 
-    public JoystickButton getButton(String buttonName) {
+    public Trigger getButton(String buttonName) {
         return buttons.get(buttonName);
     }
 
@@ -48,24 +49,23 @@ public class NAR_XboxController extends XboxController {
         return new Trigger (() -> getRightTriggerAxis() >= 0.5);
     }
 
-    public POVButton getPOVButton(int i) {
+    public Trigger getPOVButton(int i) {
         return povButtons[i];
     }
 
-    public POVButton getUpPOVButton() {
+    public Trigger getUpPOVButton() {
         return getPOVButton(0);
     }
 
-    public POVButton getDownPOVButton() {
+    public Trigger getDownPOVButton() {
         return getPOVButton(4);
     }
 
-    public POVButton getLeftPOVButton() {
+    public Trigger getLeftPOVButton() {
         return getPOVButton(6);
     }
 
-    public POVButton getRightPOVButton() {
+    public Trigger getRightPOVButton() {
         return getPOVButton(2);
     }
-
 }
