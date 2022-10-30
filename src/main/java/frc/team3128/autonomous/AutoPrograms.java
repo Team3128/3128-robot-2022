@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.commands.CmdExtendIntake;
 import frc.team3128.commands.CmdExtendIntakeAndRun;
 import frc.team3128.commands.CmdInPlaceTurn;
+import frc.team3128.commands.CmdIntakeCargo;
 import frc.team3128.commands.CmdShoot;
 import frc.team3128.commands.CmdShootAlign;
 import frc.team3128.commands.CmdShootAlignSingle;
+import frc.team3128.commands.CmdShootDist;
 import frc.team3128.commands.CmdOuttake;
 import frc.team3128.commands.CmdShootTurnVision;
 import frc.team3128.common.narwhaldashboard.NarwhalDashboard;
@@ -56,13 +58,13 @@ public class AutoPrograms {
     }
 
     private void initAutoSelector() {
-        String[] autoStrings = new String[] {"1 Ball", "2+1 Ball", "3+1 Ball", "4 Ball", "5 Ball", "S2H1", "S2H2", "S1H1", "S1I1", "S1H2", "Billiards"};
+        String[] autoStrings = new String[] {"Intake 0", "Intake 1", "Intake 2", "4 Ball", "5 Ball", "S2H1", "Intake 1 Hoard 2", "S1H1", "S1I1", "S1H2", "Billiards"};
         NarwhalDashboard.addAutos(autoStrings);
     }
 
     public Command getAutonomousCommand() {
-        // String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
-        String selectedAutoName = "2+1 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
+        String selectedAutoName = NarwhalDashboard.getSelectedAutoName();
+        // String selectedAutoName = "2+1 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
 
         if (selectedAutoName == null) {
             return null;
@@ -72,21 +74,23 @@ public class AutoPrograms {
         Command autoCommand = null;
 
         switch (selectedAutoName) {
-            case "1 Ball":
+            case "Intake 0":
                 initialPose = driveBack30In.getInitialPose();
                 autoCommand = new SequentialCommandGroup(
                                 new CmdShootAlign().withTimeout(4),
                                 trajectoryCmd("driveBack30In"));
                 break;
-            case "2+1 Ball":
-                initialPose = (get("3Ballv2_i").getInitialPose());
+            case "Intake 1":
+                initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+
+                                    new CmdShootAlign().withTimeout(3),
+
+                                    new CmdInPlaceTurn(180),
 
                                     IntakePathCmd("3Ballv2_i"),
                                     
-                                    new CmdInPlaceTurn(180),
-                                    
-                                    new CmdShootAlign().withTimeout(3));
+                                    new CmdShootTurnVision(180));
 
                                     // IntakePathCmd("twoBallTraj"),
 
@@ -94,7 +98,7 @@ public class AutoPrograms {
 
                                     // new CmdShootAlign().withTimeout(3));
                 break;
-            case "3+1 Ball":
+            case "Intake 2":
                 initialPose = inverseRotation(get("3Ballv2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
                                 new CmdShootAlign().withTimeout(3),
@@ -104,7 +108,6 @@ public class AutoPrograms {
                                 IntakePathCmd("3Ballv2_i"), 
 
                                 new CmdInPlaceTurn(180),
-                                new CmdShootAlign().withTimeout(2.5),
 
                                 IntakePathCmd("3Ballv2_ii"),
 
@@ -180,15 +183,20 @@ public class AutoPrograms {
                                 new CmdExtendIntake(),
                                 new CmdOuttake(0.5).withTimeout(2));
                 break;
-            case "S2H2":
-                initialPose = get("S2H2_i").getInitialPose();
+            case "Intake 1 Hoard 2":
+                initialPose = inverseRotation(get("S2H2_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+                                
+                                new CmdShootAlign().withTimeout(3),
+                                
+                                new CmdInPlaceTurn(180),
 
                                 //drive and intake ball
                                 IntakePathCmd("S2H2_i"),
 
                                 //turn and shoot
                                 new CmdInPlaceTurn(180),
+
                                 new CmdShootAlign().withTimeout(2),
 
                                 //turn and hoard first ball
@@ -226,16 +234,18 @@ public class AutoPrograms {
                                 new CmdOuttake(0.5).withTimeout(1));
                 break;
             case "S1H2":
-                initialPose = get("S1H1_i").getInitialPose();
+                initialPose = inverseRotation(get("S1H1_i").getInitialPose());
                 autoCommand = new SequentialCommandGroup(
+
+                                new CmdShootAlign().withTimeout(3),
+
+                                new CmdInPlaceTurn(180),
                                 //drive and intake enemy ball
                                 IntakePathCmd("S1H1_i"), 
                                 new InstantCommand(() -> drive.stop()),
 
                                 //turn and shoot 1 ball
                                 new CmdInPlaceTurn(180),
-                                
-                                new CmdShootAlignSingle().withTimeout(2),
 
                                 //drive and intake enemy ball
                                 IntakePathCmd("S1H2_ii"), 
@@ -312,6 +322,6 @@ public class AutoPrograms {
      * Flip 180 degrees rotation wise but keep same pose translation 
      */
     private Pose2d inverseRotation(Pose2d pose) {
-        return new Pose2d(pose.getTranslation(), pose.getRotation().unaryMinus());
+        return new Pose2d(pose.getTranslation(), new Rotation2d(pose.getRotation().getRadians() + Math.PI));
     }
 }
