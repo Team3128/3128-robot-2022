@@ -92,7 +92,7 @@ public class Constants {
         public static final double kF = 0.00190678;
 
         public static final int PLATEAU_COUNT = 6;
-        public static final double RPM_THRESHOLD_PERCENT = 0.05;
+        public static final double RPM_THRESHOLD_PERCENT = 0.08;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
@@ -199,7 +199,7 @@ public class Constants {
         public static final double kP = 0.3; 
         public static final double kI = 0;
         public static final double kD = 0; //8e-6;
-        public static final double kF = 0.49072349; 
+        public static final double kF = 0.60; 
 
         public static final double TOLERANCE_MIN = 0.3; // degrees
 
