@@ -67,7 +67,7 @@ public class AutoPrograms {
         // String selectedAutoName = "2+1 Ball"; // uncomment and change this for testing without opening Narwhal Dashboard
 
         if (selectedAutoName == null) {
-            return null;
+            selectedAutoName = "Intake 0";
         }
 
         Pose2d initialPose = null;
