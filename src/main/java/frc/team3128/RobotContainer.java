@@ -206,7 +206,7 @@ public class RobotContainer {
 
         m_operatorController.getButton("RightStick").whenActive(new CmdClimbEncoder(CLIMB_ENC_TO_TOP));
 
-        m_operatorController.getButton("LeftStick").whenPressed(() -> m_shooter.reverseShoot()).whenReleased(() -> m_shooter.stopShoot());
+        m_operatorController.getButton("LeftStick").whenActive(() -> m_shooter.reverseShoot()).whenInactive(() -> m_shooter.stopShoot());
 
         // m_operatorController.getButton("LeftStick").whileActiveOnce(
         //     new ParallelCommandGroup(
