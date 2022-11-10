@@ -1,6 +1,7 @@
 package frc.team3128.subsystems;
 
-import frc.team3128.ConstantsInt;
+import frc.team3128.RobotContainer;
+
 import static frc.team3128.Constants.HoodConstants.*;
 
 import java.util.function.DoubleSupplier;
@@ -8,11 +9,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-import frc.team3128.common.hardware.limelight.Limelight;
 import frc.team3128.common.hardware.motorcontroller.NAR_CANSparkMax;
 import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
@@ -74,31 +71,31 @@ public class Hood extends PIDSubsystem {
 
     public void initShuffleboard() {
         // General Tab
-        NAR_Shuffleboard.addData("General", "Hood Setpoint", this::getSetpoint).withPosition(5, 3);
-        NAR_Shuffleboard.addData("General", "Hood Angle", this::getMeasurement).withPosition(4, 3);
+        NAR_Shuffleboard.addData("General", "Hood Setpoint", this::getSetpoint,5,3);
+        NAR_Shuffleboard.addData("General", "Hood Angle", this::getMeasurement,4,3);
 
         // Hood Tab
-        NAR_Shuffleboard.addData("Shooter + Hood", "Hood Setpoint", this::getSetpoint).withPosition(6, 0);
-        NAR_Shuffleboard.addData("Shooter + Hood", "Hood Angle", this::getMeasurement).withPosition(7, 0);
-        NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood", this).withPosition(8,0);
-        NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood_PID", m_controller).withPosition(6, 1).withSize(2,2);
+        NAR_Shuffleboard.addData("Shooter + Hood", "Hood Setpoint", this::getSetpoint,6,0);
+        NAR_Shuffleboard.addData("Shooter + Hood", "Hood Angle", this::getMeasurement,7,0);
+        NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood", this,8,0);
+        NAR_Shuffleboard.addComplex("Shooter + Hood", "Hood_PID", m_controller,6,1).withSize(2,2);
         m_ff = NAR_Shuffleboard.debug("Shooter + Hood", "Hood FF", kF,5,1);
-        m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","SET_ANGLE",0,5,2);
+        m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","SET_ANGLE",HOME_ANGLE,5,2);
     }
 
     @Override
     public void periodic() {
-        NAR_Shuffleboard.put("Shooter + Hood", "Pred Angle", calculateAngleFromDist(LimelightSubsystem.getInstance().calculateShooterDistance()),5,0);
+        NAR_Shuffleboard.addData("Shooter + Hood", "Pred Angle", calculateAngleFromDist(LimelightSubsystem.getInstance().calculateShooterDistance()),5,0);
         super.periodic();
-        // SmartDashboard.putNumber("Hood Setpoint", getSetpoint());
-        // SmartDashboard.putNumber("Hood Angle", getMeasurement());
     }
 
     /**
      * Begins the PID loop to achieve the desired angle to shoot
      */
     public void startPID(double angle) {
-        // angle = m_setpoint.getAsDouble(); // uncomment for interpolation
+        if (RobotContainer.DEBUG) {
+            angle = m_setpoint.getAsDouble(); // uncomment for interpolation
+        }
         super.setSetpoint(angle);
         getController().setTolerance(TOLERANCE_MIN);
     }

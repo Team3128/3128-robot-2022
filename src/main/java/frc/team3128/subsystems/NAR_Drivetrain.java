@@ -14,19 +14,14 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.DriveConstants.*;
 
-import java.lang.reflect.Array;
 
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.utility.NAR_Shuffleboard;
@@ -134,24 +129,23 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     public void initShuffleboard(){
         // General Tab
-        NAR_Shuffleboard.addData("General","Gyro",this::getHeading).withPosition(0, 2);
-        NAR_Shuffleboard.addData("General","Pitch",this::getPitch).withPosition(1, 2);
+        NAR_Shuffleboard.addData("General","Gyro",this::getHeading,7,2).withWidget("Gyro");
+        NAR_Shuffleboard.addData("General","Pitch",this::getPitch,1,2);
         // Drivetrain Tab
-        NAR_Shuffleboard.addComplex("Field","field",field).withWidget("Field").withPosition(0,0).withSize(13,7);
-        NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance).withPosition(1, 1);
-        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance).withPosition(0, 1);
-        NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed).withSize(2, 1).withPosition(0,3);
-        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed).withSize(2, 1).withPosition(0, 2);
-        NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString())).withSize(4, 1).withPosition(2, 0);
-        NAR_Shuffleboard.addData("Drivetrain","Gyro",this::getHeading).withPosition(3, 1);
-        NAR_Shuffleboard.addData("Drivetrain","Pitch",this::getPitch).withPosition(4, 1);
-        NAR_Shuffleboard.addData("Drivetrain","PitchRate",this::getPitchRate).withPosition(5, 1);
-        NAR_Shuffleboard.addComplex("Drivetrain","Drivetrain", this).withPosition(0,0);
-        // ShuffleboardTab tab = Shuffleboard.getTab("Test");
-        // tab.add("Field",field).withWidget("Field");
+        NAR_Shuffleboard.addComplex("Field","field",field,0,0).withWidget("Field").withSize(13,7);
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance,1,1);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance,0,1);
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed,0,3).withSize(2, 1);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed,0,2).withSize(2, 1);
+        NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString()),2,0).withSize(4, 1);
+        NAR_Shuffleboard.addComplex("Drivetrain","Gyro",gyro,3,1).withWidget("Gyro");
+        NAR_Shuffleboard.addData("Drivetrain","Pitch",this::getPitch,4,1);
+        NAR_Shuffleboard.addData("Drivetrain","PitchRate",this::getPitchRate,5,1);
+        NAR_Shuffleboard.addComplex("Drivetrain","Drivetrain", this,0,0);
+
         if(RobotBase.isSimulation()) {
-            NAR_Shuffleboard.addData("Drivetrain","LeftSimSpeed", leftLeader::getSelectedSensorVelocity).withPosition(1,6);
-            NAR_Shuffleboard.addData("Drivetrain","RightSimSpeed", rightLeader::getSelectedSensorVelocity).withPosition(0,6);
+            NAR_Shuffleboard.addData("Drivetrain","LeftSimSpeed", leftLeader::getSelectedSensorVelocity,1,6);
+            NAR_Shuffleboard.addData("Drivetrain","RightSimSpeed", rightLeader::getSelectedSensorVelocity,0,6);
         }
     }
 

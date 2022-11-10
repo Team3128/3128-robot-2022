@@ -1,6 +1,5 @@
 package frc.team3128.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.common.hardware.limelight.LEDMode;
 import frc.team3128.common.hardware.limelight.Limelight;
@@ -38,18 +37,18 @@ public class LimelightSubsystem extends SubsystemBase{
 
     public void initShuffleboard() {
         // General Tab
-        NAR_Shuffleboard.addData("General","isAligned", this::isAligned).withPosition(3, 2);
-        NAR_Shuffleboard.addData("General", "Range", this::calculateShooterDistance).withPosition(1, 3);
-        NAR_Shuffleboard.addData("General", "hasValidTarget", this::getShooterHasValidTarget).withPosition(2, 2);
-        NAR_Shuffleboard.addData("General", "tx", this::getShooterTX).withPosition(0, 3);
+        NAR_Shuffleboard.addData("General","isAligned", this::isAligned,3,2);
+        NAR_Shuffleboard.addData("General", "Range", this::calculateShooterDistance,1,3);
+        NAR_Shuffleboard.addData("General", "hasValidTarget", this::getShooterHasValidTarget,2,2);
+        NAR_Shuffleboard.addData("General", "tx", this::getShooterTX,0,3);
         // Limelight Tab
-        NAR_Shuffleboard.addData("Limelight", "Range", this::calculateShooterDistance).withPosition(2, 1);
-        NAR_Shuffleboard.addData("Limelight", "ty", this::getShooterTY).withPosition(4, 1);
-        NAR_Shuffleboard.addData("Limelight", "tx", this::getShooterTX).withPosition(3, 1);
-        NAR_Shuffleboard.addData("Limelight", "hasValidTarget", this::getShooterHasValidTarget).withPosition(2, 0);
-        NAR_Shuffleboard.addComplex("Limelight", "Limelight", this).withPosition(0,0);
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", this::isAligned).withSize(2, 1).withPosition(0, 1);
-        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", this::isAligned).withPosition(1, 1);
+        NAR_Shuffleboard.addData("Limelight", "Range", this::calculateShooterDistance,2,1);
+        NAR_Shuffleboard.addData("Limelight", "ty", this::getShooterTY,4,1);
+        NAR_Shuffleboard.addData("Limelight", "tx", this::getShooterTX,3,1);
+        NAR_Shuffleboard.addData("Limelight", "hasValidTarget", this::getShooterHasValidTarget,2,0);
+        NAR_Shuffleboard.addComplex("Limelight", "Limelight", this,0,0);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isAligned", this::isAligned,0,1).withSize(2, 1);
+        NAR_Shuffleboard.addData("Limelight","Shooter isAligned", this::isAligned,1,1);
     }
 
     /**

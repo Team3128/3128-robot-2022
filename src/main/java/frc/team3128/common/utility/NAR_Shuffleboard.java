@@ -65,11 +65,17 @@ public class NAR_Shuffleboard {
    * @param tabName the title of the tab to select
    * @param name the name of the entry
    * @param data value to display
+   * @param x -coord of the entry starting from 0
+   * @param y -coord of the entry starting from 0
    * @return simple widget that can be modified
    */
-    public static SimpleWidget addData(String tabName, String name, Object data) {
+    public static SimpleWidget addData(String tabName, String name, Object data, int x, int y) {
         if(!tabs.containsKey(tabName)) create_tab(tabName);
-        SimpleWidget entry = Shuffleboard.getTab(tabName).add(name,data);
+        if (tabs.get(tabName).containsKey(name)) {
+            tabs.get(tabName).get(name).m_data.setValue(data);
+            return tabs.get(tabName).get(name).m_entry;
+        }
+        SimpleWidget entry = Shuffleboard.getTab(tabName).add(name,data).withPosition(x, y);
         tabs.get(tabName).put(name, new entryInfo(entry,null));
         return entry;
     }
@@ -80,31 +86,19 @@ public class NAR_Shuffleboard {
      * @param tabName the title of the tab to select
      * @param name the name of the entry
      * @param supply object supplier to constantly update value
+     * @param x -coord of the entry starting from 0
+     * @param y -coord of the entry starting from 0
      * @return simple widget that can be modified
      */
-    public static SimpleWidget addData(String tabName, String name, Supplier<Object> supply){
+    public static SimpleWidget addData(String tabName, String name, Supplier<Object> supply, int x, int y){
         if(!tabs.containsKey(tabName)) create_tab(tabName);
-        SimpleWidget entry = Shuffleboard.getTab(tabName).add(name,supply.get());
+        if(tabs.get(tabName).containsKey(name)) {
+            tabs.get(tabName).get(name).m_supply = supply;
+            return tabs.get(tabName).get(name).m_entry;
+        }
+        SimpleWidget entry = Shuffleboard.getTab(tabName).add(name,supply.get()).withPosition(x, y);
         tabs.get(tabName).put(name, new entryInfo(entry,supply));
         return entry;
-    }
-
-    /**
-     * Puts a value in Shuffleboard similar to SmartDashboard, use in periodic
-     * 
-     * @param tabName the title of the tab to select
-     * @param name the name of the entry
-     * @param data value to display
-     * @param x -coord of the entry
-     * @param y -coord of the entry
-     */
-    public static void put(String tabName, String name, Object data, int x, int y) {
-        if(!tabs.containsKey(tabName)) create_tab(tabName);
-        if (tabs.get(tabName).containsKey(name)) {
-            tabs.get(tabName).get(name).m_data.setValue(data);
-            return;
-        }
-        addData(tabName, name, data).withPosition(x,y);
     }
 
     /**
@@ -113,10 +107,17 @@ public class NAR_Shuffleboard {
      * @param tabName the title of the tab to select
      * @param name the name of the entry
      * @param data complex value to display
+     * @param x x-coord of the entry
+     * @param y y-coord of the entry
      * @return complex widget that can be modified
      */
-    public static ComplexWidget addComplex(String tabName, String name, Sendable data) {
-        return Shuffleboard.getTab(tabName).add(name, data);
+    public static ComplexWidget addComplex(String tabName, String name, Sendable data, int x, int y) {
+        try {
+            return Shuffleboard.getTab(tabName).add(name, data).withPosition(x,y);
+        }
+        catch(Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -133,8 +134,7 @@ public class NAR_Shuffleboard {
         if(!tabs.containsKey(tabName)){
             create_tab(tabName);
         }
-        SimpleWidget tab = addData(tabName,name,Default);
-        tab.withPosition(x,y);
+        SimpleWidget tab = addData(tabName, name, Default, x, y);
         return ()-> tab.getEntry().getDouble(Default);
     }
 
@@ -148,12 +148,12 @@ public class NAR_Shuffleboard {
      */
     public static HashMap<String,DoubleSupplier> PID_Setup(String tabName, String suffix) {
         ShuffleboardTab tab = Shuffleboard.getTab(tabName);
-        HashMap<String,DoubleSupplier> PID_C = new HashMap<String,DoubleSupplier>();
+        HashMap<String,DoubleSupplier> PID = new HashMap<String,DoubleSupplier>();
         for (String i : new String[]{"KF","KP","KI","KD","SETPOINT"}) {
             NetworkTableEntry entry = tab.add(suffix + "_" + i,0).getEntry();
-            PID_C.put(i,()-> entry.getDouble(0));
+            PID.put(i,()-> entry.getDouble(0));
         }
-        return PID_C;
+        return PID;
     }
 
     /**

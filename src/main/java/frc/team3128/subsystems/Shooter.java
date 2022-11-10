@@ -10,18 +10,14 @@ import static frc.team3128.Constants.ShooterConstants.*;
 
 import java.util.function.DoubleSupplier;
 
-import frc.team3128.ConstantsInt;
-import frc.team3128.commands.CmdShootAlign;
+import frc.team3128.RobotContainer;
 
 import static frc.team3128.Constants.ConversionConstants.*;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonFX;
 import frc.team3128.common.utility.NAR_Shuffleboard;
 import frc.team3128.common.utility.interpolation.InterpolatingDouble;
@@ -93,18 +89,18 @@ public class Shooter extends PIDSubsystem {
 
     public void initShuffleboard() {
         // General Tab
-        NAR_Shuffleboard.addData("General","Shooter Setpoint",this::getSetpoint).withPosition(5, 2);
-        NAR_Shuffleboard.addData("General","Shooter RPM",this::getMeasurement).withPosition(4, 2);
-        NAR_Shuffleboard.addData("General","Shooter isReady",this::isReady).withPosition(2, 3).withSize(2, 1);
+        NAR_Shuffleboard.addData("General","Shooter Setpoint",this::getSetpoint,5,2);
+        NAR_Shuffleboard.addData("General","Shooter RPM",this::getMeasurement,4,2);
+        NAR_Shuffleboard.addData("General","Shooter isReady",this::isReady,2,3).withSize(2, 1);
         // Shooter Tab
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint).withPosition(2, 0);
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement).withPosition(3, 0);
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady).withSize(2, 1).withPosition(0, 2);
-        NAR_Shuffleboard.addComplex("Shooter + Hood","Shooter", this).withPosition(0, 0);
-        NAR_Shuffleboard.addComplex("Shooter + Hood", "Shooter_PID",m_controller).withPosition(2,1).withSize(2,2);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint,2,0);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement,3,0);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady,0,2).withSize(2, 1);
+        NAR_Shuffleboard.addComplex("Shooter + Hood","Shooter", this,0,0);
+        NAR_Shuffleboard.addComplex("Shooter + Hood", "Shooter_PID",m_controller,2,1).withSize(2,2);
         m_ff = NAR_Shuffleboard.debug("Shooter + Hood","Shooter FF",kF,4,1);
         if(RobotBase.isSimulation()) {
-            NAR_Shuffleboard.addData("Shooter + Hood","Sim Shooter RPM", ()-> (m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI)));
+            NAR_Shuffleboard.addData("Shooter + Hood","Sim Shooter RPM", ()-> (m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI)),4,3);
         }
         m_setpoint = NAR_Shuffleboard.debug("Shooter + Hood","SET_RPM",0,4,2);
 
@@ -112,8 +108,10 @@ public class Shooter extends PIDSubsystem {
 
     @Override
     public void periodic() {
-        // setSetpoint(m_setpoint.getAsDouble());
-        NAR_Shuffleboard.put("Shooter + Hood","Pred RPM", calculateRPMFromDist(LimelightSubsystem.getInstance().calculateShooterDistance()),4,0);
+        if (RobotContainer.DEBUG) { 
+            setSetpoint(m_setpoint.getAsDouble());
+        }
+        NAR_Shuffleboard.addData("Shooter + Hood","Pred RPM", calculateRPMFromDist(LimelightSubsystem.getInstance().calculateShooterDistance()),4,0);
         super.periodic();
     }
 

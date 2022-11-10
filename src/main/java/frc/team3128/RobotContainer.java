@@ -74,7 +74,7 @@ public class RobotContainer {
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
   
-    private boolean DEBUG = true; 
+    public static boolean DEBUG = false; 
 
     public RobotContainer() {
         // ConstantsInt.initTempConstants();
@@ -260,12 +260,12 @@ public class RobotContainer {
     }
 
     private void initDashboard() {
-        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive).withSize(3, 1).withPosition(0,0);
-        NAR_Shuffleboard.addComplex("General","Intake",m_intake).withSize(3, 1).withPosition(3,0);
-        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper).withSize(3, 1).withPosition(6,0);
-        NAR_Shuffleboard.addComplex("General","Climber",m_climber).withSize(3, 1).withPosition(0,1);
-        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter).withSize(3, 1).withPosition(3, 1);
-        NAR_Shuffleboard.addComplex("General","Hood",m_hood).withSize(3, 1).withPosition(6,1);
+        NAR_Shuffleboard.addComplex("General","Drivetrain",m_drive,0,0).withSize(3, 1);
+        NAR_Shuffleboard.addComplex("General","Intake",m_intake,3,0).withSize(3, 1);
+        NAR_Shuffleboard.addComplex("General","Hopper",m_hopper,6,0).withSize(3, 1);
+        NAR_Shuffleboard.addComplex("General","Climber",m_climber,0,1).withSize(3, 1);
+        NAR_Shuffleboard.addComplex("General","Shooter",m_shooter,3,1).withSize(3, 1);
+        NAR_Shuffleboard.addComplex("General","Hood",m_hood,6,1).withSize(3, 1);
 
         m_drive.initShuffleboard();
         m_intake.initShuffleboard();

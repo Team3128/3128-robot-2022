@@ -54,6 +54,7 @@ public class AutoPrograms {
         hopper = Hopper.getInstance();
         hood = Hood.getInstance();
         limelights = LimelightSubsystem.getInstance();
+        initTrajectories();
         initAutoSelector();
     }
 
