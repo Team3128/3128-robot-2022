@@ -129,16 +129,16 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     public void initShuffleboard(){
         // General Tab
-        NAR_Shuffleboard.addData("General","Gyro",this::getHeading,7,2).withWidget("Gyro");
+        NAR_Shuffleboard.addData("General","Gyro",this::getHeading,7,2,2,2).withWidget("Gyro");
         NAR_Shuffleboard.addData("General","Pitch",this::getPitch,1,2);
         // Drivetrain Tab
-        NAR_Shuffleboard.addComplex("Field","field",field,0,0).withWidget("Field").withSize(13,7);
+        NAR_Shuffleboard.addComplex("Field","field",field,0,0,13,7).withWidget("Field");
         NAR_Shuffleboard.addData("Drivetrain","Left Encoder (m)",this::getLeftEncoderDistance,1,1);
         NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m)",this::getRightEncoderDistance,0,1);
-        NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed,0,3).withSize(2, 1);
-        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed,0,2).withSize(2, 1);
-        NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString()),2,0).withSize(4, 1);
-        NAR_Shuffleboard.addComplex("Drivetrain","Gyro",gyro,3,1).withWidget("Gyro");
+        NAR_Shuffleboard.addData("Drivetrain","Left Encoder Speed(m|s)",this::getLeftEncoderSpeed,0,3,2,1);
+        NAR_Shuffleboard.addData("Drivetrain","Right Encoder (m|s)",this::getRightEncoderSpeed,0,2,2,1);
+        NAR_Shuffleboard.addData("Drivetrain","Pose",() -> (getPose().toString()),2,0,4,1);
+        NAR_Shuffleboard.addComplex("Drivetrain","Gyro",gyro,3,1,2,2).withWidget("Gyro");
         NAR_Shuffleboard.addData("Drivetrain","Pitch",this::getPitch,4,1);
         NAR_Shuffleboard.addData("Drivetrain","PitchRate",this::getPitchRate,5,1);
         NAR_Shuffleboard.addComplex("Drivetrain","Drivetrain", this,0,0);

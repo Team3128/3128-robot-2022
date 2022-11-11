@@ -91,13 +91,13 @@ public class Shooter extends PIDSubsystem {
         // General Tab
         NAR_Shuffleboard.addData("General","Shooter Setpoint",this::getSetpoint,5,2);
         NAR_Shuffleboard.addData("General","Shooter RPM",this::getMeasurement,4,2);
-        NAR_Shuffleboard.addData("General","Shooter isReady",this::isReady,2,3).withSize(2, 1);
+        NAR_Shuffleboard.addData("General","Shooter isReady",this::isReady,2,3,2,1);
         // Shooter Tab
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint,2,0);
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement,3,0);
-        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady,0,2).withSize(2, 1);
+        NAR_Shuffleboard.addData("Shooter + Hood","Shooter isReady",this::isReady,0,2,2,1);
         NAR_Shuffleboard.addComplex("Shooter + Hood","Shooter", this,0,0);
-        NAR_Shuffleboard.addComplex("Shooter + Hood", "Shooter_PID",m_controller,2,1).withSize(2,2);
+        NAR_Shuffleboard.addComplex("Shooter + Hood", "Shooter_PID",m_controller,2,1,2,2);
         m_ff = NAR_Shuffleboard.debug("Shooter + Hood","Shooter FF",kF,4,1);
         if(RobotBase.isSimulation()) {
             NAR_Shuffleboard.addData("Shooter + Hood","Sim Shooter RPM", ()-> (m_shooterSim.getAngularVelocityRadPerSec() * 60 / (2*Math.PI)),4,3);
