@@ -30,7 +30,8 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 5;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 6;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = 0.3647;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.33;
+        // public static final double ARCADE_DRIVE_TURN_MULT = 0.3647;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
@@ -92,7 +93,7 @@ public class Constants {
         public static final double kF = 0.00190678;
 
         public static final int PLATEAU_COUNT = 6;
-        public static final double RPM_THRESHOLD_PERCENT = 0.08;
+        public static final double RPM_THRESHOLD_PERCENT = 0.1;
         public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
         public static final double TIME_TO_MAX_THRESHOLD = 8;
 
@@ -145,8 +146,8 @@ public class Constants {
         public static final double HOPPER_MAX_REVERSE_DISTANCE = -2200; //set distance
 
         public static final double HOPPER_MOTOR_POWER = 0.6;
-        public static final double HOPPER_MOTOR_2_POWER = 0.7;
-        public static final double REVERSE_HOPPER_MOTOR_POWER = -1;
+        public static final double HOPPER_MOTOR_2_POWER = 0.85;
+        public static final double REVERSE_HOPPER_MOTOR_POWER = -0.6;
 
     }
 
@@ -193,13 +194,13 @@ public class Constants {
 
     public static class HoodConstants {
 
-        public static final int HOOD_MOTOR_ID = 5;
+        public static final int HOOD_MOTOR_ID = 45;
 
         // need to retune hood pid to be actually good
-        public static final double kP = 0.3; 
+        public static final double kP = 1.5; //1.5; 
         public static final double kI = 0;
         public static final double kD = 0; //8e-6;
-        public static final double kF = 0.60; 
+        public static final double kF = 2; //4; 
 
         public static final double TOLERANCE_MIN = 0.3; // degrees
 
@@ -246,14 +247,14 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = 1e-4;
+        public static final double VISION_PID_kP = 1e-3;
         public static final double VISION_PID_kI = 0; // 0.02;
         public static final double VISION_PID_kD = 1e-3; // 0.00006;
         public static final double VISION_PID_kF = 0.1;
 
         public static final double TX_OFFSET = 0; // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = 2; // degrees
+        public static final double TX_THRESHOLD = 4; // degrees
 
         public static final int ALIGN_PLATEAU_COUNT = 3; //Number of checks at correct RPM to shoot
 

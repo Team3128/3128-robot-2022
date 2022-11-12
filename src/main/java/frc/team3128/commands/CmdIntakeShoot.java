@@ -47,7 +47,7 @@ public class CmdIntakeShoot extends CommandBase {
         m_intake.stopIntake();
         m_hopper.stopHopper();
         m_shooter.stopShoot();
-        limelights.turnShooterLEDOff();
+        // limelights.turnShooterLEDOff();
     }
 
 }

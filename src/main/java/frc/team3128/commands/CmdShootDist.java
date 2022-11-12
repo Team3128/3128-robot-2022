@@ -40,7 +40,7 @@ public class CmdShootDist extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         shooter.stopShoot();
-        limelights.turnShooterLEDOff();
+        // limelights.turnShooterLEDOff();
         Log.info("CmdShootDist", "Cancelling shooting");
     }
     

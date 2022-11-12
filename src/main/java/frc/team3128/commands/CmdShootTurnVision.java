@@ -18,8 +18,8 @@ public class CmdShootTurnVision extends SequentialCommandGroup {
 
         addCommands(
             new InstantCommand(limelights::turnShooterLEDOn),
-            new CmdInPlaceTurn(turnDeg).withInterrupt(() -> limelights.getShooterHasValidTarget()),
-            new CmdShootAlign().withTimeout(3.5)
+            new CmdInPlaceTurn(turnDeg).withInterrupt(() -> limelights.getShooterHasValidTarget()).withTimeout(5),
+            new CmdShootAlign().withTimeout(10)
         );
     }
 }

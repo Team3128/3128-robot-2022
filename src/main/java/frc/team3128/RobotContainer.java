@@ -201,6 +201,7 @@ public class RobotContainer {
         m_operatorController.getButton("LeftBumper").whileActiveOnce(new SequentialCommandGroup(
                                             new CmdExtendIntake().withTimeout(0.1), 
                                             new CmdOuttake()));
+        // m_operatorController.getButton("LeftBumper").whileActiveOnce(new CmdShoot(1200, 34.4));
 
         m_operatorController.getRightTrigger().and(m_operatorController.getButton("RightBumper")).whileActiveOnce(new CmdIntakeShoot());
 

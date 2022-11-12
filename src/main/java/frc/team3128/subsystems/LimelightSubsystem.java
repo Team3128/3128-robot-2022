@@ -21,11 +21,13 @@ public class LimelightSubsystem extends SubsystemBase{
     private Limelight m_ballLimelight;
 
     private BooleanSupplier isAligned;
+    private BooleanSupplier addPlateau;
 
     public LimelightSubsystem() {
         m_shooterLimelight = new Limelight("limelight-cog", TOP_CAMERA_ANGLE, TOP_CAMERA_HEIGHT, TOP_FRONT_DIST); 
         m_ballLimelight = new Limelight("limelight-sog", BALL_LL_ANGLE, BALL_LL_HEIGHT, BALL_LL_FRONT_DIST);
         isAligned = () -> Math.abs(getShooterTX()) <= TX_THRESHOLD && getShooterHasValidTarget();
+        addPlateau = () -> Math.abs(getShooterTX()) <= 3 && getShooterHasValidTarget();
     }
 
     public static synchronized LimelightSubsystem getInstance() {
@@ -58,7 +60,7 @@ public class LimelightSubsystem extends SubsystemBase{
      */
     public double calculateShooterDistance() {
         // we need to redo interpolation
-        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT + 18);
+        return m_shooterLimelight.calculateDistToTopTarget(TARGET_HEIGHT + 15);
     }
 
     /**
@@ -136,6 +138,10 @@ public class LimelightSubsystem extends SubsystemBase{
 
     public boolean isAligned() {
         return isAligned.getAsBoolean();
+    }
+
+    public boolean addPlateau() {
+        return addPlateau.getAsBoolean();
     }
 
 }
