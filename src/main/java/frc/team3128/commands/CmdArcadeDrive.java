@@ -34,7 +34,7 @@ public class CmdArcadeDrive extends CommandBase {
     public void execute() {
         double throttle = m_throttle.getAsDouble();
         double xSpeed = m_xSpeed.getAsDouble();
-        double turn = ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble();
+        double turn = ARCADE_DRIVE_TURN_MULT * m_turn.getAsDouble()*Math.abs(m_turn.getAsDouble());
 
         m_drivetrain.arcadeDrive(filter.calculate(xSpeed * throttle), turn);
     }

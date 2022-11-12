@@ -25,12 +25,13 @@ public class Constants {
 
     public static class DriveConstants {
 
-        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 0;
+        public static final int DRIVE_MOTOR_LEFT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_LEFT_FOLLOWER_ID = 1;
-        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
-        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
+        public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 5;
+        public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 6;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = 0.70 * 0.35;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.33;
+        // public static final double ARCADE_DRIVE_TURN_MULT = 0.3647;
         public static final double ARCADE_DRIVE_RATE_LIMIT = 2.0; //max rate of change in the forward parameter (joystick Y axis) given to arcade drive
 
         public static final double DRIVE_GEARING = 9.6;
@@ -82,8 +83,8 @@ public class Constants {
         public static final double SET_RPM = Double.valueOf(3000);
         public static final double SET_ANGLE = Double.valueOf(25);
 
-        public static final int LEFT_SHOOTER_ID = 4; 
-        public static final int RIGHT_SHOOTER_ID = 5; 
+        public static final int LEFT_SHOOTER_ID = 10; 
+        public static final int RIGHT_SHOOTER_ID = 9; 
 
         public static final double kP = Double.valueOf(2e-4); // 3.2e-3);
         public static final double kI = Double.valueOf(0);
@@ -93,6 +94,9 @@ public class Constants {
 
         public static final int PLATEAU_COUNT = Integer.valueOf(6);
         public static final double RPM_THRESHOLD_PERCENT = Double.valueOf(0.05);
+
+        public static final double RPM_THRESHOLD_PERCENT_MAX = 0.15;
+        public static final double TIME_TO_MAX_THRESHOLD = 8;
 
         public static final double LOW_kV = 0.0017857 * 0.9; // fyi these are fake numbers // 0.00163); //Velocity gain in PID Feed Forward
         public static final double LOW_kA = 0.0053359 * 0.9; // fyi these are fake numbers // 0.0349); //Acceleration gain PID Feed Forward
@@ -133,8 +137,8 @@ public class Constants {
 
     public static class HopperConstants {
 
-        public static final int HOPPER_MOTOR_ID = 6;
-        public static final int HOPPER_MOTOR_2_ID = 9;
+        public static final int HOPPER_MOTOR_ID = 12;
+        public static final int HOPPER_MOTOR_2_ID = 4;
         public static final int BOTTOM_SENSOR_ID = 12;
         public static final int TOP_SENSOR_ID = 13;
 
@@ -143,14 +147,14 @@ public class Constants {
         public static final double HOPPER_MAX_REVERSE_DISTANCE = Double.valueOf(-2200); //set distance
 
         public static final double HOPPER_MOTOR_POWER = Double.valueOf(0.6);
-        public static final double HOPPER_MOTOR_2_POWER = Double.valueOf(0.7);
-        public static final double REVERSE_HOPPER_MOTOR_POWER = Double.valueOf(-1);
+        public static final double HOPPER_MOTOR_2_POWER = Double.valueOf(0.85);
+        public static final double REVERSE_HOPPER_MOTOR_POWER = Double.valueOf(-0.6);
 
     }
 
     public static class IntakeConstants {
 
-        public static final int INTAKE_MOTOR_ID = 7; 
+        public static final int INTAKE_MOTOR_ID = 3; 
         public static final int INTAKE_SOLENOID_FORWARD_CHANNEL_ID = 4;
         public static final int INTAKE_SOLENOID_BACKWARD_CHANNEL_ID = 3;
 
@@ -161,8 +165,8 @@ public class Constants {
 
     public static class ClimberConstants {
 
-        public static final int CLIMBER_MOTOR_LEFT_ID = 12;
-        public static final int CLIMBER_MOTOR_RIGHT_ID = 13;
+        public static final int CLIMBER_MOTOR_LEFT_ID = 0;
+        public static final int CLIMBER_MOTOR_RIGHT_ID = 7;
 
         public static final int CLIMBER_SENSOR_LEFT_ID = 7;
         public static final int CLIMBER_SENSOR_RIGHT_ID = 6;
@@ -187,13 +191,13 @@ public class Constants {
 
     public static class HoodConstants {
 
-        public static final int HOOD_MOTOR_ID = 5;
+        public static final int HOOD_MOTOR_ID = 45;
 
         // need to retune hood pid to be actually good
-        public static final double kP = Double.valueOf(0.3); 
+        public static final double kP = Double.valueOf(1.5); //1.5; 
         public static final double kI = Double.valueOf(0);
-        public static final double kD = Double.valueOf(0); //8e-6);
-        public static final double kF = Double.valueOf(0.49072349); 
+        public static final double kD = Double.valueOf(0); //8e-6;
+        public static final double kF = Double.valueOf(2); //4; 
 
         public static final double TOLERANCE_MIN = Double.valueOf(0.3); // degrees
 
@@ -240,16 +244,16 @@ public class Constants {
         public static final double TOP_FRONT_DIST = 0;
         public static final double TARGET_HEIGHT = 104;
 
-        public static final double VISION_PID_kP = Double.valueOf(2.2e-3);
+        public static final double VISION_PID_kP = Double.valueOf(1e-3);
         public static final double VISION_PID_kI = Double.valueOf(0); // 0.02);
-        public static final double VISION_PID_kD = Double.valueOf(0); // 0.00006);
-        public static final double VISION_PID_kF = Double.valueOf(0.06);
+        public static final double VISION_PID_kD = Double.valueOf(1e-3); // 0.00006);
+        public static final double VISION_PID_kF = Double.valueOf(0.1);
 
         public static final double TX_OFFSET = Double.valueOf(0); // to offset alignment in either direction
 
-        public static final double TX_THRESHOLD = Double.valueOf(3); // degrees
+        public static final double TX_THRESHOLD = Double.valueOf(4); // degrees
 
-        public static final int ALIGN_PLATEAU_COUNT = Integer.valueOf(5); //Number of checks at correct RPM to shoot
+        public static final int ALIGN_PLATEAU_COUNT = Integer.valueOf(3); //Number of checks at correct RPM to shoot
 
         public static final double BALL_TARGET_HEIGHT = 9.5 / 2;
         public static final double BALL_LL_HEIGHT = 24;
