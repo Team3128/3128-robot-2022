@@ -26,7 +26,7 @@ public class CmdOuttake extends CommandBase{
      * @Requirements Intake, Hopper
      */
     public CmdOuttake(double power){
-        this(-power, -1.0);
+        this(-power, -0.6);
     }
 
     /**

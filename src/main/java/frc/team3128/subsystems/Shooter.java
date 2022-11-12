@@ -96,6 +96,7 @@ public class Shooter extends PIDSubsystem {
         NAR_Shuffleboard.addData("General","Shooter Setpoint",this::getSetpoint).withPosition(5, 2);
         NAR_Shuffleboard.addData("General","Shooter RPM",this::getMeasurement).withPosition(4, 2);
         NAR_Shuffleboard.addData("General","Shooter isReady",this::isReady).withPosition(2, 3).withSize(2, 1);
+        NAR_Shuffleboard.addData("COMP","Shooter isReady",this::isReady);
         // Shooter Tab
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter Setpoint",this::getSetpoint).withPosition(2, 0);
         NAR_Shuffleboard.addData("Shooter + Hood","Shooter RPM",this::getMeasurement).withPosition(3, 0);

@@ -47,7 +47,7 @@ public class CmdShootSingleBall extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         shooter.stopShoot();
-        limelights.turnShooterLEDOff();
+        // limelights.turnShooterLEDOff();
         Log.info("CmdShootSingleBall", "Cancelling shooting");
     }
     

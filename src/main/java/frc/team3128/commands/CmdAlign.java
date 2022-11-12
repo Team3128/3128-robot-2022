@@ -91,7 +91,7 @@ public class CmdAlign extends CommandBase {
                 drive.tankDrive(-feedbackPower, feedbackPower);
     
                 // if degrees of horizontal tx error below threshold (aligned enough)
-                if (limelights.isAligned()) plateauCount++;
+                if (limelights.addPlateau()) plateauCount++;
                 else plateauCount = 0;
 
                 prevError = currError;
@@ -110,6 +110,7 @@ public class CmdAlign extends CommandBase {
     
     @Override
     public boolean isFinished() {
+        // return false;
         return plateauCount > ALIGN_PLATEAU_COUNT;
     }
 
