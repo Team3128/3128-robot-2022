@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.IntakeConstants.*;
 import frc.team3128.common.hardware.motorcontroller.NAR_TalonSRX;
@@ -63,11 +62,11 @@ public class Intake extends SubsystemBase {
 
     public void initShuffleboard() {
         // General Tab
-        NAR_Shuffleboard.addData("General", "Intake Speed", m_intake::get).withPosition(8, 3);
+        NAR_Shuffleboard.addData("General", "Intake Speed", m_intake::get,0,2);
         // Intake Tab
-        NAR_Shuffleboard.addData("Intake + Hopper", "Intake Speed", m_intake::get).withPosition(0, 1);
-        NAR_Shuffleboard.addData("Intake + Hopper", "Intake State", this::getSolenoid).withPosition(1, 1);
-        NAR_Shuffleboard.addComplex("Intake + Hopper", "Intake", this).withPosition(0,0);
+        NAR_Shuffleboard.addData("Intake + Hopper", "Intake Speed", m_intake::get,0,1);
+        NAR_Shuffleboard.addData("Intake + Hopper", "Intake State", this::getSolenoid,1,1);
+        NAR_Shuffleboard.addComplex("Intake + Hopper", "Intake", this,0,0);
     }
 
     /**

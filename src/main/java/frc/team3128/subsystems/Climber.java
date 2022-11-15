@@ -10,7 +10,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.ClimberConstants.*;
 import static frc.team3128.common.hardware.motorcontroller.MotorControllerConstants.*;
@@ -80,13 +79,13 @@ public class Climber extends SubsystemBase {
 
     public void initShuffleboard() {
         // General Tab
-        NAR_Shuffleboard.addData("General", "Climber Encoder", this::getCurrentTicks).withPosition(7, 2);
-        NAR_Shuffleboard.addData("General", "Climber Speed", m_leftMotor::get).withPosition(8, 2);
+        NAR_Shuffleboard.addData("General", "Climber Encoder", this::getCurrentTicks,6,2);
+        NAR_Shuffleboard.addData("General", "Climber Speed", m_leftMotor::get,6,3);
         // Climber Tab
-        NAR_Shuffleboard.addComplex("Climber", "Climber", this).withPosition(0, 0);
-        NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks).withPosition(2, 0);
-        NAR_Shuffleboard.addData("Climber", "Piston State", this::getSolenoid).withPosition(3, 0);
-        NAR_Shuffleboard.addData("Climber", "Climber Speed", m_leftMotor::get).withPosition(4, 0);
+        NAR_Shuffleboard.addComplex("Climber", "Climber", this,0,0);
+        NAR_Shuffleboard.addData("Climber", "Climber Encoder", this::getCurrentTicks,2,0);
+        NAR_Shuffleboard.addData("Climber", "Piston State", this::getSolenoid,3,0);
+        NAR_Shuffleboard.addData("Climber", "Climber Speed", m_leftMotor::get,4,0);
     }
 
     /**
